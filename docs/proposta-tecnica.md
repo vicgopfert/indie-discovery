@@ -220,7 +220,7 @@ Formato de erro padronizado, produzido pelo filtro global de exceções:
 
 ### Configuração por ambiente
 
-Todas as variáveis (`DATABASE_URL`, `SESSION_TTL_DAYS`, `WEB_ORIGIN`, `IGDB_CLIENT_ID`, `IGDB_CLIENT_SECRET`, `INTERNAL_RELOAD_SECRET`, `NODE_ENV`) são lidas pelo `@nestjs/config` e validadas por um schema Zod na inicialização: se faltar algo, a aplicação não sobe e diz o que falta. Um `.env.example` versionado documenta cada uma; nenhum `.env` real entra no repositório.
+Todas as variáveis (`DATABASE_URL`, `PORT`, `SESSION_TTL_DAYS`, `WEB_ORIGIN`, `IGDB_CLIENT_ID`, `IGDB_CLIENT_SECRET`, `INTERNAL_RELOAD_SECRET`, `NODE_ENV`; no frontend, `API_URL` para o *rewrite*, acrescentadas no B-02) são lidas pelo `@nestjs/config` e validadas por um schema Zod na inicialização: se faltar algo, a aplicação não sobe e diz o que falta. Um `.env.example` versionado documenta cada uma; nenhum `.env` real entra no repositório.
 
 ## 6. Stack e justificativas
 
@@ -230,7 +230,7 @@ Todas as variáveis (`DATABASE_URL`, `SESSION_TTL_DAYS`, `WEB_ORIGIN`, `IGDB_CLI
 
 | Tecnologia | Classe | Papel | Justificativa |
 | --- | --- | --- | --- |
-| Node.js 22 LTS | Obrigatória | Runtime da API e do build do frontend | Versão com suporte longo, compatível com NestJS 12 (exige Node 20.19+ ou 22.12+) e com Prisma 7 |
+| Node.js 24 LTS (≥ 24.9) | Obrigatória | Runtime da API e do build do frontend | Versão com suporte longo, compatível com NestJS 12 e Prisma 7. **Alterado no B-02 (19/10/2026):** era Node 22, mas o Jest só carrega os pacotes ESM do NestJS 12 numa API CommonJS a partir do Node 24.9 (R-06); o Node 22 também sai de suporte em abril de 2027 |
 | pnpm (workspaces) | Obrigatória | Gerenciador de pacotes e monorrepositório | Workspaces nativos, instalação rápida, um lockfile só |
 | TypeScript (modo `strict`) | Obrigatória | Linguagem dos três pacotes | Tipos compartilhados entre frontend e backend; erros pegos na compilação |
 | Zod | Obrigatória | Schemas de validação em `packages/contracts` | Uma definição gera validação em tempo de execução e tipo estático, usada nos dois lados |
@@ -240,7 +240,7 @@ Todas as variáveis (`DATABASE_URL`, `SESSION_TTL_DAYS`, `WEB_ORIGIN`, `IGDB_CLI
 | Tecnologia | Classe | Papel | Justificativa |
 | --- | --- | --- | --- |
 | NestJS 12 | Obrigatória | Framework da API | Módulos, injeção de dependência, guards e pipes prontos; a versão 12 aceita schemas *Standard Schema* (como Zod) diretamente nos decorators `@Body`, `@Query` e `@Param` |
-| Formato de módulo CommonJS | Recomendada | Formato do projeto da API | O NestJS 12 publica seus pacotes como ESM e a CLI pergunta o formato ao criar o projeto. CommonJS reduz atrito com Jest. A compatibilidade com o cliente gerado pelo Prisma 7 deve ser confirmada no setup (B-02); se falhar, a alternativa é ESM com Vitest (risco R-06) |
+| Formato de módulo CommonJS | Recomendada | Formato do projeto da API | O NestJS 12 publica seus pacotes como ESM e a CLI pergunta o formato ao criar o projeto. CommonJS reduz atrito com Jest. Verificado no B-02: build, execução e cliente do Prisma 7 (`moduleFormat = "cjs"`) funcionam; o Jest exige Node 24.9+ com `--experimental-vm-modules`. Decisão: CommonJS com Node 24, registrada no README (risco R-06) |
 | `@nestjs/config` | Obrigatória | Variáveis de ambiente | Leitura centralizada, validada por schema Zod |
 | `@nestjs/swagger` | Obrigatória | Documentação OpenAPI em `/api/docs` | Geração a partir dos controllers. A geração automática a partir dos schemas Zod só será adotada se o suporte estiver estável no setup; caso contrário, decorators de documentação escritos à mão nos endpoints P0 |
 | `@nestjs/throttler` | Obrigatória | Limite de taxa nas rotas de autenticação | Dificulta tentativa de senha em massa |
@@ -1132,7 +1132,7 @@ Gravidade: **Alta** ameaça a defesa · **Média** atrasa ou empobrece o MVP · 
 | R-03 | **Autenticação e cookies** falhando no ambiente implantado (domínios, `Secure`, `SameSite`) | Média | Login funciona local e não em produção | Mesma origem via *rewrite*; implantação desde a semana 4; e2e de autenticação; login testado no ambiente implantado ao fim de S5 |
 | R-04 | **Cobertura insuficiente da IGDB** para país, idioma, resumo ou jogos pequenos e não lançados | Média | Filtros vazios; recomendação pobre para parte do catálogo | Medição no M0; portão do F-06; "não informado" em vez de esconder; limitação descrita no TCC |
 | R-05 | **Mudança de termos ou indisponibilidade da IGDB** | Alta | Sem fonte de catálogo | Termos confirmados no M0; ingestão em lote, nunca em tempo de requisição (RNF-02); dump do banco preserva o catálogo; atribuição visível |
-| R-06 | **Incompatibilidade entre NestJS 12, Prisma 7, formato de módulo e Jest** | Média | Dias perdidos em configuração | Verificação no B-02, logo na semana 1; alternativa definida (ESM com Vitest); decisão registrada no README |
+| R-06 | **Incompatibilidade entre NestJS 12, Prisma 7, formato de módulo e Jest** | Média | Dias perdidos em configuração | Verificação no B-02, logo na semana 1; alternativa definida (ESM com Vitest); decisão registrada no README. **Ocorreu no B-02:** resolvido com Node 24 + `--experimental-vm-modules`, mantendo CommonJS e Jest |
 | R-07 | **Testes deixados para o fim** | Média | Regressões perto da banca; falta de evidência no TCC | Testes fazem parte da definição de pronto; CI bloqueia integração; suítes e2e com sprint definida |
 | R-08 | **Expansão de escopo com IA** ou outras ideias novas | Média | Desvio do caminho crítico | IA fora do MVP, com condições de entrada na seção 12; toda ideia nova vai para a Fase B, salvo troca por item de mesmo custo |
 | R-09 | **Hibernação da hospedagem gratuita** (API dorme após 15 minutos; banco suspende após 5) | Baixa | Primeira requisição lenta durante a demonstração | Acordar API e banco alguns minutos antes da apresentação; aviso de carregamento na interface; contingência local |

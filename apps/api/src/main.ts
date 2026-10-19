@@ -1,12 +1,20 @@
-// Entrada provisória do B-01: só comprova que a API importa os contratos.
-// Substituída pelo bootstrap do NestJS no B-02.
-import { ApiErrorSchema, type ApiError } from '@indie/contracts';
+import 'reflect-metadata';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AppModule } from './app.module';
 
-const sample: ApiError = {
-  statusCode: 404,
-  error: 'Not Found',
-  message: 'Jogo não encontrado',
-  requestId: 'b01',
-};
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api');
 
-console.log('contracts ok:', ApiErrorSchema.parse(sample));
+  const config = new DocumentBuilder()
+    .setTitle('Indie Discovery API')
+    .setDescription('API da plataforma de descoberta de jogos independentes')
+    .setVersion('0.1.0')
+    .build();
+  SwaggerModule.setup('api/docs', app, () => SwaggerModule.createDocument(app, config));
+
+  await app.listen(process.env.PORT ?? 3001);
+}
+
+void bootstrap();

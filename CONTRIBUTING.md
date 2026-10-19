@@ -20,7 +20,7 @@ pontuação está na seção 12 do documento técnico.
 
 ## Stack obrigatória
 
-- **Backend:** NestJS 12, TypeScript estrito, formato CommonJS (verificar compatibilidade com Prisma 7 antes de seguir — ver B-02)
+- **Backend:** NestJS 12, TypeScript estrito, formato CommonJS, Node.js 24 (decidido no B-02; Jest roda com `--experimental-vm-modules` — ver README)
 - **ORM:** Prisma 7 + `@prisma/adapter-pg`, gerador `prisma-client`, URL do banco em `prisma.config.ts`, seed explícito via `prisma db seed`
 - **Banco:** PostgreSQL (mesma versão principal local e no Neon)
 - **Frontend:** Next.js (App Router) — Server Components para páginas públicas, Client Components para interações, `rewrites` de `/api/*` para a API (cookie same-origin)

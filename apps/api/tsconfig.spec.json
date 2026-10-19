@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "noEmit": false,
+    // Exigido pelo ts-jest com module NodeNext; a checagem de tipos fica no `typecheck`.
+    "isolatedModules": true
+  },
+  "include": ["src", "test"]
+}

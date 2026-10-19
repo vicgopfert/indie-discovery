@@ -3,11 +3,13 @@
   "private": true,
   "packageManager": "pnpm@12.14.0",
   "engines": {
-    "node": ">=22.12"
+    "node": ">=24.9"
   },
   "scripts": {
+    "dev": "pnpm -r --parallel run dev",
     "build": "pnpm -r run build",
-    "typecheck": "pnpm -r run typecheck"
+    "typecheck": "pnpm -r run typecheck",
+    "test": "pnpm -r run test"
   },
   "devDependencies": {
     "typescript": "6.0.3"
