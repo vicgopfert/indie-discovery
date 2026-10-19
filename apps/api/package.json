@@ -1,0 +1,16 @@
+{
+  "name": "@indie/api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@indie/contracts": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.0"
+  }
+}

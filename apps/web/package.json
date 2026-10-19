@@ -1,0 +1,12 @@
+{
+  "name": "@indie/web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@indie/contracts": "workspace:*"
+  }
+}
