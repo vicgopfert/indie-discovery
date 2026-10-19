@@ -1,0 +1,3 @@
+# Fim de linha LF no repositório e na cópia de trabalho, mesmo no Windows
+# com core.autocrlf ligado; o Prettier e o CI esperam LF.
+* text=auto eol=lf

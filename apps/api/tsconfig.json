@@ -6,8 +6,7 @@
     "types": ["node", "jest"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "rootDir": "src",
-    "outDir": "dist"
+    "noEmit": true
   },
-  "include": ["src"]
+  "include": ["src", "test", "prisma.config.ts"]
 }
