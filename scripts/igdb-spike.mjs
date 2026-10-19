@@ -40,16 +40,46 @@ const PAGE_SIZE = 500;
 // transforma em config/indie-criteria.json depois de validada contra casos
 // reais. Serve aqui só para medir quantos jogos o critério remove.
 const MAJOR_PUBLISHERS = [
-  'electronic arts', 'ea games', 'ubisoft', 'ubisoft entertainment',
-  'activision', 'activision blizzard', 'blizzard entertainment',
-  'take-two interactive', 'rockstar games', '2k games', '2k',
-  'square enix', 'capcom', 'konami', 'bandai namco entertainment',
-  'bandai namco games', 'sega', 'nintendo', 'sony interactive entertainment',
-  'sony computer entertainment', 'microsoft game studios', 'xbox game studios',
-  'bethesda softworks', 'zenimax media', 'warner bros. interactive entertainment',
-  'tencent', 'netease', 'embracer group', 'thq nordic', 'koch media',
-  'paradox interactive', 'focus entertainment', 'deep silver', 'krafton',
-  'epic games', 'valve corporation', 'riot games', 'mihoyo', 'devolver digital', 'annapurna interactive',
+  'electronic arts',
+  'ea games',
+  'ubisoft',
+  'ubisoft entertainment',
+  'activision',
+  'activision blizzard',
+  'blizzard entertainment',
+  'take-two interactive',
+  'rockstar games',
+  '2k games',
+  '2k',
+  'square enix',
+  'capcom',
+  'konami',
+  'bandai namco entertainment',
+  'bandai namco games',
+  'sega',
+  'nintendo',
+  'sony interactive entertainment',
+  'sony computer entertainment',
+  'microsoft game studios',
+  'xbox game studios',
+  'bethesda softworks',
+  'zenimax media',
+  'warner bros. interactive entertainment',
+  'tencent',
+  'netease',
+  'embracer group',
+  'thq nordic',
+  'koch media',
+  'paradox interactive',
+  'focus entertainment',
+  'deep silver',
+  'krafton',
+  'epic games',
+  'valve corporation',
+  'riot games',
+  'mihoyo',
+  'devolver digital',
+  'annapurna interactive',
 ];
 
 // ------------------------------------------------------------------- cliente
@@ -105,11 +135,21 @@ function makeClient(clientId, token) {
 // -------------------------------------------------------------------- query
 
 const FIELDS = [
-  'id', 'name', 'slug', 'summary', 'storyline', 'url',
-  'first_release_date', 'category', 'status',
-  'genres.id', 'genres.name',
-  'themes.id', 'themes.name',
-  'keywords.id', 'keywords.name',
+  'id',
+  'name',
+  'slug',
+  'summary',
+  'storyline',
+  'url',
+  'first_release_date',
+  'category',
+  'status',
+  'genres.id',
+  'genres.name',
+  'themes.id',
+  'themes.name',
+  'keywords.id',
+  'keywords.name',
   'cover.image_id',
   'involved_companies.developer',
   'involved_companies.publisher',
@@ -120,8 +160,12 @@ const FIELDS = [
   'language_supports.language.name',
   'language_supports.language.locale',
   'language_supports.language_support_type',
-  'websites.category', 'websites.url',
-  'total_rating_count', 'rating_count', 'follows', 'hypes',
+  'websites.category',
+  'websites.url',
+  'total_rating_count',
+  'rating_count',
+  'follows',
+  'hypes',
 ].join(',');
 
 // Jogos principais, sem DLC, expansão, bundle ou porte, e sem versões
@@ -142,7 +186,9 @@ const FIELD_CHECKS = {
   'País da desenvolvedora': (g) => developers(g).some((c) => c.company?.country != null),
   'Idiomas suportados': (g) => (g.language_supports?.length ?? 0) > 0,
   'Suporte a português': (g) =>
-    (g.language_supports ?? []).some((l) => (l.language?.locale ?? '').toLowerCase().startsWith('pt')),
+    (g.language_supports ?? []).some((l) =>
+      (l.language?.locale ?? '').toLowerCase().startsWith('pt'),
+    ),
   'Link oficial (url ou website)': (g) => Boolean(g.url || (g.websites?.length ?? 0) > 0),
   'Contagem de avaliações > 0': (g) => (g.total_rating_count ?? 0) > 0,
   'Interesse pré-lançamento (hypes > 0)': (g) => (g.hypes ?? 0) > 0,
@@ -159,10 +205,6 @@ function isMajorPublished(g) {
   return publishers(g).some((p) =>
     MAJOR_PUBLISHERS.includes((p.company?.name ?? '').trim().toLowerCase()),
   );
-}
-function hasIndieGenre(g) {
-  // 32 = Indie na taxonomia de gêneros da IGDB.
-  return (g.genres ?? []).some((x) => x.id === 32);
 }
 
 function pct(n, total) {
@@ -203,6 +245,7 @@ async function main() {
   const token = await getToken(clientId, clientSecret);
   const igdb = makeClient(clientId, token);
 
+  // genres = (32): gênero Indie na taxonomia da IGDB.
   console.log('Contando o catálogo...');
   const totalAll = (await igdb('games/count', `where ${BASE_WHERE};`)).count;
   const totalIndieGenre = (await igdb('games/count', `where ${BASE_WHERE} & genres = (32);`)).count;
@@ -214,7 +257,9 @@ async function main() {
   ).count;
 
   console.log(`  jogos principais no total: ${totalAll}`);
-  console.log(`  com gênero Indie: ${totalIndieGenre} (dos quais ${totalUpcoming} ainda não lançados)`);
+  console.log(
+    `  com gênero Indie: ${totalIndieGenre} (dos quais ${totalUpcoming} ainda não lançados)`,
+  );
 
   console.log(`Amostrando até ${MAX_GAMES} jogos com gênero Indie...`);
   const games = [];
@@ -365,7 +410,9 @@ A fórmula da seção 12 usa \`p_j\`. Disponibilidade na amostra:
 
   console.log('\nPronto.');
   console.log('  docs/m0-relatorio-igdb.md');
-  console.log(`  scripts/out/fixtures/ (${Math.min(FIXTURE_COUNT, n)} completos, ${sparse.length} incompletos, ${Math.min(10, removedByPublisher.length)} de publisher grande)`);
+  console.log(
+    `  scripts/out/fixtures/ (${Math.min(FIXTURE_COUNT, n)} completos, ${sparse.length} incompletos, ${Math.min(10, removedByPublisher.length)} de publisher grande)`,
+  );
 }
 
 main().catch((err) => {

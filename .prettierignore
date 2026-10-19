@@ -1,0 +1,9 @@
+pnpm-lock.yaml
+**/dist
+**/.next
+**/generated
+**/coverage
+scripts/out
+
+# Documentação escrita à mão: o Prettier realinharia todas as tabelas.
+*.md
