@@ -19,7 +19,7 @@ Orientadora: Adriana Aparicio Sicsú Ayres do Nascimento.
 | Banco | PostgreSQL via Prisma 7 |
 | Contratos | Zod, compartilhados entre os dois lados |
 | Monorrepositório | pnpm workspaces |
-| Runtime | Node.js 22 LTS |
+| Runtime | Node.js 24 LTS (≥ 24.9) |
 
 ## Estrutura
 
@@ -39,9 +39,25 @@ scripts/          utilitários fora do monorrepositório (spike da IGDB)
 pnpm install
 docker compose up -d          # PostgreSQL local
 cp .env.example .env          # preencher as variáveis
-pnpm --filter api prisma migrate dev
+pnpm --filter @indie/api exec prisma migrate dev
 pnpm dev
 ```
+
+## Decisões de configuração
+
+**Formato de módulo da API: CommonJS, com Node.js 24** (item B-02, risco R-06).
+
+O NestJS 12 é publicado só como ESM. Uma API em CommonJS carrega esses pacotes
+pelo `require(esm)` do Node, o que funciona no build e na execução desde o Node
+22. O Jest, porém, só consegue fazer o mesmo a partir do **Node 24.9** e com a
+flag `--experimental-vm-modules`, que o script `pnpm test` da API já passa. No
+Node 22 os testes não carregam o Nest, mesmo com a flag. A alternativa (ESM com
+Vitest) ficou descartada por exigir mais configuração; o Node 22 também sai de
+suporte em abril de 2027, perto da banca.
+
+O cliente do Prisma 7 é gerado em `apps/api/src/generated/prisma` com
+`moduleFormat = "cjs"` (fora do Git, gerado no `pnpm install`). O Jest mapeia
+os imports `./arquivo.js` do código gerado para os `.ts` correspondentes.
 
 ## Documentação
 
