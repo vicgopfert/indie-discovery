@@ -1,0 +1,12 @@
+Este projeto utiliza dados da IGDB (https://www.igdb.com/), acessados pela API
+pública mantida pela Twitch Interactive, Inc.
+
+- Os dados de jogos, empresas, gêneros, temas e palavras-chave exibidos na
+  plataforma são obtidos da IGDB e permanecem sujeitos aos termos de uso dela.
+- As imagens de capa não são armazenadas: guarda-se apenas o identificador da
+  imagem e a URL é montada para a CDN da IGDB no momento da exibição.
+- A atribuição à IGDB é exibida nas páginas que mostram esses dados.
+- O uso é não comercial, no contexto de um trabalho acadêmico.
+
+A licença MIT deste repositório aplica-se ao código-fonte e não concede qualquer
+direito sobre os dados acima.

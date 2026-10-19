@@ -1,0 +1,63 @@
+# Plataforma Web de Descoberta de Jogos Independentes
+
+Plataforma web que recomenda jogos de estúdios e desenvolvedores independentes
+pela afinidade entre as características de cada jogo e as preferências de cada
+pessoa, mostrando o motivo de cada indicação, deixando o usuário calibrar o peso
+da popularidade e incluindo jogos ainda não lançados.
+
+Trabalho de Conclusão de Curso — Tecnologia em Análise e Desenvolvimento de
+Sistemas, UERJ.
+Autor: Victor Gopfert Ferreira Figueiredo.
+Orientadora: Adriana Aparicio Sicsú Ayres do Nascimento.
+
+## Stack
+
+| Camada | Tecnologia |
+| --- | --- |
+| Frontend | Next.js (App Router), Tailwind CSS |
+| API | NestJS 12, monólito modular |
+| Banco | PostgreSQL via Prisma 7 |
+| Contratos | Zod, compartilhados entre os dois lados |
+| Monorrepositório | pnpm workspaces |
+| Runtime | Node.js 22 LTS |
+
+## Estrutura
+
+```
+apps/api/         NestJS: API REST e aplicação de ingestão
+apps/web/         Next.js: interface
+packages/contracts/  schemas Zod e tipos compartilhados
+docs/             proposta técnica, pesquisas de campo e diagramas
+scripts/          utilitários fora do monorrepositório (spike da IGDB)
+```
+
+## Como rodar localmente
+
+> Em construção. Completado no item B-43 do backlog.
+
+```bash
+pnpm install
+docker compose up -d          # PostgreSQL local
+cp .env.example .env          # preencher as variáveis
+pnpm --filter api prisma migrate dev
+pnpm dev
+```
+
+## Documentação
+
+| Arquivo | O que é |
+| --- | --- |
+| [`CONTRIBUTING.md`](./CONTRIBUTING.md) | Convenções de desenvolvimento: stack, estrutura, padrões, SOLID e definição de pronto |
+| [`BACKLOG.md`](./BACKLOG.md) | Checklist de acompanhamento dos itens e marcos |
+| [`docs/proposta-tecnica.md`](./docs/proposta-tecnica.md) | Referência oficial durante a implementação: arquitetura, segurança, modelagem, diagramas, backlog detalhado, cronograma e riscos |
+| [`docs/proposta-conceitual.md`](./docs/proposta-conceitual.md) | Problema, pesquisas de campo, justificativa e proposta de valor |
+
+## Dados
+
+O catálogo é montado por ingestão em lote a partir da API pública da
+[IGDB](https://www.igdb.com/). Veja [NOTICE](./NOTICE).
+
+## Licença
+
+Código sob licença MIT (veja [LICENSE](./LICENSE)). A licença cobre o código
+deste repositório, não os dados de terceiros descritos no NOTICE.

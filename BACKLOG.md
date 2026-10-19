@@ -1,0 +1,114 @@
+# Backlog — Plataforma de Descoberta de Jogos Independentes
+
+Checklist de acompanhamento. Detalhes completos de cada item (critério de conclusão, dependências, justificativa) estão na seção 13 de `docs/proposta-tecnica.md` — aqui fica só o essencial para marcar progresso e saber o que vem a seguir.
+
+**Esforço:** P = 2–4h · M = 5–10h · G = 12–20h, já incluindo testes.
+**Marcos:** M0 (semana 2) · M1 (semana 12) · M2 (semana 16) · Congelamento (semana 20) · M3 (semana 22) · Banca (semana 24).
+
+Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra principal existir, o Swagger estiver atualizado se houver endpoint novo, e a mudança estiver implantada).
+
+## E0 — Ambiente e fundação (S1–S2)
+
+- [ ] **B-01** (M) Monorrepositório pnpm (`apps/api`, `apps/web`, `packages/contracts`) + `tsconfig.base` estrito
+- [ ] **B-02** (P) Projetos NestJS 12 e Next.js; Swagger em `/api/docs`; rewrite `/api/*`; verificar compatibilidade CommonJS × Prisma 7
+- [ ] **B-03** (P) ESLint, Prettier, Husky, lint-staged
+- [ ] **B-04** (P) Docker Compose com PostgreSQL local
+- [ ] **B-05** (P) CI: instalação → lint → tipos → testes → migrations (Postgres de serviço) → e2e → build
+- [ ] **B-06** (P) Schema Zod das variáveis de ambiente + `.env.example`
+
+## E1 — Catálogo e ingestão (S3–S4)
+
+- [ ] **B-07** (M) **Spike da IGDB — marco M0:** credenciais, termos de uso, cobertura de campos (país, idioma, resumo, indicador pré-lançamento), tamanho do catálogo, fixtures reais salvas
+- [ ] **B-08** (M) Schema Prisma do catálogo + primeira migration + seed de países/idiomas
+- [ ] **B-09** (M) Cliente IGDB: OAuth Twitch, paginação, limite de requisições, retry
+- [ ] **B-10** (M) Mapeador IGDB → modelo interno
+- [ ] **B-11** (M) Critério indie configurável em JSON
+- [ ] **B-12** (M) Cálculo de IDF e vetores TF-IDF normalizados
+- [ ] **B-13** (G) `RunIngestionUseCase` (aplicação standalone): busca, mapeia, filtra, grava, calcula vetores, registra `IngestionRun`
+- [ ] **B-14** (P) Carga inicial do catálogo real em produção
+
+## E2 — Contas e autenticação (S5)
+
+- [ ] **B-15** (P) Modelos `User` e `Session` + migration
+- [ ] **B-16** (P) Cadastro com Argon2id e e-mail único
+- [ ] **B-17** (M) Login, logout, `GET /auth/me`, `SessionAuthGuard` global, `@Public()`
+- [ ] **B-18** (M) Proteções: throttler no login, helmet, `OriginGuard`, filtro global de exceções, request-id e logs
+- [ ] **B-19** (M) Suíte e2e de autenticação
+
+## E3 — Descoberta e interface pública (S6)
+
+- [ ] **B-20** (M) `GET /games` com busca, filtros (gênero, tema, situação), paginação; `GET /features`
+- [ ] **B-21** (P) Filtros de idioma português e país do estúdio (sujeito ao portão do M0 — pode virar P1)
+- [ ] **B-22** (P) `GET /games/:slug`
+- [ ] **B-23** (M) Página de catálogo com filtros na URL
+- [ ] **B-24** (M) Página do jogo (selo "Em breve", atribuição IGDB, metadados no servidor)
+- [ ] **B-25** (P) Página "Como funciona"
+
+## E4 — Biblioteca do jogador (S7)
+
+- [ ] **B-26** (P) Modelos `Rating`, `ListEntry`, `UserPreference` + migration
+- [ ] **B-27** (M) Endpoints `/me/*`: avaliação, listas, biblioteca, preferências, modo
+- [ ] **B-28** (M) Componentes de avaliação e listas na ficha do jogo
+- [ ] **B-29** (P) Página de perfil (avaliações e listas)
+- [ ] **B-30** (P) E2e de biblioteca e posse dos dados (um usuário não altera dados de outro)
+
+## E5 — Recomendação (S7–S10)
+
+- [ ] **B-31** (M) `ContentIndex`: carga dos vetores na inicialização + recarga protegida por segredo
+- [ ] **B-32** (G) Núcleo de pontuação em funções puras (perfil ponderado, cosseno, popularidade, seleção, desempate, explicação)
+- [ ] **B-33** (M) `GenerateRecommendationsUseCase` + `GET /recommendations` — **marco M2**
+- [ ] **B-34** (M) Partida a frio (gêneros/temas + avaliação opcional de até 4 jogos)
+- [ ] **B-35** (M) Página de recomendações com motivo e seletor de modo
+- [ ] **B-36** (P) E2e de recomendação + teste de determinismo
+- [ ] **B-37** (M) Script de avaliação offline + calibração dos pesos
+
+## E6 — Implantação (S2, contínuo)
+
+- [ ] **B-38** (P) Banco no Neon + `migrate deploy`
+- [ ] **B-39** (M) Implantação da API no Render + `GET /api/health`
+- [ ] **B-40** (P) Implantação do frontend na Vercel
+- [ ] **B-41** (P) Contingência local: dump do banco + restauração no Docker Compose
+
+## E7 — Documentação e acabamento (S11)
+
+- [ ] **B-42** (P) Revisão final do Swagger (exemplos e erros em todos os endpoints P0)
+- [ ] **B-43** (P) README (arquitetura, como rodar local, variáveis, ingestão, testes, implantação, contingência)
+- [ ] **B-45** (M) Correções priorizadas a partir do teste de usabilidade
+
+## E8 — Avaliação e defesa (horas acadêmicas, contínuo)
+
+- [ ] **B-44** (G) Teste de usabilidade com 8–12 jogadores
+- [ ] **B-46** (M) Roteiro de demonstração + dois ensaios (um com contingência local)
+- [ ] **B-47** (—) Escrita do TCC (contínua, ~3h/semana)
+- [ ] **B-48** (M) Slides da defesa
+
+---
+
+## P1 — depois do M2, se houver capacidade (não bloqueia a defesa)
+
+- [ ] **B-49** (P) Registro de cliques de saída
+- [ ] **B-50** (P) Jogos parecidos na ficha
+- [ ] **B-51** (P) Sitemap e robots
+- [ ] **B-52** (P) Exclusão da própria conta
+- [ ] **B-53** (M) Edição de nome e troca de senha
+- [ ] **B-54** (P) Ingestão agendada (GitHub Actions)
+- [ ] **B-55** (M) E2e no navegador (Playwright) do roteiro de demonstração
+
+## P2 — pós-defesa
+
+Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de entrada de cada item (F-22 a F-30: sugestão de jogo, área do estúdio, navegação por cultura, recursos de comunidade, recuperação de senha, recomendação híbrida com embeddings, filtragem colaborativa, avisos de lançamento, importação da Steam).
+
+---
+
+## Marcos — checklist rápido
+
+- [ ] **M0** (semana 2): relatório da IGDB concluído, termos confirmados, portão do B-21 decidido
+- [ ] **M1** (semana 12): catálogo real navegável + contas implantadas
+- [ ] **M2** (semana 16): recomendação ponta a ponta pela API, testada e implantada
+- [ ] **Congelamento** (semana 20): todos os P0 implementados, nenhuma funcionalidade nova depois disso
+- [ ] **M3** (semana 22): critérios de prontidão da seção 16 atendidos, teste de usabilidade feito
+- [ ] **Banca** (semana 24)
+
+## Se o atraso passar de uma sprint
+
+Aplicar o plano de corte da seção 16 do documento, nesta ordem: 1) cortar todo P1 e testes opcionais de frontend; 2) Swagger sem exemplos; 3) B-21 vira P1; 4) partida a frio sem a etapa de avaliação; 5) perfil só leitura; 6) reduzir catálogo por data de lançamento. **Nunca cortar:** contas/sessão, ingestão com critério indie e vetores, catálogo e ficha, avaliações, partida a frio mínima, recomendações com motivo e modos, avaliação offline, testes críticos, implantação e contingência local.
