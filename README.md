@@ -59,6 +59,11 @@ auditoria de dependências (só aviso),
 lint, formatação, tipos, testes unitários, migrations e seed num PostgreSQL 18 de
 serviço, testes e2e contra esse banco e build. Um PR só entra com o CI verde.
 
+Na `main`, depois do CI verde, o job `migrate-production` aplica as migrations
+e o seed no banco de produção (Neon), com a URL direta do banco no secret
+`PRODUCTION_DATABASE_URL` do repositório. Ele também pode ser disparado à mão
+na aba Actions ("Run workflow").
+
 ## Decisões de configuração
 
 **Formato de módulo da API: CommonJS, com Node.js 24** (item B-02, risco R-06).
