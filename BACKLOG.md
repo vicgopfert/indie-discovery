@@ -9,16 +9,16 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 
 ## E0 — Ambiente e fundação (S1–S2)
 
-- [ ] **B-01** (M) Monorrepositório pnpm (`apps/api`, `apps/web`, `packages/contracts`) + `tsconfig.base` estrito
-- [ ] **B-02** (P) Projetos NestJS 12 e Next.js; Swagger em `/api/docs`; rewrite `/api/*`; verificar compatibilidade CommonJS × Prisma 7
-- [ ] **B-03** (P) ESLint, Prettier, Husky, lint-staged
-- [ ] **B-04** (P) PostgreSQL local embutido no projeto (`pnpm db:start`), sem Docker
-- [ ] **B-05** (P) CI: instalação → lint → tipos → testes → migrations (Postgres de serviço) → e2e → build
+- [x] **B-01** (M) Monorrepositório pnpm (`apps/api`, `apps/web`, `packages/contracts`) + `tsconfig.base` estrito
+- [x] **B-02** (P) Projetos NestJS 12 e Next.js; Swagger em `/api/docs`; rewrite `/api/*`; verificar compatibilidade CommonJS × Prisma 7
+- [x] **B-03** (P) ESLint, Prettier, Husky, lint-staged
+- [x] **B-04** (P) PostgreSQL local embutido no projeto (`pnpm db:start`), sem Docker
+- [x] **B-05** (P) CI: instalação → lint → tipos → testes → migrations (Postgres de serviço) → e2e → build
 - [ ] **B-06** (P) Schema Zod das variáveis de ambiente + `.env.example`
 
 ## E1 — Catálogo e ingestão (S3–S4)
 
-- [ ] **B-07** (M) **Spike da IGDB — marco M0:** credenciais, termos de uso, cobertura de campos (país, idioma, resumo, indicador pré-lançamento), tamanho do catálogo, fixtures reais salvas
+- [x] **B-07** (M) **Spike da IGDB — marco M0:** credenciais, termos de uso, cobertura de campos (país, idioma, resumo, indicador pré-lançamento), tamanho do catálogo, fixtures reais salvas
 - [ ] **B-08** (M) Schema Prisma do catálogo + primeira migration + seed de países/idiomas
 - [ ] **B-09** (M) Cliente IGDB: OAuth Twitch, paginação, limite de requisições, retry
 - [ ] **B-10** (M) Mapeador IGDB → modelo interno
@@ -105,7 +105,7 @@ Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de en
 
 ## Marcos — checklist rápido
 
-- [ ] **M0** (semana 2): relatório da IGDB concluído, termos confirmados, portão do B-21 decidido
+- [x] **M0** (semana 2): relatório da IGDB concluído, termos confirmados, portão do B-21 decidido
 - [ ] **M1** (semana 12): catálogo real navegável + contas implantadas
 - [ ] **M2** (semana 16): recomendação ponta a ponta pela API, testada e implantada
 - [ ] **Congelamento** (semana 20): todos os P0 implementados, nenhuma funcionalidade nova depois disso
