@@ -10,7 +10,7 @@ Oct 19, 2026 · @Victor Gopfert
 | Natureza | Trabalho de Conclusão de Curso, modalidade projeto técnico |
 | Curso | Tecnologia em Análise e Desenvolvimento de Sistemas, UERJ |
 | Autor | Victor Gopfert Ferreira Figueiredo |
-| Orientadora | Adriana Aparicio Sicsú Ayres do Nascimento |
+| Orientador | Leonardo da Silva Bóia |
 | Documento de origem | *Plataforma Web de Descoberta de Jogos Independentes: proposta* (versão conceitual, outubro de 2026) |
 
 **Objetivo deste documento:** transformar a proposta conceitual em um plano técnico e de execução que um único desenvolvedor consiga cumprir em menos de seis meses, entregando na defesa um MVP funcional, testado, documentado e demonstrável. Ele é a referência oficial durante a implementação: quando uma decisão aqui conflitar com uma ideia nova, a ideia nova entra no backlog pós-defesa, a menos que substitua algo de mesmo custo.
@@ -1030,8 +1030,8 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | --- | --- | --- | --- | --- | --- |
 | B-44 | Teste de usabilidade com 8 a 12 jogadores (roteiro, sessões, SUS, análise) | P0 | B-34, B-35 | Resultados tabulados e análise escrita | G |
 | B-46 | Roteiro de demonstração e dois ensaios cronometrados, um deles com a contingência local | P0 | B-45, B-41 | Demonstração completa dentro do tempo da banca, nos dois ambientes | M |
-| B-47 | Escrita do TCC (contínua, cerca de 3 horas semanais) | P0 | — | Capítulos entregues à orientadora nos marcos combinados | — |
-| B-48 | Slides da defesa | P0 | B-37, B-44 | Slides revisados pela orientadora | M |
+| B-47 | Escrita do TCC (contínua, cerca de 3 horas semanais) | P0 | — | Capítulos entregues ao orientador nos marcos combinados | — |
+| B-48 | Slides da defesa | P0 | B-37, B-44 | Slides revisados pelo orientador | M |
 
 ### P1: depois do M2, se houver capacidade
 
@@ -1068,7 +1068,7 @@ Com os itens acrescentados no M0 (B-56 a B-58), o ponto médio do P0 passou de 2
 | **M2** Recomendação ponta a ponta pela API | 16 | 07/02/2027 | `GET /recommendations` devolve listas com motivo nos três modos, com o catálogo real, testadas e implantadas |
 | **Congelamento** | 20 | 07/03/2027 | Todos os P0 implementados. A partir daqui, nenhuma funcionalidade nova: só correções, testes, documentação e avaliação |
 | **M3** MVP final | 22 | 21/03/2027 | Critérios de prontidão da seção 16 atendidos, teste de usabilidade realizado |
-| **Banca** | 24 | até 04/04/2027 | Defesa (data exata a confirmar com a orientadora) |
+| **Banca** | 24 | até 04/04/2027 | Defesa (data exata a confirmar com o orientador) |
 
 A sprint S6 (semanas 11–12, entregando o M1) atravessa o recesso de fim de ano. É o ponto mais apertado do cronograma: a premissa de 15 horas semanais não se sustenta nas festas, então a carga deve ser puxada para as semanas 5–10 sempre que possível, deixando o recesso como folga declarada em vez de sprint cheia.
 
@@ -1106,9 +1106,9 @@ As dependências de cada item estão no backlog; a ordem acima respeita todas el
 | 1–8 | Introdução, fundamentação (sistemas de recomendação, viés de popularidade, mercado indie) e metodologia, incluindo as pesquisas de campo já realizadas |
 | 9–18 | Desenvolvimento: requisitos, arquitetura, modelagem, recomendação, testes, a partir deste documento |
 | 19–22 | Avaliação e resultados: avaliação offline (B-37) e usabilidade (B-44) |
-| 23–24 | Conclusão, revisão final com a orientadora, slides e ensaios |
+| 23–24 | Conclusão, revisão final com o orientador, slides e ensaios |
 
-Reuniões com a orientadora a cada sprint, levando o que foi implantado e o trecho escrito. Este documento é revisado em cada marco, registrando o que mudou e por quê.
+Reuniões com o orientador a cada sprint, levando o que foi implantado e o trecho escrito. Este documento é revisado em cada marco, registrando o que mudou e por quê.
 
 ### Margem explícita
 

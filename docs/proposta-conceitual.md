@@ -2,7 +2,7 @@
 
 Oct 19, 2026 · @Victor Gopfert
 
-*Recomendação explicável e controle de popularidade.* Proposta de Trabalho de Conclusão de Curso · Tecnologia em Análise e Desenvolvimento de Sistemas · Universidade do Estado do Rio de Janeiro (UERJ) · Autor: Victor Gopfert Ferreira Figueiredo · Orientadora: Adriana Aparicio Sicsú Ayres do Nascimento
+*Recomendação explicável e controle de popularidade.* Proposta de Trabalho de Conclusão de Curso · Tecnologia em Análise e Desenvolvimento de Sistemas · Universidade do Estado do Rio de Janeiro (UERJ) · Autor: Victor Gopfert Ferreira Figueiredo · Orientador: Leonardo da Silva Bóia
 
 ## 1. Apresentação
 

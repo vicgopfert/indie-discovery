@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: indie-discovery-api
+    runtime: node
+    plan: free
+    region: virginia
+    # --prod=false: com NODE_ENV=production o pnpm pularia as devDependencies que o build usa.
+    buildCommand: corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm --filter @indie/api build
+    startCommand: pnpm --filter @indie/api start
+    healthCheckPath: /api/health
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: WEB_ORIGIN
+        sync: false
+      - key: INTERNAL_RELOAD_SECRET
+        generateValue: true
