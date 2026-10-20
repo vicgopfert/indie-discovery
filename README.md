@@ -68,7 +68,7 @@ na aba Actions ("Run workflow").
 
 | O quê | Onde | Configuração |
 | --- | --- | --- |
-| Site | https://indie-discovery.vercel.app | Vercel, pasta `apps/web`; variáveis `API_URL` e `ENABLE_EXPERIMENTAL_COREPACK=1` no painel |
+| Site | https://indie-discovery.vercel.app | Vercel, pasta `apps/web`, comando de build em `apps/web/vercel.json`; variáveis `API_URL` e `ENABLE_EXPERIMENTAL_COREPACK=1` no painel |
 | API | https://indie-discovery-api.onrender.com | Render, pelo Blueprint `render.yaml`; `DATABASE_URL` (URL com pooling) e `WEB_ORIGIN` no painel |
 | Swagger | https://indie-discovery.vercel.app/api/docs | — |
 | Banco | Neon, PostgreSQL 18, AWS US East | Migrations e seed pelo job `migrate-production` do CI (secret `PRODUCTION_DATABASE_URL`, URL direta) |

@@ -5,7 +5,7 @@ services:
     plan: free
     region: virginia
     # --prod=false: com NODE_ENV=production o pnpm pularia as devDependencies que o build usa.
-    buildCommand: corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm --filter @indie/api build
+    buildCommand: corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm --filter @indie/api... run build
     startCommand: pnpm --filter @indie/api start
     healthCheckPath: /api/health
     autoDeployTrigger: checksPass
