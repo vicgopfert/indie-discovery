@@ -21,6 +21,7 @@ Orientadora: Adriana Aparicio Sicsú Ayres do Nascimento.
 | Contratos | Zod, compartilhados entre os dois lados |
 | Monorrepositório | pnpm workspaces |
 | Runtime | Node.js 24 LTS (≥ 24.9) |
+| Banco local | PostgreSQL 18 embutido (`embedded-postgres`), sem Docker |
 
 ## Estrutura
 
@@ -38,8 +39,8 @@ scripts/          utilitários fora do monorrepositório (spike da IGDB)
 
 ```bash
 pnpm install
-docker compose up -d          # PostgreSQL local
 cp .env.example .env          # preencher as variáveis
+pnpm db:start                 # PostgreSQL local (pnpm db:stop para desligar)
 pnpm --filter @indie/api exec prisma migrate dev
 pnpm dev
 ```
@@ -59,6 +60,23 @@ suporte em abril de 2027, perto da banca.
 O cliente do Prisma 7 é gerado em `apps/api/src/generated/prisma` com
 `moduleFormat = "cjs"` (fora do Git, gerado no `pnpm install`). O Jest mapeia
 os imports `./arquivo.js` do código gerado para os `.ts` correspondentes.
+
+### Banco de dados local
+
+O PostgreSQL 18 vem como dependência do projeto (pacote `embedded-postgres`, com
+os binários oficiais): não precisa de Docker, instalador nem permissão de
+administrador. `pnpm db:start` cria o cluster na primeira vez, sobe o servidor
+em segundo plano e cria o banco; `pnpm db:stop` desliga; `pnpm db:status` informa
+se está no ar. Porta, usuário, senha e nome do banco vêm da `DATABASE_URL` do
+`.env`, e os dados ficam em `.data/postgres` (fora do Git).
+
+Qualquer cliente PostgreSQL (pgAdmin, DBeaver, extensão do VS Code) conecta com
+os dados da `DATABASE_URL`. O Prisma Studio já vem com o projeto:
+`pnpm --filter @indie/api exec prisma studio`.
+
+Se a porta 5432 estiver ocupada (outro PostgreSQL instalado, por exemplo), o
+`db:start` falha e indica o log em `.data/postgres.log`; troque a porta na
+`DATABASE_URL` do `.env`.
 
 ## Documentação
 

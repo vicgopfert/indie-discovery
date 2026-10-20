@@ -1,9 +1,12 @@
 # scripts
 
-Utilitários que rodam fora do monorrepositório, sem dependências e sem build.
+Utilitários em Node puro, sem build, que rodam fora dos pacotes do monorrepositório. O
+`db.mjs` usa duas dependências de desenvolvimento da raiz (`embedded-postgres` e `pg`);
+o spike da IGDB não tem dependências.
 
 | Script | Item | O que faz |
 | --- | --- | --- |
+| `db.mjs` | B-04 | Sobe, desliga e informa o estado do PostgreSQL local embutido; chamado por `pnpm db:start`, `db:stop` e `db:status` |
 | `igdb-spike.mjs` | B-07 (M0) | Percorre todos os jogos indie da IGDB, mede a cobertura dos campos e o tamanho de recortes candidatos e gera o relatório do M0 e as fixtures dos testes do B-10 |
 
 ```bash

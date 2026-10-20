@@ -28,3 +28,6 @@ npm-debug.log*
 pnpm-debug.log*
 
 scripts/out/
+
+# PostgreSQL local (pnpm db:start)
+.data/

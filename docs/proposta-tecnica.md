@@ -36,7 +36,7 @@ As decisões centrais:
 
 O MVP tem 16 funcionalidades P0, que demonstram a proposta central de ponta a ponta: cadastro, catálogo independente com filtros, coleções culturais curadas, ficha do jogo, avaliações e listas, partida a frio, recomendações com motivo, seleção do grau de novidade e uma avaliação offline mensurável do recomendador.
 
-O cronograma tem 24 semanas, com a premissa de 15 horas semanais dedicadas ao TCC. Prevê implantação já na semana 4, recomendação funcionando pela API na semana 16, congelamento de funcionalidades ao fim da semana 20 e duas semanas finais de margem antes da banca. Um ambiente local completo em Docker serve de contingência para a demonstração.
+O cronograma tem 24 semanas, com a premissa de 15 horas semanais dedicadas ao TCC. Prevê implantação já na semana 4, recomendação funcionando pela API na semana 16, congelamento de funcionalidades ao fim da semana 20 e duas semanas finais de margem antes da banca. Um ambiente local completo, com PostgreSQL embutido no projeto, serve de contingência para a demonstração.
 
 ## 3. Escopo e premissas
 
@@ -64,7 +64,7 @@ O cronograma tem 24 semanas, com a premissa de 15 horas semanais dedicadas ao TC
 | PR-02 | Cerca de 15 horas semanais dedicadas ao TCC: 12 de desenvolvimento e 3 de escrita e atividades acadêmicas | Com menos horas, aplicar o plano de corte da seção 16 já no marco M1 |
 | PR-03 | 24 semanas até a banca, ancoradas no fim do período letivo em 24/04/2027 | Ao saber a data exata da defesa, recalcular os marcos a partir dela |
 | PR-04 | A API da IGDB continua gratuita para uso não comercial, com atribuição visível | Confirmar os termos na tarefa B-07; se mudarem, o MVP roda com um recorte salvo do catálogo |
-| PR-05 | Hospedagem e banco em camadas gratuitas, sem cartão de crédito | O ambiente local em Docker é a contingência oficial da demonstração |
+| PR-05 | Hospedagem e banco em camadas gratuitas, sem cartão de crédito | O ambiente local (PostgreSQL embutido, B-04) é a contingência oficial da demonstração |
 | PR-06 | O catálogo recortado tem cerca de 20 mil jogos. **Revisada no M0 (19/10/2026):** a premissa original era "poucos milhares", mas a IGDB tem 130 mil jogos indie; o recorte aprovado (relatório do M0, `docs/m0-relatorio-igdb.md`, seção 8) mantém só jogos com ficha completa e algum sinal de interesse | Reduzir o recorte (por exemplo, por ano de lançamento) até caber no banco gratuito e na memória da API |
 | PR-07 | As pesquisas de campo de outubro de 2026 já estão concluídas e entram no TCC como metodologia | Nenhuma nova pesquisa é necessária antes do teste de usabilidade |
 
@@ -156,7 +156,7 @@ Um único repositório com *workspaces* do pnpm:
 │  └─ web/          Next.js: interface
 ├─ packages/
 │  └─ contracts/    schemas Zod e tipos compartilhados
-├─ docker-compose.yml
+├─ scripts/db.mjs       PostgreSQL local (pnpm db:start / db:stop)
 ├─ tsconfig.base.json
 └─ pnpm-workspace.yaml
 ```
@@ -252,7 +252,7 @@ Todas as variáveis (`DATABASE_URL`, `PORT`, `SESSION_TTL_DAYS`, `WEB_ORIGIN`, `
 | cookie-parser | Obrigatória | Leitura do cookie de sessão | Necessário para a autenticação por sessão |
 | argon2 | Obrigatória | Hash de senha (Argon2id) | Algoritmo recomendado pela OWASP para armazenamento de senhas |
 | Prisma 7 + `@prisma/adapter-pg` | Obrigatória | ORM, migrations e seed | Schema declarativo, migrations versionadas e cliente tipado. No Prisma 7 o gerador é `prisma-client` com `output` obrigatório, o cliente exige *driver adapter* e a URL do banco fica em `prisma.config.ts`; o seed roda explicitamente com `prisma db seed` |
-| PostgreSQL | Obrigatória | Banco relacional | Mesma versão principal no ambiente local e no provedor |
+| PostgreSQL 18 | Obrigatória | Banco relacional | Mesma versão principal no ambiente local e no provedor; o Neon oferece a 18 |
 | Logger nativo do Nest em modo JSON | Recomendada | Logs estruturados (RNF-07) | O `ConsoleLogger` do Nest aceita saída em JSON; um middleware acrescenta o `requestId`. Sem dependência extra |
 | pino (via `nestjs-pino`) | Opcional | Logs estruturados alternativos | Só se o logger nativo não atender na hospedagem |
 
@@ -275,7 +275,7 @@ Todas as variáveis (`DATABASE_URL`, `PORT`, `SESSION_TTL_DAYS`, `WEB_ORIGIN`, `
 | Vitest + Testing Library | Opcional | Testes de componentes do frontend | Apenas para componentes com lógica (avaliação, seletor de modo) |
 | Playwright | Opcional (P1) | Testes ponta a ponta no navegador | Útil para o fluxo da demonstração, mas não é condição para a defesa |
 | GitHub Actions | Obrigatória | CI | Gratuito para repositório público; aceita PostgreSQL como serviço no job de testes |
-| Docker Compose | Obrigatória | Ambiente local completo | Banco local idêntico entre máquinas e plano de contingência para a demonstração |
+| PostgreSQL embutido (`embedded-postgres`) | Obrigatória | Banco local | Binários oficiais do PostgreSQL 18 instalados pelo `pnpm install`, sem Docker nem permissão de administrador; banco local idêntico entre máquinas e base da contingência da demonstração. **Substitui o Docker Compose**, indisponível na máquina do autor (B-04, 19/10/2026). O pacote é marcado como beta no npm, por isso a versão fica fixada |
 
 ### Hospedagem sem custo
 
@@ -286,7 +286,7 @@ Todas as variáveis (`DATABASE_URL`, `PORT`, `SESSION_TTL_DAYS`, `WEB_ORIGIN`, `
 | Banco | Neon, plano gratuito | 1 GB por projeto; o computador do banco suspende após 5 minutos ociosos e volta na primeira consulta | O catálogo recortado, de cerca de 20 mil jogos, cabe com folga; o banco não expira |
 | Banco (descartado) | Render Postgres gratuito | Expira 30 dias após a criação | Não serve para um projeto de 24 semanas |
 
-Os limites dos planos gratuitos mudam com frequência. Eles devem ser conferidos de novo na semana 3 (B-38) e na semana 21. Se qualquer serviço deixar de atender, a contingência é o ambiente Docker Compose local com um dump do banco (B-41), ensaiado antes da defesa.
+Os limites dos planos gratuitos mudam com frequência. Eles devem ser conferidos de novo na semana 3 (B-38) e na semana 21. Se qualquer serviço deixar de atender, a contingência é o ambiente local, com o PostgreSQL embutido e um dump do banco (B-41), ensaiado antes da defesa.
 
 ## 7. Organização do código e padrões
 
@@ -944,7 +944,7 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | B-01 | Monorrepositório pnpm com `apps/api`, `apps/web`, `packages/contracts` e `tsconfig.base` estrito | P0 | — | Os três pacotes compilam; `contracts` é importado pela API e pelo frontend | M |
 | B-02 | Projetos NestJS 12 e Next.js criados; Swagger em `/api/docs`; prefixo `/api`; *rewrite* `/api/*`; verificação de compatibilidade CommonJS × Prisma 7 | P0 | B-01 | Página do Next.js chama uma rota da API pela mesma origem; decisão CJS ou ESM registrada no README | P |
 | B-03 | ESLint, Prettier, Husky e lint-staged na raiz | P0 | B-01 | Commit com erro de lint é bloqueado | P |
-| B-04 | Docker Compose com PostgreSQL local | P0 | B-01 | `docker compose up` sobe o banco com a mesma versão principal do provedor | P |
+| B-04 | PostgreSQL local embutido no projeto (`pnpm db:start` / `db:stop`), em vez de Docker Compose, que ficou indisponível na máquina do autor (decisão de 19/10/2026) | P0 | B-01 | `pnpm db:start` sobe o banco com a mesma versão principal do provedor | P |
 | B-05 | Pipeline de CI: instalação, lint, tipos, testes, build; PostgreSQL de serviço para e2e | P0 | B-03 | PR com teste falhando fica vermelho; e2e de exemplo roda contra o banco de serviço | P |
 | B-06 | Schema Zod das variáveis de ambiente e `.env.example` | P0 | B-02 | API não sobe sem variável obrigatória e informa qual falta | P |
 
@@ -1011,10 +1011,10 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 
 | ID | Item | Prior. | Depende de | Critério de conclusão | Esf. |
 | --- | --- | --- | --- | --- | --- |
-| B-38 | Banco no Neon; `migrate deploy` na implantação; limites do plano conferidos | P0 | — | Migrations aplicadas no banco remoto a partir do pipeline | P |
+| B-38 | Banco no Neon, criado com PostgreSQL 18; `migrate deploy` na implantação; limites do plano conferidos | P0 | — | Migrations aplicadas no banco remoto a partir do pipeline | P |
 | B-39 | Implantação da API no Render com variáveis de ambiente e `GET /api/health` (F-15) | P0 | B-02, B-38 | Rota de saúde pública responde e informa o estado do banco | M |
 | B-40 | Implantação do frontend na Vercel com *rewrite* para a API | P0 | B-02 | Cookie de sessão funciona no ambiente implantado | P |
-| B-41 | Contingência local: dump do banco de produção, restauração no Docker Compose e roteiro de troca | P0 | B-04, B-14 | Demonstração completa roda só na máquina local, sem internet além das capas | P |
+| B-41 | Contingência local: dump do banco de produção, restauração no PostgreSQL embutido e roteiro de troca. O pacote embutido não traz `pg_dump` nem `pg_restore`: usar os binários portáteis oficiais do PostgreSQL 18 | P0 | B-04, B-14 | Demonstração completa roda só na máquina local, sem internet além das capas | P |
 
 ### E7. Documentação e acabamento
 
