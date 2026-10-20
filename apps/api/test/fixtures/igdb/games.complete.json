@@ -1,0 +1,5557 @@
+[
+  {
+    "id": 111,
+    "cover": {
+      "id": 81293,
+      "image_id": "co1qq5"
+    },
+    "first_release_date": 1283904000,
+    "genres": [
+      {
+        "id": 9,
+        "name": "Puzzle"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 75227,
+        "company": {
+          "id": 36,
+          "country": 752,
+          "name": "Frictional Games"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 98,
+        "name": "monsters"
+      },
+      {
+        "id": 129,
+        "name": "bloody"
+      },
+      {
+        "id": 223,
+        "name": "dark"
+      },
+      {
+        "id": 278,
+        "name": "germany"
+      },
+      {
+        "id": 1032,
+        "name": "insanity"
+      },
+      {
+        "id": 1295,
+        "name": "lovecraftian"
+      },
+      {
+        "id": 1308,
+        "name": "gore"
+      },
+      {
+        "id": 1437,
+        "name": "hiding"
+      },
+      {
+        "id": 1440,
+        "name": "artificial intelligence"
+      },
+      {
+        "id": 1836,
+        "name": "survival horror"
+      },
+      {
+        "id": 1881,
+        "name": "amnesia"
+      },
+      {
+        "id": 2010,
+        "name": "19th century"
+      },
+      {
+        "id": 2113,
+        "name": "castle"
+      },
+      {
+        "id": 2169,
+        "name": "chemistry"
+      },
+      {
+        "id": 2451,
+        "name": "physics puzzles"
+      },
+      {
+        "id": 3203,
+        "name": "darkness"
+      },
+      {
+        "id": 4004,
+        "name": "steam achievements"
+      },
+      {
+        "id": 4287,
+        "name": "voice acting"
+      },
+      {
+        "id": 4359,
+        "name": "polygonal 3d"
+      },
+      {
+        "id": 4637,
+        "name": "corpse"
+      },
+      {
+        "id": 4897,
+        "name": "auto-saving"
+      },
+      {
+        "id": 4993,
+        "name": "invisible enemy"
+      },
+      {
+        "id": 4998,
+        "name": "betrayal"
+      },
+      {
+        "id": 5422,
+        "name": "bread"
+      },
+      {
+        "id": 5564,
+        "name": "british accent"
+      },
+      {
+        "id": 5628,
+        "name": "water level"
+      },
+      {
+        "id": 5651,
+        "name": "physics manipulation"
+      },
+      {
+        "id": 6324,
+        "name": "book tie-in"
+      },
+      {
+        "id": 6326,
+        "name": "ambient music"
+      },
+      {
+        "id": 6692,
+        "name": "aggressive door-opening"
+      },
+      {
+        "id": 7314,
+        "name": "cockroach"
+      },
+      {
+        "id": 9045,
+        "name": "breaking through windows"
+      },
+      {
+        "id": 23933,
+        "name": "male protagonist"
+      },
+      {
+        "id": 25173,
+        "name": "eldritch horror"
+      },
+      {
+        "id": 45699,
+        "name": "first person horror"
+      }
+    ],
+    "name": "Amnesia: The Dark Descent",
+    "rating_count": 546,
+    "slug": "amnesia-the-dark-descent",
+    "storyline": "The game, set in 1839, casts the player in the role of Daniel, a young man from London, who awakens in the dark halls of Prussian Brennenburg Castle with little to no memory about himself or his past. All he can remember is his name, that he lives in Mayfair and that something is hunting him. Shortly after waking, Daniel finds a note written by himself that explains how he purposely made himself forget his past, because he couldn't handle losing his innocence, so he wanted to forget it all. The note urges Daniel to descend into the castle's Inner Sanctum and murder a man named Alexander , the baron of the castle. The note gives a final warning that a \"living nightmare\" is chasing him, and Daniel must escape it for as long as he can because there is no way to fight back.",
+    "summary": "Amnesia: The Dark Descent is a survival horror video game by Frictional Games. The game features a protagonist named Daniel exploring a dark and foreboding castle, while trying to maintain his sanity by avoiding monsters and other terrifying obstructions. The game was critically well received.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 19,
+        "name": "Horror"
+      },
+      {
+        "id": 21,
+        "name": "Survival"
+      }
+    ],
+    "total_rating_count": 548,
+    "url": "https://www.igdb.com/games/amnesia-the-dark-descent",
+    "websites": [
+      {
+        "id": 523159,
+        "url": "https://www.youtube.com/@frictionalgames",
+        "type": 9
+      },
+      {
+        "id": 118579,
+        "url": "https://www.gog.com/game/amnesia_the_dark_descent",
+        "type": 17
+      },
+      {
+        "id": 146526,
+        "url": "https://www.reddit.com/r/Amnesia",
+        "type": 14
+      },
+      {
+        "id": 15074,
+        "url": "https://store.steampowered.com/app/57300",
+        "type": 13
+      },
+      {
+        "id": 15073,
+        "url": "http://www.amnesiagame.com",
+        "type": 1
+      },
+      {
+        "id": 101672,
+        "url": "https://amnesia.fandom.com/wiki/Amnesia:_The_Dark_Descent",
+        "type": 2
+      },
+      {
+        "id": 287249,
+        "url": "https://store.epicgames.com/en-US/p/amnesia-the-dark-descent",
+        "type": 16
+      },
+      {
+        "id": 309038,
+        "url": "https://discord.gg/frictionalgames",
+        "type": 18
+      },
+      {
+        "id": 101670,
+        "url": "https://en.wikipedia.org/wiki/Amnesia:_The_Dark_Descent",
+        "type": 3
+      },
+      {
+        "id": 332987,
+        "url": "https://www.twitch.tv/directory/game/Amnesia:%20The%20Dark%20Descent",
+        "type": 6
+      },
+      {
+        "id": 309040,
+        "url": "https://facebook.com/frictionalgames",
+        "type": 4
+      },
+      {
+        "id": 309039,
+        "url": "https://twitter.com/frictionalgames",
+        "type": 5
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 478453,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 478456,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 478457,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 478454,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 478455,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 478458,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 478459,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 478460,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 478461,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 536120,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 536122,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 536123,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 536124,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 536125,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 536126,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 536127,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 8499,
+    "cover": {
+      "id": 391943,
+      "image_id": "co8efb"
+    },
+    "first_release_date": 1407456000,
+    "genres": [
+      {
+        "id": 2,
+        "name": "Point-and-click"
+      },
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 206916,
+        "company": {
+          "id": 8653,
+          "country": 840,
+          "name": "Scottgames"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 575,
+        "name": "robots"
+      },
+      {
+        "id": 2493,
+        "name": "steam greenlight"
+      },
+      {
+        "id": 3203,
+        "name": "darkness"
+      },
+      {
+        "id": 4134,
+        "name": "digital distribution"
+      },
+      {
+        "id": 4162,
+        "name": "anthropomorphism"
+      },
+      {
+        "id": 4583,
+        "name": "white noise"
+      },
+      {
+        "id": 4791,
+        "name": "faceless protagonist"
+      },
+      {
+        "id": 4877,
+        "name": "titular antagonist"
+      },
+      {
+        "id": 5176,
+        "name": "jump scare moment"
+      },
+      {
+        "id": 5812,
+        "name": "surveillance camera"
+      },
+      {
+        "id": 6392,
+        "name": "day-based narrative"
+      },
+      {
+        "id": 31191,
+        "name": "animatronics"
+      },
+      {
+        "id": 37089,
+        "name": "mascot horror"
+      }
+    ],
+    "name": "Five Nights at Freddy's",
+    "rating_count": 180,
+    "slug": "five-nights-at-freddys",
+    "storyline": "Freddy Fazbear's Pizza was once a popular restaurant for adults and children alike. However, due to a number of incidents including the kidnapping and implied murder of five children by a man wearing an empty animatronic suit, sanctions by the Health Department over the numerous reports of dirtiness, and \"The Bite of '87\", the pizzeria has fallen on hard times. Freddy Fazbear's Pizza is set to close by the end of the year, as potential buyers do not want to be associated with the tainted reputation of the company.\n\nThe four mascots - Freddy Fazbear, Bonnie the Rabbit, Chica the Chicken, and Foxy the Pirate had a particularly foul odor and what appeared to be \"blood and mucus\" around their eyes and mouths, which concerned parents had interpreted as \"reanimated carcasses\".",
+    "summary": "Welcome to your new summer job at Freddy Fazbear's Pizza, where kids and parents alike come for entertainment and food as far as the eye can see! The main attraction is Freddy Fazbear, of course; and his two friends. They are animatronic robots, programmed to please the crowds! The robots' behavior has become somewhat unpredictable at night however, and it was much cheaper to hire you as a security guard than to find a repairman.\n\nFrom your small office you must watch the security cameras carefully. You have a very limited amount of electricity that you're allowed to use per night (corporate budget cuts, you know). That means when you run out of power for the night- no more security doors and no more lights! If something isn't right- namely if Freddybear or his friends aren't in their proper places, you must find them on the monitors and protect yourself if needed!\n\nCan you survive five nights at Freddy's?",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 19,
+        "name": "Horror"
+      },
+      {
+        "id": 21,
+        "name": "Survival"
+      }
+    ],
+    "total_rating_count": 183,
+    "url": "https://www.igdb.com/games/five-nights-at-freddys",
+    "websites": [
+      {
+        "id": 332568,
+        "url": "https://www.twitch.tv/directory/game/Five%20Nights%20at%20Freddy's",
+        "type": 6
+      },
+      {
+        "id": 552945,
+        "url": "https://www.youtube.com/@animdude",
+        "type": 9
+      },
+      {
+        "id": 66406,
+        "url": "http://www.scottgames.com",
+        "type": 1
+      },
+      {
+        "id": 648340,
+        "url": "https://twitter.com/FNAF_ScottGames",
+        "type": 5
+      },
+      {
+        "id": 20207,
+        "url": "https://en.wikipedia.org/wiki/Five_Nights_at_Freddy%27s",
+        "type": 3
+      },
+      {
+        "id": 240034,
+        "url": "https://www.reddit.com/r/fivenightsatfreddys",
+        "type": 14
+      },
+      {
+        "id": 20208,
+        "url": "https://store.steampowered.com/app/319510",
+        "type": 13
+      },
+      {
+        "id": 648341,
+        "url": "https://discord.gg/fnafreddys",
+        "type": 18
+      },
+      {
+        "id": 240035,
+        "url": "https://freddy-fazbears-pizza.fandom.com/wiki/Five_Nights_at_Freddy%27s",
+        "type": 2
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 795924,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 795955,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 10541,
+    "cover": {
+      "id": 127859,
+      "image_id": "co2qnn"
+    },
+    "first_release_date": 1383004800,
+    "genres": [
+      {
+        "id": 9,
+        "name": "Puzzle"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 25500,
+        "company": {
+          "id": 6218,
+          "country": 826,
+          "name": "Wales Interactive"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 1033,
+        "name": "action-adventure"
+      },
+      {
+        "id": 1158,
+        "name": "steam"
+      },
+      {
+        "id": 1494,
+        "name": "steam trading cards"
+      },
+      {
+        "id": 4004,
+        "name": "steam achievements"
+      },
+      {
+        "id": 4134,
+        "name": "digital distribution"
+      },
+      {
+        "id": 4135,
+        "name": "xbox controller support for pc"
+      },
+      {
+        "id": 4138,
+        "name": "single-player only"
+      },
+      {
+        "id": 4150,
+        "name": "steam cloud"
+      },
+      {
+        "id": 5896,
+        "name": "dynamic soundtrack"
+      },
+      {
+        "id": 9000,
+        "name": "psychics"
+      }
+    ],
+    "name": "Master Reboot",
+    "rating_count": 8,
+    "slug": "master-reboot",
+    "storyline": "When you begin the game your identity is unknown. You are simply a digital representation of who you once were when you were alive, transferred into an endless network of people’s memories called the Soul Cloud. Beginning your transfer into your new digital existence is simple: you sit on a monorail transporting you to your new home, a place where you can live out all your favorite memories for all time. But something is different… a feeling of anxiety comes over you and something strange happens, causing you to black out. Waking up on a deserted beach without any knowledge of who you are or where you are, you bring yourself to your feet. Looking around you, everything you used to know has seemingly been wiped from your memory. Why did this happen? Did someone do this on purpose? If so, was it meant for you or someone else?\n\nIt's up to you to piece your memories together to find out all these answers by solving the puzzles in each memory from your past that are housed in there own rooms. However, this won’t be an easy task as not only are these puzzles very difficult, but you are also pursued by the Soul Cloud’s anti-virus who believes that you are the cause of all these 'problems' in the network. Every puzzle solved unlocks a memory which reveals more about your life when you were alive: a walk on a beach, visiting loved ones now lost from your life and confronting demons who have manipulated your career and very existence.\n\nOnce you have pieced together all your memories the games narrative and game play will lead you to a dramatic climax which brings the answers you are looking for but also questions the very nature of life and your creations coming back to haunt you.",
+    "summary": "Imagine a world where death is no longer final, where precious memories are saved to enjoy forever, where your soul is immortal, welcome to the Soul Cloud. Upload your soul to our dedicated servers and relax knowing that a part of you will live on for eternity. That favorite holiday, happy moments from your childhood, meeting that special someone for the first time. All these memories saved for your digital soul for your family to revisit again and again. The Soul Cloud - saving your past to secure your future.\n\nMaster Reboot is a haunting first person sci-fi adventure horror game set inside the Soul Cloud. It's an exploration game with action and puzzle elements set across 34 unique environments. In the not-too-distant future exists the Soul Cloud, a giant server that holds the data of your soul and your memories when you die. The Soul Cloud is filled with floating islands, each island looks like a town, village or city filled with rooms, skyscrapers and houses that hold people’s memories. To house your Soul, a family member (or you before you die) must purchase an island on the Soul Cloud where the server will generate rooms, houses or skyscrapers that hold each and every memory from the deceased’s past. The game features a distinctive visual style, intriguing story-line, psychological adventure-game action and a dynamic atmospheric soundtrack. Get prepared for upload......Where am I?.....Who am I?......It's time to piece your life......and death back together.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 18,
+        "name": "Science fiction"
+      },
+      {
+        "id": 19,
+        "name": "Horror"
+      }
+    ],
+    "total_rating_count": 11,
+    "url": "https://www.igdb.com/games/master-reboot",
+    "websites": [
+      {
+        "id": 850981,
+        "url": "https://www.nintendo.com/games/detail/master-reboot-wii-u/",
+        "type": 24
+      },
+      {
+        "id": 44603,
+        "url": "https://store.steampowered.com/app/251850",
+        "type": 13
+      },
+      {
+        "id": 347432,
+        "url": "https://www.twitch.tv/directory/game/Master%20Reboot",
+        "type": 6
+      },
+      {
+        "id": 44602,
+        "url": "http://www.walesinteractive.com/#!master-reboot/c1vts",
+        "type": 1
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 76154,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 76155,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 76156,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 15079,
+    "cover": {
+      "id": 123847,
+      "image_id": "co2nk7"
+    },
+    "first_release_date": 1298851200,
+    "genres": [
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 29054,
+        "company": {
+          "id": 7532,
+          "name": "Red Redemption"
+        },
+        "developer": true,
+        "publisher": true
+      },
+      {
+        "id": 110810,
+        "company": {
+          "id": 28782,
+          "name": "Soothsayer Games"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 994,
+        "name": "management"
+      },
+      {
+        "id": 1158,
+        "name": "steam"
+      },
+      {
+        "id": 4004,
+        "name": "steam achievements"
+      },
+      {
+        "id": 4150,
+        "name": "steam cloud"
+      },
+      {
+        "id": 4541,
+        "name": "original soundtrack release"
+      },
+      {
+        "id": 5262,
+        "name": "steam play"
+      },
+      {
+        "id": 7417,
+        "name": "indie royale"
+      }
+    ],
+    "name": "Fate of the World",
+    "rating_count": 4,
+    "slug": "fate-of-the-world",
+    "summary": "Fate of the World is a dramatic global strategy game that puts all our futures in your hands. The game features a dramatic set of scenarios based on the latest science covering the next two centuries. You must manage a balancing act of protecting the Earth’s resources and climate versus the needs of an ever-growing world population, who are demanding ever more food, power, and living space.\n\nFate of the World is brought to you by the award-winning Red Redemption games team and Battlestations: Midway Producer Klaude Thomas with climate science by Dr. Myles Allen (University of Oxford), writing by David Bishop (Dr. Who, 2000AD) and music composed by Richard Jacques (Mass Effect, Alice in Wonderland) with game design by veteran game designer Matthew Miles Griffiths (Conflict: Desert Storm, Battlestations: Midway).",
+    "themes": [
+      {
+        "id": 33,
+        "name": "Sandbox"
+      },
+      {
+        "id": 34,
+        "name": "Educational"
+      }
+    ],
+    "total_rating_count": 5,
+    "url": "https://www.igdb.com/games/fate-of-the-world",
+    "websites": [
+      {
+        "id": 336111,
+        "url": "https://www.twitch.tv/directory/game/Fate%20of%20the%20World",
+        "type": 6
+      },
+      {
+        "id": 157690,
+        "url": "https://en.wikipedia.org/wiki/Fate_of_the_World",
+        "type": 3
+      },
+      {
+        "id": 45294,
+        "url": "https://store.steampowered.com/app/80200",
+        "type": 13
+      },
+      {
+        "id": 157689,
+        "url": "http://www.soothsayergames.com/what-we-do/",
+        "type": 1
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 29698,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 29699,
+        "language": {
+          "id": 6,
+          "name": "Dutch",
+          "locale": "nl-NL"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 29700,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 17659,
+    "cover": {
+      "id": 85958,
+      "image_id": "co1ubq"
+    },
+    "first_release_date": 1390262400,
+    "genres": [
+      {
+        "id": 14,
+        "name": "Sport"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 32530,
+        "company": {
+          "id": 8912,
+          "name": "Ludeme Games"
+        },
+        "developer": true,
+        "publisher": true
+      },
+      {
+        "id": 87804,
+        "company": {
+          "id": 8552,
+          "country": 840,
+          "name": "Sirlin Games"
+        },
+        "developer": true,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 380,
+        "name": "chess"
+      },
+      {
+        "id": 1158,
+        "name": "steam"
+      },
+      {
+        "id": 1293,
+        "name": "achievements"
+      },
+      {
+        "id": 1297,
+        "name": "asymmetric gameplay"
+      },
+      {
+        "id": 1333,
+        "name": "online"
+      },
+      {
+        "id": 2180,
+        "name": "cross-platform multiplayer"
+      },
+      {
+        "id": 4004,
+        "name": "steam achievements"
+      },
+      {
+        "id": 4134,
+        "name": "digital distribution"
+      },
+      {
+        "id": 4150,
+        "name": "steam cloud"
+      },
+      {
+        "id": 4248,
+        "name": "tactical turn-based combat"
+      },
+      {
+        "id": 5821,
+        "name": "chessboard"
+      }
+    ],
+    "name": "Chess 2: The Sequel",
+    "rating_count": 0,
+    "slug": "chess-2-the-sequel",
+    "summary": "Chess 2: The Sequel is the next step in the evolution of chess tuned for more viable options, strategic interest, and years and years of expert play.",
+    "total_rating_count": 2,
+    "url": "https://www.igdb.com/games/chess-2-the-sequel",
+    "websites": [
+      {
+        "id": 125624,
+        "url": "https://en.wikipedia.org/wiki/Chess_2:_The_Sequel",
+        "type": 3
+      },
+      {
+        "id": 24649,
+        "url": "http://ludemegames.com/chess2",
+        "type": 1
+      },
+      {
+        "id": 338700,
+        "url": "https://www.twitch.tv/directory/game/Chess%202:%20The%20Sequel",
+        "type": 6
+      },
+      {
+        "id": 24648,
+        "url": "https://store.steampowered.com/app/314340",
+        "type": 13
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 465900,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 465901,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 465902,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 20788,
+    "cover": {
+      "id": 95180,
+      "image_id": "co21fw"
+    },
+    "first_release_date": 1471305600,
+    "genres": [
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 37684,
+        "company": {
+          "id": 10384,
+          "name": "Polyslash"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 37685,
+        "company": {
+          "id": 9005,
+          "country": 616,
+          "name": "PlayWay S.A."
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 134580,
+        "company": {
+          "id": 4741,
+          "country": 616,
+          "name": "Forever Entertainment S.A."
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 947,
+        "name": "spaceship"
+      }
+    ],
+    "name": "Phantaruk",
+    "rating_count": 1,
+    "slug": "phantaruk",
+    "storyline": "For long has the humanity been constrained by limits of human body. Most have accepted the imperfection of flesh, but some sought for liberation. To pursue the dream of creating a post-human being – to achieve ideas of transhumanism – is the driving force behind H+ Corporation. Within its facilities technology and homo sapiens became one entity. An organism devoid of humanity’s biological weaknesses.\n\nYou board the spaceship Purity-02 – prime complex of the H+ Corporation.\n\nThe dream shatters to a nightmare when you realize what has become of Purity-02. Once a research vessel, it has turned into a deadly, deserted trap. To flee Purity-02 you have to investigate the mysteries of the ship. With every passing minute the chances of survival grow slim. Infected with a parasite emitting deadly toxins, you struggle against havoc being wrought within your body. But there is yet a greater danger to evade.\n\nA beast is roaming the ship. A creature known from long-forgotten fables and ancient myths. It could prowl around in any shadow and lurk behind any corner. You must plan your every move. You must survive the infection.\n\nYou Must Get Off the Ship.",
+    "summary": "Phantaruk combines survival horror with adventure and stealth mechanics. Expect true shivers down your spine as you fight for your life not only facing the dangers of the Purity-02 spaceship, but most of all - when you try to get rid of toxins continually destroying you from the inside",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 18,
+        "name": "Science fiction"
+      },
+      {
+        "id": 19,
+        "name": "Horror"
+      },
+      {
+        "id": 21,
+        "name": "Survival"
+      },
+      {
+        "id": 23,
+        "name": "Stealth"
+      }
+    ],
+    "total_rating_count": 1,
+    "url": "https://www.igdb.com/games/phantaruk",
+    "websites": [
+      {
+        "id": 788953,
+        "url": "https://www.nintendo.com/games/detail/phantaruk-switch/",
+        "type": 24
+      },
+      {
+        "id": 48708,
+        "url": "https://store.steampowered.com/app/468930",
+        "type": 13
+      },
+      {
+        "id": 48707,
+        "url": "http://phantaruk.com",
+        "type": 1
+      },
+      {
+        "id": 401484,
+        "url": "https://www.twitch.tv/directory/game/Phantaruk",
+        "type": 6
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 64673,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 64674,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 64675,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 64676,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 64669,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 64667,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 64670,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 64671,
+        "language": {
+          "id": 19,
+          "name": "Polish",
+          "locale": "pl-PL"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 64672,
+        "language": {
+          "id": 19,
+          "name": "Polish",
+          "locale": "pl-PL"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 26577,
+    "cover": {
+      "id": 429334,
+      "image_id": "co979y"
+    },
+    "first_release_date": 1481587200,
+    "genres": [
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 43112,
+        "company": {
+          "id": 11823,
+          "name": "Quantum Phoenix"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 215,
+        "name": "detective"
+      }
+    ],
+    "name": "The Butterfly Sign",
+    "rating_count": 3,
+    "slug": "the-butterfly-sign",
+    "storyline": "The Butterfly Sign is a first person detective story putting players in shoes of the lone survivor and the only witness to a disastrous incident. The protagonist’s destiny depends on his memories. That is why he dares to take a desperate measure. He takes an experimental drug \"Rammex\" which immerses him in the depths of his mind and precisely restores all the events occurred to him. In his memories, the protagonist will discover the ones responsible for the disaster, collecting clues bit by bit…",
+    "summary": "The Butterfly Sign is a detective story putting players into the role of the survivor of a disastrous incident. The protagonist takes an experimental drug which immerses him in the depths of his mind. In his memories, he will discover the ones responsible for the disaster, little by little, step by step...",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 20,
+        "name": "Thriller"
+      }
+    ],
+    "total_rating_count": 5,
+    "url": "https://www.igdb.com/games/the-butterfly-sign",
+    "websites": [
+      {
+        "id": 48444,
+        "url": "https://store.steampowered.com/app/546700",
+        "type": 13
+      },
+      {
+        "id": 48443,
+        "url": "http://thebutterflysign.com/",
+        "type": 1
+      },
+      {
+        "id": 346653,
+        "url": "https://www.twitch.tv/directory/game/The%20Butterfly%20Sign",
+        "type": 6
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 180292,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 180293,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 180295,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 180296,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 180294,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 180285,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 180286,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 180287,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 180288,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 180289,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 180290,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 180291,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 29495,
+    "cover": {
+      "id": 117002,
+      "image_id": "co2ia2"
+    },
+    "first_release_date": 1568851200,
+    "genres": [
+      {
+        "id": 14,
+        "name": "Sport"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      },
+      {
+        "id": 33,
+        "name": "Arcade"
+      }
+    ],
+    "hypes": 1,
+    "involved_companies": [
+      {
+        "id": 131225,
+        "company": {
+          "id": 6940,
+          "country": 826,
+          "name": "Milky Tea Studios"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 49310,
+        "name": "previously on - apple arcade"
+      }
+    ],
+    "name": "HyperBrawl Tournament",
+    "slug": "hyperbrawl-tournament",
+    "summary": "HyperBrawl Tournament is an arena based sports combat game, fusing intense sporting action and brutally competitive PvP combat.\nSelect your warrior and your weapon before unleashing brawling fury in an arena where goals equal glory.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 40,
+        "name": "Party"
+      }
+    ],
+    "total_rating_count": 1,
+    "url": "https://www.igdb.com/games/hyperbrawl-tournament",
+    "websites": [
+      {
+        "id": 835179,
+        "url": "https://store.playstation.com/en-us/concept/233986",
+        "type": 23
+      },
+      {
+        "id": 835180,
+        "url": "https://www.nintendo.com/games/detail/hyperbrawl-tournament-switch/",
+        "type": 24
+      },
+      {
+        "id": 846703,
+        "url": "https://apps.apple.com/app/id201466782466",
+        "type": 11
+      },
+      {
+        "id": 846704,
+        "url": "https://apps.apple.com/app/id201466782466",
+        "type": 10
+      },
+      {
+        "id": 51821,
+        "url": "https://store.steampowered.com/app/591760",
+        "type": 13
+      },
+      {
+        "id": 51822,
+        "url": "http://hyperbrawl.com",
+        "type": 1
+      },
+      {
+        "id": 156069,
+        "url": "https://twitter.com/HyperBrawl",
+        "type": 5
+      },
+      {
+        "id": 339121,
+        "url": "https://www.twitch.tv/directory/game/HyperBrawl%20Tournament",
+        "type": 6
+      },
+      {
+        "id": 964091,
+        "url": "https://www.youtube.com/channel/UCda3-Orfp9SkdJO_a0EnBaQ/",
+        "type": 9
+      },
+      {
+        "id": 1103799,
+        "url": "https://www.xbox.com/en-us/games/store/hyperbrawl-tournament/9P8MPB1JR3TW",
+        "type": 22
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 353444,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 353446,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 353448,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 353450,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 353452,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 353454,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 353457,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 353459,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 353461,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 353463,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 353465,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 353466,
+        "language": {
+          "id": 1,
+          "name": "Arabic",
+          "locale": "ar"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 353467,
+        "language": {
+          "id": 1,
+          "name": "Arabic",
+          "locale": "ar"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 353471,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 353475,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 353478,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 353482,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 353486,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 353469,
+        "language": {
+          "id": 6,
+          "name": "Dutch",
+          "locale": "nl-NL"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 353472,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 353476,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 353480,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 353490,
+        "language": {
+          "id": 24,
+          "name": "Turkish",
+          "locale": "tr-TR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 353474,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 353479,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 353484,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 353468,
+        "language": {
+          "id": 6,
+          "name": "Dutch",
+          "locale": "nl-NL"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 353470,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 353473,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 353477,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 353481,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 353488,
+        "language": {
+          "id": 24,
+          "name": "Turkish",
+          "locale": "tr-TR"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 36356,
+    "cover": {
+      "id": 167695,
+      "image_id": "co3le7"
+    },
+    "first_release_date": 1397779200,
+    "genres": [
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 89037,
+        "company": {
+          "id": 4755,
+          "country": 380,
+          "name": "Winter Wolves"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 358,
+        "name": "dating"
+      },
+      {
+        "id": 1158,
+        "name": "steam"
+      },
+      {
+        "id": 1494,
+        "name": "steam trading cards"
+      },
+      {
+        "id": 1937,
+        "name": "otome"
+      },
+      {
+        "id": 4004,
+        "name": "steam achievements"
+      },
+      {
+        "id": 4134,
+        "name": "digital distribution"
+      }
+    ],
+    "name": "Always Remember Me",
+    "rating_count": 1,
+    "slug": "always-remember-me",
+    "storyline": "Amy is desperate! Her boyfriend Aaron doesn't remember her anymore after a car accident!\n\nWill you be able to make him remember again?\n\nOr perhaps it's time to move on. Maybe Amy will fall in love with someone else?\n\nIt's up to you to decide. Play this life simulation game with dating sim elements and shape Amy's destiny.\n\nFeaturing a very detailed life simulation game. Explore the town using the map, find what actions you can do on each location and at which day of the week and time of the day.\n\nIt's a real living world, where you must find the right strategy to raise the skill needed to win the heart of each of the four dateable boys: Aaron, Lawrence, Eddy and Hugh.",
+    "summary": "Amy is desperate! Her boyfriend Aaron doesn't remember her anymore after a car accident!\nWill you be able to make him remember again? Or perhaps it's time to move on. Maybe Amy will fall in love with someone else?\nIt's up to you to decide. Play this life simulation game with dating sim elements and shape Amy's destiny.",
+    "total_rating_count": 1,
+    "url": "https://www.igdb.com/games/always-remember-me",
+    "websites": [
+      {
+        "id": 39099,
+        "url": "http://www.winterwolves.com/rememberme.htm",
+        "type": 1
+      },
+      {
+        "id": 39098,
+        "url": "https://store.steampowered.com/app/291030",
+        "type": 13
+      },
+      {
+        "id": 349237,
+        "url": "https://www.twitch.tv/directory/game/Always%20Remember%20Me",
+        "type": 6
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 359498,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 74598,
+    "cover": {
+      "id": 104764,
+      "image_id": "co28u4"
+    },
+    "first_release_date": 1525132800,
+    "genres": [
+      {
+        "id": 8,
+        "name": "Platform"
+      },
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 133195,
+        "company": {
+          "id": 17654,
+          "country": 752,
+          "name": "DoubleMoose Games"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 2794,
+        "name": "editor"
+      },
+      {
+        "id": 5455,
+        "name": "squad"
+      }
+    ],
+    "name": "Animal Super Squad",
+    "rating_count": 7,
+    "slug": "animal-super-squad",
+    "summary": "Animal Super Squad is a physics-based game that lets you play a chicken riding a toilet on wheels, or a sloth with a propeller on its butt, speeding through a world full of traps and bananas. You can also create your own maps to infuriate your friends with, and ticking off our friends is what we all live for anyway.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 27,
+        "name": "Comedy"
+      }
+    ],
+    "total_rating_count": 7,
+    "url": "https://www.igdb.com/games/animal-super-squad",
+    "websites": [
+      {
+        "id": 79218,
+        "url": "https://play.google.com/store/apps/details?id=com.DoubleMoose.AnimalSuperSquad&hl=en&gl=us",
+        "type": 12
+      },
+      {
+        "id": 339024,
+        "url": "https://www.twitch.tv/directory/game/Animal%20Super%20Squad",
+        "type": 6
+      },
+      {
+        "id": 772284,
+        "url": "https://store.playstation.com/en-us/concept/231214",
+        "type": 23
+      },
+      {
+        "id": 772283,
+        "url": "https://www.nintendo.com/games/detail/animal-super-squad-switch/",
+        "type": 24
+      },
+      {
+        "id": 60105,
+        "url": "https://store.steampowered.com/app/703840",
+        "type": 13
+      },
+      {
+        "id": 98828,
+        "url": "https://twitter.com/doublemoose",
+        "type": 5
+      },
+      {
+        "id": 60106,
+        "url": "http://doublemoose.com",
+        "type": 1
+      },
+      {
+        "id": 1104182,
+        "url": "https://www.xbox.com/en-us/games/store/animal-super-squad/BPDTC7H7RCSW",
+        "type": 22
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 40379,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 40380,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 100581,
+    "cover": {
+      "id": 68055,
+      "image_id": "wm68jalu4hdp1m3cq8zs"
+    },
+    "first_release_date": 1549584000,
+    "genres": [
+      {
+        "id": 8,
+        "name": "Platform"
+      },
+      {
+        "id": 9,
+        "name": "Puzzle"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 1,
+    "involved_companies": [
+      {
+        "id": 69219,
+        "company": {
+          "id": 16277,
+          "country": 792,
+          "name": "Proud Dinosaurs"
+        },
+        "developer": true,
+        "publisher": true
+      },
+      {
+        "id": 123522,
+        "company": {
+          "id": 2238,
+          "country": 344,
+          "name": "Eastasiasoft"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 1111,
+        "name": "nature"
+      },
+      {
+        "id": 2448,
+        "name": "australia"
+      },
+      {
+        "id": 18530,
+        "name": "ambient"
+      }
+    ],
+    "name": "Macrotis: A Mother's Journey",
+    "rating_count": 4,
+    "slug": "macrotis-a-mothers-journey",
+    "storyline": "Experience the emotional tale of a challenging journey...\n\nGo on this deeply emotional journey as Mother Bilby and save your beloved children who got separated from you because of a frightening flood caused by the never-ending rain. Climb, jump, and gnaw your way under the ground in Macrotis: A Mother's Journey, a 2.5D puzzle-platformer. Solve challenging puzzles by interacting with the beautiful yet dangerous world, while avoiding deadly traps that could end the adventure immediately.\n\nA great variety of natural and supernatural abilities will aid you on your emotive trip. Will you be able to help the desperate Mother find and rescue her cute little children?",
+    "summary": "Help Mother Bilby, as she struggles underground to find her children, in this magical indie, 2.5D puzzle-platformer game. Macrotis: A Mother’s Journey is an unforgettable adventure for those who love being challenged.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 17,
+        "name": "Fantasy"
+      },
+      {
+        "id": 35,
+        "name": "Kids"
+      }
+    ],
+    "total_rating_count": 4,
+    "url": "https://www.igdb.com/games/macrotis-a-mothers-journey",
+    "websites": [
+      {
+        "id": 85588,
+        "url": "https://store.steampowered.com/app/823840",
+        "type": 13
+      },
+      {
+        "id": 770815,
+        "url": "https://store.playstation.com/en-us/concept/10000247",
+        "type": 23
+      },
+      {
+        "id": 770814,
+        "url": "https://www.nintendo.com/games/detail/macrotis-a-mothers-journey-switch/",
+        "type": 24
+      },
+      {
+        "id": 87983,
+        "url": "https://www.instagram.com/prouddinosaurs",
+        "type": 8
+      },
+      {
+        "id": 87984,
+        "url": "https://www.youtube.com/channel/UCvliH8wUeuEUcF5uDDcxhDg",
+        "type": 9
+      },
+      {
+        "id": 85589,
+        "url": "http://macrotis.prouddinosaurs.com/",
+        "type": 1
+      },
+      {
+        "id": 87981,
+        "url": "https://www.facebook.com/macrotisthegame",
+        "type": 4
+      },
+      {
+        "id": 99621,
+        "url": "https://twitter.com/Macrotisgame",
+        "type": 5
+      },
+      {
+        "id": 513625,
+        "url": "https://www.twitch.tv/directory/game/Macrotis:%20A%20Mother's%20Journey",
+        "type": 6
+      },
+      {
+        "id": 1104555,
+        "url": "https://www.xbox.com/en-us/games/store/macrotis-a-mother-s-journey/9NR1D70SJFJC",
+        "type": 22
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 152880,
+        "language": {
+          "id": 24,
+          "name": "Turkish",
+          "locale": "tr-TR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 152881,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 152877,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 152878,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 152879,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 152870,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 152871,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 152872,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 152873,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 152874,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 152875,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 152876,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 167065,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 167067,
+        "language": {
+          "id": 24,
+          "name": "Turkish",
+          "locale": "tr-TR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 167069,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 167071,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 167073,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 167075,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 167077,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 167079,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 167081,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 167083,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 506057,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 113557,
+    "cover": {
+      "id": 182217,
+      "image_id": "co3wll"
+    },
+    "first_release_date": 1555545600,
+    "genres": [
+      {
+        "id": 7,
+        "name": "Music"
+      },
+      {
+        "id": 14,
+        "name": "Sport"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 77769,
+        "company": {
+          "id": 19279,
+          "name": "Five Mind Creations UG (haftungsbeschraenkt)"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 632,
+        "name": "boxing"
+      },
+      {
+        "id": 777,
+        "name": "fitness"
+      },
+      {
+        "id": 4137,
+        "name": "music and rhythm"
+      },
+      {
+        "id": 18396,
+        "name": "workout"
+      },
+      {
+        "id": 21052,
+        "name": "fitness game"
+      },
+      {
+        "id": 30952,
+        "name": "vr only"
+      },
+      {
+        "id": 34315,
+        "name": "real world fitness"
+      }
+    ],
+    "name": "PowerBeatsVR",
+    "rating_count": 2,
+    "slug": "powerbeatsvr",
+    "summary": "PowerBeatsVR is a high-intensity VR fitness game where you box, dodge, and squat to the rhythm of energetic music. Choose between official songs with leaderboards and dozens of professional workouts or play with your own music using the generator. See those calories burn and your pulse racing.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      }
+    ],
+    "total_rating_count": 2,
+    "url": "https://www.igdb.com/games/powerbeatsvr",
+    "websites": [
+      {
+        "id": 97481,
+        "url": "https://www.powerbeatsvr.com",
+        "type": 1
+      },
+      {
+        "id": 97480,
+        "url": "https://store.steampowered.com/app/810500",
+        "type": 13
+      },
+      {
+        "id": 852652,
+        "url": "https://store.playstation.com/en-us/concept/10011995",
+        "type": 23
+      },
+      {
+        "id": 852770,
+        "url": "https://www.meta.com/en-us/experiences/powerbeatsvr/4336749139724039/",
+        "type": 25
+      },
+      {
+        "id": 166723,
+        "url": "https://www.youtube.com/c/PowerBeatsVR",
+        "type": 9
+      },
+      {
+        "id": 166725,
+        "url": "https://twitter.com/PowerBeatsVR",
+        "type": 5
+      },
+      {
+        "id": 166724,
+        "url": "https://www.facebook.com/powerbeatsvr",
+        "type": 4
+      },
+      {
+        "id": 166726,
+        "url": "https://www.instagram.com/powerbeatsvr",
+        "type": 8
+      },
+      {
+        "id": 390735,
+        "url": "https://www.twitch.tv/directory/game/PowerBeatsVR",
+        "type": 6
+      },
+      {
+        "id": 166727,
+        "url": "https://discord.gg/powerbeatsvr",
+        "type": 18
+      },
+      {
+        "id": 1081265,
+        "url": "https://en.wikipedia.org/wiki/PowerBeatsVR",
+        "type": 3
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 305344,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 305346,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 305347,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 305345,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 305348,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 305350,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 305351,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 305349,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 305352,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 305353,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 305354,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1138164,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1138165,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1138166,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1138167,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1138168,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1138169,
+        "language": {
+          "id": 25,
+          "name": "Thai",
+          "locale": "th-TH"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1138170,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1138172,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1138173,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1138175,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1138177,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1138179,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1138180,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1138181,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 1
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 121894,
+    "cover": {
+      "id": 592033,
+      "image_id": "cocotd"
+    },
+    "first_release_date": 1628553600,
+    "genres": [
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 16,
+        "name": "Turn-based strategy (TBS)"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      },
+      {
+        "id": 35,
+        "name": "Card & Board Game"
+      }
+    ],
+    "hypes": 5,
+    "involved_companies": [
+      {
+        "id": 117908,
+        "company": {
+          "id": 12175,
+          "country": 643,
+          "name": "Morteshka"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 117909,
+        "company": {
+          "id": 10549,
+          "country": 196,
+          "name": "HypeTrain Digital"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 175,
+        "name": "demon"
+      },
+      {
+        "id": 250,
+        "name": "3d"
+      },
+      {
+        "id": 415,
+        "name": "turn-based"
+      },
+      {
+        "id": 416,
+        "name": "roguelike"
+      },
+      {
+        "id": 537,
+        "name": "dark fantasy"
+      },
+      {
+        "id": 953,
+        "name": "mythology"
+      },
+      {
+        "id": 962,
+        "name": "female protagonist"
+      },
+      {
+        "id": 1548,
+        "name": "turn-based tactics"
+      },
+      {
+        "id": 1963,
+        "name": "slavic folklore"
+      },
+      {
+        "id": 2228,
+        "name": "dungeon crawler"
+      },
+      {
+        "id": 2426,
+        "name": "story rich"
+      },
+      {
+        "id": 3534,
+        "name": "choices matter"
+      },
+      {
+        "id": 17292,
+        "name": "roguelite"
+      },
+      {
+        "id": 42128,
+        "name": "card battler"
+      }
+    ],
+    "name": "Black Book",
+    "rating_count": 37,
+    "slug": "black-book",
+    "storyline": "A fusion of card-based RPGs and Adventure games, “Black Book” is a haunting tale of a young sorceress, who gave her life to serve the dark forces. Dive into the cold, yet alluring world of Russian folktales – and uncover the secrets that hide in the darkness.\n\nA young girl named Vasilisa, destined to become a witch, decides to throw her fate away and marry her beloved – but that dream is shattered when her betrothed dies under mysterious circumstances.\n\nAching for her lost love, Vasilisa seeks out Black Book – a demonic artifact, said to be powerful enough to grant any wish to the one who uncovers all 7 of its seals.\n\nJoin Vasilisa in her adventures across Russian countryside, as she solves the woes of common folk by confronting demons and performing exorcisms.",
+    "summary": "A fusion of card-based RPGs and Adventure games, “Black Book” is a haunting tale of a young sorceress, who gave her life to serve the dark forces. Dive into the cold, yet alluring world of folk tales - and uncover the secrets that hide in the darkness.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 17,
+        "name": "Fantasy"
+      },
+      {
+        "id": 19,
+        "name": "Horror"
+      },
+      {
+        "id": 22,
+        "name": "Historical"
+      }
+    ],
+    "total_rating_count": 37,
+    "url": "https://www.igdb.com/games/black-book",
+    "websites": [
+      {
+        "id": 217615,
+        "url": "https://twitter.com/playblackbook",
+        "type": 5
+      },
+      {
+        "id": 217614,
+        "url": "https://www.facebook.com/playblackbook",
+        "type": 4
+      },
+      {
+        "id": 546982,
+        "url": "http://itunes.apple.com/us/app/id1619327414#?platform=ipad",
+        "type": 11
+      },
+      {
+        "id": 217612,
+        "url": "https://www.epicgames.com/store/en-US/p/black-book",
+        "type": 16
+      },
+      {
+        "id": 115912,
+        "url": "https://store.steampowered.com/app/1138660",
+        "type": 13
+      },
+      {
+        "id": 194893,
+        "url": "https://www.gog.com/game/black_book",
+        "type": 17
+      },
+      {
+        "id": 217613,
+        "url": "http://www.mooseman.ru/blackbook.html",
+        "type": 1
+      },
+      {
+        "id": 834311,
+        "url": "https://store.playstation.com/en-us/concept/10003004",
+        "type": 23
+      },
+      {
+        "id": 834312,
+        "url": "https://www.nintendo.com/games/detail/black-book-switch/",
+        "type": 24
+      },
+      {
+        "id": 391272,
+        "url": "https://www.twitch.tv/directory/game/Black%20Book%20",
+        "type": 6
+      },
+      {
+        "id": 546981,
+        "url": "http://itunes.apple.com/us/app/id1619327414#?platform=iphone",
+        "type": 10
+      },
+      {
+        "id": 217616,
+        "url": "https://discord.gg/T9XjCyf",
+        "type": 18
+      },
+      {
+        "id": 217617,
+        "url": "https://en.wikipedia.org/wiki/Black_Book_(video_game)",
+        "type": 3
+      },
+      {
+        "id": 660913,
+        "url": "https://www.reddit.com/r/blackbook/",
+        "type": 14
+      },
+      {
+        "id": 1105277,
+        "url": "https://www.xbox.com/en-us/games/store/black-book/9N6TQN780V77",
+        "type": 22
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 152459,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 152462,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 152460,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 152461,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 152463,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 298925,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 298926,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 298927,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 774402,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1232308,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1232309,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 132334,
+    "cover": {
+      "id": 420600,
+      "image_id": "co90jc"
+    },
+    "first_release_date": 1728000000,
+    "genres": [
+      {
+        "id": 11,
+        "name": "Real Time Strategy (RTS)"
+      },
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 2,
+    "involved_companies": [
+      {
+        "id": 151923,
+        "company": {
+          "id": 38132,
+          "name": "Door 407"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 151,
+        "name": "medieval"
+      },
+      {
+        "id": 9384,
+        "name": "horde"
+      }
+    ],
+    "name": "Diplomacy is Not an Option",
+    "rating_count": 10,
+    "slug": "diplomacy-is-not-an-option",
+    "storyline": "You were born a feudal lord. Sounds good, right? But you're bored of hunting, executions and tournaments. Even of feasts with beautiful maidens. The only dream left - your castle surrounded by hordes of enemies. You would waste no time on negotiation. This is your chance to show'em who is in charge.",
+    "summary": "In the RTS-game “Diplomacy is Not an Option” you will become a medieval feudal lord in a midlife crisis. Due to your position you must constantly make hundreds of decisions a day related with city management and economic development. You are tired of this monotonous and, so it seems, meaningless existence. But things are about to change: hordes of bloodlusted enemies, swarms of scary monsters and crowds of rebellious peasants at any second can bring some life to your working schedule.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 22,
+        "name": "Historical"
+      },
+      {
+        "id": 33,
+        "name": "Sandbox"
+      }
+    ],
+    "total_rating_count": 10,
+    "url": "https://www.igdb.com/games/diplomacy-is-not-an-option",
+    "websites": [
+      {
+        "id": 268429,
+        "url": "https://twitter.com/Door407",
+        "type": 5
+      },
+      {
+        "id": 162929,
+        "url": "https://store.steampowered.com/app/1272320",
+        "type": 13
+      },
+      {
+        "id": 262284,
+        "url": "https://www.door407.com/projects",
+        "type": 1
+      },
+      {
+        "id": 262285,
+        "url": "https://www.facebook.com/DNOstrategy",
+        "type": 4
+      },
+      {
+        "id": 262286,
+        "url": "https://www.reddit.com/r/DNO",
+        "type": 14
+      },
+      {
+        "id": 262283,
+        "url": "https://www.gog.com/game/diplomacy_is_not_an_option",
+        "type": 17
+      },
+      {
+        "id": 728760,
+        "url": "https://instagram.com/door407studio",
+        "type": 8
+      },
+      {
+        "id": 679789,
+        "url": "https://www.twitch.tv/directory/category/diplomacy-is-not-an-option",
+        "type": 6
+      },
+      {
+        "id": 235349,
+        "url": "https://discord.gg/invite/zYthr8q",
+        "type": 18
+      },
+      {
+        "id": 264437,
+        "url": "https://www.epicgames.com/store/en-US/p/diplomacy-is-not-an-option-9c6bea",
+        "type": 16
+      },
+      {
+        "id": 268428,
+        "url": "https://www.youtube.com/channel/UCtYAFbMSnxIYwRhTzvH1Q8w",
+        "type": 9
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 219054,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 219052,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 219050,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 219056,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 219043,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 219044,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 219045,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 219046,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 219048,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 486630,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 532440,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 532439,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 532441,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 532442,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 532443,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 532444,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 532445,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 790238,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 790239,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 790240,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1099432,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1099433,
+        "language": {
+          "id": 24,
+          "name": "Turkish",
+          "locale": "tr-TR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1232080,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1232081,
+        "language": {
+          "id": 19,
+          "name": "Polish",
+          "locale": "pl-PL"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 141397,
+    "cover": {
+      "id": 467439,
+      "image_id": "coa0of"
+    },
+    "first_release_date": 1659052800,
+    "genres": [
+      {
+        "id": 4,
+        "name": "Fighting"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 16,
+        "name": "Turn-based strategy (TBS)"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 1,
+    "involved_companies": [
+      {
+        "id": 114179,
+        "company": {
+          "id": 30345,
+          "name": "dhamster"
+        },
+        "developer": true,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 2208,
+        "name": "simultaneous turns"
+      }
+    ],
+    "name": "Mega Knockdown",
+    "slug": "mega-knockdown",
+    "summary": "Mega Knockdown is a simultaneous turn-based 2D fighting game which emulates fundamental fighting game concepts such as oki, spacing and pressure. No execution required.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      }
+    ],
+    "url": "https://www.igdb.com/games/mega-knockdown",
+    "websites": [
+      {
+        "id": 792168,
+        "url": "https://bsky.app/profile/megaknockdown.com",
+        "type": 19
+      },
+      {
+        "id": 162393,
+        "url": "https://discord.gg/bGVftKK",
+        "type": 18
+      },
+      {
+        "id": 162394,
+        "url": "https://www.reddit.com/r/megaknockdown",
+        "type": 14
+      },
+      {
+        "id": 820115,
+        "url": "https://dhamster.itch.io/mega-knockdown",
+        "type": 15
+      },
+      {
+        "id": 820116,
+        "url": "https://www.instagram.com/megaknockdown/",
+        "type": 8
+      },
+      {
+        "id": 162391,
+        "url": "https://facebook.com/megaknockdown",
+        "type": 4
+      },
+      {
+        "id": 162392,
+        "url": "https://twitter.com/MegaKnockdown",
+        "type": 5
+      },
+      {
+        "id": 264499,
+        "url": "https://store.steampowered.com/app/1492750/Mega_Knockdown",
+        "type": 13
+      },
+      {
+        "id": 253500,
+        "url": "https://www.megaknockdown.com/",
+        "type": 1
+      },
+      {
+        "id": 297319,
+        "url": "https://www.youtube.com/channel/UCGXPgzIzfcu5WzdF5nNK1zQ",
+        "type": 9
+      },
+      {
+        "id": 505004,
+        "url": "https://www.twitch.tv/directory/game/Mega%20Knockdown",
+        "type": 6
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 435701,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1243502,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1289952,
+        "language": {
+          "id": 10,
+          "name": "Spanish (Mexico)",
+          "locale": "es-MX"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1289953,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1453904,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_status": 4,
+    "game_type": 0
+  },
+  {
+    "id": 150271,
+    "cover": {
+      "id": 496754,
+      "image_id": "coanaq"
+    },
+    "genres": [
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 9,
+    "involved_companies": [
+      {
+        "id": 336581,
+        "company": {
+          "id": 66695,
+          "country": 792,
+          "name": "Pokuch"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 336582,
+        "company": {
+          "id": 29148,
+          "country": 196,
+          "name": "META Publishing"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 50104,
+        "name": "nextfest october 2025"
+      }
+    ],
+    "name": "Blind Descent",
+    "slug": "blind-descent",
+    "storyline": "The year 2071. You are tasked with finding the pioneer team who went missing while exploring the newly opened mine on Mars.\n\nYou and a few team members began descending into a 10-mile deep Martian cave. During the descent, the elevator crashes, and only a few of you survive.\n\nYou have no communication with the surface, and there's no sign of the lost pioneer team that you have been sent for. You start moving through the tunnel and see something you never expected.\n\nA subterranean world right beneath Mars, full of alien life and surrounded by dense jungles and bizarre weather.",
+    "summary": "Blind Descent is a multiplayer open-world survival adventure game with up to 4 players set in the Martian underground.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 18,
+        "name": "Science fiction"
+      },
+      {
+        "id": 21,
+        "name": "Survival"
+      }
+    ],
+    "url": "https://www.igdb.com/games/blind-descent",
+    "websites": [
+      {
+        "id": 811752,
+        "url": "https://www.gog.com/en/game/blind_descent",
+        "type": 17
+      },
+      {
+        "id": 805678,
+        "url": "https://www.twitch.tv/directory/category/blind-descent",
+        "type": 6
+      },
+      {
+        "id": 832980,
+        "url": "https://store.epicgames.com/en-US/p/blind-descent-b33fa1",
+        "type": 16
+      },
+      {
+        "id": 732515,
+        "url": "https://www.youtube.com/channel/UClu8haMpF7ZlyN-tbyyIjsQ/",
+        "type": 9
+      },
+      {
+        "id": 732514,
+        "url": "https://x.com/theblinddescent",
+        "type": 5
+      },
+      {
+        "id": 820109,
+        "url": "https://discord.com/invite/GeQ926zEyn",
+        "type": 18
+      },
+      {
+        "id": 190077,
+        "url": "https://store.steampowered.com/app/1209970",
+        "type": 13
+      },
+      {
+        "id": 676974,
+        "url": "https://blinddescent.net/",
+        "type": 1
+      },
+      {
+        "id": 976697,
+        "url": "https://www.xbox.com/en-us/games/store/blind-descent/9nc10hw6xf01",
+        "type": 22
+      },
+      {
+        "id": 976698,
+        "url": "https://store.playstation.com/en-us/concept/10015519",
+        "type": 23
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 544231,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 544232,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 544233,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094172,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094164,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094171,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094160,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094161,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094162,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094165,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094166,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094167,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094168,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094174,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094173,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094163,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094169,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094170,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1273822,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1273823,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_status": 4,
+    "game_type": 0
+  },
+  {
+    "id": 177288,
+    "cover": {
+      "id": 340217,
+      "image_id": "co7aih"
+    },
+    "first_release_date": 1698278400,
+    "genres": [
+      {
+        "id": 8,
+        "name": "Platform"
+      },
+      {
+        "id": 9,
+        "name": "Puzzle"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 189780,
+        "company": {
+          "id": 43743,
+          "country": 826,
+          "name": "Giraffe Cat"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 589,
+        "name": "2.5d"
+      },
+      {
+        "id": 2225,
+        "name": "low-poly"
+      },
+      {
+        "id": 28024,
+        "name": "haunted ps1"
+      }
+    ],
+    "name": "The Sirena Expedition",
+    "slug": "the-sirena-expedition",
+    "storyline": "Explore a mysterious, abandoned underwater facility at the bottom of the Mariana trench. Who built it? What was it used for? Perhaps you will find answers, or perhaps the answers will find you.",
+    "summary": "The Sirena Expedition is short PSX-style horror-platformer in which you explore a mysterious underwater facility.",
+    "themes": [
+      {
+        "id": 18,
+        "name": "Science fiction"
+      },
+      {
+        "id": 19,
+        "name": "Horror"
+      }
+    ],
+    "total_rating_count": 1,
+    "url": "https://www.igdb.com/games/the-sirena-expedition",
+    "websites": [
+      {
+        "id": 762725,
+        "url": "https://www.nintendo.com/us/store/products/the-sirena-expedition-switch/",
+        "type": 24
+      },
+      {
+        "id": 279567,
+        "url": "https://store.steampowered.com/app/1957300",
+        "type": 13
+      },
+      {
+        "id": 945382,
+        "url": "https://www.youtube.com/@giraffecatgames7350/",
+        "type": 9
+      },
+      {
+        "id": 546156,
+        "url": "https://giraffe.cat/game",
+        "type": 1
+      },
+      {
+        "id": 473891,
+        "url": "https://www.twitch.tv/directory/game/The%20Sirena%20Expedition",
+        "type": 6
+      },
+      {
+        "id": 237608,
+        "url": "https://giraffecat.itch.io/the-sirena-expedition",
+        "type": 15
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 362697,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 362698,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 362699,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 203052,
+    "cover": {
+      "id": 224165,
+      "image_id": "co4syt"
+    },
+    "genres": [
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 1,
+    "involved_companies": [
+      {
+        "id": 334300,
+        "company": {
+          "id": 66187,
+          "name": "Mashpoe"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 2248,
+        "name": "4d"
+      }
+    ],
+    "name": "4D Miner",
+    "slug": "4d-miner",
+    "summary": "4D Miner is a 4-dimensional survival sandbox game that allows players to explore an infinite, randomly-generated, 4-dimensional world.",
+    "themes": [
+      {
+        "id": 21,
+        "name": "Survival"
+      },
+      {
+        "id": 33,
+        "name": "Sandbox"
+      },
+      {
+        "id": 38,
+        "name": "Open world"
+      }
+    ],
+    "url": "https://www.igdb.com/games/4d-miner",
+    "websites": [
+      {
+        "id": 286500,
+        "url": "https://www.youtube.com/c/Mashpoe",
+        "type": 9
+      },
+      {
+        "id": 286502,
+        "url": "https://discord.gg/zg92JTdp66",
+        "type": 18
+      },
+      {
+        "id": 286503,
+        "url": "https://www.reddit.com/r/4D_Miner",
+        "type": 14
+      },
+      {
+        "id": 286504,
+        "url": "https://4d-miner.fandom.com/wiki/4D_Miner_Wiki",
+        "type": 2
+      },
+      {
+        "id": 286501,
+        "url": "https://twitter.com/4DMiner",
+        "type": 5
+      },
+      {
+        "id": 492880,
+        "url": "https://www.twitch.tv/directory/game/4D%20Miner",
+        "type": 6
+      },
+      {
+        "id": 286498,
+        "url": "https://store.steampowered.com/app/1941640/4D_Miner",
+        "type": 13
+      },
+      {
+        "id": 286499,
+        "url": "https://mashpoe.com/4d-miner",
+        "type": 1
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 1334466,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_status": 2,
+    "game_type": 0
+  },
+  {
+    "id": 225879,
+    "cover": {
+      "id": 270572,
+      "image_id": "co5srw"
+    },
+    "first_release_date": 1669766400,
+    "genres": [
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 1,
+    "involved_companies": [
+      {
+        "id": 196482,
+        "company": {
+          "id": 44360,
+          "country": 124,
+          "name": "Patient Cactus"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 101,
+        "name": "casual"
+      },
+      {
+        "id": 524,
+        "name": "fast paced"
+      },
+      {
+        "id": 962,
+        "name": "female protagonist"
+      },
+      {
+        "id": 1387,
+        "name": "cute"
+      },
+      {
+        "id": 1511,
+        "name": "funny"
+      },
+      {
+        "id": 2385,
+        "name": "free-to-play"
+      },
+      {
+        "id": 2760,
+        "name": "family friendly"
+      },
+      {
+        "id": 3430,
+        "name": "time management"
+      },
+      {
+        "id": 3560,
+        "name": "cartoony"
+      },
+      {
+        "id": 23931,
+        "name": "wholesome"
+      }
+    ],
+    "name": "MopGarden's Veggie Cart",
+    "slug": "mopgardens-veggie-cart",
+    "storyline": "MopGarden, a variety Twitch streamer, has decided to feed all the local bunnies in her town. As business begins to boom, she moves her veggie cart to other surrounding areas, where the vegetable orders get faster, and faster, and faster.",
+    "summary": "MopGarden’s Veggie Cart is a fast-paced, simulation game where you feed hungry bunnies lots of healthy vegetables! Can you feed them all in time?\n\nMopGarden, a variety Twitch streamer, has decided to feed all the local bunnies in her town. As business begins to boom, she moves her veggie cart to other surrounding areas, where the vegetable orders get faster, and faster, and faster.",
+    "themes": [
+      {
+        "id": 27,
+        "name": "Comedy"
+      }
+    ],
+    "url": "https://www.igdb.com/games/mopgardens-veggie-cart",
+    "websites": [
+      {
+        "id": 324482,
+        "url": "https://store.steampowered.com/app/2213770/MopGardens_Veggie_Cart",
+        "type": 13
+      },
+      {
+        "id": 978126,
+        "url": "https://x.com/PatientCactus",
+        "type": 5
+      },
+      {
+        "id": 510778,
+        "url": "https://www.twitch.tv/directory/game/MopGarden%27s%20Veggie%20Cart",
+        "type": 6
+      },
+      {
+        "id": 512055,
+        "url": "https://www.youtube.com/@PatientCactus",
+        "type": 9
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 216410,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 260275,
+    "cover": {
+      "id": 358955,
+      "image_id": "co7oyz"
+    },
+    "first_release_date": 1726185600,
+    "genres": [
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 16,
+        "name": "Turn-based strategy (TBS)"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      },
+      {
+        "id": 35,
+        "name": "Card & Board Game"
+      }
+    ],
+    "hypes": 1,
+    "involved_companies": [
+      {
+        "id": 286982,
+        "company": {
+          "id": 40187,
+          "country": 250,
+          "name": "Two Tiny Dice"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 286983,
+        "company": {
+          "id": 52564,
+          "name": "Indie Asylum"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 416,
+        "name": "roguelike"
+      },
+      {
+        "id": 2228,
+        "name": "dungeon crawler"
+      },
+      {
+        "id": 25826,
+        "name": "deck-building"
+      },
+      {
+        "id": 27419,
+        "name": "roguelike deckbuilder"
+      }
+    ],
+    "name": "Pyrene",
+    "slug": "pyrene",
+    "storyline": "Join forces with your villagers to battle the malevolent Demon Herensuge and his army of hellish fiends, intent on wreaking havoc on your serene homeland. Use your deck-building skills to emerge victorious from the perilous depths of the Pyrenees.\n\nExplore a variety of characters, each with distinct abilities and traits that enable a wide range of gameplay styles. Develop different strategies and optimize the use of items you collect to enhance your abilities on every adventure.",
+    "summary": "Defeat hellish monsters and rebuild your home in Pyrene, a fast paced roguelike dungeon-crawler. Play with different heroes & spells, collect powerful relics to upgrade your deck while uncovering the mysteries behind your village’s destruction.",
+    "themes": [
+      {
+        "id": 17,
+        "name": "Fantasy"
+      }
+    ],
+    "url": "https://www.igdb.com/games/pyrene",
+    "websites": [
+      {
+        "id": 611041,
+        "url": "https://discord.gg/UcycyJBZtG",
+        "type": 18
+      },
+      {
+        "id": 571316,
+        "url": "https://store.steampowered.com/app/2468100",
+        "type": 13
+      },
+      {
+        "id": 673933,
+        "url": "https://www.youtube.com/@TwoTinyDice",
+        "type": 9
+      },
+      {
+        "id": 673932,
+        "url": "https://www.twitch.tv/directory/category/pyrene",
+        "type": 6
+      },
+      {
+        "id": 673934,
+        "url": "https://twitter.com/twotinydice",
+        "type": 5
+      },
+      {
+        "id": 674860,
+        "url": "https://www.twotinydice.com/pyrene/",
+        "type": 1
+      },
+      {
+        "id": 676874,
+        "url": "https://twotinydice.itch.io/pyrene",
+        "type": 15
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 745804,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 745807,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 745809,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 745810,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 745811,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 745801,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1256585,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1256586,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 292272,
+    "cover": {
+      "id": 371947,
+      "image_id": "co7yzv"
+    },
+    "genres": [
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 1,
+    "involved_companies": [
+      {
+        "id": 259727,
+        "company": {
+          "id": 53720,
+          "name": "LV99 Studios"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 416,
+        "name": "roguelike"
+      },
+      {
+        "id": 17292,
+        "name": "roguelite"
+      },
+      {
+        "id": 41781,
+        "name": "action roguelike"
+      }
+    ],
+    "name": "Pixel Quest: Survivor",
+    "slug": "pixel-quest-survivor",
+    "summary": "In this action roguelite with unique and themed characters, create your build and face hordes of enemies with up to 4 friends online, kill monsters, collect their souls, face bosses and survive!",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      }
+    ],
+    "url": "https://www.igdb.com/games/pixel-quest-survivor",
+    "websites": [
+      {
+        "id": 623456,
+        "url": "https://store.steampowered.com/app/2880170",
+        "type": 13
+      },
+      {
+        "id": 947849,
+        "url": "https://www.youtube.com/@lv99studios/",
+        "type": 9
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 940759,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 940760,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 940761,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 940762,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1481295,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1481296,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1481297,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1481298,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1481299,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1481300,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1481301,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1481302,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1481303,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1481304,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1481305,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1481306,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1481307,
+        "language": {
+          "id": 24,
+          "name": "Turkish",
+          "locale": "tr-TR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1481308,
+        "language": {
+          "id": 24,
+          "name": "Turkish",
+          "locale": "tr-TR"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 317820,
+    "cover": {
+      "id": 413406,
+      "image_id": "co8uzi"
+    },
+    "genres": [
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 34,
+    "involved_companies": [
+      {
+        "id": 288627,
+        "company": {
+          "id": 58544,
+          "country": 124,
+          "name": "Riyo Games"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 409374,
+        "company": {
+          "id": 78970,
+          "country": 840,
+          "name": "Balor Games"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 170,
+        "name": "time travel"
+      },
+      {
+        "id": 1780,
+        "name": "pixel graphics"
+      }
+    ],
+    "name": "Threads of Time",
+    "slug": "threads-of-time--2",
+    "summary": "Threads of Time is an era-spanning, turn-based RPG inspired by the timeless classics. Embark on a journey through time, gather a party of charismatic heroes from across ages, and uncover a plot that threatens to unravel the past, present and future.",
+    "themes": [
+      {
+        "id": 17,
+        "name": "Fantasy"
+      },
+      {
+        "id": 18,
+        "name": "Science fiction"
+      }
+    ],
+    "url": "https://www.igdb.com/games/threads-of-time--2",
+    "websites": [
+      {
+        "id": 799269,
+        "url": "https://discord.gg/FBdgdbAVbf",
+        "type": 18
+      },
+      {
+        "id": 799271,
+        "url": "https://www.instagram.com/riyogames",
+        "type": 8
+      },
+      {
+        "id": 799270,
+        "url": "https://x.com/RiyoGames",
+        "type": 5
+      },
+      {
+        "id": 676839,
+        "url": "https://store.steampowered.com/app/2090210",
+        "type": 13
+      },
+      {
+        "id": 676803,
+        "url": "https://threadsoftimegame.com/",
+        "type": 1
+      },
+      {
+        "id": 1051305,
+        "url": "https://www.xbox.com/en-US/games/store/threadsoftime/9PPNV0NCL881",
+        "type": 22
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 1094462,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094473,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094477,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094478,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094479,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094481,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094482,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094461,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094466,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094469,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094472,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094476,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094480,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094460,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1094463,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094467,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094471,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094475,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094464,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094468,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094474,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1094465,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1094470,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1662806,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 1
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 338726,
+    "cover": {
+      "id": 501204,
+      "image_id": "coaqqc"
+    },
+    "genres": [
+      {
+        "id": 5,
+        "name": "Shooter"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 3,
+    "involved_companies": [
+      {
+        "id": 354848,
+        "company": {
+          "id": 62801,
+          "country": 840,
+          "name": "Two Stamp Studios"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 9,
+        "name": "western"
+      },
+      {
+        "id": 962,
+        "name": "female protagonist"
+      },
+      {
+        "id": 1836,
+        "name": "survival horror"
+      },
+      {
+        "id": 2489,
+        "name": "inventory management"
+      }
+    ],
+    "name": "Hear Tell of Hauntings",
+    "slug": "hear-tell-of-hauntings",
+    "storyline": "The year is 1897, the twilight of the American frontier. After receiving a wedding invitation from two long-deceased lovers, Adelaide Clancy braves the halls of Wraith Manor in search of a missing sheriff.\n\nStep into the boots of a gunslinger and learn what makes this hot-headed deputy tick as she investigates a long-abandoned estate in this survival horror adventure inspired by the classics of the genre.",
+    "summary": "Deep in the mountains of wild west-era Montana, former outlaw Adelaide Clancy ventures to the desolate remains of the Wraith estate in this third-person survival horror game.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 19,
+        "name": "Horror"
+      }
+    ],
+    "url": "https://www.igdb.com/games/hear-tell-of-hauntings",
+    "websites": [
+      {
+        "id": 724953,
+        "url": "https://store.steampowered.com/app/3410390/Hear_Tell_of_Hauntings/",
+        "type": 13
+      },
+      {
+        "id": 724955,
+        "url": "https://twitter.com/TwoStampStudios",
+        "type": 5
+      },
+      {
+        "id": 802372,
+        "url": "https://discord.gg/dJNDmPXdhj",
+        "type": 18
+      },
+      {
+        "id": 802371,
+        "url": "https://www.twitch.tv/directory/category/hear-tell-of-hauntings",
+        "type": 6
+      },
+      {
+        "id": 730331,
+        "url": "https://www.youtube.com/@SeanGauseOfficial",
+        "type": 9
+      },
+      {
+        "id": 730332,
+        "url": "https://bsky.app/profile/seangause.bsky.social",
+        "type": 19
+      },
+      {
+        "id": 724954,
+        "url": "https://www.twostamp.com/",
+        "type": 1
+      },
+      {
+        "id": 724956,
+        "url": "https://www.instagram.com/TwoStampStudios/",
+        "type": 8
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 1206144,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1206145,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1206146,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 360995,
+    "cover": {
+      "id": 479494,
+      "image_id": "coa9za"
+    },
+    "first_release_date": 1763337600,
+    "genres": [
+      {
+        "id": 8,
+        "name": "Platform"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 1,
+    "involved_companies": [
+      {
+        "id": 336762,
+        "company": {
+          "id": 17639,
+          "name": "Hugecalf Studios"
+        },
+        "developer": true,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 131,
+        "name": "psychological horror"
+      },
+      {
+        "id": 988,
+        "name": "online co-op"
+      },
+      {
+        "id": 1635,
+        "name": "local co-op"
+      }
+    ],
+    "name": "Stuck Together",
+    "slug": "stuck-together--1",
+    "summary": "A co-op climbing game about two stuck-together toys on an escape mission from their evil owner. Failure is always one slip away.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 27,
+        "name": "Comedy"
+      }
+    ],
+    "url": "https://www.igdb.com/games/stuck-together--1",
+    "websites": [
+      {
+        "id": 850994,
+        "url": "https://store.steampowered.com/app/3295360/Stuck_Together/",
+        "type": 13
+      },
+      {
+        "id": 850995,
+        "url": "https://hugecalf.com/stuck-together",
+        "type": 1
+      },
+      {
+        "id": 850996,
+        "url": "https://x.com/HugecalfStudios",
+        "type": 5
+      },
+      {
+        "id": 850997,
+        "url": "https://www.instagram.com/hugecalf_studios/",
+        "type": 8
+      },
+      {
+        "id": 850998,
+        "url": "https://www.youtube.com/@hugecalfstudios",
+        "type": 9
+      },
+      {
+        "id": 850999,
+        "url": "https://discord.gg/RDRyeJ26Tc",
+        "type": 18
+      },
+      {
+        "id": 896584,
+        "url": "https://www.twitch.tv/directory/category/stuck-together-1",
+        "type": 6
+      },
+      {
+        "id": 1076168,
+        "url": "https://www.nintendo.com/us/store/products/stuck-together-switch/",
+        "type": 24
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 1346106,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1346107,
+        "language": {
+          "id": 19,
+          "name": "Polish",
+          "locale": "pl-PL"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1346108,
+        "language": {
+          "id": 19,
+          "name": "Polish",
+          "locale": "pl-PL"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1346109,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1346110,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1346111,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1346112,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1346113,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1346114,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1346115,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1346116,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1346118,
+        "language": {
+          "id": 24,
+          "name": "Turkish",
+          "locale": "tr-TR"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1346120,
+        "language": {
+          "id": 28,
+          "name": "Ukrainian",
+          "locale": "uk-UA"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1346095,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1346096,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1346097,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1346098,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1346099,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1346100,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1346101,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1346102,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1346103,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1346104,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1346105,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1346117,
+        "language": {
+          "id": 24,
+          "name": "Turkish",
+          "locale": "tr-TR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1346119,
+        "language": {
+          "id": 28,
+          "name": "Ukrainian",
+          "locale": "uk-UA"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1683439,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 388515,
+    "cover": {
+      "id": 533943,
+      "image_id": "cobfzr"
+    },
+    "first_release_date": 1773014400,
+    "genres": [
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 1,
+    "involved_companies": [
+      {
+        "id": 370623,
+        "company": {
+          "id": 73695,
+          "country": 840,
+          "name": "INFINITE RETRY STUDIO"
+        },
+        "developer": true,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 77,
+        "name": "tower defense"
+      },
+      {
+        "id": 546,
+        "name": "pvp"
+      },
+      {
+        "id": 988,
+        "name": "online co-op"
+      },
+      {
+        "id": 1332,
+        "name": "pve"
+      },
+      {
+        "id": 1634,
+        "name": "couch co-op"
+      },
+      {
+        "id": 4699,
+        "name": "4 player co-op"
+      },
+      {
+        "id": 6152,
+        "name": "competitive co-op"
+      },
+      {
+        "id": 38148,
+        "name": "ai-generated artwork"
+      },
+      {
+        "id": 43816,
+        "name": "ai-generated music"
+      },
+      {
+        "id": 44888,
+        "name": "ai-generated marketing"
+      },
+      {
+        "id": 45434,
+        "name": "online pvp"
+      },
+      {
+        "id": 49229,
+        "name": "ai-generated interface"
+      }
+    ],
+    "name": "Endless TD",
+    "slug": "endless-td",
+    "summary": "Endless TD is a multiplayer tower defense game focused on deep buildcraft, co-op survival, and competitive PvP. Team up with friends to survive endlessly scaling waves, experiment with elemental synergies and tower merges, or face off by sending enemies to overwhelm your opponents. Every run plays differently, rewarding strategy, creativity, and smart decisions.",
+    "themes": [
+      {
+        "id": 17,
+        "name": "Fantasy"
+      },
+      {
+        "id": 21,
+        "name": "Survival"
+      }
+    ],
+    "url": "https://www.igdb.com/games/endless-td",
+    "websites": [
+      {
+        "id": 1001439,
+        "url": "https://store.steampowered.com/app/4306460/Endless_TD/",
+        "type": 13
+      },
+      {
+        "id": 1001440,
+        "url": "https://endlesstd.com/",
+        "type": 1
+      },
+      {
+        "id": 1001441,
+        "url": "https://www.youtube.com/@endless-td",
+        "type": 9
+      },
+      {
+        "id": 1001442,
+        "url": "https://discord.gg/Y5WSpKDeaG",
+        "type": 18
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 1551581,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_status": 4,
+    "game_type": 0
+  }
+]

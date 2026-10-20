@@ -3,7 +3,8 @@
 Plataforma web que recomenda jogos de estúdios e desenvolvedores independentes
 pela afinidade entre as características de cada jogo e as preferências de cada
 pessoa, mostrando o motivo de cada indicação, deixando o usuário calibrar o peso
-da popularidade e incluindo jogos ainda não lançados.
+da popularidade, incluindo jogos ainda não lançados e permitindo explorar o
+catálogo por país do estúdio e por coleções culturais curadas.
 
 Trabalho de Conclusão de Curso — Tecnologia em Análise e Desenvolvimento de
 Sistemas, UERJ.

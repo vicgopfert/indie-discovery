@@ -4,17 +4,17 @@ Utilitários que rodam fora do monorrepositório, sem dependências e sem build.
 
 | Script | Item | O que faz |
 | --- | --- | --- |
-| `igdb-spike.mjs` | B-07 (M0) | Mede a cobertura dos campos da IGDB, estima o tamanho do catálogo e gera as fixtures usadas nos testes do B-10 |
+| `igdb-spike.mjs` | B-07 (M0) | Percorre todos os jogos indie da IGDB, mede a cobertura dos campos e o tamanho de recortes candidatos e gera o relatório do M0 e as fixtures dos testes do B-10 |
 
 ```bash
-node scripts/igdb-spike.mjs                 # amostra de 3000 jogos
-node scripts/igdb-spike.mjs --max 8000      # amostra maior
+node scripts/igdb-spike.mjs                      # censo completo (alguns minutos)
+node scripts/igdb-spike.mjs --max 1000           # só os primeiros 1000 jogos, para testar
+node scripts/igdb-spike.mjs --primitives 5000    # amostra maior para o PopScore
 ```
 
 Credenciais: crie uma aplicação em https://dev.twitch.tv/console/apps (a conta
 Twitch precisa de autenticação em dois fatores ativa) e preencha
 `IGDB_CLIENT_ID` e `IGDB_CLIENT_SECRET` no `.env`.
 
-A saída em `scripts/out/` é ignorada pelo Git. As fixtures aprovadas são movidas
-à mão para `apps/api/test/fixtures/` quando o B-10 começar — é lá que elas
-precisam estar versionadas.
+Saída: `docs/m0-relatorio-igdb.md` (sobrescrito a cada execução) e as fixtures
+em `apps/api/test/fixtures/igdb/`, versionadas para os testes do B-10 e do B-11.

@@ -15,7 +15,7 @@ necessário.
 Recomenda jogos independentes a jogadores por afinidade de conteúdo (TF-IDF +
 similaridade do cosseno), com três modos de popularidade (Populares /
 Equilibrado / Descobertas), motivo visível em cada recomendação, e catálogo que
-inclui jogos ainda não lançados. Sem IA generativa no MVP. A lógica completa de
+inclui jogos ainda não lançados, filtros por idioma e país do estúdio, e coleções culturais curadas ("Explore por cultura"). Sem IA generativa no MVP. A lógica completa de
 pontuação está na seção 12 do documento técnico.
 
 ## Stack obrigatória

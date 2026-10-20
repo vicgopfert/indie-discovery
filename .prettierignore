@@ -5,5 +5,8 @@ pnpm-lock.yaml
 **/coverage
 scripts/out
 
+# Respostas reais da IGDB salvas pelo spike (B-07); ficam como a API devolveu.
+apps/api/test/fixtures/igdb
+
 # Documentação escrita à mão: o Prettier realinharia todas as tabelas.
 *.md
