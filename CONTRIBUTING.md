@@ -25,7 +25,7 @@ pontuação está na seção 12 do documento técnico.
 - **Banco:** PostgreSQL (mesma versão principal local e no Neon)
 - **Frontend:** Next.js (App Router) — Server Components para páginas públicas, Client Components para interações, `rewrites` de `/api/*` para a API (cookie same-origin)
 - **Contratos:** Zod em `packages/contracts`, usados nos dois lados; validação via opção `schema` dos decorators do Nest
-- **Qualidade:** ESLint, Prettier, Husky + lint-staged, Jest + Supertest, GitHub Actions (CI com PostgreSQL de serviço), Docker Compose local
+- **Qualidade:** ESLint, Prettier, Husky + lint-staged, Jest + Supertest, GitHub Actions (CI com PostgreSQL de serviço), PostgreSQL 18 local embutido via `embedded-postgres` (`pnpm db:start` / `db:stop`; sem Docker — decidido no B-04)
 - **Auth:** sessão opaca no banco + cookie HttpOnly/Secure/SameSite=Lax (não JWT); senha em Argon2id
 - **Hospedagem gratuita:** Vercel (frontend), Render (API — hiberna após 15 min sem tráfego), Neon (banco — não expira, mas suspende após 5 min ocioso). O Postgres gratuito do Render **não é usado**, porque expira em 30 dias.
 
@@ -35,7 +35,7 @@ pontuação está na seção 12 do documento técnico.
 apps/api/             NestJS: API REST e aplicação de ingestão (standalone)
 apps/web/             Next.js
 packages/contracts/   schemas Zod e tipos compartilhados
-docker-compose.yml
+scripts/db.mjs        PostgreSQL local (pnpm db:start / db:stop)
 ```
 
 Dentro de `apps/api/src`: `common/` (filters, guards, decorators, middleware),

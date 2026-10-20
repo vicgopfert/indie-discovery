@@ -12,7 +12,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [ ] **B-01** (M) Monorrepositório pnpm (`apps/api`, `apps/web`, `packages/contracts`) + `tsconfig.base` estrito
 - [ ] **B-02** (P) Projetos NestJS 12 e Next.js; Swagger em `/api/docs`; rewrite `/api/*`; verificar compatibilidade CommonJS × Prisma 7
 - [ ] **B-03** (P) ESLint, Prettier, Husky, lint-staged
-- [ ] **B-04** (P) Docker Compose com PostgreSQL local
+- [ ] **B-04** (P) PostgreSQL local embutido no projeto (`pnpm db:start`), sem Docker
 - [ ] **B-05** (P) CI: instalação → lint → tipos → testes → migrations (Postgres de serviço) → e2e → build
 - [ ] **B-06** (P) Schema Zod das variáveis de ambiente + `.env.example`
 
@@ -70,7 +70,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [ ] **B-38** (P) Banco no Neon + `migrate deploy`
 - [ ] **B-39** (M) Implantação da API no Render + `GET /api/health`
 - [ ] **B-40** (P) Implantação do frontend na Vercel
-- [ ] **B-41** (P) Contingência local: dump do banco + restauração no Docker Compose
+- [ ] **B-41** (P) Contingência local: dump do banco + restauração no PostgreSQL embutido
 
 ## E7 — Documentação e acabamento (S11)
 
