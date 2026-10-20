@@ -1,5 +1,3 @@
-// Modelos entram no B-08 (catálogo) e no B-15 (usuários e sessões).
-
 generator client {
   provider     = "prisma-client"
   output       = "../src/generated/prisma"

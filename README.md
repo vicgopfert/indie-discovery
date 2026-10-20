@@ -45,6 +45,18 @@ pnpm --filter @indie/api exec prisma migrate dev
 pnpm dev
 ```
 
+### Testes e CI
+
+```bash
+pnpm test        # unitários, sem banco
+pnpm db:start    # os e2e precisam do banco local
+pnpm test:e2e    # sobem a API inteira e usam o banco da DATABASE_URL
+```
+
+O CI (`.github/workflows/ci.yml`) roda em todo PR para a `main`: instalação,
+lint, formatação, tipos, testes unitários, migrations num PostgreSQL 18 de
+serviço, testes e2e contra esse banco e build. Um PR só entra com o CI verde.
+
 ## Decisões de configuração
 
 **Formato de módulo da API: CommonJS, com Node.js 24** (item B-02, risco R-06).

@@ -2,8 +2,7 @@ import { Injectable, type OnModuleDestroy } from '@nestjs/common';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../generated/prisma/client';
 
-// A conexão é aberta na primeira consulta, então a API sobe mesmo com o banco
-// suspenso (Neon). A URL passa a vir do ConfigService validado no B-06.
+// A conexão só abre na primeira consulta: a API sobe mesmo com o Neon suspenso.
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleDestroy {
   constructor() {

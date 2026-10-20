@@ -1,26 +1,4 @@
 #!/usr/bin/env node
-/**
- * Spike da IGDB — item B-07 do backlog, marco M0.
- *
- * Percorre todos os jogos principais com o gênero Indie (censo, não amostra) e mede:
- *   - cobertura de cada campo de que o projeto depende;
- *   - tamanho do catálogo em recortes candidatos (PR-06);
- *   - quantos jogos o critério de publisher provisório remove, por publisher;
- *   - cobertura dos indicadores de popularidade (p_j da seção 12), inclusive
- *     os primitivos do PopScore para jogos não lançados.
- *
- * Produz:
- *   docs/m0-relatorio-igdb.md            relatório do M0
- *   apps/api/test/fixtures/igdb/*.json   fixtures reais para os testes do B-10
- *
- * Uso:
- *   node scripts/igdb-spike.mjs                      censo completo (alguns minutos)
- *   node scripts/igdb-spike.mjs --max 5000           só os primeiros 5000 jogos, para testar
- *   node scripts/igdb-spike.mjs --primitives 5000    amostra maior para o PopScore
- *
- * Credenciais em IGDB_CLIENT_ID e IGDB_CLIENT_SECRET (ambiente ou .env da raiz).
- * Não tem dependências: roda com Node puro.
- */
 
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
@@ -28,8 +6,6 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const FIXTURES_DIR = resolve(ROOT, 'apps/api/test/fixtures/igdb');
-
-// ---------------------------------------------------------------- argumentos
 
 function arg(name, fallback) {
   const i = process.argv.indexOf(`--${name}`);
@@ -40,9 +16,7 @@ const MAX_GAMES = Number(arg('max', Infinity));
 const PRIMITIVE_SAMPLE = Number(arg('primitives', 3000));
 const PAGE_SIZE = 500;
 
-// Publishers grandes, por nome normalizado. Lista provisória: o B-11 a
-// transforma em config/indie-criteria.json depois de validada contra casos
-// reais. Serve aqui só para medir quantos jogos o critério remove.
+// Lista provisória, só para medir remoções; a definitiva é do B-11.
 const MAJOR_PUBLISHERS = [
   'electronic arts',
   'ea games',
@@ -95,10 +69,7 @@ const EROTIC_THEME = 42;
 const OFFICIAL_SITE_TYPE = 1;
 const STORE_SITE_TYPES = [13, 15, 16, 17]; // Steam, itch.io, Epic, GOG
 
-// Recorte por data: 1º de janeiro de 2015 (UTC).
 const SINCE_2015 = Date.UTC(2015, 0, 1) / 1000;
-
-// ------------------------------------------------------------------- cliente
 
 async function getToken(clientId, clientSecret) {
   const url = new URL('https://id.twitch.tv/oauth2/token');
@@ -148,8 +119,6 @@ function makeClient(clientId, token) {
   };
 }
 
-// -------------------------------------------------------------------- query
-
 const FIELDS = [
   'id',
   'name',
@@ -187,8 +156,6 @@ const FIELDS = [
 // versões alternativas do mesmo título, com o gênero Indie.
 const BASE_WHERE = `game_type = ${MAIN_GAME_TYPE} & version_parent = null`;
 const INDIE_WHERE = `${BASE_WHERE} & genres = (${INDIE_GENRE})`;
-
-// ------------------------------------------------------------------ perfil
 
 function developers(g) {
   return (g.involved_companies ?? []).filter((c) => c.developer);
@@ -239,8 +206,6 @@ function profile(g, now) {
   };
 }
 
-// ---------------------------------------------------------------- recortes
-
 const RECORTES = [
   {
     id: 'R0',
@@ -280,8 +245,7 @@ const RECORTES = [
   },
 ];
 
-// Recorte aprovado no M0 (relatório, seção 8): base das fixtures, do PopScore e
-// dos países. O B-11 o leva para o arquivo de critério da ingestão.
+// Recorte aprovado no M0 (relatório, seção 8).
 const FINAL = 'R4';
 
 const FIELD_CHECKS = {
@@ -301,8 +265,6 @@ const FIELD_CHECKS = {
   'Avaliações (total_rating_count > 0)': (p) => p.ratings > 0,
   'Interesse pré-lançamento (hypes > 0)': (p) => p.hypes > 0,
 };
-
-// ------------------------------------------------------------------ utilidades
 
 function pct(n, total) {
   if (!total) return '—';
@@ -327,8 +289,6 @@ function chunk(list, size) {
   return out;
 }
 
-// ---------------------------------------------------------------------- etapas
-
 async function census(igdb, now) {
   const profiles = [];
   let lastId = 0;
@@ -346,7 +306,6 @@ async function census(igdb, now) {
   return profiles.slice(0, MAX_GAMES);
 }
 
-// Para cada tipo de popularidade, quantos jogos da amostra têm pelo menos um valor.
 async function primitivesCoverage(igdb, games) {
   const types = await igdb('popularity_types', 'fields id,name,popularity_source; limit 100;');
   const seen = new Map(types.map((t) => [t.id, new Set()]));
@@ -388,12 +347,10 @@ async function writeFixtures(igdb, profiles) {
   const final = profiles.filter(RECORTES.find((r) => r.id === FINAL).test);
 
   const sets = {
-    // dados completos, o caso comum do mapeador
     complete: spread(
       final.filter((p) => !p.upcoming && p.developer && p.languages && p.keywords > 0),
       25,
     ),
-    // jogos ainda não lançados: selo "Em breve" e p_j sem avaliações
     upcoming: spread(
       final.filter((p) => p.upcoming),
       5,
@@ -403,7 +360,6 @@ async function writeFixtures(igdb, profiles) {
       r0.filter((p) => !r1.has(p.id) || !p.developer || !p.languages),
       10,
     ),
-    // removidos pelo critério de publisher, para os testes do B-11
     'major-publisher': spread(
       profiles.filter((p) => p.major.length > 0),
       10,
@@ -426,8 +382,6 @@ async function writeFixtures(igdb, profiles) {
   }
   return written;
 }
-
-// ------------------------------------------------------------------ relatório
 
 function coverageTable(groups) {
   const header = `| Campo | ${groups.map((g) => `${g.id} (${fmt(g.list.length)})`).join(' | ')} |`;
@@ -600,8 +554,6 @@ async function previousAnalysis(reportPath) {
   }
   return '_A preencher depois da execução._';
 }
-
-// ---------------------------------------------------------------------- main
 
 async function loadEnv() {
   if (process.env.IGDB_CLIENT_ID && process.env.IGDB_CLIENT_SECRET) return;

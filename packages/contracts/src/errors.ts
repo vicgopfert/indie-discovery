@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-// Formato único de erro produzido pelo filtro global de exceções (seção 5).
 export const ApiErrorSchema = z.object({
   statusCode: z.number().int(),
   error: z.string(),
