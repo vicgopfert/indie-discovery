@@ -5,13 +5,15 @@ on:
     branches: [main]
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+# Na main nada é cancelado: interromper uma migration no meio deixaria o banco inconsistente.
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   ci:
@@ -84,3 +86,33 @@ jobs:
 
       - name: Build
         run: pnpm build
+
+  migrate-production:
+    name: Migrations e seed no banco de produção
+    needs: ci
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+        with:
+          cache: true
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - name: Instalação
+        run: pnpm install --frozen-lockfile
+
+      - name: Migrations
+        run: pnpm --filter @indie/api exec prisma migrate deploy
+
+      - name: Seed
+        run: pnpm --filter @indie/api exec prisma db seed

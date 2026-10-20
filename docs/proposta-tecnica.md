@@ -282,8 +282,8 @@ Todas as variáveis (`DATABASE_URL`, `PORT`, `SESSION_TTL_DAYS`, `WEB_ORIGIN`, `
 | Componente | Escolha | Limitações conhecidas | Consequência para o plano |
 | --- | --- | --- | --- |
 | Frontend | Vercel, plano gratuito | Uso pessoal e não comercial | Adequado a um TCC |
-| API | Render, *web service* gratuito | 512 MB de memória; hiberna após 15 minutos sem tráfego e leva cerca de um minuto para acordar; sistema de arquivos efêmero | Acordar a API antes de demonstrar; o índice em memória precisa caber em 512 MB (dimensionado no M0) |
-| Banco | Neon, plano gratuito | 1 GB por projeto; o computador do banco suspende após 5 minutos ociosos e volta na primeira consulta | O catálogo recortado, de cerca de 20 mil jogos, cabe com folga; o banco não expira |
+| API | Render, *web service* gratuito | 512 MB de memória; hiberna após 15 minutos sem tráfego e leva cerca de um minuto para acordar; sistema de arquivos efêmero; 750 horas de instância por mês na conta | Acordar a API antes de demonstrar; o índice em memória precisa caber em 512 MB (dimensionado no M0); um único serviço no ar o mês todo usa no máximo 744 horas |
+| Banco | Neon, plano gratuito | 1 GB por projeto; o computador do banco suspende após 5 minutos ociosos e volta na primeira consulta; 100 CU-horas de computação e 5 GB de tráfego de saída por projeto por mês, e ao estourar o banco fica suspenso até o mês seguinte, sem perder dados (conferido no B-38, 20/10/2026) | O catálogo recortado, de cerca de 20 mil jogos, cabe com folga; o banco não expira; a computação fica no tamanho mínimo, e o consumo é conferido no painel do Neon antes de cada marco e da demonstração |
 | Banco (descartado) | Render Postgres gratuito | Expira 30 dias após a criação | Não serve para um projeto de 24 semanas |
 
 Os limites dos planos gratuitos mudam com frequência. Eles devem ser conferidos de novo na semana 3 (B-38) e na semana 21. Se qualquer serviço deixar de atender, a contingência é o ambiente local, com o PostgreSQL embutido e um dump do banco (B-41), ensaiado antes da defesa.

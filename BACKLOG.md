@@ -67,7 +67,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 
 ## E6 — Implantação (S2, contínuo)
 
-- [ ] **B-38** (P) Banco no Neon + `migrate deploy`
+- [x] **B-38** (P) Banco no Neon + `migrate deploy`
 - [ ] **B-39** (M) Implantação da API no Render + `GET /api/health`
 - [ ] **B-40** (P) Implantação do frontend na Vercel
 - [ ] **B-41** (P) Contingência local: dump do banco + restauração no PostgreSQL embutido
