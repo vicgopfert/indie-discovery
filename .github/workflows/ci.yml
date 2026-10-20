@@ -56,6 +56,11 @@ jobs:
       - name: Instalação
         run: pnpm install --frozen-lockfile
 
+      # Só aviso: vulnerabilidade sem correção disponível não bloqueia o PR.
+      - name: Auditoria de dependências
+        run: pnpm audit
+        continue-on-error: true
+
       - name: Lint
         run: pnpm lint
 
