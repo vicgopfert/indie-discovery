@@ -76,6 +76,9 @@ jobs:
       - name: Migrations
         run: pnpm --filter @indie/api exec prisma migrate deploy
 
+      - name: Seed
+        run: pnpm --filter @indie/api exec prisma db seed
+
       - name: Testes e2e
         run: pnpm test:e2e
 
