@@ -1,11 +1,14 @@
 import 'reflect-metadata';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import type { ApiEnv } from './config/env';
+import { configureApp } from './configure-app';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api');
+  configureApp(app);
 
   const config = new DocumentBuilder()
     .setTitle('Indie Discovery API')
@@ -14,7 +17,8 @@ async function bootstrap() {
     .build();
   SwaggerModule.setup('api/docs', app, () => SwaggerModule.createDocument(app, config));
 
-  await app.listen(process.env.PORT ?? 3001);
+  const env = app.get<ConfigService<ApiEnv, true>>(ConfigService);
+  await app.listen(env.get('PORT', { infer: true }));
 }
 
 void bootstrap();

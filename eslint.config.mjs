@@ -50,6 +50,7 @@ export default defineConfig([
     files: ['apps/web/**/*.{ts,tsx}'],
     extends: [nextRules],
     settings: { next: { rootDir: 'apps/web' }, react: { version: '19' } },
+    rules: { 'react/no-danger': 'error' },
   },
 
   // Precisa ser o último.

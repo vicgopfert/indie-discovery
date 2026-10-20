@@ -14,7 +14,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [x] **B-03** (P) ESLint, Prettier, Husky, lint-staged
 - [x] **B-04** (P) PostgreSQL local embutido no projeto (`pnpm db:start`), sem Docker
 - [x] **B-05** (P) CI: instalação → lint → tipos → testes → migrations (Postgres de serviço) → e2e → build
-- [ ] **B-06** (P) Schema Zod das variáveis de ambiente + `.env.example`
+- [x] **B-06** (P) Schema Zod das variáveis de ambiente + `.env.example`
 
 ## E1 — Catálogo e ingestão (S3–S4)
 

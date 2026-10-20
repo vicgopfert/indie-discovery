@@ -37,6 +37,8 @@ jobs:
 
     env:
       DATABASE_URL: postgresql://indie:indie@localhost:5432/indie?schema=public
+      WEB_ORIGIN: http://localhost:3000
+      INTERNAL_RELOAD_SECRET: segredo-do-ci-usado-so-nos-testes-e2e
       NODE_ENV: test
       NEXT_TELEMETRY_DISABLED: '1'
 
@@ -53,6 +55,11 @@ jobs:
 
       - name: Instalação
         run: pnpm install --frozen-lockfile
+
+      # Só aviso: vulnerabilidade sem correção disponível não bloqueia o PR.
+      - name: Auditoria de dependências
+        run: pnpm audit
+        continue-on-error: true
 
       - name: Lint
         run: pnpm lint
