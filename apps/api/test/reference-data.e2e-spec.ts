@@ -27,6 +27,15 @@ describe('Seed de países e idiomas', () => {
     expect(await prisma.language.count()).toBe(first.languages);
   });
 
+  it('atualiza registros existentes com os dados versionados', async () => {
+    await prisma.country.update({ where: { code: 76 }, data: { namePt: 'Nome antigo' } });
+
+    await seedReferenceData(prisma);
+
+    const brazil = await prisma.country.findUniqueOrThrow({ where: { code: 76 } });
+    expect(brazil.namePt).toBe('Brasil');
+  });
+
   it('usa os códigos que a IGDB devolve', async () => {
     const brazil = await prisma.country.findUniqueOrThrow({ where: { code: 76 } });
     const portugueseBr = await prisma.language.findUniqueOrThrow({ where: { igdbId: 21 } });
