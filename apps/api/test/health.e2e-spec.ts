@@ -19,9 +19,9 @@ describe('GET /api/health', () => {
     await app.close();
   });
 
-  it('responde que a API está no ar', async () => {
+  it('responde que a API e o banco estão no ar', async () => {
     const res = await request(app.getHttpServer()).get('/api/health').expect(200);
 
-    expect(res.body).toEqual({ status: 'ok' });
+    expect(res.body).toEqual({ status: 'ok', database: 'up' });
   });
 });

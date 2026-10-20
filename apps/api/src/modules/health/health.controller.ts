@@ -1,12 +1,18 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { HealthService } from './health.service';
 
 @ApiTags('health')
 @Controller('health')
 export class HealthController {
+  constructor(private readonly health: HealthService) {}
+
   @Get()
-  @ApiOkResponse({ description: 'API no ar', schema: { example: { status: 'ok' } } })
+  @ApiOkResponse({
+    description: 'API no ar, com o estado do banco ("degraded" quando o banco não responde)',
+    schema: { example: { status: 'ok', database: 'up' } },
+  })
   check() {
-    return { status: 'ok' };
+    return this.health.check();
   }
 }
