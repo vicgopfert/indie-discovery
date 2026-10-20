@@ -64,6 +64,20 @@ e o seed no banco de produção (Neon), com a URL direta do banco no secret
 `PRODUCTION_DATABASE_URL` do repositório. Ele também pode ser disparado à mão
 na aba Actions ("Run workflow").
 
+## Ambiente implantado
+
+| O quê | Onde | Configuração |
+| --- | --- | --- |
+| Site | https://indie-discovery.vercel.app | Vercel, pasta `apps/web`, comando de build em `apps/web/vercel.json`; variáveis `API_URL` e `ENABLE_EXPERIMENTAL_COREPACK=1` no painel |
+| API | https://indie-discovery-api.onrender.com | Render, pelo Blueprint `render.yaml`; `DATABASE_URL` (URL com pooling) e `WEB_ORIGIN` no painel |
+| Swagger | https://indie-discovery.vercel.app/api/docs | — |
+| Banco | Neon, PostgreSQL 18, AWS US East | Migrations e seed pelo job `migrate-production` do CI (secret `PRODUCTION_DATABASE_URL`, URL direta) |
+
+O navegador só fala com a Vercel: `/api/*` é repassado para o Render pelo rewrite
+do Next.js. O Render implanta a API só depois do CI verde na `main`; a Vercel
+implanta o site a cada push. A API hiberna após 15 minutos sem tráfego e leva
+cerca de um minuto para acordar.
+
 ## Decisões de configuração
 
 **Formato de módulo da API: CommonJS, com Node.js 24** (item B-02, risco R-06).
