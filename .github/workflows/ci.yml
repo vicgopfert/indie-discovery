@@ -37,6 +37,8 @@ jobs:
 
     env:
       DATABASE_URL: postgresql://indie:indie@localhost:5432/indie?schema=public
+      WEB_ORIGIN: http://localhost:3000
+      INTERNAL_RELOAD_SECRET: segredo-do-ci-usado-so-nos-testes-e2e
       NODE_ENV: test
       NEXT_TELEMETRY_DISABLED: '1'
 
