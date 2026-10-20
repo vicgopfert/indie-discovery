@@ -1,0 +1,3297 @@
+[
+  {
+    "id": 527,
+    "cover": {
+      "id": 115816,
+      "image_id": "co2hd4"
+    },
+    "first_release_date": 1321920000,
+    "genres": [
+      {
+        "id": 5,
+        "name": "Shooter"
+      },
+      {
+        "id": 9,
+        "name": "Puzzle"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 1281,
+        "company": {
+          "id": 414,
+          "country": 191,
+          "name": "Croteam"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 1282,
+        "company": {
+          "id": 634,
+          "country": 840,
+          "name": "Devolver Digital"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 1,
+        "name": "modern warfare"
+      },
+      {
+        "id": 3,
+        "name": "aliens"
+      },
+      {
+        "id": 21,
+        "name": "helicopter"
+      },
+      {
+        "id": 129,
+        "name": "bloody"
+      },
+      {
+        "id": 170,
+        "name": "time travel"
+      },
+      {
+        "id": 226,
+        "name": "magic"
+      },
+      {
+        "id": 472,
+        "name": "prequel"
+      },
+      {
+        "id": 558,
+        "name": "death"
+      },
+      {
+        "id": 562,
+        "name": "soldier"
+      },
+      {
+        "id": 660,
+        "name": "run and gun"
+      },
+      {
+        "id": 947,
+        "name": "spaceship"
+      },
+      {
+        "id": 1138,
+        "name": "egypt"
+      },
+      {
+        "id": 1158,
+        "name": "steam"
+      },
+      {
+        "id": 1293,
+        "name": "achievements"
+      },
+      {
+        "id": 1322,
+        "name": "mutants"
+      },
+      {
+        "id": 1333,
+        "name": "online"
+      },
+      {
+        "id": 1494,
+        "name": "steam trading cards"
+      },
+      {
+        "id": 1898,
+        "name": "easter egg"
+      },
+      {
+        "id": 1961,
+        "name": "nudity"
+      },
+      {
+        "id": 1986,
+        "name": "teleportation"
+      },
+      {
+        "id": 2109,
+        "name": "level selection"
+      },
+      {
+        "id": 2141,
+        "name": "slow-motion"
+      },
+      {
+        "id": 2543,
+        "name": "playstation network"
+      },
+      {
+        "id": 2962,
+        "name": "alien invasion"
+      },
+      {
+        "id": 3087,
+        "name": "one-man army"
+      },
+      {
+        "id": 3203,
+        "name": "darkness"
+      },
+      {
+        "id": 3486,
+        "name": "boss fight"
+      },
+      {
+        "id": 3831,
+        "name": "explosion"
+      },
+      {
+        "id": 4004,
+        "name": "steam achievements"
+      },
+      {
+        "id": 4134,
+        "name": "digital distribution"
+      },
+      {
+        "id": 4135,
+        "name": "xbox controller support for pc"
+      },
+      {
+        "id": 4150,
+        "name": "steam cloud"
+      },
+      {
+        "id": 4151,
+        "name": "steam leaderboards"
+      },
+      {
+        "id": 4179,
+        "name": "throwing weapons"
+      },
+      {
+        "id": 4210,
+        "name": "split-screen multiplayer"
+      },
+      {
+        "id": 4245,
+        "name": "playstation trophies"
+      },
+      {
+        "id": 4259,
+        "name": "modern military"
+      },
+      {
+        "id": 4275,
+        "name": "steam workshop"
+      },
+      {
+        "id": 4287,
+        "name": "voice acting"
+      },
+      {
+        "id": 4297,
+        "name": "protagonist's name in the title"
+      },
+      {
+        "id": 4353,
+        "name": "human"
+      },
+      {
+        "id": 4359,
+        "name": "polygonal 3d"
+      },
+      {
+        "id": 4403,
+        "name": "pop culture reference"
+      },
+      {
+        "id": 4407,
+        "name": "skeletons"
+      },
+      {
+        "id": 4613,
+        "name": "non-player character"
+      },
+      {
+        "id": 4614,
+        "name": "extreme violence"
+      },
+      {
+        "id": 4615,
+        "name": "profanity"
+      },
+      {
+        "id": 4637,
+        "name": "corpse"
+      },
+      {
+        "id": 4681,
+        "name": "retail games with steam activation"
+      },
+      {
+        "id": 4711,
+        "name": "sprinting mechanics"
+      },
+      {
+        "id": 4869,
+        "name": "downloadable content"
+      },
+      {
+        "id": 4890,
+        "name": "xbox live"
+      },
+      {
+        "id": 4891,
+        "name": "melee"
+      },
+      {
+        "id": 4897,
+        "name": "auto-saving"
+      },
+      {
+        "id": 4901,
+        "name": "kill feed"
+      },
+      {
+        "id": 4990,
+        "name": "instant kill"
+      },
+      {
+        "id": 4991,
+        "name": "secret area"
+      },
+      {
+        "id": 4992,
+        "name": "infinite ammo"
+      },
+      {
+        "id": 4999,
+        "name": "vision obstruction"
+      },
+      {
+        "id": 5029,
+        "name": "difficulty level"
+      },
+      {
+        "id": 5106,
+        "name": "in-game achievement menu"
+      },
+      {
+        "id": 5181,
+        "name": "quicksaving"
+      },
+      {
+        "id": 5182,
+        "name": "quickloading"
+      },
+      {
+        "id": 5262,
+        "name": "steam play"
+      },
+      {
+        "id": 5287,
+        "name": "rock music"
+      },
+      {
+        "id": 5304,
+        "name": "survival mode"
+      },
+      {
+        "id": 5414,
+        "name": "developer cameo"
+      },
+      {
+        "id": 5453,
+        "name": "destructible environment"
+      },
+      {
+        "id": 5560,
+        "name": "multiplayer scoreboard"
+      },
+      {
+        "id": 5675,
+        "name": "suicide"
+      },
+      {
+        "id": 5691,
+        "name": "difficulty achievement"
+      },
+      {
+        "id": 5703,
+        "name": "tentacles"
+      },
+      {
+        "id": 5790,
+        "name": "valve anti-cheat"
+      },
+      {
+        "id": 5850,
+        "name": "high definition graphics"
+      },
+      {
+        "id": 5896,
+        "name": "dynamic soundtrack"
+      },
+      {
+        "id": 6304,
+        "name": "ancient advanced civilization technology"
+      },
+      {
+        "id": 6315,
+        "name": "dedicated servers"
+      },
+      {
+        "id": 6328,
+        "name": "alternative blood"
+      },
+      {
+        "id": 6620,
+        "name": "scripted events"
+      },
+      {
+        "id": 6653,
+        "name": "fire manipulation"
+      },
+      {
+        "id": 6735,
+        "name": "first-person platforming"
+      },
+      {
+        "id": 6828,
+        "name": "propaganda"
+      },
+      {
+        "id": 6863,
+        "name": "guided by radio"
+      },
+      {
+        "id": 7116,
+        "name": "arrival by crash landing"
+      },
+      {
+        "id": 7158,
+        "name": "infinite spawn"
+      },
+      {
+        "id": 7215,
+        "name": "context sensitive"
+      },
+      {
+        "id": 7316,
+        "name": "outside of the map"
+      },
+      {
+        "id": 7416,
+        "name": "creature compendium"
+      },
+      {
+        "id": 7568,
+        "name": "swarming enemies"
+      },
+      {
+        "id": 8286,
+        "name": "persistent enemy"
+      },
+      {
+        "id": 8801,
+        "name": "crash landing"
+      },
+      {
+        "id": 9200,
+        "name": "crowd control"
+      },
+      {
+        "id": 9989,
+        "name": "novint falcon support"
+      },
+      {
+        "id": 10048,
+        "name": "pc to console port"
+      },
+      {
+        "id": 10447,
+        "name": "faceless antagonist"
+      },
+      {
+        "id": 10587,
+        "name": "in-game anti-piracy effects"
+      },
+      {
+        "id": 11210,
+        "name": "achievement hitching"
+      },
+      {
+        "id": 23933,
+        "name": "male protagonist"
+      }
+    ],
+    "name": "Serious Sam 3: BFE",
+    "rating_count": 177,
+    "slug": "serious-sam-3-bfe",
+    "storyline": "Prior to AD 2060, humanity had slowly begun uncovering artifacts and ruins left behind in ancient times by the Sirians, the famous and long-thought extinct race from the place of Sirius. Unfortunately, Mental has chosen this time to turn his attention upon Earth. He dispatches his space fleet carrying his endless hordes to attack Earth, leading a three-year conquest that has humanity driven almost to the point of extinction. In a last-ditch effort, the survivors turn to the Time-Lock, a recently excavated device supposedly capable of granting a single person the ability of time travel via an inter-dimensional portal. Through it, that person could reach a pivotal point in time and alter events of the past. But as the device lies dormant, they must first discover a means to turn it on.\n\nSam \"Serious\" Stone, part of the Earth Defense force, is dispatched with a detachment of soldiers in the Alpha team to modern Egypt, which is occupied by Mental's alien army. Their original mission is to recon, rendezvous, and extract Bravo team who are protecting Dr Stein, a scientist carrying hieroglyphics believed to contain instructions for powering up the Time-Lock. Sam's insertion goes haywire as his chopper is shot down and both teams are quickly wiped out. However, he is able to recover the hieroglyphics from Stein's phone in the museum and transmit them to headquarters. Deciphering indicates there is a hidden Sirian chamber below the Great Pyramid. Sam clears himself a path to a tunnel underneath the Sphinx and descends into the Pyramid. He not only discovers the hidden chamber but recovers crucial information and a bracelet device from the remains of what might have been Earth's last Sirian.\n\nIn order to power the Time-Lock, two dormant but incredibly powerful plasma-energy generators need to be activated. Hellfire from Charlie team inserts Sam to bring both online. This is slowly accomplished and Team Charlie is staged to enter the Time-Lock. Sam is relieved of duty and in the process of being extracted from Cairo, but is shot down once again and is forced to flee towards the lost ruins of Nubia. Traversing through more tombs, Sam gets back in touch with Hellfire and learns that Mental's forces have overrun the human military and killed them all shortly before dying herself. Now determined to finish what the Sirians has started, Sam vows to use the Time-Lock himself and kill Mental in the past before he can destroy humanity in the present. Sam then makes one last travel to Hatshepsut Temple, where the Time-Lock is located. The struggle to this destination ends with Sam killing Ugh-Zan IV. With Ugh-Zan IV dead, the Time-Lock then activates, displaying an inter-dimensional portal to 3000 B.C., the timeline where the Sirians became extinct. Sam calls Mental on Stein's phone and is answered by Mental's daughter, Judy. She tells him that Mental is planning to \"moon\" him. Sam notices the Moon plummeting rapidly within Earth's atmosphere and escapes through the Time-Lock to 3000 B.C. as the Moon impacts Earth, destroying the planet.",
+    "summary": "Serious Sam 3: BFE is a first-person action shooter, a glorious throwback to the golden age of first-person shooters where men were men, cover was for amateurs and pulling the trigger made things go boom.\n\nServing as a prequel to the original game, Serious Sam: The First Encounter, Serious Sam 3 takes place during the Earth’s final struggle against Mental’s invading legions of beasts and mercenaries.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 18,
+        "name": "Science fiction"
+      },
+      {
+        "id": 27,
+        "name": "Comedy"
+      },
+      {
+        "id": 39,
+        "name": "Warfare"
+      }
+    ],
+    "total_rating_count": 183,
+    "url": "https://www.igdb.com/games/serious-sam-3-bfe",
+    "websites": [
+      {
+        "id": 926806,
+        "url": "https://www.youtube.com/croteam/",
+        "type": 9
+      },
+      {
+        "id": 18808,
+        "url": "https://store.steampowered.com/app/41070",
+        "type": 13
+      },
+      {
+        "id": 66968,
+        "url": "http://www.croteam.com",
+        "type": 1
+      },
+      {
+        "id": 45629,
+        "url": "https://en.wikipedia.org/wiki/Serious_Sam_3:_BFE",
+        "type": 3
+      },
+      {
+        "id": 926805,
+        "url": "https://www.facebook.com/SeriousSamFan/",
+        "type": 4
+      },
+      {
+        "id": 332874,
+        "url": "https://www.twitch.tv/directory/game/Serious%20Sam%203:%20BFE",
+        "type": 6
+      },
+      {
+        "id": 204477,
+        "url": "https://twitter.com/SeriousSamIAm",
+        "type": 5
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 409265,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 409267,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 409269,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 409272,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 409273,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 409275,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 409274,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 409271,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 409270,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 409276,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 409277,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 409282,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 409278,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 409286,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 409289,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 409291,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 409292,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 409293,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 5076,
+    "cover": {
+      "id": 5052,
+      "image_id": "so1nesqrzu0qxyreeeve"
+    },
+    "first_release_date": 1204588800,
+    "genres": [
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 12242,
+        "company": {
+          "id": 1898,
+          "country": 840,
+          "name": "Sanzaru Games"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 12241,
+        "company": {
+          "id": 1,
+          "country": 840,
+          "name": "Electronic Arts"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 12243,
+        "company": {
+          "id": 2250,
+          "name": "Nunchuck Games"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 61,
+        "name": "martial arts"
+      },
+      {
+        "id": 164,
+        "name": "ninja"
+      },
+      {
+        "id": 274,
+        "name": "minigames"
+      },
+      {
+        "id": 1158,
+        "name": "steam"
+      },
+      {
+        "id": 1293,
+        "name": "achievements"
+      },
+      {
+        "id": 4004,
+        "name": "steam achievements"
+      },
+      {
+        "id": 4134,
+        "name": "digital distribution"
+      },
+      {
+        "id": 4328,
+        "name": "minigame collection"
+      },
+      {
+        "id": 4438,
+        "name": "motion control"
+      },
+      {
+        "id": 5194,
+        "name": "wii remote infrared pointer gameplay"
+      }
+    ],
+    "name": "Ninja Reflex",
+    "slug": "ninja-reflex",
+    "summary": "Master the Art of Speed and become a Ninja Gamer! Ninja Reflex uses martial arts challenges to test your reflexes, sharpen your hand-eye coordination, and measure your reaction times to the millisecond. Wield throwing stars, katanas, nunchucks...even chopsticks! Progress from White Belt all the way to Black Belt, 3rd Degree, and see if you can complete the 50+ Steam achievements on your journey!",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 40,
+        "name": "Party"
+      }
+    ],
+    "total_rating_count": 4,
+    "url": "https://www.igdb.com/games/ninja-reflex",
+    "websites": [
+      {
+        "id": 26893,
+        "url": "http://www.nunchuckgames.com/ninjareflex/",
+        "type": 1
+      },
+      {
+        "id": 26892,
+        "url": "https://store.steampowered.com/app/13000",
+        "type": 13
+      },
+      {
+        "id": 395037,
+        "url": "https://www.twitch.tv/directory/game/Ninja%20Reflex",
+        "type": 6
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 1697380,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 8920,
+    "cover": {
+      "id": 90719,
+      "image_id": "co1xzz"
+    },
+    "first_release_date": 1441152000,
+    "genres": [
+      {
+        "id": 11,
+        "name": "Real Time Strategy (RTS)"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 26,
+        "name": "Quiz/Trivia"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 2,
+    "involved_companies": [
+      {
+        "id": 21852,
+        "company": {
+          "id": 110,
+          "country": 250,
+          "name": "Focus Entertainment"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 21851,
+        "company": {
+          "id": 457,
+          "country": 250,
+          "name": "Eugen Systems"
+        },
+        "developer": true,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 1,
+        "name": "modern warfare"
+      },
+      {
+        "id": 70,
+        "name": "futuristic warfare"
+      },
+      {
+        "id": 4259,
+        "name": "modern military"
+      }
+    ],
+    "name": "Act of Aggression",
+    "rating_count": 6,
+    "slug": "act-of-aggression",
+    "summary": "Set in the near-future, Act of Aggression is an explosive techno-thriller real-time strategy game hailing from the Golden Era of RTS. With three global super-powers, there can be only one victory.\n\nAcross three distinct factions each armed with the greatest modern and prototype military weaponry, head into some of the world’s most volatile conflict zones, building bases for mass production, establishing resource supply lines, and waging war in Eugen Systems’ explosive RTS.\n\nBuild and manage the cogs of war in a return to strategic base-building, resource harvesting, and dynamic tech-trees. Capture banks and enemy soldiers to generate cash income. Upgrade units with specialization and unlock new skills. Embark on an epic single player Campaign with a thrilling original story, and fight throughout the world on realistic environments. Compete online in visceral PVP battles and become the best commander.",
+    "themes": [
+      {
+        "id": 18,
+        "name": "Science fiction"
+      },
+      {
+        "id": 27,
+        "name": "Comedy"
+      },
+      {
+        "id": 39,
+        "name": "Warfare"
+      }
+    ],
+    "total_rating_count": 12,
+    "url": "https://www.igdb.com/games/act-of-aggression",
+    "websites": [
+      {
+        "id": 46852,
+        "url": "http://www.actofaggression-game.com/",
+        "type": 1
+      },
+      {
+        "id": 46853,
+        "url": "https://store.steampowered.com/app/318020",
+        "type": 13
+      },
+      {
+        "id": 336523,
+        "url": "https://www.twitch.tv/directory/game/Act%20of%20Aggression",
+        "type": 6
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 546093,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 546094,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 546095,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 546096,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 546097,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 546098,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 546099,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 546100,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 546101,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 546102,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 546103,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 546104,
+        "language": {
+          "id": 4,
+          "name": "Czech",
+          "locale": "cs-CZ"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 546105,
+        "language": {
+          "id": 4,
+          "name": "Czech",
+          "locale": "cs-CZ"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 546106,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 546107,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 11488,
+    "cover": {
+      "id": 113508,
+      "image_id": "co2fl0"
+    },
+    "first_release_date": 1441843200,
+    "genres": [
+      {
+        "id": 2,
+        "name": "Point-and-click"
+      },
+      {
+        "id": 9,
+        "name": "Puzzle"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 190543,
+        "company": {
+          "id": 8333,
+          "country": 392,
+          "name": "A Jolly Corpse"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 190544,
+        "company": {
+          "id": 6064,
+          "name": "Tendershoot"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 190545,
+        "company": {
+          "id": 634,
+          "country": 840,
+          "name": "Devolver Digital"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 211,
+        "name": "vampire"
+      },
+      {
+        "id": 575,
+        "name": "robots"
+      },
+      {
+        "id": 1158,
+        "name": "steam"
+      },
+      {
+        "id": 1228,
+        "name": "bird"
+      },
+      {
+        "id": 1935,
+        "name": "dog"
+      },
+      {
+        "id": 2170,
+        "name": "dreams"
+      },
+      {
+        "id": 4134,
+        "name": "digital distribution"
+      },
+      {
+        "id": 4267,
+        "name": "clowns"
+      },
+      {
+        "id": 4368,
+        "name": "mouse"
+      },
+      {
+        "id": 5262,
+        "name": "steam play"
+      },
+      {
+        "id": 7112,
+        "name": "dream sequence"
+      },
+      {
+        "id": 7668,
+        "name": "crane puzzle"
+      },
+      {
+        "id": 23933,
+        "name": "male protagonist"
+      }
+    ],
+    "name": "Dropsy",
+    "rating_count": 27,
+    "slug": "dropsy",
+    "summary": "After a deadly circus fire shatters his world and tarnishes his name, Dropsy the Clown finds himself on a journey of self-discovery through a story that harnesses powerful themes of love and kindness. With his father gravely ill and the world turning its back on a once happy-go-lucky clown, Dropsy will need to help those in need, hug total strangers, and unravel dark and shameful secrets from his past on the way to redemption. Oh, and Dropsy can also talk to animals.\n\nDropsy is a non-traditional take on the classic point and click adventure formula starring the game’s perpetually carefree namesake clown as he explores a richly detailed world full of colorful characters and sinister secrets, doling out hugs along the way. Rather than lead players on a singular narrative path, players are free to choose which avenues of adventure they want to explore in an open world setting and can piece the puzzles and story together however they choose.",
+    "themes": [
+      {
+        "id": 27,
+        "name": "Comedy"
+      },
+      {
+        "id": 38,
+        "name": "Open world"
+      }
+    ],
+    "total_rating_count": 30,
+    "url": "https://www.igdb.com/games/dropsy",
+    "websites": [
+      {
+        "id": 780035,
+        "url": "https://www.nintendo.com/store/products/dropsy-switch/",
+        "type": 24
+      },
+      {
+        "id": 47344,
+        "url": "https://store.steampowered.com/app/274350",
+        "type": 13
+      },
+      {
+        "id": 118709,
+        "url": "https://www.gog.com/game/dropsy",
+        "type": 17
+      },
+      {
+        "id": 240650,
+        "url": "https://devolverdigital.itch.io/dropsy",
+        "type": 15
+      },
+      {
+        "id": 47343,
+        "url": "http://dropsytheclown.com",
+        "type": 1
+      },
+      {
+        "id": 334886,
+        "url": "https://www.twitch.tv/directory/game/Dropsy",
+        "type": 6
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 475644,
+        "language": {
+          "id": 1,
+          "name": "Arabic",
+          "locale": "ar"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475646,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475645,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475647,
+        "language": {
+          "id": 4,
+          "name": "Czech",
+          "locale": "cs-CZ"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475649,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475648,
+        "language": {
+          "id": 5,
+          "name": "Danish",
+          "locale": "da-DK"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475651,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475650,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475652,
+        "language": {
+          "id": 11,
+          "name": "Finnish",
+          "locale": "fi-FI"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475666,
+        "language": {
+          "id": 28,
+          "name": "Ukrainian",
+          "locale": "uk-UA"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475667,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475656,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475658,
+        "language": {
+          "id": 6,
+          "name": "Dutch",
+          "locale": "nl-NL"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475659,
+        "language": {
+          "id": 18,
+          "name": "Norwegian",
+          "locale": "nb-NO"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475660,
+        "language": {
+          "id": 19,
+          "name": "Polish",
+          "locale": "pl-PL"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475662,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475661,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475664,
+        "language": {
+          "id": 25,
+          "name": "Thai",
+          "locale": "th-TH"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475663,
+        "language": {
+          "id": 23,
+          "name": "Swedish",
+          "locale": "sv-SE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475665,
+        "language": {
+          "id": 24,
+          "name": "Turkish",
+          "locale": "tr-TR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475653,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475655,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475654,
+        "language": {
+          "id": 14,
+          "name": "Hungarian",
+          "locale": "hu-HU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475657,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 19543,
+    "cover": {
+      "id": 128659,
+      "image_id": "co2r9v"
+    },
+    "first_release_date": 1476662400,
+    "genres": [
+      {
+        "id": 5,
+        "name": "Shooter"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 196684,
+        "company": {
+          "id": 414,
+          "country": 191,
+          "name": "Croteam"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 196685,
+        "company": {
+          "id": 634,
+          "country": 840,
+          "name": "Devolver Digital"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 1158,
+        "name": "steam"
+      },
+      {
+        "id": 4134,
+        "name": "digital distribution"
+      },
+      {
+        "id": 4261,
+        "name": "pre-release public testing"
+      }
+    ],
+    "name": "Serious Sam VR: The Last Hope",
+    "rating_count": 4,
+    "slug": "serious-sam-vr-the-last-hope",
+    "summary": "Serious Sam returns in his first ever VR adventure to dual wield an overwhelming amount of explosive ordinance and battle Mental’s relentless hordes in Serious Sam VR: The Last Hope. The Earth Defense Force is crumbling under the crushing offensive of Mental and his legions of savage warriors and beasts. Now the galaxy’s last hope must battle from planet to planet – pilling up and upgrading his arsenal along the way - and lay waste to massive alien swarms under Mental’s control.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 21,
+        "name": "Survival"
+      },
+      {
+        "id": 27,
+        "name": "Comedy"
+      }
+    ],
+    "total_rating_count": 5,
+    "url": "https://www.igdb.com/games/serious-sam-vr-the-last-hope",
+    "websites": [
+      {
+        "id": 32794,
+        "url": "https://store.steampowered.com/app/465240",
+        "type": 13
+      },
+      {
+        "id": 32795,
+        "url": "http://www.croteam.com",
+        "type": 1
+      },
+      {
+        "id": 985888,
+        "url": "https://x.com/SeriousSamIAm",
+        "type": 5
+      },
+      {
+        "id": 985889,
+        "url": "https://www.youtube.com/croteam/",
+        "type": 9
+      },
+      {
+        "id": 985887,
+        "url": "https://www.facebook.com/SeriousSamFan/",
+        "type": 4
+      },
+      {
+        "id": 512415,
+        "url": "https://www.twitch.tv/directory/game/Serious%20Sam%20VR:%20The%20Last%20Hope",
+        "type": 6
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 259773,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 259776,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 32198,
+    "cover": {
+      "id": 433309,
+      "image_id": "co9acd"
+    },
+    "first_release_date": 1469491200,
+    "genres": [
+      {
+        "id": 8,
+        "name": "Platform"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 60192,
+        "company": {
+          "id": 111,
+          "country": 826,
+          "name": "The Creative Assembly"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 303941,
+        "company": {
+          "id": 61005,
+          "country": 826,
+          "name": "War Child Gaming"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 303939,
+        "company": {
+          "id": 112,
+          "country": 392,
+          "name": "Sega"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "name": "Rise",
+    "slug": "rise",
+    "summary": "Experience our music-driven platform adventure and aim for the highest score! You can even use your own music! Go on a metaphysical journey to the sky and beyond collecting war letters for a loved one.",
+    "url": "https://www.igdb.com/games/rise",
+    "websites": [
+      {
+        "id": 126502,
+        "url": "https://warchildgaming.org.uk/campaign/help-pc-mobile/",
+        "type": 1
+      },
+      {
+        "id": 705540,
+        "url": "https://store.steampowered.com/app/497380/Rise/",
+        "type": 13
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 125024,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 106836,
+    "cover": {
+      "id": 90475,
+      "image_id": "co1xt7"
+    },
+    "first_release_date": 1640217600,
+    "genres": [
+      {
+        "id": 8,
+        "name": "Platform"
+      },
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 1,
+    "involved_companies": [
+      {
+        "id": 69079,
+        "company": {
+          "id": 16256,
+          "country": 724,
+          "name": "Uprising Studios"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 69078,
+        "company": {
+          "id": 10075,
+          "country": 40,
+          "name": "THQ Nordic"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 220132,
+        "company": {
+          "id": 6987,
+          "country": 276,
+          "name": "HandyGames"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 1493,
+        "name": "walking simulator"
+      },
+      {
+        "id": 1697,
+        "name": "atmospheric"
+      },
+      {
+        "id": 2907,
+        "name": "exploration driven"
+      },
+      {
+        "id": 49326,
+        "name": "previously on - prime gaming"
+      }
+    ],
+    "name": "Scarf",
+    "rating_count": 5,
+    "slug": "scarf",
+    "summary": "Scarf is a 3D Adventure game, where protagonist Hyke must use his polymorphic scarf to explore a magical environment, solve mysterious puzzles and overcome difficult challenges. Hyke’s scarf morphs into different objects which will help to progress the adventure. Hyke was born in an unknown place, surrounded by other souls. All of them will start a path through the World with the main goal being to meld with it and become part of nature.\n\n\"Mixing walking simulator and 3D platformers, Scarf is an atmospheric and emotional journey about what it means to be a hero. Travel to three beautiful crafted worlds and discover your true destiny.\"",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 38,
+        "name": "Open world"
+      },
+      {
+        "id": 43,
+        "name": "Mystery"
+      }
+    ],
+    "total_rating_count": 10,
+    "url": "https://www.igdb.com/games/scarf",
+    "websites": [
+      {
+        "id": 88007,
+        "url": "https://store.steampowered.com/app/645320",
+        "type": 13
+      },
+      {
+        "id": 835908,
+        "url": "https://store.playstation.com/en-us/concept/10006997",
+        "type": 23
+      },
+      {
+        "id": 87825,
+        "url": "https://www.thqnordic.com/node/284",
+        "type": 1
+      },
+      {
+        "id": 167236,
+        "url": "https://twitter.com/uprisingworks",
+        "type": 5
+      },
+      {
+        "id": 253568,
+        "url": "https://www.epicgames.com/store/en-US/p/scarf-dd1030",
+        "type": 16
+      },
+      {
+        "id": 254110,
+        "url": "https://www.gog.com/game/scarf",
+        "type": 17
+      },
+      {
+        "id": 386090,
+        "url": "https://www.twitch.tv/directory/game/Scarf",
+        "type": 6
+      },
+      {
+        "id": 167235,
+        "url": "https://www.youtube.com/channel/UCQpy3AFrlbgXcgwRifVZKkg",
+        "type": 9
+      },
+      {
+        "id": 325320,
+        "url": "https://discord.gg/tKY8jrh",
+        "type": 18
+      },
+      {
+        "id": 325317,
+        "url": "https://www.facebook.com/HandyGames/",
+        "type": 4
+      },
+      {
+        "id": 325318,
+        "url": "https://www.instagram.com/handygames/",
+        "type": 8
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 31309,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125853,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125858,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125854,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125857,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125860,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125862,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 125864,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125868,
+        "language": {
+          "id": 19,
+          "name": "Polish",
+          "locale": "pl-PL"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125870,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125874,
+        "language": {
+          "id": 5,
+          "name": "Danish",
+          "locale": "da-DK"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125876,
+        "language": {
+          "id": 11,
+          "name": "Finnish",
+          "locale": "fi-FI"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125866,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125869,
+        "language": {
+          "id": 19,
+          "name": "Polish",
+          "locale": "pl-PL"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125872,
+        "language": {
+          "id": 1,
+          "name": "Arabic",
+          "locale": "ar"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125855,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125856,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125865,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125867,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125871,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125873,
+        "language": {
+          "id": 1,
+          "name": "Arabic",
+          "locale": "ar"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125877,
+        "language": {
+          "id": 11,
+          "name": "Finnish",
+          "locale": "fi-FI"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125852,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 125859,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 125861,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125878,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125879,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125880,
+        "language": {
+          "id": 18,
+          "name": "Norwegian",
+          "locale": "nb-NO"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125881,
+        "language": {
+          "id": 18,
+          "name": "Norwegian",
+          "locale": "nb-NO"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125882,
+        "language": {
+          "id": 23,
+          "name": "Swedish",
+          "locale": "sv-SE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125883,
+        "language": {
+          "id": 23,
+          "name": "Swedish",
+          "locale": "sv-SE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125863,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125875,
+        "language": {
+          "id": 5,
+          "name": "Danish",
+          "locale": "da-DK"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125884,
+        "language": {
+          "id": 4,
+          "name": "Czech",
+          "locale": "cs-CZ"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125889,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125886,
+        "language": {
+          "id": 14,
+          "name": "Hungarian",
+          "locale": "hu-HU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125888,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 125885,
+        "language": {
+          "id": 4,
+          "name": "Czech",
+          "locale": "cs-CZ"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 125887,
+        "language": {
+          "id": 14,
+          "name": "Hungarian",
+          "locale": "hu-HU"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 485833,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 485834,
+        "language": {
+          "id": 6,
+          "name": "Dutch",
+          "locale": "nl-NL"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 723001,
+        "language": {
+          "id": 8,
+          "name": "English (UK)",
+          "locale": "en-GB"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 723002,
+        "language": {
+          "id": 8,
+          "name": "English (UK)",
+          "locale": "en-GB"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 723003,
+        "language": {
+          "id": 8,
+          "name": "English (UK)",
+          "locale": "en-GB"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 127350,
+    "cover": {
+      "id": 217297,
+      "image_id": "co4no1"
+    },
+    "first_release_date": 1648684800,
+    "genres": [
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 13,
+    "involved_companies": [
+      {
+        "id": 158955,
+        "company": {
+          "id": 634,
+          "country": 840,
+          "name": "Devolver Digital"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 158956,
+        "company": {
+          "id": 22898,
+          "country": 36,
+          "name": "Wolfeye Studios"
+        },
+        "developer": true,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 9,
+        "name": "western"
+      }
+    ],
+    "name": "Weird West",
+    "rating_count": 29,
+    "slug": "weird-west",
+    "storyline": "Discover a dark fantasy reimagining of the Wild West where lawmen and gunslingers share the frontier with fantastical creatures. Journey through the story of a group of atypical heroes, written into legend by the decisions you make in an unforgiving land. Each journey is unique and tailored to the actions taken - a series of high stakes adventures where everything counts and the world reacts to the choices you make. Form a posse or venture forth alone into an otherworldly confines of the Weird West and make each legend your own.",
+    "summary": "Discover a dark fantasy reimagining of the Wild West where lawmen and gunslingers share the frontier with fantastical creatures. Journey through the origin stories of a group of atypical heroes, written into legend by the decisions you make in an unforgiving land. Each journey is unique and tailored to the actions taken - a series of high stakes stories where everything counts and the world reacts to the choices you make. Form a posse or venture forth alone into an otherworldly confines of the Weird West and make each legend your own.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 17,
+        "name": "Fantasy"
+      }
+    ],
+    "total_rating_count": 34,
+    "url": "https://www.igdb.com/games/weird-west",
+    "websites": [
+      {
+        "id": 271875,
+        "url": "https://store.epicgames.com/en-US/p/weird-west-906661",
+        "type": 16
+      },
+      {
+        "id": 768205,
+        "url": "https://store.playstation.com/en-us/concept/234916",
+        "type": 23
+      },
+      {
+        "id": 768207,
+        "url": "https://www.xbox.com/en-us/games/store/weird-west-definitive-edition/9P0B86JN5X28",
+        "type": 22
+      },
+      {
+        "id": 127182,
+        "url": "https://store.steampowered.com/app/1097350/Weird_West/",
+        "type": 13
+      },
+      {
+        "id": 216227,
+        "url": "https://www.gog.com/game/weird_west",
+        "type": 17
+      },
+      {
+        "id": 264995,
+        "url": "https://www.instagram.com/wolfeyestudios",
+        "type": 8
+      },
+      {
+        "id": 264993,
+        "url": "https://www.facebook.com/wolfeyegames",
+        "type": 4
+      },
+      {
+        "id": 264992,
+        "url": "https://www.weirdwest.com/",
+        "type": 1
+      },
+      {
+        "id": 325304,
+        "url": "https://discord.com/invite/weirdwest",
+        "type": 18
+      },
+      {
+        "id": 391315,
+        "url": "https://www.twitch.tv/directory/game/Weird%20West",
+        "type": 6
+      },
+      {
+        "id": 658907,
+        "url": "https://www.reddit.com/r/WeirdWest/",
+        "type": 14
+      },
+      {
+        "id": 569655,
+        "url": "https://weirdwest.fandom.com/wiki/Weird_West_Wiki",
+        "type": 2
+      },
+      {
+        "id": 264996,
+        "url": "https://en.wikipedia.org/wiki/Weird_West_(video_game)",
+        "type": 3
+      },
+      {
+        "id": 264994,
+        "url": "https://twitter.com/WolfEyeGames",
+        "type": 5
+      },
+      {
+        "id": 325303,
+        "url": "https://www.youtube.com/user/DevolverDigital",
+        "type": 9
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 138375,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 138376,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 138377,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 138378,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 138381,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 138383,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 138385,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 138379,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 138380,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 138382,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 138384,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 218437,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 370471,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 370473,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 370475,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 370474,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 370477,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 370476,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 370478,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 370481,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 370479,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 370480,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 150512,
+    "cover": {
+      "id": 142119,
+      "image_id": "co31nr"
+    },
+    "first_release_date": 1660003200,
+    "genres": [
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 6,
+    "involved_companies": [
+      {
+        "id": 281526,
+        "company": {
+          "id": 112,
+          "country": 392,
+          "name": "Sega"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 281527,
+        "company": {
+          "id": 14440,
+          "country": 826,
+          "name": "Two Point Studios"
+        },
+        "developer": true,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 126,
+        "name": "retro"
+      },
+      {
+        "id": 994,
+        "name": "management"
+      },
+      {
+        "id": 2760,
+        "name": "family friendly"
+      },
+      {
+        "id": 2827,
+        "name": "school life"
+      },
+      {
+        "id": 3560,
+        "name": "cartoony"
+      }
+    ],
+    "name": "Two Point Campus",
+    "rating_count": 31,
+    "slug": "two-point-campus",
+    "storyline": "It’s time to spin academia on its head! Got a yearning for learning? Or just keen to build an educational masterpiece? Campus is jam-packed with new creative tools to help you build the university of your dreams. For the first time, build in the great outdoors as you develop your own delightfully educational campus environment, housing the top teaching facilities in the land. Whether you prefer building on simple foundations, or placing every tree, you can build the university you want. Lay down pathways with new easy-to-use tools. Plant glorious collections of outdoor flora. Place benches, fountains, sculptures, hedgerows – even picket fences. The only limit is your imagination (and your in-game bank balance).",
+    "summary": "Build the university of your dreams with Two Point Campus, the follow up management sim with a twist from the creators of Two Point Hospital. Get to know your students, explore their personalities and fulfill their wants and needs. Craft buildings, choose courses, hire the best staff and build an academic institution to stand the test of time.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 27,
+        "name": "Comedy"
+      },
+      {
+        "id": 28,
+        "name": "Business"
+      },
+      {
+        "id": 33,
+        "name": "Sandbox"
+      }
+    ],
+    "total_rating_count": 36,
+    "url": "https://www.igdb.com/games/two-point-campus",
+    "websites": [
+      {
+        "id": 733381,
+        "url": "https://www.twitch.tv/directory/category/two-point-campus",
+        "type": 6
+      },
+      {
+        "id": 733380,
+        "url": "https://store.epicgames.com/en-US/p/two-point-campus",
+        "type": 16
+      },
+      {
+        "id": 816824,
+        "url": "https://store.playstation.com/en-us/concept/10001458",
+        "type": 23
+      },
+      {
+        "id": 816826,
+        "url": "https://x.com/TwoPointStudios",
+        "type": 5
+      },
+      {
+        "id": 816828,
+        "url": "https://www.youtube.com/@twopointstudios",
+        "type": 9
+      },
+      {
+        "id": 816825,
+        "url": "https://www.nintendo.com/games/detail/two-point-campus-switch/",
+        "type": 24
+      },
+      {
+        "id": 816827,
+        "url": "https://www.instagram.com/twopointstudios",
+        "type": 8
+      },
+      {
+        "id": 816823,
+        "url": "https://www.xbox.com/en-us/games/store/two-point-campus/9PCW1SMN9RGG",
+        "type": 22
+      },
+      {
+        "id": 185917,
+        "url": "https://store.steampowered.com/app/1649080/Two_Point_Campus",
+        "type": 13
+      },
+      {
+        "id": 303362,
+        "url": "https://en.wikipedia.org/wiki/Two_Point_Campus",
+        "type": 3
+      },
+      {
+        "id": 306766,
+        "url": "https://two-point-campus.fandom.com/",
+        "type": 2
+      },
+      {
+        "id": 663931,
+        "url": "https://www.twopointstudios.com/en/games/two-point-campus",
+        "type": 1
+      },
+      {
+        "id": 668286,
+        "url": "https://www.facebook.com/twopointstudios/",
+        "type": 4
+      },
+      {
+        "id": 668289,
+        "url": "https://www.reddit.com/r/TwoPointCampus/",
+        "type": 14
+      },
+      {
+        "id": 668288,
+        "url": "https://discord.gg/invite/TwoPointStudios",
+        "type": 18
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 52722,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 52729,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 52740,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1071557,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1071558,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1071559,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1071560,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1071561,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1071562,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1071563,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1071564,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1071565,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1071566,
+        "language": {
+          "id": 19,
+          "name": "Polish",
+          "locale": "pl-PL"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1071567,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1071568,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1071569,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1071570,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1071571,
+        "language": {
+          "id": 19,
+          "name": "Polish",
+          "locale": "pl-PL"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1071572,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1071573,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1071574,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1071575,
+        "language": {
+          "id": 24,
+          "name": "Turkish",
+          "locale": "tr-TR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1071576,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1071577,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1071578,
+        "language": {
+          "id": 24,
+          "name": "Turkish",
+          "locale": "tr-TR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1074286,
+        "language": {
+          "id": 8,
+          "name": "English (UK)",
+          "locale": "en-GB"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1074287,
+        "language": {
+          "id": 8,
+          "name": "English (UK)",
+          "locale": "en-GB"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1074288,
+        "language": {
+          "id": 8,
+          "name": "English (UK)",
+          "locale": "en-GB"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 252502,
+    "cover": {
+      "id": 307919,
+      "image_id": "co6llb"
+    },
+    "first_release_date": 1758585600,
+    "genres": [
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 23,
+    "involved_companies": [
+      {
+        "id": 218722,
+        "company": {
+          "id": 634,
+          "country": 840,
+          "name": "Devolver Digital"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 218723,
+        "company": {
+          "id": 13660,
+          "country": 840,
+          "name": "Bennett Foddy"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 218810,
+        "company": {
+          "id": 12311,
+          "country": 840,
+          "name": "Gabe Cuzzillo"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 218811,
+        "company": {
+          "id": 47912,
+          "name": "Maxi Boch"
+        },
+        "developer": true,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 1493,
+        "name": "walking simulator"
+      },
+      {
+        "id": 4554,
+        "name": "qwoplike"
+      },
+      {
+        "id": 48285,
+        "name": "nextfest june 2025"
+      }
+    ],
+    "name": "Baby Steps",
+    "rating_count": 13,
+    "slug": "baby-steps",
+    "summary": "Play as Nate, an unemployed failson with nothing going for him, until one day he discovers a power he never knew he had… putting one foot in front of the other. Explore a world shrouded in mist, one step at a time. Hike the serene mountains by placing each footstep yourself, in original physics-based gameplay from the minds behind Ape Out and Getting Over It. Take in the sights, fall in love with the local fauna, and try to find meaning in a wasted life.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 27,
+        "name": "Comedy"
+      }
+    ],
+    "total_rating_count": 16,
+    "url": "https://www.igdb.com/games/baby-steps",
+    "websites": [
+      {
+        "id": 871986,
+        "url": "https://x.com/BabyStepsGame",
+        "type": 5
+      },
+      {
+        "id": 871987,
+        "url": "https://bsky.app/profile/babystepsgame.bsky.social",
+        "type": 19
+      },
+      {
+        "id": 866617,
+        "url": "https://store.playstation.com/en-us/concept/10008588",
+        "type": 23
+      },
+      {
+        "id": 890291,
+        "url": "https://www.twitch.tv/directory/category/baby-steps",
+        "type": 6
+      },
+      {
+        "id": 890292,
+        "url": "https://en.wikipedia.org/wiki/Baby_Steps_(video_game)",
+        "type": 3
+      },
+      {
+        "id": 890293,
+        "url": "https://www.reddit.com/r/BabyStepsGame/",
+        "type": 14
+      },
+      {
+        "id": 815462,
+        "url": "https://discord.gg/BabySteps",
+        "type": 18
+      },
+      {
+        "id": 694680,
+        "url": "https://www.babystepsgame.com/",
+        "type": 1
+      },
+      {
+        "id": 556793,
+        "url": "https://store.steampowered.com/app/1281040/Baby_Steps/",
+        "type": 13
+      },
+      {
+        "id": 1055856,
+        "url": "https://www.gog.com/en/game/baby_steps",
+        "type": 17
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 706883,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 706884,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1234290,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1234291,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1234292,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1234293,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1234294,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1234295,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1234296,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1234297,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1234298,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1234299,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1234300,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1234301,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1234302,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1234303,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1234304,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1234305,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1234306,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1234307,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1384428,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1384429,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      }
+    ],
+    "game_type": 0
+  }
+]

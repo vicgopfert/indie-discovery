@@ -34,7 +34,7 @@ As decisões centrais:
 - **Padrões com justificativa, não por padrão.** Controllers, services e repositories em todos os módulos; casos de uso dedicados só onde há orquestração real (recomendação e ingestão); regras de negócio críticas como funções puras, testáveis sem banco nem framework.
 - **Contratos únicos em Zod**, compartilhados entre frontend e backend num pacote do monorrepositório e validados no NestJS pelo mecanismo nativo de *Standard Schema*.
 
-O MVP tem 15 funcionalidades P0, que demonstram a proposta central de ponta a ponta: cadastro, catálogo independente com filtros, ficha do jogo, avaliações e listas, partida a frio, recomendações com motivo, seleção do grau de novidade e uma avaliação offline mensurável do recomendador.
+O MVP tem 16 funcionalidades P0, que demonstram a proposta central de ponta a ponta: cadastro, catálogo independente com filtros, coleções culturais curadas, ficha do jogo, avaliações e listas, partida a frio, recomendações com motivo, seleção do grau de novidade e uma avaliação offline mensurável do recomendador.
 
 O cronograma tem 24 semanas, com a premissa de 15 horas semanais dedicadas ao TCC. Prevê implantação já na semana 4, recomendação funcionando pela API na semana 16, congelamento de funcionalidades ao fim da semana 20 e duas semanas finais de margem antes da banca. Um ambiente local completo em Docker serve de contingência para a demonstração.
 
@@ -65,16 +65,18 @@ O cronograma tem 24 semanas, com a premissa de 15 horas semanais dedicadas ao TC
 | PR-03 | 24 semanas até a banca, ancoradas no fim do período letivo em 24/04/2027 | Ao saber a data exata da defesa, recalcular os marcos a partir dela |
 | PR-04 | A API da IGDB continua gratuita para uso não comercial, com atribuição visível | Confirmar os termos na tarefa B-07; se mudarem, o MVP roda com um recorte salvo do catálogo |
 | PR-05 | Hospedagem e banco em camadas gratuitas, sem cartão de crédito | O ambiente local em Docker é a contingência oficial da demonstração |
-| PR-06 | O catálogo cabe em poucos milhares de jogos, dimensionado no marco M0 | Reduzir o recorte (por exemplo, por ano de lançamento) até caber no banco gratuito e na memória da API |
+| PR-06 | O catálogo recortado tem cerca de 20 mil jogos. **Revisada no M0 (19/10/2026):** a premissa original era "poucos milhares", mas a IGDB tem 130 mil jogos indie; o recorte aprovado (relatório do M0, `docs/m0-relatorio-igdb.md`, seção 8) mantém só jogos com ficha completa e algum sinal de interesse | Reduzir o recorte (por exemplo, por ano de lançamento) até caber no banco gratuito e na memória da API |
 | PR-07 | As pesquisas de campo de outubro de 2026 já estão concluídas e entram no TCC como metodologia | Nenhuma nova pesquisa é necessária antes do teste de usabilidade |
 
 ### Decisões herdadas da proposta conceitual
 
 Estas decisões vieram das pesquisas com desenvolvedores e jogadores e não são reabertas aqui: popularidade calibrada pelo usuário, com o equilíbrio como padrão; jogos não lançados no catálogo; país do estúdio como filtro secundário, sem seção própria; idioma e temas como recortes de navegação; critério de indie público, que não exclui um jogo só por ele ter publisher; partida a frio que pede no máximo quatro avaliações; e neutralidade comercial.
 
+**Revisão no M0 (19/10/2026), por decisão do autor:** país do estúdio e cultura retratada passam a ser tratados como diferenciais da plataforma. O país continua como filtro, agora com a IGDB complementada pelo Wikidata, e a cultura retratada ganha navegação própria por coleções curadas (F-24), que deixa de ser P2. As medições que sustentam a decisão estão no relatório do M0, `docs/m0-relatorio-igdb.md`, seção 8.8.
+
 ## 4. Requisitos e MVP
 
-**O MVP é o conjunto P0: 15 funcionalidades que permitem a um jogador se cadastrar, informar o próprio gosto, receber recomendações explicadas e escolher o grau de novidade, sobre um catálogo real de jogos independentes.** P1 entra se sobrar capacidade depois do marco M2, sem nunca ser dependência de um P0. P2 é pós-defesa.
+**O MVP é o conjunto P0: 16 funcionalidades que permitem a um jogador se cadastrar, informar o próprio gosto, receber recomendações explicadas e escolher o grau de novidade, sobre um catálogo real de jogos independentes.** P1 entra se sobrar capacidade depois do marco M2, sem nunca ser dependência de um P0. P2 é pós-defesa.
 
 Complexidade: **B** baixa (até um dia de trabalho), **M** média (alguns dias), **A** alta (uma semana ou mais, com incerteza técnica).
 
@@ -87,16 +89,17 @@ Complexidade: **B** baixa (até um dia de trabalho), **M** média (alguns dias),
 | F-03 | **Critério de jogo independente** configurável e documentado | O termo não tem definição única; o critério precisa ser público e testável | Regras em arquivo versionado; jogo com publisher pequena não é excluído; jogo de grande publisher listada é excluído; resultado verificado contra um conjunto de casos reais, com acertos e erros documentados | — | M |
 | F-04 | **Vetorização de conteúdo** (TF-IDF) dos jogos | Base da recomendação e da explicação | Cada jogo tem pesos por gênero, tema e palavra-chave, com norma 1; atributos raros ou comuns demais são descartados por limites configuráveis; recálculo idempotente | — | M |
 | F-05 | **Busca e navegação do catálogo** por título, gênero, tema e situação (lançado ou em breve) | Descoberta não personalizada e porta de entrada sem login | Filtros combináveis; paginação; estado dos filtros na URL; acessível sem login | F-02 | M |
-| F-06 | **Filtros de idioma (português) e país do estúdio** | Idioma pesou cinco vezes mais que país na pesquisa; país fica como recorte secundário | Combináveis com os de F-05; jogos sem o dado não aparecem como "não tem", e sim como "não informado". **Regra de portão:** se em M0 a cobertura do campo ficar abaixo de 50% do catálogo, aquele filtro passa a P1 | F-05, M0 | B |
+| F-06 | **Filtros de idioma (português) e país do estúdio** | Idioma pesou cinco vezes mais que país na pesquisa; país fica como recorte secundário | Combináveis com os de F-05; jogos sem o dado não aparecem como "não tem", e sim como "não informado". **Regra de portão (revisada no M0):** idioma segue P0 com 95,5% de cobertura. O país do estúdio vem da IGDB e, na falta dela, do Wikidata (cerca de 50% de cobertura somada); no filtro, cada país só aparece como opção se tiver pelo menos 20 jogos no catálogo | F-05, M0 | M |
 | F-07 | **Ficha do jogo** com capa, resumo, gêneros, temas, estúdio, país, situação e link para a página oficial | É onde a recomendação se converte em interesse pelo jogo | Selo "Em breve" para não lançados; link externo abre a página oficial; atribuição à IGDB visível; metadados de página gerados no servidor | F-02 | M |
 | F-08 | **Avaliação de 1 a 5 e listas** (favorito, concluído, quero jogar) | Fonte do perfil de preferências | Criar, alterar e remover; só o próprio usuário altera seus dados; alteração reflete na próxima recomendação | F-01, F-07 | M |
 | F-09 | **Página de perfil** com avaliações e listas | O usuário precisa ver e corrigir o que alimenta as recomendações | Lista avaliações e listas com acesso à ficha de cada jogo; estados vazios orientam o próximo passo | F-08 | B |
 | F-10 | **Partida a frio**: escolha de pelo menos 3 gêneros ou temas e avaliação opcional de até 4 jogos | Sem perfil não há recomendação; 16,7% dos jogadores não avaliariam nenhum jogo | Pode pular a etapa de avaliação; preferências geram recomendações mesmo sem avaliações; aparece no primeiro acesso e pode ser refeita | F-08, F-11 | M |
 | F-11 | **Recomendações personalizadas com motivo** | Núcleo da proposta | Retorna os N mais bem pontuados, sem jogos já avaliados; cada item traz de 1 a 3 atributos que mais contribuíram; mesmo estado gera mesma lista; usuário sem perfil é levado à partida a frio | F-04, F-08 | A |
 | F-12 | **Modo de descoberta**: Populares, Equilibrado e Descobertas | 75% dos jogadores querem equilíbrio ou escolha; nenhum dos lados quer penalização fixa | Padrão Equilibrado; escolha persistida no usuário; trocar o modo muda a lista de forma observável | F-11 | B |
-| F-13 | **Página "Como funciona"**: critério de indie, lógica da recomendação e origem dos dados | Transparência é princípio da proposta | Explica o critério em linguagem simples e lista as grandes publishers excluídas; acessível sem login | F-03 | B |
+| F-13 | **Página "Como funciona"**: critério de indie, lógica da recomendação e origem dos dados | Transparência é princípio da proposta | Explica o critério em linguagem simples, lista as grandes publishers excluídas e descreve como as coleções culturais são curadas; acessível sem login | F-03 | B |
 | F-14 | **Avaliação offline do recomendador** | Resultado mensurável do TCC | Script gera, para perfis simulados, cobertura de catálogo e popularidade média das recomendações em cada modo; resultado exportável em tabela e reproduzível | F-11, F-12 | M |
 | F-15 | **Documentação da API e verificação de saúde** | Contrato verificável e monitoramento mínimo | Swagger lista todos os endpoints P0 com exemplos e erros; rota de saúde informa API e banco | — | B |
+| F-24 | **Coleções culturais curadas** ("Explore por cultura") | Cultura retratada pesou 33,3% na pesquisa; nenhuma fonte de dados registra a cultura de forma ampla (medido no M0), então a navegação é feita por curadoria transparente. Promovida de P2 a P0 no M0 | Coleções definidas em arquivo versionado, com nome, descrição e jogos aprovados; candidatos sugeridos automaticamente (palavras-chave, resumo e Wikidata) e revisados pelo autor; cada coleção com pelo menos 10 jogos, com destaque para a cultura brasileira; vitrine na página inicial e no catálogo, página da coleção e indicação na ficha do jogo; acessível sem login | F-02, F-07 | M |
 
 ### P1: importantes, mas negociáveis
 
@@ -115,7 +118,6 @@ Complexidade: **B** baixa (até um dia de trabalho), **M** média (alguns dias),
 | --- | --- | --- |
 | F-22 | Sugestão de jogo ausente pela URL da loja, com moderação | Pedido de desenvolvedores; jogos pequenos e por lançar podem faltar nas bases |
 | F-23 | Área do estúdio para descrever os próprios jogos | Pedido de desenvolvedores; exige verificação de identidade |
-| F-24 | Navegação por cultura ou ambientação retratada | Cultura retratada pesou 33,3% na pesquisa; exige dado mais rico que os temas |
 | F-25 | Recursos de comunidade: perfis públicos e listas compartilhadas | Pedido de desenvolvedores; só faz sentido com base de usuários |
 | F-26 | Recuperação de senha por e-mail | Exige provedor de e-mail transacional |
 | F-27 | Recomendação híbrida com embeddings semânticos | Evolução opcional, condicionada à avaliação da seção 12 |
@@ -175,7 +177,7 @@ Para um desenvolvedor só, o contrato único e o pipeline único pesam mais que 
 | --- | --- | --- |
 | `AuthModule` | Cadastro, login, logout, sessões, guard de autenticação | `SessionAuthGuard`, decorators `@Public()` e `@CurrentUser()` |
 | `UsersModule` | Dados do usuário e modo de descoberta | `UsersService` |
-| `CatalogModule` | Busca, filtros, ficha do jogo, listas de gêneros e temas | `CatalogRepository` (leitura) |
+| `CatalogModule` | Busca, filtros, ficha do jogo, listas de gêneros e temas, coleções culturais | `CatalogRepository` (leitura) |
 | `LibraryModule` | Avaliações, listas e preferências de partida a frio | `LibraryRepository` (leitura) |
 | `RecommendationModule` | Índice de conteúdo em memória, pontuação, explicação | — |
 | `IngestionModule` | Cliente IGDB, mapeamento, critério indie, TF-IDF, execução | — (só carregado pela aplicação de ingestão) |
@@ -202,6 +204,8 @@ Prefixo global `/api`. Respostas em JSON; erros sempre no mesmo formato.
 | `GET /api/auth/me` | Autenticado | Usuário atual |
 | `GET /api/games` | Público | Busca com filtros e paginação |
 | `GET /api/games/:slug` | Público | Ficha do jogo |
+| `GET /api/collections` | Público | Coleções culturais curadas |
+| `GET /api/collections/:slug` | Público | Jogos de uma coleção, com paginação |
 | `GET /api/features?type=GENRE\|THEME` | Público | Opções de filtro e de partida a frio |
 | `PUT /api/me/ratings/:gameId` / `DELETE` | Autenticado | Cria, altera ou remove avaliação |
 | `PUT /api/me/lists/:listType/:gameId` / `DELETE` | Autenticado | Adiciona ou remove de lista |
@@ -279,7 +283,7 @@ Todas as variáveis (`DATABASE_URL`, `PORT`, `SESSION_TTL_DAYS`, `WEB_ORIGIN`, `
 | --- | --- | --- | --- |
 | Frontend | Vercel, plano gratuito | Uso pessoal e não comercial | Adequado a um TCC |
 | API | Render, *web service* gratuito | 512 MB de memória; hiberna após 15 minutos sem tráfego e leva cerca de um minuto para acordar; sistema de arquivos efêmero | Acordar a API antes de demonstrar; o índice em memória precisa caber em 512 MB (dimensionado no M0) |
-| Banco | Neon, plano gratuito | 1 GB por projeto; o computador do banco suspende após 5 minutos ociosos e volta na primeira consulta | O catálogo de alguns milhares de jogos cabe com folga; o banco não expira |
+| Banco | Neon, plano gratuito | 1 GB por projeto; o computador do banco suspende após 5 minutos ociosos e volta na primeira consulta | O catálogo recortado, de cerca de 20 mil jogos, cabe com folga; o banco não expira |
 | Banco (descartado) | Render Postgres gratuito | Expira 30 dias após a criação | Não serve para um projeto de 24 semanas |
 
 Os limites dos planos gratuitos mudam com frequência. Eles devem ser conferidos de novo na semana 3 (B-38) e na semana 21. Se qualquer serviço deixar de atender, a contingência é o ambiente Docker Compose local com um dump do banco (B-41), ensaiado antes da defesa.
@@ -468,7 +472,7 @@ O diagrama entidade-relacionamento completo está na seção 11 (diagrama 3).
 | --- | --- | --- | --- |
 | `User` | Conta, papel e modo de descoberta escolhido | Cadastro | F-01, F-12 |
 | `Session` | Sessão ativa (hash do token e expiração) | Login | F-01 |
-| `Game` | Jogo do catálogo: nome, resumo, capa, lançamento, status, popularidade bruta e normalizada, se é indie, link oficial | Ingestão | F-02, F-05, F-07 |
+| `Game` | Jogo do catálogo: nome, resumo, capa, lançamento, status, popularidade bruta e normalizada, se é indie, link oficial, país do estúdio e a origem desse dado | Ingestão (IGDB e Wikidata) | F-02, F-05, F-06, F-07 |
 | `Company` | Desenvolvedora ou publicadora, com país | Ingestão | F-03, F-06 |
 | `GameCompany` | Papel de cada empresa em cada jogo (desenvolvedora, publicadora) | Ingestão | F-03 |
 | `Country` | Tabela de países (código ISO 3166-1 numérico, sigla, nome em português) | Seed | F-06 |
@@ -479,6 +483,7 @@ O diagrama entidade-relacionamento completo está na seção 11 (diagrama 3).
 | `ListEntry` | Jogo em uma lista do usuário (favoritos, concluídos, quero jogar) | Usuário | F-08 |
 | `UserPreference` | Gêneros e temas escolhidos na partida a frio | Usuário | F-10 |
 | `IngestionRun` | Registro de cada execução da ingestão: início, fim, status, contagens, resumo de erros | Ingestão | F-02 |
+| `Collection` e `CollectionGame` | Coleção cultural curada (nome, descrição, ordem) e os jogos aprovados nela | Arquivo de curadoria versionado, sincronizado pela ingestão | F-24 |
 
 ### Decisões de modelagem
 
@@ -488,17 +493,19 @@ O diagrama entidade-relacionamento completo está na seção 11 (diagrama 3).
 | `igdbId` único em `Game`, `Company`, `Language`; único composto `(type, igdbId)` em `Feature` | Ingestão idempotente: rodar duas vezes atualiza em vez de duplicar. Gêneros, temas e palavras-chave têm numerações independentes na IGDB |
 | `slug` único em `Game` | URLs legíveis e estáveis para a ficha do jogo e para buscadores |
 | Jogos não indie são rejeitados na ingestão, mas `isIndie` fica no modelo | Permite revisar o critério e reprocessar sem mudar o esquema; as consultas da interface sempre filtram `isIndie = true` |
-| Índices em `Game(isIndie, releaseStatus)`, `GameFeature(featureId)`, `Company(countryCode)` e `Session(expiresAt)` | Correspondem aos filtros do catálogo, à busca por atributo e à limpeza de sessões |
-| Busca textual por nome com `ILIKE` no P0 | Suficiente para alguns milhares de jogos; busca *full-text* do PostgreSQL fica como P2 |
+| Índices em `Game(isIndie, releaseStatus)`, `Game(studioCountryCode)`, `GameFeature(featureId)`, `Company(countryCode)` e `Session(expiresAt)` | Correspondem aos filtros do catálogo, à busca por atributo e à limpeza de sessões |
+| Busca textual por nome com `ILIKE` no P0 | Suficiente para cerca de 20 mil jogos; busca *full-text* do PostgreSQL fica como P2 |
 | Recomendações não são persistidas | São calculadas na hora a partir do índice em memória; persistir criaria problema de invalidação sem benefício no MVP |
 | Imagens de capa não são armazenadas | Guarda-se só o identificador da imagem; a URL é montada para a CDN de imagens da IGDB, com atribuição visível |
 | Critério indie em arquivo JSON versionado (`config/indie-criteria.json`) | Fica rastreável no Git, revisável na banca e alterável sem migration |
 | `popularityRaw` e `popularityNorm` gravados na ingestão | A normalização logarítmica depende do máximo do catálogo e só muda quando o catálogo muda |
+| País do estúdio resolvido na ingestão e gravado em `Game.studioCountryCode`, com `studioCountrySource` (IGDB ou WIKIDATA) | A IGDB tem o país em 39% do catálogo e o Wikidata completa até cerca de 50% (M0); resolver uma vez na ingestão mantém a consulta do filtro simples e deixa a origem do dado rastreável |
+| Coleções em arquivo versionado (`config/collections.json`), sincronizadas pela ingestão | A curadoria fica revisável no Git e na banca, como o critério indie; o banco guarda só o resultado para as consultas |
 | Datas em UTC; IDs internos UUID | Padrão sem ambiguidade; os IDs internos não expõem a contagem de usuários |
 
 ### Volume esperado
 
-O tamanho do catálogo é definido no M0 (B-07), depois de medir quantos jogos passam pelo critério indie (premissa PR-06: alguns milhares). Nessa ordem de grandeza, tanto o banco gratuito de 1 GB quanto o índice em memória dentro dos 512 MB da API têm folga, mas os dois valores devem ser medidos e registrados no relatório do B-07, e não presumidos. Se o catálogo ficar grande demais, o corte é feito por data de lançamento ou por um mínimo de popularidade, registrado no critério de ingestão.
+O tamanho do catálogo foi definido no M0 (B-07): cerca de 20 mil jogos, depois do recorte aprovado (relatório do M0, `docs/m0-relatorio-igdb.md`, seção 8). Nessa ordem de grandeza, tanto o banco gratuito de 1 GB quanto o índice em memória dentro dos 512 MB da API têm folga (índice estimado em poucos MB); os valores reais são medidos na carga inicial (B-14) e no B-31, e não presumidos. Se o catálogo ficar grande demais, o corte é feito por data de lançamento ou por um mínimo de popularidade, registrado no critério de ingestão.
 
 ## 11. Diagramas
 
@@ -519,12 +526,14 @@ flowchart LR
         ingest["Rotina de ingestão<br/>CLI"]
     end
     igdb[["IGDB API<br/>dados de jogos e empresas"]]
+    wikidata[["Wikidata<br/>país de origem dos jogos"]]
     loja[["Página oficial do jogo<br/>ex.: Steam"]]
     jogador -->|"navega, avalia e recebe recomendações"| web
     web -->|"HTTPS + JSON"| api
     api -->|"Prisma"| db
     autor -->|"executa ou agenda"| ingest
     ingest -->|"consultas em lote"| igdb
+    ingest -->|"consulta SPARQL"| wikidata
     ingest -->|"grava catálogo e vetores"| db
     web -->|"link de saída"| loja
 ```
@@ -554,10 +563,11 @@ flowchart TB
         prisma["PrismaModule"]
     end
     subgraph jobs["Ingestão: aplicação Nest standalone"]
-        ing["IngestionModule<br/>cliente IGDB · mapeamento · critério indie · TF-IDF"]
+        ing["IngestionModule<br/>cliente IGDB · Wikidata · mapeamento · critério indie · coleções · TF-IDF"]
     end
     db[("PostgreSQL gerenciado")]
     igdb[["IGDB API"]]
+    wd[["Wikidata"]]
     ui --> rsc
     ui --> rcc
     rcc --> proxy
@@ -567,6 +577,7 @@ flowchart TB
     auth & users & catalog & library & reco --> prisma
     prisma --> db
     ing -->|"OAuth Twitch + consultas"| igdb
+    ing -->|"SPARQL"| wd
     ing --> prisma
 ```
 
@@ -588,6 +599,9 @@ erDiagram
     GAME ||--o{ GAME_COMPANY : "envolve"
     COMPANY ||--o{ GAME_COMPANY : "participa de"
     COUNTRY |o--o{ COMPANY : "registra"
+    COUNTRY |o--o{ GAME : "país do estúdio"
+    COLLECTION ||--o{ COLLECTION_GAME : "reúne"
+    GAME ||--o{ COLLECTION_GAME : "faz parte de"
     GAME ||--o{ GAME_LANGUAGE : "suporta"
     LANGUAGE ||--o{ GAME_LANGUAGE : "é suportado em"
     USER {
@@ -620,7 +634,20 @@ erDiagram
         float popularityNorm
         boolean isIndie
         string storeUrl
+        int studioCountryCode FK
+        enum studioCountrySource "IGDB ou WIKIDATA"
         datetime syncedAt
+    }
+    COLLECTION {
+        uuid id PK
+        string slug UK
+        string name
+        text description
+        int sortOrder
+    }
+    COLLECTION_GAME {
+        uuid collectionId PK, FK
+        uuid gameId PK, FK
     }
     COMPANY {
         uuid id PK
@@ -850,13 +877,13 @@ pop_j = log(1 + p_j) / log(1 + p_max)          popularidade normalizada entre 0 
 λ_modo (valores iniciais):  Populares −0,2 · Equilibrado 0 · Descobertas +0,3
 ```
 
-`p_j` é a contagem de avaliações do jogo na IGDB; para jogos não lançados, um indicador de interesse pré-lançamento, se a IGDB oferecer (a confirmar no B-07), ou zero. A escala logarítmica evita que poucos sucessos dominem a normalização.
+`p_j` é o número de pessoas que marcaram o jogo como "quero jogar" na IGDB (primitivo "Want to Play" do PopScore), o mesmo indicador para jogos lançados e não lançados; zero quando não houver valor. **Decidido no M0** (relatório do M0, `docs/m0-relatorio-igdb.md`, seção 8): substitui a proposta original (contagem de avaliações e, para não lançados, `hypes`), porque existe para 91% dos jogos lançados e 43% dos não lançados, enquanto as avaliações existem em 47% do catálogo (praticamente só lançados) e os `hypes` em 27% dos não lançados. A escala logarítmica evita que poucos sucessos dominem a normalização.
 
 **4. Seleção.** Candidatos são todos os jogos indie que o usuário não avaliou e que não estão em nenhuma de suas listas. Ordenação por pontuação; empate resolvido por popularidade e depois por identificador, para que o mesmo estado produza sempre a mesma lista. Filtros opcionais da requisição (por exemplo, só "em breve") são aplicados antes do corte.
 
 **5. Explicação.** A contribuição de cada atributo k para a similaridade é `u_k · v_jk / (‖u‖ · ‖v_j‖)`. Os 1 a 3 atributos com maior contribuição positiva viram o texto "Recomendado por: Roguelike, Pixel art". No modo Descobertas, quando o termo de popularidade foi decisivo, o cartão acrescenta "pouco conhecido".
 
-**6. Execução.** O `ContentIndex` carrega os vetores de todos os jogos indie na memória da API ao iniciar (B-31). Cada recomendação é uma varredura sobre vetores esparsos de alguns milhares de jogos, sem consulta pesada ao banco. O tempo de resposta e a memória ocupada são medidos com o catálogo real no M2 (RNF-03).
+**6. Execução.** O `ContentIndex` carrega os vetores de todos os jogos indie na memória da API ao iniciar (B-31). Cada recomendação é uma varredura sobre vetores esparsos de cerca de 20 mil jogos, sem consulta pesada ao banco. O tempo de resposta e a memória ocupada são medidos com o catálogo real no M2 (RNF-03).
 
 Todos os pesos (bônus de lista, β, peso por tipo de atributo, limites de descarte e λ por modo) ficam em um arquivo de configuração versionado e são ajustados no B-37 com o protocolo abaixo, não por intuição.
 
@@ -929,10 +956,11 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | B-08 | Schema Prisma do catálogo (Game, Company, Country, GameCompany, Feature, GameFeature, Language, GameLanguage, IngestionRun), primeira migration e seed de países e idiomas | P0 | B-02, B-04, B-07 | `migrate dev` e `db seed` rodam do zero; `migrate deploy` roda no CI | M |
 | B-09 | Cliente IGDB: token OAuth da Twitch, paginação, limite de requisições por segundo, novas tentativas com espera | P0 | B-06, B-07 | Teste com servidor simulado comprova o limite de taxa e a renovação do token | M |
 | B-10 | Mapeador IGDB → modelo interno | P0 | B-07 | Testes com as fixtures, incluindo campos ausentes, passam | M |
-| B-11 | Critério indie configurável em JSON (F-03) | P0 | B-10 | Conjunto de casos reais documentado com acertos e erros; jogo com publisher pequena não é excluído | M |
+| B-11 | Critério indie configurável em JSON (F-03), incluindo o recorte do catálogo aprovado no M0 e a exclusão do tema Erotic (relatório do M0, `docs/m0-relatorio-igdb.md`, seção 8) | P0 | B-10 | Conjunto de casos reais documentado com acertos e erros; jogo com publisher pequena não é excluído | M |
 | B-12 | Cálculo de IDF e vetores TF-IDF normalizados (F-04) | P0 | B-08, B-10 | Testes com catálogo sintético verificam pesos, norma 1 e descarte por limites | M |
-| B-13 | `RunIngestionUseCase` em aplicação standalone: busca, mapeia, filtra, grava em lote, calcula vetores, registra `IngestionRun` (F-02) | P0 | B-09, B-11, B-12 | Duas execuções seguidas não duplicam registros; falha parcial fica registrada com resumo de erros | G |
+| B-13 | `RunIngestionUseCase` em aplicação standalone: busca, mapeia, filtra, grava em lote, busca a popularidade "Want to Play" do PopScore, calcula vetores, registra `IngestionRun` (F-02) | P0 | B-09, B-11, B-12 | Duas execuções seguidas não duplicam registros; falha parcial fica registrada com resumo de erros | G |
 | B-14 | Carga inicial do catálogo real no banco de produção | P0 | B-13, B-38 | Catálogo carregado; tamanho do banco e contagens registrados | P |
+| B-56 | Enriquecimento do país do estúdio pelo Wikidata na ingestão (F-06) | P0 | B-13 | Jogos sem país na IGDB recebem o do Wikidata quando existir, cruzando pelo identificador da IGDB; origem do dado gravada; cobertura final medida e registrada | P |
 
 ### E2. Contas e autenticação
 
@@ -949,11 +977,13 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | ID | Item | Prior. | Depende de | Critério de conclusão | Esf. |
 | --- | --- | --- | --- | --- | --- |
 | B-20 | `GET /games` com busca por nome, filtros de gênero, tema e situação, paginação e ordenação; `GET /features` (F-05) | P0 | B-08, B-14 | Filtros combinados retornam o esperado em testes com dados conhecidos; limite máximo de página respeitado | M |
-| B-21 | Filtros de idioma português e país do estúdio, com "não informado" (F-06, sujeito ao portão do M0) | P0 | B-20, B-07 | Filtros funcionam combinados; ou, se o portão reprovar, decisão registrada e item movido para P1 | P |
+| B-21 | Filtros de idioma português e país do estúdio, com "não informado" (F-06) | P0 | B-20, B-56 | Filtros funcionam combinados; o filtro de país só lista países com pelo menos 20 jogos | P |
 | B-22 | `GET /games/:slug` com empresas, país, atributos e link oficial | P0 | B-08 | 404 padronizado para slug inexistente | P |
 | B-23 | Página de catálogo com filtros na URL (F-05, F-06) | P0 | B-20, B-40 | Link copiado reabre a mesma busca; funciona sem login; estados vazio e de erro tratados | M |
 | B-24 | Página do jogo com selo "Em breve", atribuição à IGDB e metadados gerados no servidor (F-07) | P0 | B-22, B-40 | Título e descrição aparecem no HTML inicial; link externo abre a página oficial | M |
-| B-25 | Página "Como funciona" (F-13) | P0 | B-11, B-40 | Explica critério, recomendação, modos e origem dos dados; lista as publishers excluídas a partir do arquivo de critério | P |
+| B-25 | Página "Como funciona" (F-13) | P0 | B-11, B-40 | Explica critério, recomendação, modos, curadoria das coleções e origem dos dados; lista as publishers excluídas a partir do arquivo de critério | P |
+| B-57 | Coleções culturais: modelo e migration, arquivo `config/collections.json`, script que sugere candidatos (palavras-chave, resumo e Wikidata), sincronização na ingestão, `GET /collections` e `GET /collections/:slug` (F-24) | P0 | B-13, B-20 | De 8 a 10 coleções iniciais revisadas pelo autor, com destaque para a cultura brasileira e pelo menos 10 jogos cada; endpoints no Swagger | M |
+| B-58 | Interface das coleções: vitrine "Explore por cultura", página da coleção e indicação na ficha do jogo (F-24) | P0 | B-57, B-24 | Vitrine e página funcionam sem login; a ficha mostra as coleções do jogo | M |
 
 ### E4. Biblioteca do jogador
 
@@ -1019,11 +1049,11 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 
 | Conjunto | Itens P / M / G | Estimativa (mínimo · ponto médio · máximo) |
 | --- | --- | --- |
-| P0 de desenvolvimento (E0 a E7) | 20 / 22 / 2 | 174 h · **257 h** · 340 h |
+| P0 de desenvolvimento (E0 a E7) | 21 / 24 / 2 | 186 h · **275 h** · 364 h |
 | Capacidade de desenvolvimento nas semanas 1 a 22 (12 h × 22) | — | 264 h |
 | Semanas 23 e 24 (15 h × 2), sem item novo | — | 30 h, divididas entre ensaios, slides e absorção de atraso |
 
-No ponto médio, o P0 cabe nas semanas 1 a 22 com uma pequena sobra, mais as semanas 23 e 24 de margem. Se a execução se aproximar do máximo, o plano de corte da seção 16 é aplicado nos marcos M1 e M2, e não na véspera da defesa. Os itens P1 só entram com horas que sobrarem depois do M2.
+Com os itens acrescentados no M0 (B-56 a B-58), o ponto médio do P0 passou de 257 h para 275 h, 11 h acima da capacidade das semanas 1 a 22. O autor decidiu não trocar nenhuma funcionalidade: a diferença é coberta pelas semanas 23 e 24 e pelo ritmo observado na semana 1, em que todo o E0 planejado para a sprint foi feito em um dia. O ritmo real é conferido a cada marco. Se a execução se aproximar do máximo, o plano de corte da seção 16 é aplicado nos marcos M1 e M2, e não na véspera da defesa. Os itens P1 só entram com horas que sobrarem depois do M2.
 
 ## 14. Cronograma até a defesa (Fase A)
 
@@ -1049,12 +1079,12 @@ A sprint S6 (semanas 11–12, entregando o M1) atravessa o recesso de fim de ano
 | S1 | 1–2 | Fundação e viabilidade dos dados | B-01, B-02, B-03, B-04, B-07 | Monorrepositório rodando local com hooks; **M0** | R-04, R-05, R-06 |
 | S2 | 3–4 | Implantação e CI desde o início | B-05, B-08, B-38, B-39, B-40 | API e frontend vazios implantados, banco remoto com migrations, CI verde | R-09, R-13 |
 | S3 | 5–6 | Integração com a IGDB | B-06, B-09, B-10, B-11 | Cliente e mapeador testados com fixtures; critério indie validado contra casos reais | R-04 |
-| S4 | 7–8 | Catálogo real no banco | B-12, B-13, B-14 | Ingestão completa executada em produção e registrada | R-11, R-12 |
+| S4 | 7–8 | Catálogo real no banco | B-12, B-13, B-14, B-56 | Ingestão completa executada em produção e registrada | R-11, R-12 |
 | S5 | 9–10 | Contas e segurança | B-15, B-16, B-17, B-18, B-22 | Cadastro, login e logout funcionando no ambiente implantado | R-03 |
 | S6 | 11–12 | Interface pública de descoberta | B-20, B-21, B-23, B-24 | **M1** | R-01 |
-| S7 | 13–14 | Biblioteca e índice de conteúdo | B-19, B-26, B-27, B-31 | Avaliações e listas pela API; índice carregado com memória medida; e2e de autenticação no CI | R-07, R-09 |
+| S7 | 13–14 | Biblioteca, índice de conteúdo e coleções | B-19, B-26, B-27, B-31, B-57 | Avaliações e listas pela API; índice carregado com memória medida; e2e de autenticação no CI | R-07, R-09 |
 | S8 | 15–16 | Núcleo da recomendação | B-32, B-33 | **M2** | R-12, R-08 |
-| S9 | 17–18 | Recomendação na interface | B-28, B-35, B-36, B-30 | Jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de posse no CI | R-01 |
+| S9 | 17–18 | Recomendação e coleções na interface | B-28, B-35, B-36, B-30, B-58 | Jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de posse no CI | R-01 |
 | S10 | 19–20 | Partida a frio, perfil e avaliação offline | B-34, B-29, B-37, B-25 | Todos os P0 prontos; pesos calibrados; **congelamento** | R-01, R-10 |
 | S11 | 21–22 | Avaliação com usuários e acabamento | B-44, B-45, B-41, B-42, B-43 | **M3**: critérios de prontidão atendidos | R-10, R-13 |
 | Margem | 23–24 | Preparação da banca e absorção de atrasos | B-46, B-48, revisão do texto | Dois ensaios realizados, texto entregue, slides revisados | R-10 |
@@ -1083,7 +1113,7 @@ Reuniões com a orientadora a cada sprint, levando o que foi implantado e o trec
 ### Margem explícita
 
 1. **Semanas 23 e 24 sem nenhum item de desenvolvimento.** Os ensaios e slides ocupam parte das 30 horas; o restante absorve atrasos.
-2. **Folga das estimativas.** O ponto médio do P0 (257 h) fica abaixo da capacidade das semanas 1 a 22 (264 h).
+2. **Folga das estimativas.** O ponto médio do P0 (275 h, depois do M0) passa 11 h da capacidade das semanas 1 a 22 (264 h); a diferença sai das semanas 23 e 24 se o ritmo da semana 1 não se mantiver.
 3. **Plano de corte (seção 16)**, aplicado em M1 ou M2 se o atraso acumulado passar de uma sprint.
 4. **Itens P1 fora do caminho crítico.** Nenhum P0 depende deles; só entram depois do M2 com horas que sobrarem.
 
@@ -1107,7 +1137,6 @@ Reuniões com a orientadora a cada sprint, levando o que foi implantado e o trec
 | --- | --- | --- |
 | F-26 | Recuperação de senha por e-mail | Houver um provedor de e-mail transacional sem custo que atenda o volume |
 | F-22 | Sugestão de jogo ausente pela URL da loja, com moderação | Os cliques de saída mostrarem uso real e houver tempo para moderar; exige o papel `ADMIN` e um `RolesGuard` |
-| F-24 | Navegação por cultura ou ambientação | Houver uma fonte de dados para esse atributo além dos temas da IGDB, ou um processo de marcação viável |
 | F-27 | Recomendação híbrida com embeddings | A cobertura de resumos medida no B-07 for suficiente e o protocolo da seção 12 for aplicado antes da adoção |
 | F-29 | Avisos de lançamento | F-26 existir (canal de e-mail) |
 | F-30 | Importação da biblioteca da Steam | A API pública da Steam permitir o uso pretendido, verificado na documentação e nos termos vigentes |
@@ -1140,6 +1169,7 @@ Gravidade: **Alta** ameaça a defesa · **Média** atrasa ou empobrece o MVP · 
 | R-11 | **Catálogo grande demais** para o banco gratuito ou para a memória da API | Média | Falha na carga ou na inicialização | Tamanho medido no M0 e memória medida no B-31; recorte por data ou popularidade mínima |
 | R-12 | **Recomendações percebidas como ruins**, por palavras-chave ruidosas ou pesos mal calibrados | Média | Proposta central enfraquecida na banca | Peso menor para palavras-chave e descarte por limites; calibração com protocolo offline e *baselines*; teste de usabilidade com tempo para ajustes |
 | R-13 | **Mudança ou fim de um plano gratuito** durante o projeto | Média | Ambiente de demonstração fora do ar | Limites conferidos nas semanas 3 e 21; banco que não expira; contingência local ensaiada (B-41, B-46) |
+| R-14 | **Curadoria das coleções culturais** consome mais tempo que o previsto ou resulta em coleções pequenas | Média | Diferencial enfraquecido na demonstração | Candidatos sugeridos automaticamente; começar com 8 a 10 coleções e mínimo de 10 jogos cada; critério de curadoria público em "Como funciona" |
 
 ### Plano de corte
 
@@ -1196,7 +1226,9 @@ Consultadas em setembro e outubro de 2026. Versões e limites de planos gratuito
 
 ### Dados e hospedagem
 
-- IGDB. *API Documentation* (autenticação pela Twitch, limites de requisição, termos de uso; a confirmar no B-07). <https://api-docs.igdb.com/>
+- IGDB. *API Documentation* (autenticação pela Twitch, limites de requisição, termos de uso; confirmados no B-07). <https://api-docs.igdb.com/>
+- Wikidata. Propriedades *Internet Game Database game ID* (P5794), *country of origin* (P495), *developer* (P178) e *country* (P17); dados em domínio público (CC0). <https://www.wikidata.org/wiki/Property:P5794>
+- Wikidata. *Query Service* (consultas SPARQL). <https://query.wikidata.org/>
 - Render. *Deploy for Free* (hibernação após 15 minutos; Postgres gratuito expira em 30 dias). <https://render.com/docs/free>
 - Neon. *Pricing* (plano gratuito). <https://neon.com/pricing>
 - Copes, F. *Hosting free tiers* (comparação de planos gratuitos, consultada em setembro de 2026). <https://flaviocopes.com/hosting-free-tiers/>

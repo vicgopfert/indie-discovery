@@ -1,0 +1,835 @@
+[
+  {
+    "id": 19128,
+    "cover": {
+      "id": 611332,
+      "image_id": "cod3pg"
+    },
+    "first_release_date": 1814313600,
+    "genres": [
+      {
+        "id": 5,
+        "name": "Shooter"
+      },
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 61,
+    "involved_companies": [
+      {
+        "id": 402800,
+        "company": {
+          "id": 873,
+          "country": 826,
+          "name": "Cloud Imperium Games Corporation"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 2425,
+        "name": "crowdfunding - kickstarter"
+      },
+      {
+        "id": 4004,
+        "name": "steam achievements"
+      }
+    ],
+    "name": "Squadron 42",
+    "slug": "squadron-42",
+    "storyline": "The story begins during the Events of Vega II in 2945. The player is a rookie pilot joining and flying with the UEE Navy's celebrated 42nd Squadron. At some point the player will serve on board the UEES Stanton which is assigned to the 5th Fleet, 87th Battlegroup in the Odin system.\nThe player is thrown into a hazardous campaign to combat a sinister pirate threat, battling on the front lines of an interstellar conflict between some of the most dangerous factions in the universe.",
+    "summary": "Take the role of a rookie UEE Navy combat pilot in a cinematic single-player epic adventure set in the Star Citizen universe. Battle in the stars and face-to-face as you seamlessly transition between dogfighting and ground combat. Serve aboard a massive Navy capital ship as your custom character interacts and builds relationships with a living, breathing crew. Cutting-edge performance capture brings unprecedented emotion and life to some of your favorite actors. Powered by StarEngine, Squadron 42 pushes gaming graphics and fidelity to the next level.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 18,
+        "name": "Science fiction"
+      }
+    ],
+    "url": "https://www.igdb.com/games/squadron-42",
+    "websites": [
+      {
+        "id": 583265,
+        "url": "https://www.reddit.com/r/Squadron42",
+        "type": 14
+      },
+      {
+        "id": 122216,
+        "url": "https://www.instagram.com/squadron42",
+        "type": 8
+      },
+      {
+        "id": 122215,
+        "url": "https://www.facebook.com/Squad42",
+        "type": 4
+      },
+      {
+        "id": 634306,
+        "url": "https://starcitizen.tools/Squadron_42",
+        "type": 2
+      },
+      {
+        "id": 1081229,
+        "url": "https://squadron42.com/",
+        "type": 1
+      },
+      {
+        "id": 1081230,
+        "url": "https://www.youtube.com/@RobertsSpaceInd",
+        "type": 9
+      },
+      {
+        "id": 1081614,
+        "url": "https://en.wikipedia.org/wiki/Squadron_42",
+        "type": 3
+      },
+      {
+        "id": 1131422,
+        "url": "https://x.com/squadron_42",
+        "type": 5
+      },
+      {
+        "id": 1131508,
+        "url": "https://store.steampowered.com/app/4045720",
+        "type": 13
+      },
+      {
+        "id": 1131509,
+        "url": "https://www.twitch.tv/directory/category/squadron-42",
+        "type": 6
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 801774,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 801775,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 801776,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1698880,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1698881,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1698882,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1698883,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1698884,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1698885,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1698886,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1698887,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1790301,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1790292,
+        "language": {
+          "id": 10,
+          "name": "Spanish (Mexico)",
+          "locale": "es-MX"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1790293,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1790294,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1790295,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1790296,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1790297,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1790298,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1790299,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1790300,
+        "language": {
+          "id": 10,
+          "name": "Spanish (Mexico)",
+          "locale": "es-MX"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 338300,
+    "cover": {
+      "id": 454154,
+      "image_id": "co9qfe"
+    },
+    "first_release_date": 1830211200,
+    "genres": [
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 1,
+    "name": "Skateboard Knight",
+    "slug": "skateboard-knight",
+    "summary": "Hop on a skateboard and casually save the world! Simple controls—just move up or down the lanes. Horizontal movement and attacks are all auto!",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      }
+    ],
+    "url": "https://www.igdb.com/games/skateboard-knight",
+    "websites": [
+      {
+        "id": 737278,
+        "url": "https://store.steampowered.com/app/3061730",
+        "type": 13
+      },
+      {
+        "id": 737279,
+        "url": "https://marorugames.com/2024/06/29/skateboard-knight/",
+        "type": 1
+      },
+      {
+        "id": 737280,
+        "url": "https://x.com/MaroruGames",
+        "type": 5
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 1228575,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1228576,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1228577,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1228578,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1228579,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1228580,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1228581,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1228582,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 380256,
+    "cover": {
+      "id": 510423,
+      "image_id": "coaxuf"
+    },
+    "first_release_date": 1793059200,
+    "genres": [
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "name": "Asylium",
+    "slug": "asylium",
+    "summary": "Trapped in an abandoned mental hospital, you are hunted by a deranged doctor. Hide, fight, and outsmart your enemy as you uncover the dark secrets of the asylum. One wrong move, and you won't survive the night.",
+    "url": "https://www.igdb.com/games/asylium",
+    "websites": [
+      {
+        "id": 925819,
+        "url": "https://store.steampowered.com/app/4027820",
+        "type": 13
+      },
+      {
+        "id": 925820,
+        "url": "https://discord.gg/yNqZ6RUdBD",
+        "type": 18
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 1462801,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1462802,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1462803,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 402371,
+    "cover": {
+      "id": 564165,
+      "image_id": "coc3b9"
+    },
+    "first_release_date": 1798675200,
+    "genres": [
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      },
+      {
+        "id": 35,
+        "name": "Card & Board Game"
+      }
+    ],
+    "keywords": [
+      {
+        "id": 1011,
+        "name": "mahjong"
+      },
+      {
+        "id": 25826,
+        "name": "deck-building"
+      }
+    ],
+    "name": "Dragon and Mahjong",
+    "slug": "dragon-and-mahjong",
+    "summary": "Dragon & Sparrow is a mahjong-combat roguelite. Play as three unlikely heroes, escape the endless exploitation games, and fight the goblin corporation that owns the city — across three timelines, all to break free from the Debt of Fate.",
+    "url": "https://www.igdb.com/games/dragon-and-mahjong",
+    "websites": [
+      {
+        "id": 1057983,
+        "url": "https://store.steampowered.com/app/4503800",
+        "type": 13
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 1649392,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 416303,
+    "cover": {
+      "id": 598594,
+      "image_id": "coctvm"
+    },
+    "first_release_date": 1798675200,
+    "genres": [
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 411893,
+        "company": {
+          "id": 80882,
+          "country": 804,
+          "name": "Elvoris"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 243,
+        "name": "heist"
+      },
+      {
+        "id": 287,
+        "name": "physics"
+      },
+      {
+        "id": 1669,
+        "name": "crime"
+      },
+      {
+        "id": 4699,
+        "name": "4 player co-op"
+      },
+      {
+        "id": 5377,
+        "name": "robbery"
+      },
+      {
+        "id": 17083,
+        "name": "vehicles"
+      },
+      {
+        "id": 47732,
+        "name": "sandbox rpg"
+      }
+    ],
+    "name": "Palm City",
+    "slug": "palm-city",
+    "storyline": "A crew of aspiring criminals arrives in Palm City, a sunny metropolis controlled by a powerful mob boss. Starting with small robberies, they work their way through increasingly dangerous jobs, stealing vehicles, breaking into apartments, robbing the city bank, and confronting the criminal organization that controls the city. Along the way, failed plans, police chases, and conflicts within the crew force them to improvise if they want to pull off the ultimate heist.",
+    "summary": "A first-person co-op action game set in a sunny open city. Play solo or with friends, explore the streets, plan heists, and escape with the loot. Use vehicles, the environment, and physics to your advantage when even the best-laid plan descends into chaos.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 27,
+        "name": "Comedy"
+      }
+    ],
+    "url": "https://www.igdb.com/games/palm-city",
+    "websites": [
+      {
+        "id": 1114141,
+        "url": "https://store.steampowered.com/app/5058470",
+        "type": 13
+      },
+      {
+        "id": 1114142,
+        "url": "https://discord.gg/hSAxgV8S3t",
+        "type": 18
+      },
+      {
+        "id": 1114143,
+        "url": "https://www.youtube.com/channel/UCLBX-ppFILiatXH0kEz7SrQ",
+        "type": 9
+      },
+      {
+        "id": 1114144,
+        "url": "https://x.com/PalmCityGames",
+        "type": 5
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 1753328,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1753329,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1753330,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1753331,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1753332,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1753333,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1753334,
+        "language": {
+          "id": 1,
+          "name": "Arabic",
+          "locale": "ar"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1753335,
+        "language": {
+          "id": 1,
+          "name": "Arabic",
+          "locale": "ar"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1753336,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1753337,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1753338,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1753339,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1753340,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1753341,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1753342,
+        "language": {
+          "id": 24,
+          "name": "Turkish",
+          "locale": "tr-TR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1753343,
+        "language": {
+          "id": 24,
+          "name": "Turkish",
+          "locale": "tr-TR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1753344,
+        "language": {
+          "id": 28,
+          "name": "Ukrainian",
+          "locale": "uk-UA"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1753345,
+        "language": {
+          "id": 28,
+          "name": "Ukrainian",
+          "locale": "uk-UA"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1753346,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1753347,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_status": 2,
+    "game_type": 0
+  }
+]

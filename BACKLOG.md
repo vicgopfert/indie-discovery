@@ -22,10 +22,11 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [ ] **B-08** (M) Schema Prisma do catálogo + primeira migration + seed de países/idiomas
 - [ ] **B-09** (M) Cliente IGDB: OAuth Twitch, paginação, limite de requisições, retry
 - [ ] **B-10** (M) Mapeador IGDB → modelo interno
-- [ ] **B-11** (M) Critério indie configurável em JSON
+- [ ] **B-11** (M) Critério indie configurável em JSON, com o recorte do catálogo e a exclusão do tema Erotic aprovados no M0
 - [ ] **B-12** (M) Cálculo de IDF e vetores TF-IDF normalizados
-- [ ] **B-13** (G) `RunIngestionUseCase` (aplicação standalone): busca, mapeia, filtra, grava, calcula vetores, registra `IngestionRun`
+- [ ] **B-13** (G) `RunIngestionUseCase` (aplicação standalone): busca, mapeia, filtra, grava, busca a popularidade "Want to Play", calcula vetores, registra `IngestionRun`
 - [ ] **B-14** (P) Carga inicial do catálogo real em produção
+- [ ] **B-56** (P) Enriquecimento do país do estúdio pelo Wikidata na ingestão
 
 ## E2 — Contas e autenticação (S5)
 
@@ -38,11 +39,13 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 ## E3 — Descoberta e interface pública (S6)
 
 - [ ] **B-20** (M) `GET /games` com busca, filtros (gênero, tema, situação), paginação; `GET /features`
-- [ ] **B-21** (P) Filtros de idioma português e país do estúdio (sujeito ao portão do M0 — pode virar P1)
+- [ ] **B-21** (P) Filtros de idioma português e país do estúdio (país só lista opções com 20+ jogos)
 - [ ] **B-22** (P) `GET /games/:slug`
 - [ ] **B-23** (M) Página de catálogo com filtros na URL
 - [ ] **B-24** (M) Página do jogo (selo "Em breve", atribuição IGDB, metadados no servidor)
 - [ ] **B-25** (P) Página "Como funciona"
+- [ ] **B-57** (M) Coleções culturais curadas: modelo, arquivo de curadoria, sugestão de candidatos, endpoints
+- [ ] **B-58** (M) Interface das coleções: vitrine "Explore por cultura", página da coleção, indicação na ficha
 
 ## E4 — Biblioteca do jogador (S7)
 

@@ -1,0 +1,1002 @@
+[
+  {
+    "id": 933,
+    "cover": {
+      "id": 912,
+      "image_id": "nra6eyikzbmw73d4gkxp"
+    },
+    "first_release_date": 1095120000,
+    "genres": [
+      {
+        "id": 8,
+        "name": "Platform"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 2012,
+        "company": {
+          "id": 481,
+          "country": 840,
+          "name": "Reflexive Entertainment"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 1158,
+        "name": "steam"
+      },
+      {
+        "id": 1293,
+        "name": "achievements"
+      },
+      {
+        "id": 1313,
+        "name": "multiple endings"
+      },
+      {
+        "id": 4134,
+        "name": "digital distribution"
+      },
+      {
+        "id": 4164,
+        "name": "bonus stage"
+      },
+      {
+        "id": 4754,
+        "name": "single-screen level"
+      },
+      {
+        "id": 5450,
+        "name": "digital rights management"
+      },
+      {
+        "id": 5720,
+        "name": "igf awards"
+      },
+      {
+        "id": 11107,
+        "name": "license hell"
+      },
+      {
+        "id": 15018,
+        "name": "interactive achievement awards 2006"
+      }
+    ],
+    "name": "Wik & the Fable of Souls",
+    "slug": "wik-the-fable-of-souls",
+    "summary": "Join a frog-boy on an adventure to use his tongue to save his family.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      }
+    ],
+    "total_rating_count": 1,
+    "url": "https://www.igdb.com/games/wik-the-fable-of-souls",
+    "websites": [
+      {
+        "id": 334475,
+        "url": "https://www.twitch.tv/directory/game/Wik%20&%20The%20Fable%20of%20Souls",
+        "type": 6
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 81790,
+    "cover": {
+      "id": 371242,
+      "image_id": "co7yga"
+    },
+    "first_release_date": 1514505600,
+    "genres": [
+      {
+        "id": 10,
+        "name": "Racing"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "name": "Color Retro Racer: Miles Challenge",
+    "slug": "color-retro-racer-miles-challenge",
+    "summary": "Color Retro Racer: Miles Challenge is an hommage to the retro year of VHS! Run as many miles as you can in this free game, try to beat the online score and unlock all the achievement!",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      }
+    ],
+    "url": "https://www.igdb.com/games/color-retro-racer-miles-challenge",
+    "websites": [
+      {
+        "id": 419461,
+        "url": "https://www.twitch.tv/directory/game/COLOR%20RETRO%20RACER%3A%20MILES%20CHALLENGE",
+        "type": 6
+      },
+      {
+        "id": 68429,
+        "url": "https://store.steampowered.com/app/768840",
+        "type": 13
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 6756,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 122150,
+    "cover": {
+      "id": 184703,
+      "image_id": "co3yin"
+    },
+    "first_release_date": 1568332800,
+    "genres": [
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "keywords": [
+      {
+        "id": 4137,
+        "name": "music and rhythm"
+      }
+    ],
+    "name": "Rhythm Mage VR",
+    "slug": "rhythm-mage-vr",
+    "summary": "The rhythm of the universe has been thrown off by a mysterious force. Portals are appearing all over the land, letting frustratingly cute creatures from other dimensions into our world. After many millennia of rest, you must aid Alfred and take up the mantel of Rhythm Mage to restore the rhythm of the universe.",
+    "url": "https://www.igdb.com/games/rhythm-mage-vr",
+    "websites": [
+      {
+        "id": 116118,
+        "url": "https://store.steampowered.com/app/1138380",
+        "type": 13
+      },
+      {
+        "id": 116119,
+        "url": "https://flatmountainarts.com/",
+        "type": 1
+      },
+      {
+        "id": 426368,
+        "url": "https://www.twitch.tv/directory/game/Rhythm%20Mage%20VR",
+        "type": 6
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 407631,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 407632,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      }
+    ],
+    "game_status": 4,
+    "game_type": 0
+  },
+  {
+    "id": 159869,
+    "cover": {
+      "id": 169272,
+      "image_id": "co3mm0"
+    },
+    "first_release_date": 1613520000,
+    "genres": [
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "name": "Brutal Wizardry",
+    "slug": "brutal-wizardry",
+    "summary": "Brutal Wizardry is a VR magic shooter with randomly generated levels. Use telekinesis, magical weapons and mechanisms to destroy your enemies.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      }
+    ],
+    "url": "https://www.igdb.com/games/brutal-wizardry",
+    "websites": [
+      {
+        "id": 206664,
+        "url": "https://store.steampowered.com/app/1416820",
+        "type": 13
+      },
+      {
+        "id": 464438,
+        "url": "https://www.twitch.tv/directory/game/Brutal%20Wizardry",
+        "type": 6
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 287433,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 199654,
+    "cover": {
+      "id": 249854,
+      "image_id": "co5cse"
+    },
+    "genres": [
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "name": "Closer Than You Know",
+    "slug": "closer-than-you-know",
+    "summary": "A cozy, modern spin on the old point-and-click adventure games. Packed with story and puzzles, this adventure centers around young Sam. She's on a big quest to save her home planet--where Hope has been outlawed.",
+    "url": "https://www.igdb.com/games/closer-than-you-know",
+    "websites": [
+      {
+        "id": 280274,
+        "url": "https://store.steampowered.com/app/1969490",
+        "type": 13
+      },
+      {
+        "id": 280275,
+        "url": "https://www.sopeculiar.com/ctyk",
+        "type": 1
+      },
+      {
+        "id": 490369,
+        "url": "https://www.twitch.tv/directory/game/Closer%20Than%20You%20Know",
+        "type": 6
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 374396,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 374397,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 374395,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 244531,
+    "cover": {
+      "id": 296808,
+      "image_id": "co6d0o"
+    },
+    "genres": [
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "name": "Siren Forest",
+    "slug": "siren-forest",
+    "summary": "Their final known location was within the eerie Siren Forest, as recorded in an ancient sheepskin scroll. This forgotten woodland holds an air of mystery and intrigue...",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      }
+    ],
+    "url": "https://www.igdb.com/games/siren-forest",
+    "websites": [
+      {
+        "id": 543164,
+        "url": "https://store.steampowered.com/app/2358350",
+        "type": 13
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 671447,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 671448,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 671449,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 671450,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 671451,
+        "language": {
+          "id": 3,
+          "name": "Chinese (Traditional)",
+          "locale": "zh-TW"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 671452,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 671453,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 671454,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 671455,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 671456,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 671457,
+        "language": {
+          "id": 19,
+          "name": "Polish",
+          "locale": "pl-PL"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_status": 6,
+    "game_type": 0
+  },
+  {
+    "id": 285884,
+    "cover": {
+      "id": 360997,
+      "image_id": "co7qjp"
+    },
+    "genres": [
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "name": "Seers of Ages Past 1: The Harbinger of Mah",
+    "slug": "seers-of-ages-past-1-the-harbinger-of-mah",
+    "summary": "Seers of Ages Past 1: The Harbinger of Mah is a third-person, open-world Action RPG that tells the story of the summoner Tarbeard, the first Seer, who battles fierce and wondrous creatures with his minions on an epic fantasy adventure across the savage swampland of Yvermist.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      }
+    ],
+    "url": "https://www.igdb.com/games/seers-of-ages-past-1-the-harbinger-of-mah",
+    "websites": [
+      {
+        "id": 613306,
+        "url": "https://store.steampowered.com/app/2702830",
+        "type": 13
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 898181,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 898182,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 898183,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 322446,
+    "cover": {
+      "id": 422404,
+      "image_id": "co91xg"
+    },
+    "first_release_date": 1732060800,
+    "genres": [
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "name": "Unplugged",
+    "slug": "unplugged--2",
+    "summary": "Embark on an adventure with a friend in UnPlugged. Work together with a friend in a challenging Local Co-Op as two robots who work their way through challenging puzzles and mazes in an epic adventure.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      }
+    ],
+    "url": "https://www.igdb.com/games/unplugged--2",
+    "websites": [
+      {
+        "id": 691966,
+        "url": "https://store.steampowered.com/app/3142930",
+        "type": 13
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 1119353,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1119354,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1119355,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1119356,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1119357,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1119358,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1119359,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1119360,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1119361,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1119362,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1119363,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1119364,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1119366,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1119368,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1119365,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1119367,
+        "language": {
+          "id": 22,
+          "name": "Russian",
+          "locale": "ru-RU"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1119369,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 360654,
+    "cover": {
+      "id": 478984,
+      "image_id": "coa9l4"
+    },
+    "first_release_date": 1771545600,
+    "genres": [
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "keywords": [
+      {
+        "id": 38148,
+        "name": "ai-generated artwork"
+      },
+      {
+        "id": 44208,
+        "name": "ai-generated text"
+      },
+      {
+        "id": 44612,
+        "name": "ai-generated translations"
+      }
+    ],
+    "name": "Delirium: Echoes of the Domino",
+    "slug": "delirium-echoes-of-the-domino",
+    "summary": "Delirium: Echoes of the Domino is a supernatural roguelike where each placed domino alters a cursed board and unleashes echoes of ancient curses. Confront time-warped entities and break the cycle... or become part of it.",
+    "url": "https://www.igdb.com/games/delirium-echoes-of-the-domino",
+    "websites": [
+      {
+        "id": 849691,
+        "url": "https://store.steampowered.com/app/3707610",
+        "type": 13
+      },
+      {
+        "id": 849692,
+        "url": "https://www.instagram.com/rialuzgames/",
+        "type": 8
+      },
+      {
+        "id": 849693,
+        "url": "https://x.com/RialuzGames",
+        "type": 5
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 1342799,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1342800,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1342801,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1342802,
+        "language": {
+          "id": 12,
+          "name": "French",
+          "locale": "fr-FR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1342803,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1342804,
+        "language": {
+          "id": 15,
+          "name": "Italian",
+          "locale": "it-IT"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1342805,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1342806,
+        "language": {
+          "id": 27,
+          "name": "German",
+          "locale": "de-DE"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1342807,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1342808,
+        "language": {
+          "id": 9,
+          "name": "Spanish (Spain)",
+          "locale": "es-ES"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1342809,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1342810,
+        "language": {
+          "id": 2,
+          "name": "Chinese (Simplified)",
+          "locale": "zh-CN"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1342811,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1342812,
+        "language": {
+          "id": 17,
+          "name": "Korean",
+          "locale": "ko-KR"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1342813,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1342814,
+        "language": {
+          "id": 16,
+          "name": "Japanese",
+          "locale": "ja-JP"
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1342815,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1342816,
+        "language": {
+          "id": 20,
+          "name": "Portuguese (Portugal)",
+          "locale": "pt-PT"
+        },
+        "language_support_type": 2
+      }
+    ],
+    "game_type": 0
+  },
+  {
+    "id": 391128,
+    "cover": {
+      "id": 540053,
+      "image_id": "cobkph"
+    },
+    "first_release_date": 1798675200,
+    "genres": [
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "keywords": [
+      {
+        "id": 50569,
+        "name": "nextfest february 2026"
+      }
+    ],
+    "name": "Friends of a Feather",
+    "slug": "friends-of-a-feather",
+    "summary": "An absurd adventure RPG: ruin weddings, break into dinosaur mansions, and sleep with 3 or 4 opossums.",
+    "url": "https://www.igdb.com/games/friends-of-a-feather",
+    "websites": [
+      {
+        "id": 1014020,
+        "url": "https://store.steampowered.com/app/3999630",
+        "type": 13
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 1573348,
+        "language": {
+          "id": 7,
+          "name": "English",
+          "locale": "en-US"
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1573349,
+        "language": {
+          "id": 21,
+          "name": "Portuguese (Brazil)",
+          "locale": "pt-BR"
+        },
+        "language_support_type": 3
+      }
+    ],
+    "game_type": 0
+  }
+]
