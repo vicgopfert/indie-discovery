@@ -9,7 +9,7 @@ catálogo por país do estúdio e por coleções culturais curadas.
 Trabalho de Conclusão de Curso — Tecnologia em Análise e Desenvolvimento de
 Sistemas, UERJ.
 Autor: Victor Gopfert Ferreira Figueiredo.
-Orientadora: Adriana Aparicio Sicsú Ayres do Nascimento.
+Orientador: Leonardo da Silva Bóia.
 
 ## Stack
 
