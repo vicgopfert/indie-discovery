@@ -5,9 +5,8 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-// Do eslint-config-next aproveitamos as regras de Next, React, hooks e jsx-a11y.
-// O bloco TypeScript dele e o parser próprio ficam de fora: o typescript-eslint
-// abaixo já cobre o TypeScript, com informação de tipos.
+// Sem o bloco TypeScript e o parser do eslint-config-next: duplicariam o plugin do
+// typescript-eslint e desligariam as regras com informação de tipos no frontend.
 const nextRules = nextVitals
   .filter((config) => config.name !== 'next/typescript')
   .map((config) => {
@@ -29,7 +28,6 @@ export default defineConfig([
 
   js.configs.recommended,
 
-  // Regras com informação de tipos (ex.: promessa sem await) em todo o TypeScript.
   tseslint.configs.recommendedTypeChecked,
   {
     languageOptions: {
@@ -37,24 +35,23 @@ export default defineConfig([
     },
   },
 
-  // Arquivos JavaScript de configuração e scripts rodam no Node, sem tsconfig.
   {
     files: ['**/*.{js,mjs,cjs}'],
     extends: [tseslint.configs.disableTypeChecked],
     languageOptions: { globals: globals.node },
   },
   {
-    files: ['**/*.cjs', 'apps/api/jest.config.js'],
+    files: ['**/*.cjs', 'apps/api/jest*.config.js'],
     languageOptions: { sourceType: 'commonjs' },
+    rules: { '@typescript-eslint/no-require-imports': 'off' },
   },
 
-  // Frontend: regras do Next.js, React, hooks e acessibilidade (RNF-05).
   {
     files: ['apps/web/**/*.{ts,tsx}'],
     extends: [nextRules],
     settings: { next: { rootDir: 'apps/web' }, react: { version: '19' } },
   },
 
-  // Desliga regras de estilo que conflitam com o Prettier; precisa ser o último.
+  // Precisa ser o último.
   prettier,
 ]);

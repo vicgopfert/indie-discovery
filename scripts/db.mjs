@@ -1,19 +1,4 @@
 #!/usr/bin/env node
-/**
- * PostgreSQL local sem Docker — item B-04 do backlog.
- *
- * Usa os binários oficiais do PostgreSQL empacotados no `embedded-postgres`
- * (mesma versão principal do Neon) e os controla pelo `pg_ctl`, de modo que o
- * banco fica rodando em segundo plano até o `stop`.
- *
- * Uso:
- *   pnpm db:start     cria o cluster na primeira vez, sobe o servidor e o banco
- *   pnpm db:stop      desliga o servidor
- *   pnpm db:status    informa se o servidor está no ar
- *
- * Porta, usuário, senha e nome do banco vêm da DATABASE_URL do .env (ou do
- * .env.example, se não houver .env). Os dados ficam em .data/postgres.
- */
 
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
@@ -26,8 +11,6 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DATA_ROOT = resolve(ROOT, '.data');
 const DATA_DIR = resolve(DATA_ROOT, 'postgres');
 const LOG_FILE = resolve(DATA_ROOT, 'postgres.log');
-
-// ------------------------------------------------------------- configuração
 
 function databaseUrl() {
   if (!process.env.DATABASE_URL) {
@@ -48,8 +31,7 @@ function databaseUrl() {
   };
 }
 
-// Os binários ficam no pacote da plataforma, dependência opcional do
-// embedded-postgres; por isso são resolvidos a partir dele.
+// O pacote da plataforma é dependência opcional do embedded-postgres, não da raiz.
 async function binaries() {
   const platform = process.platform === 'win32' ? 'windows' : process.platform;
   const name = `@embedded-postgres/${platform}-${process.arch}`;
@@ -61,15 +43,11 @@ async function binaries() {
   }
 }
 
-// ------------------------------------------------------------------ comandos
-
-// Mensagens do PostgreSQL em inglês: traduzidas, saem com acentos quebrados no
-// terminal do Windows, que usa outra codificação.
+// Em português, as mensagens saem com acentos quebrados no terminal do Windows.
 const PG_ENV = { ...process.env, LANGUAGE: 'en' };
 
-function run(bin, args) {
-  // stdio herdado: o postgres iniciado pelo pg_ctl não pode prender pipes deste processo.
-  return spawnSync(bin, args, { stdio: 'inherit', env: PG_ENV }).status;
+function run(bin, args, stdio = 'inherit') {
+  return spawnSync(bin, args, { stdio, env: PG_ENV }).status;
 }
 
 function isRunning(bin) {
@@ -123,21 +101,28 @@ async function start() {
   if (isRunning(bin)) {
     console.log('PostgreSQL já está no ar.');
   } else {
-    const status = run(bin.pg_ctl, [
-      'start',
-      '-D',
-      DATA_DIR,
-      '-l',
-      LOG_FILE,
-      '-w',
-      '-o',
-      `-p ${cfg.port} -c listen_addresses=localhost`,
-    ]);
+    // Sem stdio: o postgres herdaria um eventual pipe da saída e o comando nunca
+    // terminaria. A saída do servidor vai para o log.
+    const status = run(
+      bin.pg_ctl,
+      [
+        'start',
+        '-D',
+        DATA_DIR,
+        '-l',
+        LOG_FILE,
+        '-w',
+        '-o',
+        `-p ${cfg.port} -c listen_addresses=localhost`,
+      ],
+      'ignore',
+    );
     if (status !== 0) {
       throw new Error(
         `O servidor não subiu. Veja ${LOG_FILE} (a porta ${cfg.port} pode estar ocupada).`,
       );
     }
+    console.log('Servidor iniciado.');
   }
   await ensureDatabase(cfg);
   console.log(`PostgreSQL local em postgresql://${cfg.user}@localhost:${cfg.port}/${cfg.database}`);
