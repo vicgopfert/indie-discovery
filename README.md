@@ -42,6 +42,7 @@ pnpm install
 cp .env.example .env          # preencher as variáveis
 pnpm db:start                 # PostgreSQL local (pnpm db:stop para desligar)
 pnpm --filter @indie/api exec prisma migrate dev
+pnpm --filter @indie/api exec prisma db seed   # países e idiomas
 pnpm dev
 ```
 
@@ -54,7 +55,8 @@ pnpm test:e2e    # sobem a API inteira e usam o banco da DATABASE_URL
 ```
 
 O CI (`.github/workflows/ci.yml`) roda em todo PR para a `main`: instalação,
-lint, formatação, tipos, testes unitários, migrations num PostgreSQL 18 de
+auditoria de dependências (só aviso),
+lint, formatação, tipos, testes unitários, migrations e seed num PostgreSQL 18 de
 serviço, testes e2e contra esse banco e build. Um PR só entra com o CI verde.
 
 ## Decisões de configuração
