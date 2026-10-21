@@ -15,10 +15,17 @@ export type ApiEnv = z.infer<typeof apiEnvSchema>;
 // O .env fica na raiz; os scripts da API rodam em apps/api.
 export const rootEnvFile = resolve(process.cwd(), '../../.env');
 
-export function validateApiEnv(env: Record<string, unknown>): ApiEnv {
-  const result = apiEnvSchema.safeParse(env);
+export function parseEnv<Schema extends z.ZodType>(
+  schema: Schema,
+  env: Record<string, unknown>,
+): z.infer<Schema> {
+  const result = schema.safeParse(env);
   if (!result.success) {
     throw new Error(`Variáveis de ambiente inválidas:\n${z.prettifyError(result.error)}`);
   }
   return result.data;
+}
+
+export function validateApiEnv(env: Record<string, unknown>): ApiEnv {
+  return parseEnv(apiEnvSchema, env);
 }
