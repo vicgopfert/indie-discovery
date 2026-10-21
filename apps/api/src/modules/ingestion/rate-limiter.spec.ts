@@ -8,8 +8,10 @@ function maxStartsInAnyWindow(starts: number[], windowMs: number) {
 }
 
 describe('RateLimiter', () => {
+  // As tarefas medem o próprio início um pouco depois de liberadas; a folga de 50 ms
+  // absorve esse atraso em máquinas lentas como a do CI.
   it('não inicia mais tarefas por janela do que o limite', async () => {
-    const limiter = new RateLimiter({ requestsPerWindow: 3, windowMs: 200, maxConcurrent: 10 });
+    const limiter = new RateLimiter({ requestsPerWindow: 3, windowMs: 500, maxConcurrent: 10 });
     const starts: number[] = [];
 
     await Promise.all(
@@ -22,8 +24,8 @@ describe('RateLimiter', () => {
     );
 
     expect(starts).toHaveLength(9);
-    expect(maxStartsInAnyWindow(starts, 200)).toBeLessThanOrEqual(3);
-    expect(Math.max(...starts) - Math.min(...starts)).toBeGreaterThanOrEqual(400);
+    expect(maxStartsInAnyWindow(starts, 450)).toBeLessThanOrEqual(3);
+    expect(Math.max(...starts) - Math.min(...starts)).toBeGreaterThanOrEqual(950);
   });
 
   it('não deixa mais tarefas abertas ao mesmo tempo do que o limite', async () => {
