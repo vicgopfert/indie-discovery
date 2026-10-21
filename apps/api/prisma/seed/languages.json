@@ -11,6 +11,7 @@
   { "igdbId": 10, "locale": "es-MX", "namePt": "Espanhol (México)" },
   { "igdbId": 11, "locale": "fi-FI", "namePt": "Finlandês" },
   { "igdbId": 12, "locale": "fr-FR", "namePt": "Francês" },
+  { "igdbId": 13, "locale": "he-IL", "namePt": "Hebraico" },
   { "igdbId": 14, "locale": "hu-HU", "namePt": "Húngaro" },
   { "igdbId": 15, "locale": "it-IT", "namePt": "Italiano" },
   { "igdbId": 16, "locale": "ja-JP", "namePt": "Japonês" },
@@ -23,6 +24,7 @@
   { "igdbId": 23, "locale": "sv-SE", "namePt": "Sueco" },
   { "igdbId": 24, "locale": "tr-TR", "namePt": "Turco" },
   { "igdbId": 25, "locale": "th-TH", "namePt": "Tailandês" },
+  { "igdbId": 26, "locale": "vi-VN", "namePt": "Vietnamita" },
   { "igdbId": 27, "locale": "de-DE", "namePt": "Alemão" },
   { "igdbId": 28, "locale": "uk-UA", "namePt": "Ucraniano" }
 ]
