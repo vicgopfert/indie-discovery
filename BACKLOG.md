@@ -20,7 +20,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 
 - [x] **B-07** (M) **Spike da IGDB — marco M0:** credenciais, termos de uso, cobertura de campos (país, idioma, resumo, indicador pré-lançamento), tamanho do catálogo, fixtures reais salvas
 - [x] **B-08** (M) Schema Prisma do catálogo + primeira migration + seed de países/idiomas
-- [ ] **B-09** (M) Cliente IGDB: OAuth Twitch, paginação, limite de requisições, retry
+- [x] **B-09** (M) Cliente IGDB: OAuth Twitch, paginação, limite de requisições, retry
 - [ ] **B-10** (M) Mapeador IGDB → modelo interno
 - [ ] **B-11** (M) Critério indie configurável em JSON, com o recorte do catálogo e a exclusão do tema Erotic aprovados no M0
 - [ ] **B-12** (M) Cálculo de IDF e vetores TF-IDF normalizados
