@@ -96,7 +96,7 @@ Complexidade: **B** baixa (até um dia de trabalho), **M** média (alguns dias),
 | F-10 | **Partida a frio**: escolha de pelo menos 3 gêneros ou temas e avaliação opcional de até 4 jogos | Sem perfil não há recomendação; 16,7% dos jogadores não avaliariam nenhum jogo | Pode pular a etapa de avaliação; preferências geram recomendações mesmo sem avaliações; aparece no primeiro acesso e pode ser refeita | F-08, F-11 | M |
 | F-11 | **Recomendações personalizadas com motivo** | Núcleo da proposta | Retorna os N mais bem pontuados, sem jogos já avaliados; cada item traz de 1 a 3 atributos que mais contribuíram; mesmo estado gera mesma lista; usuário sem perfil é levado à partida a frio | F-04, F-08 | A |
 | F-12 | **Modo de descoberta**: Populares, Equilibrado e Descobertas | 75% dos jogadores querem equilíbrio ou escolha; nenhum dos lados quer penalização fixa | Padrão Equilibrado; escolha persistida no usuário; trocar o modo muda a lista de forma observável | F-11 | B |
-| F-13 | **Página "Como funciona"**: critério de indie, lógica da recomendação e origem dos dados | Transparência é princípio da proposta | Explica o critério em linguagem simples, lista as grandes publishers excluídas e descreve como as coleções culturais são curadas; acessível sem login | F-03 | B |
+| F-13 | **Página "Como funciona"**: critério de indie, lógica da recomendação e origem dos dados | Transparência é princípio da proposta | Explica o critério em linguagem simples, lista as grandes publishers excluídas e as exceções manuais com o motivo e a fonte de cada uma, e descreve como as coleções culturais são curadas; acessível sem login | F-03 | B |
 | F-14 | **Avaliação offline do recomendador** | Resultado mensurável do TCC | Script gera, para perfis simulados, cobertura de catálogo e popularidade média das recomendações em cada modo; resultado exportável em tabela e reproduzível | F-11, F-12 | M |
 | F-15 | **Documentação da API e verificação de saúde** | Contrato verificável e monitoramento mínimo | Swagger lista todos os endpoints P0 com exemplos e erros; rota de saúde informa API e banco | — | B |
 | F-24 | **Coleções culturais curadas** ("Explore por cultura") | Cultura retratada pesou 33,3% na pesquisa; nenhuma fonte de dados registra a cultura de forma ampla (medido no M0), então a navegação é feita por curadoria transparente. Promovida de P2 a P0 no M0 | Coleções definidas em arquivo versionado, com nome, descrição e jogos aprovados; candidatos sugeridos automaticamente (palavras-chave, resumo e Wikidata) e revisados pelo autor; cada coleção com pelo menos 10 jogos, com destaque para a cultura brasileira; vitrine na página inicial e no catálogo, página da coleção e indicação na ficha do jogo; acessível sem login | F-02, F-07 | M |
@@ -960,6 +960,7 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | B-12 | Cálculo de IDF e vetores TF-IDF normalizados (F-04) | P0 | B-08, B-10 | Testes com catálogo sintético verificam pesos, norma 1 e descarte por limites | M |
 | B-13 | `RunIngestionUseCase` em aplicação standalone: busca, mapeia, filtra, grava em lote, busca a popularidade "Want to Play" do PopScore, calcula vetores, registra `IngestionRun` (F-02) | P0 | B-09, B-11, B-12 | Duas execuções seguidas não duplicam registros; falha parcial fica registrada com resumo de erros | G |
 | B-14 | Carga inicial do catálogo real no banco de produção | P0 | B-13, B-38 | Catálogo carregado; tamanho do banco e contagens registrados | P |
+| B-59 | Medição dos falsos negativos do critério indie: sortear de 8 a 10 jogos excluídos pela regra e classificá-los à mão | P0 | B-11 | Amostra classificada e registrada em `docs/criterio-indie-casos.md`, com a taxa de indies legítimos excluídos; se a taxa for alta, a regra de publisher é revista antes do B-14 | P |
 | B-56 | Enriquecimento do país do estúdio pelo Wikidata na ingestão (F-06) | P0 | B-13 | Jogos sem país na IGDB recebem o do Wikidata quando existir, cruzando pelo identificador da IGDB; origem do dado gravada; cobertura final medida e registrada | P |
 
 ### E2. Contas e autenticação
@@ -981,7 +982,7 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | B-22 | `GET /games/:slug` com empresas, país, atributos e link oficial | P0 | B-08 | 404 padronizado para slug inexistente | P |
 | B-23 | Página de catálogo com filtros na URL (F-05, F-06) | P0 | B-20, B-40 | Link copiado reabre a mesma busca; funciona sem login; estados vazio e de erro tratados | M |
 | B-24 | Página do jogo com selo "Em breve", atribuição à IGDB e metadados gerados no servidor (F-07) | P0 | B-22, B-40 | Título e descrição aparecem no HTML inicial; link externo abre a página oficial | M |
-| B-25 | Página "Como funciona" (F-13) | P0 | B-11, B-40 | Explica critério, recomendação, modos, curadoria das coleções e origem dos dados; lista as publishers excluídas a partir do arquivo de critério | P |
+| B-25 | Página "Como funciona" (F-13) | P0 | B-11, B-40 | Explica critério, recomendação, modos, curadoria das coleções e origem dos dados; lista as publishers excluídas e as exceções manuais, com motivo e fonte, a partir do arquivo de critério | P |
 | B-57 | Coleções culturais: modelo e migration, arquivo `config/collections.json`, script que sugere candidatos (palavras-chave, resumo e Wikidata), sincronização na ingestão, `GET /collections` e `GET /collections/:slug` (F-24) | P0 | B-13, B-20 | De 8 a 10 coleções iniciais revisadas pelo autor, com destaque para a cultura brasileira e pelo menos 10 jogos cada; endpoints no Swagger | M |
 | B-58 | Interface das coleções: vitrine "Explore por cultura", página da coleção e indicação na ficha do jogo (F-24) | P0 | B-57, B-24 | Vitrine e página funcionam sem login; a ficha mostra as coleções do jogo | M |
 
@@ -1049,11 +1050,11 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 
 | Conjunto | Itens P / M / G | Estimativa (mínimo · ponto médio · máximo) |
 | --- | --- | --- |
-| P0 de desenvolvimento (E0 a E7) | 21 / 24 / 2 | 186 h · **275 h** · 364 h |
+| P0 de desenvolvimento (E0 a E7) | 22 / 24 / 2 | 188 h · **278 h** · 368 h |
 | Capacidade de desenvolvimento nas semanas 1 a 22 (12 h × 22) | — | 264 h |
 | Semanas 23 e 24 (15 h × 2), sem item novo | — | 30 h, divididas entre ensaios, slides e absorção de atraso |
 
-Com os itens acrescentados no M0 (B-56 a B-58), o ponto médio do P0 passou de 257 h para 275 h, 11 h acima da capacidade das semanas 1 a 22. O autor decidiu não trocar nenhuma funcionalidade: a diferença é coberta pelas semanas 23 e 24 e pelo ritmo observado na semana 1, em que todo o E0 planejado para a sprint foi feito em um dia. O ritmo real é conferido a cada marco. Se a execução se aproximar do máximo, o plano de corte da seção 16 é aplicado nos marcos M1 e M2, e não na véspera da defesa. Os itens P1 só entram com horas que sobrarem depois do M2.
+Com os itens acrescentados no M0 (B-56 a B-58), o ponto médio do P0 passou de 257 h para 275 h, e com o B-59, aberto no B-11, para 278 h, 14 h acima da capacidade das semanas 1 a 22. O autor decidiu não trocar nenhuma funcionalidade: a diferença é coberta pelas semanas 23 e 24 e pelo ritmo observado na semana 1, em que todo o E0 planejado para a sprint foi feito em um dia. O ritmo real é conferido a cada marco. Se a execução se aproximar do máximo, o plano de corte da seção 16 é aplicado nos marcos M1 e M2, e não na véspera da defesa. Os itens P1 só entram com horas que sobrarem depois do M2.
 
 ## 14. Cronograma até a defesa (Fase A)
 
@@ -1079,7 +1080,7 @@ A sprint S6 (semanas 11–12, entregando o M1) atravessa o recesso de fim de ano
 | S1 | 1–2 | Fundação e viabilidade dos dados | B-01, B-02, B-03, B-04, B-07 | Monorrepositório rodando local com hooks; **M0** | R-04, R-05, R-06 |
 | S2 | 3–4 | Implantação e CI desde o início | B-05, B-08, B-38, B-39, B-40 | API e frontend vazios implantados, banco remoto com migrations, CI verde | R-09, R-13 |
 | S3 | 5–6 | Integração com a IGDB | B-06, B-09, B-10, B-11 | Cliente e mapeador testados com fixtures; critério indie validado contra casos reais | R-04 |
-| S4 | 7–8 | Catálogo real no banco | B-12, B-13, B-14, B-56 | Ingestão completa executada em produção e registrada | R-11, R-12 |
+| S4 | 7–8 | Catálogo real no banco | B-12, B-13, B-14, B-56, B-59 | Ingestão completa executada em produção e registrada | R-11, R-12 |
 | S5 | 9–10 | Contas e segurança | B-15, B-16, B-17, B-18, B-22 | Cadastro, login e logout funcionando no ambiente implantado | R-03 |
 | S6 | 11–12 | Interface pública de descoberta | B-20, B-21, B-23, B-24 | **M1** | R-01 |
 | S7 | 13–14 | Biblioteca, índice de conteúdo e coleções | B-19, B-26, B-27, B-31, B-57 | Avaliações e listas pela API; índice carregado com memória medida; e2e de autenticação no CI | R-07, R-09 |
@@ -1113,7 +1114,7 @@ Reuniões com o orientador a cada sprint, levando o que foi implantado e o trech
 ### Margem explícita
 
 1. **Semanas 23 e 24 sem nenhum item de desenvolvimento.** Os ensaios e slides ocupam parte das 30 horas; o restante absorve atrasos.
-2. **Folga das estimativas.** O ponto médio do P0 (275 h, depois do M0) passa 11 h da capacidade das semanas 1 a 22 (264 h); a diferença sai das semanas 23 e 24 se o ritmo da semana 1 não se mantiver.
+2. **Folga das estimativas.** O ponto médio do P0 (278 h, depois do M0 e do B-59) passa 14 h da capacidade das semanas 1 a 22 (264 h); a diferença sai das semanas 23 e 24 se o ritmo da semana 1 não se mantiver.
 3. **Plano de corte (seção 16)**, aplicado em M1 ou M2 se o atraso acumulado passar de uma sprint.
 4. **Itens P1 fora do caminho crítico.** Nenhum P0 depende deles; só entram depois do M2 com horas que sobrarem.
 
