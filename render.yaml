@@ -4,9 +4,10 @@ services:
     runtime: node
     plan: free
     region: virginia
+    # Sem `corepack enable`: ele grava na pasta do Node, que é somente leitura no Render.
     # --prod=false: com NODE_ENV=production o pnpm pularia as devDependencies que o build usa.
-    buildCommand: corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm --filter @indie/api... run build
-    startCommand: pnpm --filter @indie/api start
+    buildCommand: corepack pnpm install --frozen-lockfile --prod=false && corepack pnpm --filter @indie/api... run build
+    startCommand: npm --prefix apps/api run start
     healthCheckPath: /api/health
     autoDeployTrigger: checksPass
     envVars:
