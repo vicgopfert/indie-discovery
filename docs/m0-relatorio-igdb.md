@@ -244,6 +244,12 @@ Populares e Descobertas tratarem lançamentos aguardados como conhecidos.
   *Squadron 42*, de orçamento alto. Isso reforça a importância do B-11.
 - Pendente: conferir manualmente 20 jogos do recorte contra o critério e registrar
   acertos e erros (critério de conclusão do B-11).
+- **Decidido no B-11 (21/10/2026):** Devolver Digital, Annapurna Interactive,
+  Paradox Interactive, Focus Entertainment e THQ Nordic (e, por coerência, Deep
+  Silver e Koch Media) saem da lista; ela passa a conter só donas de plataforma e
+  grandes conglomerados AAA. Erotic continua excluído pelo tema, e erros de
+  classificação são corrigidos por listas de exceção com fonte pública. Os 22 casos
+  conferidos estão em `docs/criterio-indie-casos.md`.
 
 ### 8.6 Qualidade dos dados para a recomendação (B-12) e a ficha (F-07)
 
