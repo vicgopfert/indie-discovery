@@ -1,0 +1,70 @@
+{
+  "principle": "O critério classifica a situação atual do estúdio, não a do lançamento.",
+  "indieGenre": { "igdbId": 32, "name": "Indie" },
+  "excludedThemes": [{ "igdbId": 42, "name": "Erotic" }],
+  "excludedPublishersRule": "Donas de plataforma e grandes conglomerados de jogos AAA. Publishers dedicadas a estúdios independentes, como Devolver Digital e Annapurna Interactive, não são excluídas.",
+  "excludedPublishers": [
+    { "igdbId": 1, "name": "Electronic Arts" },
+    { "igdbId": 19200, "name": "EA Games" },
+    { "igdbId": 104, "name": "Ubisoft Entertainment" },
+    { "igdbId": 66, "name": "Activision" },
+    { "igdbId": 179, "name": "Activision Blizzard" },
+    { "igdbId": 51, "name": "Blizzard Entertainment" },
+    { "igdbId": 139, "name": "Take-Two Interactive" },
+    { "igdbId": 29, "name": "Rockstar Games" },
+    { "igdbId": 8, "name": "2K Games" },
+    { "igdbId": 20228, "name": "2K" },
+    { "igdbId": 26, "name": "Square Enix" },
+    { "igdbId": 37, "name": "Capcom" },
+    { "igdbId": 129, "name": "Konami" },
+    { "igdbId": 248, "name": "Bandai Namco Entertainment" },
+    { "igdbId": 3958, "name": "Bandai Namco Games" },
+    { "igdbId": 112, "name": "Sega" },
+    { "igdbId": 70, "name": "Nintendo" },
+    { "igdbId": 10100, "name": "Sony Interactive Entertainment" },
+    { "igdbId": 13634, "name": "Sony Computer Entertainment" },
+    { "igdbId": 53, "name": "Microsoft Game Studios" },
+    { "igdbId": 17966, "name": "Xbox Game Studios" },
+    { "igdbId": 16565, "name": "Bethesda Softworks" },
+    { "igdbId": 245, "name": "ZeniMax Media" },
+    { "igdbId": 14055, "name": "Warner Bros. Interactive Entertainment" },
+    { "igdbId": 21315, "name": "Tencent" },
+    { "igdbId": 32410, "name": "NetEase" },
+    { "igdbId": 42782, "name": "Embracer Group" },
+    { "igdbId": 41542, "name": "Krafton" },
+    { "igdbId": 17463, "name": "Epic Games" },
+    { "igdbId": 56, "name": "Valve" },
+    { "igdbId": 41, "name": "Riot Games" },
+    { "igdbId": 15932, "name": "miHoYo" }
+  ],
+  "completeEntry": { "minSummaryLength": 40 },
+  "interestSignals": { "ratingsOnlyBefore": "2015-01-01" },
+  "overridesPolicy": {
+    "purpose": "As listas corrigem erros de classificação indie. Não sobrepõem o filtro de conteúdo (temas excluídos).",
+    "alwaysInclude": "Estúdio independente no lançamento e hoje, excluído pela regra apenas por publisher de distribuição ou de porte.",
+    "alwaysExclude": "Jogo com rótulo indie na IGDB cujo orçamento ou estrutura de produção é publicamente documentado como AAA.",
+    "sourceRequired": "Toda entrada exige uma fonte pública citável.",
+    "maxEntries": 20,
+    "maxEntriesReason": "Se as exceções passarem desse teto, o problema é a regra, não os casos."
+  },
+  "overrides": {
+    "alwaysInclude": [
+      {
+        "igdbId": 1352,
+        "name": "Journey",
+        "reason": "Desenvolvido pela Thatgamecompany. A Sony foi publisher de plataforma nas versões de PS3 e PS4, e a Annapurna Interactive publicou as versões de PC e iOS em 2019; a regra o excluiu pela distribuição, não pela propriedade do estúdio.",
+        "source": "https://en.wikipedia.org/wiki/Journey_(2012_video_game)",
+        "decidedAt": "2026-10-21"
+      }
+    ],
+    "alwaysExclude": [
+      {
+        "igdbId": 19128,
+        "name": "Squadron 42",
+        "reason": "Marcado como indie na IGDB, mas desenvolvido pela Cloud Imperium (Foundry 42) e financiado junto com Star Citizen, projeto que passou de US$ 1 bilhão em financiamento coletivo e vendas antecipadas.",
+        "source": "https://en.wikipedia.org/wiki/Squadron_42",
+        "decidedAt": "2026-10-21"
+      }
+    ]
+  }
+}
