@@ -250,6 +250,11 @@ Populares e Descobertas tratarem lançamentos aguardados como conhecidos.
   grandes conglomerados AAA. Erotic continua excluído pelo tema, e erros de
   classificação são corrigidos por listas de exceção com fonte pública. Os 22 casos
   conferidos estão em `docs/criterio-indie-casos.md`.
+- **Revisto no B-59 (22/10/2026):** a medição dos falsos negativos mostrou que a
+  regra de publisher excluía, por engano, 8 de 10 jogos de uma amostra (entre os 94
+  excluídos só por ela estavam *Limbo*, *Braid* e *Chroma Squad*). A regra passou a
+  excluir pelo **controle do estúdio na data de lançamento**, com 56 estúdios
+  verificados em fonte pública; publicar um jogo não exclui mais.
 
 ### 8.6 Qualidade dos dados para a recomendação (B-12) e a ficha (F-07)
 

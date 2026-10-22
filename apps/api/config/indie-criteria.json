@@ -1,47 +1,703 @@
 {
-  "principle": "O critério classifica a situação atual do estúdio, não a do lançamento.",
-  "indieGenre": { "igdbId": 32, "name": "Indie" },
-  "excludedThemes": [{ "igdbId": 42, "name": "Erotic" }],
-  "excludedPublishersRule": "Donas de plataforma e grandes conglomerados de jogos AAA. Publishers dedicadas a estúdios independentes, como Devolver Digital e Annapurna Interactive, não são excluídas.",
-  "excludedPublishers": [
-    { "igdbId": 1, "name": "Electronic Arts" },
-    { "igdbId": 19200, "name": "EA Games" },
-    { "igdbId": 104, "name": "Ubisoft Entertainment" },
-    { "igdbId": 66, "name": "Activision" },
-    { "igdbId": 179, "name": "Activision Blizzard" },
-    { "igdbId": 51, "name": "Blizzard Entertainment" },
-    { "igdbId": 139, "name": "Take-Two Interactive" },
-    { "igdbId": 29, "name": "Rockstar Games" },
-    { "igdbId": 8, "name": "2K Games" },
-    { "igdbId": 20228, "name": "2K" },
-    { "igdbId": 26, "name": "Square Enix" },
-    { "igdbId": 37, "name": "Capcom" },
-    { "igdbId": 129, "name": "Konami" },
-    { "igdbId": 248, "name": "Bandai Namco Entertainment" },
-    { "igdbId": 3958, "name": "Bandai Namco Games" },
-    { "igdbId": 112, "name": "Sega" },
-    { "igdbId": 70, "name": "Nintendo" },
-    { "igdbId": 10100, "name": "Sony Interactive Entertainment" },
-    { "igdbId": 13634, "name": "Sony Computer Entertainment" },
-    { "igdbId": 53, "name": "Microsoft Game Studios" },
-    { "igdbId": 17966, "name": "Xbox Game Studios" },
-    { "igdbId": 16565, "name": "Bethesda Softworks" },
-    { "igdbId": 245, "name": "ZeniMax Media" },
-    { "igdbId": 14055, "name": "Warner Bros. Interactive Entertainment" },
-    { "igdbId": 21315, "name": "Tencent" },
-    { "igdbId": 32410, "name": "NetEase" },
-    { "igdbId": 42782, "name": "Embracer Group" },
-    { "igdbId": 41542, "name": "Krafton" },
-    { "igdbId": 17463, "name": "Epic Games" },
-    { "igdbId": 56, "name": "Valve" },
-    { "igdbId": 41, "name": "Riot Games" },
-    { "igdbId": 15932, "name": "miHoYo" }
+  "principle": "O critério classifica a situação do estúdio na data de lançamento do jogo.",
+  "indieGenre": {
+    "igdbId": 32,
+    "name": "Indie"
+  },
+  "excludedThemes": [
+    {
+      "igdbId": 42,
+      "name": "Erotic"
+    }
   ],
-  "completeEntry": { "minSummaryLength": 40 },
-  "interestSignals": { "ratingsOnlyBefore": "2015-01-01" },
+  "majorCompaniesRule": "Donas de plataforma e grandes conglomerados de jogos AAA. Publicar um jogo não exclui: excluem só o desenvolvimento pela própria empresa ou por estúdio que ela controla.",
+  "majorCompanies": [
+    {
+      "igdbId": 1,
+      "name": "Electronic Arts"
+    },
+    {
+      "igdbId": 19200,
+      "name": "EA Games"
+    },
+    {
+      "igdbId": 104,
+      "name": "Ubisoft Entertainment"
+    },
+    {
+      "igdbId": 66,
+      "name": "Activision"
+    },
+    {
+      "igdbId": 179,
+      "name": "Activision Blizzard"
+    },
+    {
+      "igdbId": 51,
+      "name": "Blizzard Entertainment"
+    },
+    {
+      "igdbId": 139,
+      "name": "Take-Two Interactive"
+    },
+    {
+      "igdbId": 29,
+      "name": "Rockstar Games"
+    },
+    {
+      "igdbId": 8,
+      "name": "2K Games"
+    },
+    {
+      "igdbId": 20228,
+      "name": "2K"
+    },
+    {
+      "igdbId": 26,
+      "name": "Square Enix"
+    },
+    {
+      "igdbId": 37,
+      "name": "Capcom"
+    },
+    {
+      "igdbId": 129,
+      "name": "Konami"
+    },
+    {
+      "igdbId": 248,
+      "name": "Bandai Namco Entertainment"
+    },
+    {
+      "igdbId": 3958,
+      "name": "Bandai Namco Games"
+    },
+    {
+      "igdbId": 112,
+      "name": "Sega"
+    },
+    {
+      "igdbId": 70,
+      "name": "Nintendo"
+    },
+    {
+      "igdbId": 10100,
+      "name": "Sony Interactive Entertainment"
+    },
+    {
+      "igdbId": 13634,
+      "name": "Sony Computer Entertainment"
+    },
+    {
+      "igdbId": 53,
+      "name": "Microsoft Game Studios"
+    },
+    {
+      "igdbId": 17966,
+      "name": "Xbox Game Studios"
+    },
+    {
+      "igdbId": 16565,
+      "name": "Bethesda Softworks"
+    },
+    {
+      "igdbId": 245,
+      "name": "ZeniMax Media"
+    },
+    {
+      "igdbId": 14055,
+      "name": "Warner Bros. Interactive Entertainment"
+    },
+    {
+      "igdbId": 21315,
+      "name": "Tencent"
+    },
+    {
+      "igdbId": 32410,
+      "name": "NetEase"
+    },
+    {
+      "igdbId": 42782,
+      "name": "Embracer Group"
+    },
+    {
+      "igdbId": 41542,
+      "name": "Krafton"
+    },
+    {
+      "igdbId": 17463,
+      "name": "Epic Games"
+    },
+    {
+      "igdbId": 56,
+      "name": "Valve"
+    },
+    {
+      "igdbId": 41,
+      "name": "Riot Games"
+    },
+    {
+      "igdbId": 15932,
+      "name": "miHoYo"
+    },
+    {
+      "igdbId": 42,
+      "name": "Tencent Holdings"
+    },
+    {
+      "igdbId": 3595,
+      "name": "Tencent Games"
+    },
+    {
+      "igdbId": 128,
+      "name": "Microsoft"
+    },
+    {
+      "igdbId": 1010,
+      "name": "Microsoft Studios"
+    },
+    {
+      "igdbId": 10282,
+      "name": "Sony"
+    },
+    {
+      "igdbId": 2289,
+      "name": "Sony Interactive Entertainment Worldwide Studios"
+    },
+    {
+      "igdbId": 6330,
+      "name": "Namco Bandai Games"
+    }
+  ],
+  "controlledStudiosPolicy": {
+    "control": "Exclui quando, na data de lançamento do jogo, uma grande empresa detém controle integral ou majoritário de uma das desenvolvedoras. Participação minoritária e investimento não excluem.",
+    "coDevelopment": "Basta uma desenvolvedora controlada para excluir, e a data de lançamento vale para cada uma delas.",
+    "evidence": "Cada entrada exige fonte pública citável (release de aquisição ou notícia da época). A empresa-mãe registrada na IGDB só sugere candidatos: ela erra nos dois sentidos.",
+    "controlValues": "wholly_owned: 100% declarado; majority: maioria declarada; acquired: release de aquisição sem percentual informado."
+  },
+  "controlledStudios": [
+    {
+      "igdbId": 7011,
+      "name": "34BigThings",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2020-11-18",
+      "divestedAt": "2024-03-01",
+      "source": "https://prnewswire.co.uk/news-releases/embracer-group-acquires-34bigthings-882423372.html",
+      "note": "Via Saber, 100%; saiu do grupo com a venda da Saber em março de 2024"
+    },
+    {
+      "igdbId": 32611,
+      "name": "5minlab Corporation",
+      "ownerIgdbId": 41542,
+      "control": "wholly_owned",
+      "acquiredAt": "2022-02-14",
+      "source": "https://5minlab.com/en/2022/02/14/220214_us/",
+      "note": "Krafton comprou 100% das ações"
+    },
+    {
+      "igdbId": 5145,
+      "name": "Amplitude Studios",
+      "ownerIgdbId": 112,
+      "control": "acquired",
+      "acquiredAt": "2016-01-01",
+      "divestedAt": "2024-11-08",
+      "source": "https://videogameschronicle.com/news/sega-has-sold-humankind-developer-amplitude",
+      "note": "Comprada pela Sega em 2016; independente de novo por compra da gestão em 08/11/2024"
+    },
+    {
+      "igdbId": 8212,
+      "name": "Auroch Digital",
+      "ownerIgdbId": 42,
+      "control": "acquired",
+      "acquiredAt": "2022-01-18",
+      "divestedAt": "2025-11-01",
+      "source": "https://gematsu.com/2021/09/sumo-group-acquires-auroch-digital",
+      "note": "Sumo comprou em set/2021 (Sumo ainda independente); passou à Tencent com a Sumo em jan/2022; vendida à Roundtable Interactive em nov/2025 (dia não informado)"
+    },
+    {
+      "igdbId": 42860,
+      "name": "Bitwave Games",
+      "ownerIgdbId": 42782,
+      "control": "acquired",
+      "acquiredAt": "2022-08-18",
+      "source": "https://www.gematsu.com/2022/08/embracer-group-acquires-bitwave-games-gioteck-limited-run-games-middle-earth-enterprises-singtrix-tatsujin-tripwire-interactive-and-tuxedo-labs",
+      "note": "Grupo Freemode; percentual a confirmar"
+    },
+    {
+      "igdbId": 1463,
+      "name": "Black Forest Games",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2017-08-21",
+      "source": "https://www.embracer.com/releases/thq-nordic-acquires-the-independent-developer-black-forest-games-gmbh/",
+      "note": "Ações dos cinco fundadores"
+    },
+    {
+      "igdbId": 5531,
+      "name": "Blue Mammoth Games",
+      "ownerIgdbId": 104,
+      "control": "acquired",
+      "acquiredAt": "2018-03-01",
+      "source": "https://gematsu.com/2018/03/ubisoft-acquires-brawlhalla-developer-blue-mammoth-games",
+      "note": "Brawlhalla (out/2017) é anterior"
+    },
+    {
+      "igdbId": 427,
+      "name": "Bugbear Entertainment",
+      "ownerIgdbId": 42782,
+      "control": "majority",
+      "acquiredAt": "2018-11-14",
+      "source": "https://thqnordic.com/news/thq-nordic-acquires-wreckfest-developer-bugbear-entertainment",
+      "note": "THQ Nordic comprou 90% das ações"
+    },
+    {
+      "igdbId": 5212,
+      "name": "Campo Santo",
+      "ownerIgdbId": 56,
+      "control": "acquired",
+      "acquiredAt": "2018-04-21",
+      "source": "https://gematsu.com/2018/04/valve-acquires-campo-santo",
+      "note": "Firewatch (2016) anterior; In the Valley of Gods passa a jogo da Valve"
+    },
+    {
+      "igdbId": 999,
+      "name": "Coffee Stain Studios",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2018-11-14",
+      "divestedAt": "2025-12-11",
+      "source": "https://www.embracer.com/?p=12710",
+      "note": "THQ Nordic comprou o grupo Coffee Stain em 14/11/2018; separação da Embracer com listagem prevista para 11/12/2025 (https://embracer.com/releases/coffee-stain-group-publishes-company-description-in-connection-with-listing-of-its-class-b-shares-on-nasdaq-first-north-premier-growth-market-in-stockholm/)"
+    },
+    {
+      "igdbId": 1924,
+      "name": "Compulsion Games",
+      "ownerIgdbId": 17966,
+      "control": "wholly_owned",
+      "acquiredAt": "2018-06-10",
+      "source": "https://gematsu.com/2018/06/microsoft-acquires-undead-labs-playground-games-ninja-theory-and-compulsion-games",
+      "note": "Anúncio no E3 2018"
+    },
+    {
+      "igdbId": 13665,
+      "name": "DESTINYbit",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2020-05-01",
+      "source": "https://gematsu.com/2020/05/amplifier-game-invest-acquires-destinybit",
+      "note": "Amplifier; compra integral; dia exato a confirmar"
+    },
+    {
+      "igdbId": 15657,
+      "name": "DigixArt",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2021-08-05",
+      "source": "https://www.embracer.com/wp-content/uploads/2022/11/Embracer-Group-acquires-Digixart-210805-1.pdf",
+      "note": "Koch Media, 100%; Road 96 saiu 11 dias depois"
+    },
+    {
+      "igdbId": 85,
+      "name": "Double Fine Productions",
+      "ownerIgdbId": 17966,
+      "control": "wholly_owned",
+      "acquiredAt": "2019-06-09",
+      "source": "https://gematsu.com/2019/06/microsoft-acquires-double-fine-productions",
+      "note": "Anúncio no E3 2019"
+    },
+    {
+      "igdbId": 40035,
+      "name": "Dreamotion",
+      "ownerIgdbId": 41542,
+      "control": "acquired",
+      "acquiredAt": "2021-05-13",
+      "source": "https://www.pocketgamer.biz/krafton-buys-dreamotion/",
+      "note": "Termos não divulgados"
+    },
+    {
+      "igdbId": 12185,
+      "name": "Easy Trigger Games",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2021-08-05",
+      "divestedAt": "2025-12-11",
+      "source": "https://news.cision.com/embracer-group-ab/r/embracer-group-acquires-easy-trigger,c3392435",
+      "note": "Via Coffee Stain, todas as ações; Huntdown (2020) é anterior"
+    },
+    {
+      "igdbId": 860,
+      "name": "Fatshark",
+      "ownerIgdbId": 42,
+      "control": "majority",
+      "acquiredAt": "2021-01-01",
+      "source": "https://en.wikipedia.org/wiki/Fatshark",
+      "note": "36% (minoritária) em 2019; maioria noticiada em janeiro de 2021 (dia não informado)"
+    },
+    {
+      "igdbId": 8068,
+      "name": "Fishlabs",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2018-02-14",
+      "source": "https://www.embracer.com/?p=12830",
+      "note": "Koch Media comprou a Fishlabs em 2013, mas só passou a ser da THQ Nordic/Embracer em 14/02/2018"
+    },
+    {
+      "igdbId": 420,
+      "name": "Flying Wild Hog",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2020-11-18",
+      "source": "https://www.embracer.com/?p=12161",
+      "note": "Koch Media, 100%"
+    },
+    {
+      "igdbId": 36724,
+      "name": "Frame Break",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2021-05-11",
+      "source": "https://www.gematsu.com/2021/05/embracer-group-acquires-appeal-studios-kaiko-massive-miniteam-and-frame-break-establishes-gate21",
+      "note": "Subsidiária integral da Amplifier"
+    },
+    {
+      "igdbId": 12074,
+      "name": "Ghost Ship Games",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2021-08-05",
+      "divestedAt": "2025-12-11",
+      "source": "https://www.embracer.com/?p=12017",
+      "note": "Coffee Stain tinha 35% (minoritária); 100% em 05/08/2021; separação do Coffee Stain Group em 2025"
+    },
+    {
+      "igdbId": 28517,
+      "name": "Green Tile Digital",
+      "ownerIgdbId": 42782,
+      "control": "acquired",
+      "acquiredAt": "2021-12-01",
+      "source": "https://www.amplifiergameinvest.com/amplifier-acquires-swedish-studio-green-tile-digital",
+      "note": "Amplifier; data e percentual a confirmar no release"
+    },
+    {
+      "igdbId": 6987,
+      "name": "HandyGames",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2018-07-09",
+      "source": "https://news.cision.com/embracer-group-ab/r/thq-nordic-acquires-the-german-game-developer-and-publisher-handygames,c2572110",
+      "note": "100% das ações; memória dizia 2017"
+    },
+    {
+      "igdbId": 45505,
+      "name": "Intercept Games",
+      "ownerIgdbId": 139,
+      "control": "wholly_owned",
+      "acquiredAt": "2020-01-01",
+      "source": "https://gameinformer.com/news/2024/05/02/take-two-closes-rollerdrome-and-kerbal-space-program-2-studios-while-majority-of",
+      "note": "Estúdio interno da Take-Two, criado no começo de 2020"
+    },
+    {
+      "igdbId": 28241,
+      "name": "Invisible Walls",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2022-03-16",
+      "source": "https://www.amplifiergameinvest.com/amplifier-game-invest-acquires-danish-game-studio-invisible-walls",
+      "note": "Amplifier; primeiro estúdio integralmente controlado na Dinamarca"
+    },
+    {
+      "igdbId": 393,
+      "name": "inXile Entertainment",
+      "ownerIgdbId": 17966,
+      "control": "wholly_owned",
+      "acquiredAt": "2018-11-10",
+      "source": "https://www.pcgamer.com/uk/microsoft-to-buy-rpg-developers-obsidian-entertainment-and-inxile",
+      "note": "Anúncio no X018"
+    },
+    {
+      "igdbId": 1005,
+      "name": "Klei Entertainment",
+      "ownerIgdbId": 42,
+      "control": "majority",
+      "acquiredAt": "2021-01-22",
+      "source": "https://gamedeveloper.com/business/tencent-acquires-majority-stake-in-klei-entertainment",
+      "note": "Participação majoritária; o estúdio declara autonomia total"
+    },
+    {
+      "igdbId": 161,
+      "name": "Konami Digital Entertainment",
+      "ownerIgdbId": 129,
+      "control": "wholly_owned",
+      "acquiredAt": "2006-03-31",
+      "source": "https://en.wikipedia.org/wiki/Konami",
+      "note": "Subsidiária de jogos da Konami desde 2006"
+    },
+    {
+      "igdbId": 19967,
+      "name": "Lab42 Games",
+      "ownerIgdbId": 42,
+      "control": "acquired",
+      "acquiredAt": "2022-01-18",
+      "source": "https://www.pocketgamer.biz/tencent-closes-acquisition-of-sumo-group",
+      "note": "Subsidiária da Sumo Group (data de entrada na Sumo não confirmada, mas anterior à Tencent)"
+    },
+    {
+      "igdbId": 20504,
+      "name": "Lavapotion",
+      "ownerIgdbId": 42782,
+      "control": "majority",
+      "acquiredAt": "2018-11-14",
+      "divestedAt": "2025-12-11",
+      "source": "https://en.wikipedia.org/wiki/Coffee_Stain_Studios",
+      "note": "Coffee Stain tinha 60% desde 2017; sob a Embracer de 2018 a 2025"
+    },
+    {
+      "igdbId": 19015,
+      "name": "Massive Miniteam",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2021-05-11",
+      "source": "https://gematsu.com/2021/05/embracer-group-acquires-appeal-studios-kaiko-massive-miniteam-and-frame-break-establishes-gate21",
+      "note": "Via HandyGames"
+    },
+    {
+      "igdbId": 2581,
+      "name": "Mediatonic",
+      "ownerIgdbId": 17463,
+      "control": "wholly_owned",
+      "acquiredAt": "2021-03-02",
+      "source": "https://www.gamedeveloper.com/console/epic-games-acquires-i-fall-guys-i-dev-mediatonic",
+      "note": "Compra da Tonic Games Group"
+    },
+    {
+      "igdbId": 8900,
+      "name": "Metalhead Software",
+      "ownerIgdbId": 1,
+      "control": "acquired",
+      "acquiredAt": "2021-05-05",
+      "source": "https://ir.ea.com/press-releases/press-release-details/2021/Electronic-Arts-Acquires-Metalhead-Software-Bringing-a-Talented-Sports-Development-Team-and-Baseball-Franchise-to-EA-SPORTS/default.aspx",
+      "note": "Super Mega Baseball 3 (2020) é anterior"
+    },
+    {
+      "igdbId": 58,
+      "name": "Mojang Studios",
+      "ownerIgdbId": 17966,
+      "control": "wholly_owned",
+      "acquiredAt": "2014-11-06",
+      "source": "https://www.engadget.com/2014-11-06-microsoft-completes-acquisition-of-minecraft-studio.html",
+      "note": "Fechamento da compra"
+    },
+    {
+      "igdbId": 25396,
+      "name": "Neon Giant",
+      "ownerIgdbId": 41542,
+      "control": "acquired",
+      "acquiredAt": "2022-09-01",
+      "source": "https://gematsu.com/2022/11/krafton-acquires-neon-giant",
+      "note": "Compra em setembro de 2022 (dia não informado); a IGDB atribui o estúdio à Embracer, erro"
+    },
+    {
+      "igdbId": 21574,
+      "name": "NExT Studios",
+      "ownerIgdbId": 42,
+      "control": "wholly_owned",
+      "acquiredAt": "2017-01-01",
+      "source": "https://www.mcvuk.com/tencent-signs-publishing-agreement-with-team17-for-crown-trick/",
+      "note": "Estúdio interno da Tencent; data de criação aproximada"
+    },
+    {
+      "igdbId": 795,
+      "name": "Ninja Theory",
+      "ownerIgdbId": 17966,
+      "control": "wholly_owned",
+      "acquiredAt": "2018-06-10",
+      "source": "https://gematsu.com/2018/06/microsoft-acquires-undead-labs-playground-games-ninja-theory-and-compulsion-games",
+      "note": "Anúncio no E3 2018"
+    },
+    {
+      "igdbId": 7212,
+      "name": "Pieces Interactive",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2017-08-28",
+      "source": "https://www.embracer.com/releases/thq-nordic-acquires-pieces-interactive-ab/",
+      "note": "Todas as ações"
+    },
+    {
+      "igdbId": 2173,
+      "name": "Press Play",
+      "ownerIgdbId": 128,
+      "control": "acquired",
+      "acquiredAt": "2012-06-04",
+      "source": "https://shacknews.com/article/74232/microsoft-acquires-magic-marker-dev-press-play",
+      "note": "Anúncio no E3 2012; fechado em 2016"
+    },
+    {
+      "igdbId": 50608,
+      "name": "ReLU Games, Inc.",
+      "ownerIgdbId": 41542,
+      "control": "wholly_owned",
+      "acquiredAt": "2023-06-01",
+      "source": "https://www.pocketgamer.biz/krafton-opens-new-deep-learning-focused-studio-relu-games",
+      "note": "Estúdio criado pela Krafton"
+    },
+    {
+      "igdbId": 3689,
+      "name": "Roll7",
+      "ownerIgdbId": 139,
+      "control": "wholly_owned",
+      "acquiredAt": "2021-11-15",
+      "source": "https://gamedeveloper.com/business/private-division-has-acquired-olliolli-developer-roll7",
+      "note": "Via Private Division, selo da Take-Two"
+    },
+    {
+      "igdbId": 15512,
+      "name": "SCE Santa Monica Studio",
+      "ownerIgdbId": 10100,
+      "control": "wholly_owned",
+      "acquiredAt": "1999-01-01",
+      "source": "https://en.wikipedia.org/wiki/Santa_Monica_Studio",
+      "note": "Estúdio criado pela Sony em 1999"
+    },
+    {
+      "igdbId": 10692,
+      "name": "SIE Japan Studio",
+      "ownerIgdbId": 10100,
+      "control": "wholly_owned",
+      "acquiredAt": "1993-01-01",
+      "source": "https://en.wikipedia.org/wiki/Japan_Studio",
+      "note": "Estúdio criado pela Sony em 1993"
+    },
+    {
+      "igdbId": 42840,
+      "name": "Silent Games",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2020-11-18",
+      "source": "https://embracer.com/wp-content/uploads/2022/11/Embracer-Group-acquires-Silent-Games-201118.pdf",
+      "note": "Amplifier; 100% das ações"
+    },
+    {
+      "igdbId": 4355,
+      "name": "Skybox Labs",
+      "ownerIgdbId": 32410,
+      "control": "acquired",
+      "acquiredAt": "2023-01-06",
+      "source": "https://www.pocketgamer.biz/netease-acquires-halo-infinite-co-developer-skybox-labs",
+      "note": "Stela (2019) é anterior"
+    },
+    {
+      "igdbId": 243,
+      "name": "Sony Online Entertainment",
+      "ownerIgdbId": 10100,
+      "control": "wholly_owned",
+      "acquiredAt": "1998-01-01",
+      "divestedAt": "2015-02-02",
+      "source": "https://gameinformer.com/b/news/archive/2015/02/02/sony-sells-off-sony-online-entertainment-will-develop-multi-platform-games",
+      "note": "Estúdio da Sony até a venda em 02/02/2015 (virou Daybreak)"
+    },
+    {
+      "igdbId": 439,
+      "name": "Sumo Digital",
+      "ownerIgdbId": 42,
+      "control": "acquired",
+      "acquiredAt": "2022-01-18",
+      "source": "https://www.pocketgamer.biz/tencent-closes-acquisition-of-sumo-group",
+      "note": "Compra da Sumo Group concluída em janeiro de 2022 (Tencent tinha 8,75% desde 2019)"
+    },
+    {
+      "igdbId": 21449,
+      "name": "Sumo Nottingham",
+      "ownerIgdbId": 42,
+      "control": "acquired",
+      "acquiredAt": "2022-01-18",
+      "source": "https://www.pocketgamer.biz/tencent-closes-acquisition-of-sumo-group",
+      "note": "Estúdio da Sumo Group"
+    },
+    {
+      "igdbId": 817,
+      "name": "Taito",
+      "ownerIgdbId": 26,
+      "control": "majority",
+      "acquiredAt": "2005-09-28",
+      "source": "https://www.sec.gov/Archives/edgar/data/0000057083/000119312505186437/d20f.htm",
+      "note": "Oferta pública: 93,7% das ações em setembro de 2005"
+    },
+    {
+      "igdbId": 743,
+      "name": "Tripwire Interactive",
+      "ownerIgdbId": 42782,
+      "control": "acquired",
+      "acquiredAt": "2022-08-18",
+      "source": "https://www.gematsu.com/2022/08/embracer-group-acquires-bitwave-games-gioteck-limited-run-games-middle-earth-enterprises-singtrix-tatsujin-tripwire-interactive-and-tuxedo-labs",
+      "note": "Memória dizia 2020; Maneater (2020) fica no catálogo"
+    },
+    {
+      "igdbId": 21884,
+      "name": "Tuxedo Labs",
+      "ownerIgdbId": 42782,
+      "control": "acquired",
+      "acquiredAt": "2022-08-18",
+      "source": "https://www.gematsu.com/2022/08/embracer-group-acquires-bitwave-games-gioteck-limited-run-games-middle-earth-enterprises-singtrix-tatsujin-tripwire-interactive-and-tuxedo-labs",
+      "note": "Memória dizia 2021; Teardown (abril de 2022) fica no catálogo"
+    },
+    {
+      "igdbId": 14440,
+      "name": "Two Point Studios",
+      "ownerIgdbId": 112,
+      "control": "wholly_owned",
+      "acquiredAt": "2019-05-09",
+      "source": "https://gematsu.com/2019/05/sega-acquires-two-point-studios",
+      "note": "Substitui a linha anterior com igdbId provisório"
+    },
+    {
+      "igdbId": 60706,
+      "name": "Ubisoft Abu Dhabi",
+      "ownerIgdbId": 104,
+      "control": "wholly_owned",
+      "acquiredAt": "2011-01-01",
+      "source": "https://en.wikipedia.org/wiki/Growtopia",
+      "note": "Estúdio interno da Ubisoft; ano de criação aproximado"
+    },
+    {
+      "igdbId": 38,
+      "name": "Ubisoft Montreal",
+      "ownerIgdbId": 104,
+      "control": "wholly_owned",
+      "acquiredAt": "1997-01-01",
+      "source": "https://en.wikipedia.org/wiki/Ubisoft_Montreal",
+      "note": "Estúdio criado pela Ubisoft em 1997"
+    },
+    {
+      "igdbId": 433,
+      "name": "Ubisoft Reflections",
+      "ownerIgdbId": 104,
+      "control": "acquired",
+      "acquiredAt": "2006-07-14",
+      "source": "https://www.engadget.com/2006-07-14-ubisoft-acquires-the-driver-franchise.html",
+      "note": "Compra do estúdio e da franquia Driver"
+    },
+    {
+      "igdbId": 453,
+      "name": "Zen Studios",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2020-11-18",
+      "source": "https://news.cision.com/embracer-group-ab/r/embracer-group-acquires-zen-studios,c3239046",
+      "note": "Via Saber, 100%; a Embracer manteve a Zen depois de vender a Saber em 2024"
+    }
+  ],
+  "completeEntry": {
+    "minSummaryLength": 40
+  },
+  "interestSignals": {
+    "ratingsOnlyBefore": "2015-01-01"
+  },
   "overridesPolicy": {
     "purpose": "As listas corrigem erros de classificação indie. Não sobrepõem o filtro de conteúdo (temas excluídos).",
-    "alwaysInclude": "Estúdio independente no lançamento e hoje, excluído pela regra apenas por publisher de distribuição ou de porte.",
+    "alwaysInclude": "Jogo desenvolvido por estúdios independentes na data de lançamento, excluído por um crédito da IGDB que não corresponde a esse desenvolvimento: publisher, estúdio de porte ou estúdio que assumiu o jogo depois do lançamento, creditados como desenvolvedores.",
     "alwaysExclude": "Jogo com rótulo indie na IGDB cujo orçamento ou estrutura de produção é publicamente documentado como AAA.",
     "sourceRequired": "Toda entrada exige uma fonte pública citável.",
     "maxEntries": 20,
@@ -50,11 +706,25 @@
   "overrides": {
     "alwaysInclude": [
       {
-        "igdbId": 1352,
-        "name": "Journey",
-        "reason": "Desenvolvido pela Thatgamecompany. A Sony foi publisher de plataforma nas versões de PS3 e PS4, e a Annapurna Interactive publicou as versões de PC e iOS em 2019; a regra o excluiu pela distribuição, não pela propriedade do estúdio.",
-        "source": "https://en.wikipedia.org/wiki/Journey_(2012_video_game)",
-        "decidedAt": "2026-10-21"
+        "igdbId": 26352,
+        "name": "Growtopia",
+        "reason": "Criado pelos independentes Robinson Technologies e Hamumu; a Ubisoft só comprou o jogo em 28/02/2017, e a Ubisoft Abu Dhabi, creditada como desenvolvedora, assumiu o desenvolvimento depois.",
+        "source": "https://www.pocketgamer.biz/ubisoft-acquires-sandbox-title-growtopia",
+        "decidedAt": "2026-10-22"
+      },
+      {
+        "igdbId": 7086,
+        "name": "Ilomilo",
+        "reason": "Desenvolvido pela SouthEnd Interactive; a Microsoft, creditada também como desenvolvedora, foi a publisher.",
+        "source": "https://giantbomb.com/wiki/Games/ilomilo",
+        "decidedAt": "2026-10-22"
+      },
+      {
+        "igdbId": 265111,
+        "name": "Chained Together",
+        "reason": "Desenvolvido e publicado pela Anegar Games no lançamento para PC (19/06/2024); a Lab42, creditada como codesenvolvedora, entrou pelo porte para consoles publicado pela Secret Mode.",
+        "source": "https://en.wikipedia.org/wiki/Chained_Together",
+        "decidedAt": "2026-10-22"
       }
     ],
     "alwaysExclude": [

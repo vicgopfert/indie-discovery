@@ -24,9 +24,9 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [x] **B-10** (M) Mapeador IGDB → modelo interno
 - [x] **B-11** (M) Critério indie configurável em JSON, com o recorte do catálogo e a exclusão do tema Erotic aprovados no M0
 - [ ] **B-12** (M) Cálculo de IDF e vetores TF-IDF normalizados
-- [ ] **B-13** (G) `RunIngestionUseCase` (aplicação standalone): busca, mapeia, filtra, grava, busca a popularidade "Want to Play", calcula vetores, registra `IngestionRun`
+- [ ] **B-13** (G) `RunIngestionUseCase` (aplicação standalone): busca, mapeia, filtra, grava, busca a popularidade "Want to Play", calcula vetores, registra `IngestionRun`, sinaliza jogo novo de estúdio "sem efeito atual" do critério indie
 - [ ] **B-14** (P) Carga inicial do catálogo real em produção
-- [ ] **B-59** (P) Medir falsos negativos do critério indie: sortear 8 a 10 jogos excluídos pela regra e classificar à mão
+- [x] **B-59** (M, estimado P) Medir falsos negativos do critério indie: sortear 8 a 10 jogos excluídos pela regra e classificar à mão — taxa de 8 em 10 levou à troca da regra de publisher pela de controle do estúdio
 - [ ] **B-56** (P) Enriquecimento do país do estúdio pelo Wikidata na ingestão
 
 ## E2 — Contas e autenticação (S5)
@@ -44,7 +44,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [ ] **B-22** (P) `GET /games/:slug`
 - [ ] **B-23** (M) Página de catálogo com filtros na URL
 - [ ] **B-24** (M) Página do jogo (selo "Em breve", atribuição IGDB, metadados no servidor)
-- [ ] **B-25** (P) Página "Como funciona" (lista publishers excluídas e exceções manuais com motivo e fonte)
+- [ ] **B-25** (P) Página "Como funciona" (lista grandes empresas, estúdios controlados e exceções manuais com motivo e fonte)
 - [ ] **B-57** (M) Coleções culturais curadas: modelo, arquivo de curadoria, sugestão de candidatos, endpoints
 - [ ] **B-58** (M) Interface das coleções: vitrine "Explore por cultura", página da coleção, indicação na ficha
 
