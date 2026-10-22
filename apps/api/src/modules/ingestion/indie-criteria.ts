@@ -2,13 +2,24 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { z } from 'zod';
 import { FeatureType, ReleaseStatus } from '../../generated/prisma/client';
-import type { MappedGame } from './igdb.mapper';
+import type { MappedCompany, MappedGame } from './igdb.mapper';
 
 const igdbEntity = z.object({ igdbId: z.number().int(), name: z.string().min(1) });
+const publicSource = z.url({ protocol: /^https?$/ });
+
 const override = igdbEntity.extend({
   reason: z.string().min(1),
-  source: z.url({ protocol: /^https?$/ }),
+  source: publicSource,
   decidedAt: z.iso.date(),
+});
+
+const controlledStudio = igdbEntity.extend({
+  ownerIgdbId: z.number().int(),
+  control: z.enum(['wholly_owned', 'majority', 'acquired']),
+  acquiredAt: z.iso.date(),
+  divestedAt: z.iso.date().optional(),
+  source: publicSource,
+  note: z.string().min(1),
 });
 
 export const indieCriteriaSchema = z
@@ -16,8 +27,15 @@ export const indieCriteriaSchema = z
     principle: z.string().min(1),
     indieGenre: igdbEntity,
     excludedThemes: z.array(igdbEntity),
-    excludedPublishersRule: z.string().min(1),
-    excludedPublishers: z.array(igdbEntity),
+    majorCompaniesRule: z.string().min(1),
+    majorCompanies: z.array(igdbEntity),
+    controlledStudiosPolicy: z.object({
+      control: z.string().min(1),
+      coDevelopment: z.string().min(1),
+      evidence: z.string().min(1),
+      controlValues: z.string().min(1),
+    }),
+    controlledStudios: z.array(controlledStudio),
     completeEntry: z.object({ minSummaryLength: z.number().int().nonnegative() }),
     interestSignals: z.object({ ratingsOnlyBefore: z.coerce.date() }),
     overridesPolicy: z.object({
@@ -37,6 +55,19 @@ export const indieCriteriaSchema = z
       message: 'As listas de exceção passaram do teto: o problema é a regra, não os casos.',
       path: ['overrides'],
     },
+  )
+  .refine(
+    ({ controlledStudios, majorCompanies }) =>
+      controlledStudios.every((s) => majorCompanies.some((m) => m.igdbId === s.ownerIgdbId)),
+    {
+      message: 'Todo estúdio controlado precisa ter como dona uma empresa da lista de grandes.',
+      path: ['controlledStudios'],
+    },
+  )
+  .refine(
+    ({ controlledStudios }) =>
+      controlledStudios.every((s) => !s.divestedAt || s.divestedAt > s.acquiredAt),
+    { message: 'A saída do grupo precisa ser posterior à aquisição.', path: ['controlledStudios'] },
   );
 
 export type IndieCriteria = z.infer<typeof indieCriteriaSchema>;
@@ -50,17 +81,32 @@ export function readIndieCriteria(file = INDIE_CRITERIA_FILE): IndieCriteria {
 export type RejectionReason =
   | 'MANUALLY_EXCLUDED'
   | 'NOT_INDIE'
-  | 'MAJOR_PUBLISHER'
+  | 'CONTROLLED_DEVELOPER'
   | 'EXCLUDED_THEME'
   | 'CANCELLED'
   | 'INCOMPLETE_ENTRY'
   | 'NO_INTEREST_SIGNAL';
 
-export type CriteriaVerdict = { accepted: true } | { accepted: false; reason: RejectionReason };
+// Data de referência do controle: a do lançamento ou, no jogo sem data, a da avaliação.
+export interface ControlCause {
+  developer: string;
+  owner: string;
+  referenceDate: string;
+  referenceDateSource: 'RELEASE' | 'EVALUATION';
+}
 
-// As listas de exceção corrigem só a classificação indie (gênero e publisher); nunca
+export type CriteriaVerdict =
+  | { accepted: true }
+  | { accepted: false; reason: Exclude<RejectionReason, 'CONTROLLED_DEVELOPER'> }
+  | ({ accepted: false; reason: 'CONTROLLED_DEVELOPER' } & ControlCause);
+
+// As listas de exceção corrigem só a classificação indie (gênero e desenvolvedora); nunca
 // sobrepõem o filtro de conteúdo, a qualidade da ficha ou o sinal de interesse.
-export function evaluateIndieCriteria(game: MappedGame, criteria: IndieCriteria): CriteriaVerdict {
+export function evaluateIndieCriteria(
+  game: MappedGame,
+  criteria: IndieCriteria,
+  now: Date,
+): CriteriaVerdict {
   const has = (list: { igdbId: number }[], igdbId: number) =>
     list.some((entry) => entry.igdbId === igdbId);
 
@@ -69,9 +115,8 @@ export function evaluateIndieCriteria(game: MappedGame, criteria: IndieCriteria)
     if (!hasFeature(game, FeatureType.GENRE, criteria.indieGenre.igdbId)) {
       return reject('NOT_INDIE');
     }
-    if (game.companies.some((c) => c.isPublisher && has(criteria.excludedPublishers, c.igdbId))) {
-      return reject('MAJOR_PUBLISHER');
-    }
+    const control = findControlledDeveloper(game, criteria, now);
+    if (control) return { accepted: false, reason: 'CONTROLLED_DEVELOPER', ...control };
   }
   if (criteria.excludedThemes.some((theme) => hasFeature(game, FeatureType.THEME, theme.igdbId))) {
     return reject('EXCLUDED_THEME');
@@ -84,8 +129,37 @@ export function evaluateIndieCriteria(game: MappedGame, criteria: IndieCriteria)
   return { accepted: true };
 }
 
-function reject(reason: RejectionReason): CriteriaVerdict {
+function reject(reason: Exclude<RejectionReason, 'CONTROLLED_DEVELOPER'>): CriteriaVerdict {
   return { accepted: false, reason };
+}
+
+function findControlledDeveloper(
+  game: MappedGame,
+  criteria: IndieCriteria,
+  now: Date,
+): ControlCause | null {
+  const reference = {
+    referenceDate: (game.firstReleaseDate ?? now).toISOString().slice(0, 10),
+    referenceDateSource: game.firstReleaseDate ? ('RELEASE' as const) : ('EVALUATION' as const),
+  };
+  const majorName = (igdbId: number) =>
+    criteria.majorCompanies.find((m) => m.igdbId === igdbId)?.name;
+
+  for (const developer of game.companies.filter((c: MappedCompany) => c.isDeveloper)) {
+    const major = majorName(developer.igdbId);
+    if (major) return { developer: developer.name, owner: major, ...reference };
+
+    const studio = criteria.controlledStudios.find(
+      (s) =>
+        s.igdbId === developer.igdbId &&
+        s.acquiredAt <= reference.referenceDate &&
+        (s.divestedAt === undefined || reference.referenceDate < s.divestedAt),
+    );
+    if (studio) {
+      return { developer: developer.name, owner: majorName(studio.ownerIgdbId)!, ...reference };
+    }
+  }
+  return null;
 }
 
 function hasFeature(game: MappedGame, type: FeatureType, igdbId: number) {
