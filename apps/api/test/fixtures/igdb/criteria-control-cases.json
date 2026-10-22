@@ -1,0 +1,5487 @@
+[
+  {
+    "id": 1331,
+    "cover": {
+      "id": 81352,
+      "image_id": "co1qrs"
+    },
+    "first_release_date": 1279670400,
+    "genres": [
+      {
+        "id": 8,
+        "name": "Platform"
+      },
+      {
+        "id": 9,
+        "name": "Puzzle"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 1,
+    "involved_companies": [
+      {
+        "id": 91054,
+        "company": {
+          "id": 23818,
+          "name": "Ryan C. Gordon"
+        },
+        "developer": false,
+        "publisher": false
+      },
+      {
+        "id": 91052,
+        "company": {
+          "id": 53,
+          "country": 840,
+          "name": "Microsoft Game Studios"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 91057,
+        "company": {
+          "id": 748,
+          "country": 826,
+          "name": "Double Eleven"
+        },
+        "developer": false,
+        "publisher": false
+      },
+      {
+        "id": 207128,
+        "company": {
+          "id": 854,
+          "country": 208,
+          "name": "Playdead"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 137,
+        "name": "gravity"
+      },
+      {
+        "id": 558,
+        "name": "death"
+      },
+      {
+        "id": 770,
+        "name": "chicken"
+      },
+      {
+        "id": 960,
+        "name": "compilation"
+      },
+      {
+        "id": 1158,
+        "name": "steam"
+      },
+      {
+        "id": 1228,
+        "name": "bird"
+      },
+      {
+        "id": 1293,
+        "name": "achievements"
+      },
+      {
+        "id": 1345,
+        "name": "traps"
+      },
+      {
+        "id": 1898,
+        "name": "easter egg"
+      },
+      {
+        "id": 2109,
+        "name": "level selection"
+      },
+      {
+        "id": 2111,
+        "name": "giant insects"
+      },
+      {
+        "id": 2141,
+        "name": "slow-motion"
+      },
+      {
+        "id": 2170,
+        "name": "dreams"
+      },
+      {
+        "id": 2280,
+        "name": "climbing"
+      },
+      {
+        "id": 3203,
+        "name": "darkness"
+      },
+      {
+        "id": 4004,
+        "name": "steam achievements"
+      },
+      {
+        "id": 4134,
+        "name": "digital distribution"
+      },
+      {
+        "id": 4135,
+        "name": "xbox controller support for pc"
+      },
+      {
+        "id": 4138,
+        "name": "single-player only"
+      },
+      {
+        "id": 4150,
+        "name": "steam cloud"
+      },
+      {
+        "id": 4235,
+        "name": "spider"
+      },
+      {
+        "id": 4247,
+        "name": "pig"
+      },
+      {
+        "id": 4353,
+        "name": "human"
+      },
+      {
+        "id": 4520,
+        "name": "ea app"
+      },
+      {
+        "id": 4527,
+        "name": "puzzle platformer"
+      },
+      {
+        "id": 4541,
+        "name": "original soundtrack release"
+      },
+      {
+        "id": 4609,
+        "name": "humble bundle"
+      },
+      {
+        "id": 4637,
+        "name": "corpse"
+      },
+      {
+        "id": 4718,
+        "name": "cross buy"
+      },
+      {
+        "id": 4725,
+        "name": "young protagonist"
+      },
+      {
+        "id": 4726,
+        "name": "playstation plus"
+      },
+      {
+        "id": 4770,
+        "name": "ragdoll physics"
+      },
+      {
+        "id": 4777,
+        "name": "checkpoints"
+      },
+      {
+        "id": 4781,
+        "name": "falling damage"
+      },
+      {
+        "id": 4784,
+        "name": "minimalism"
+      },
+      {
+        "id": 4790,
+        "name": "unstable platforms"
+      },
+      {
+        "id": 4791,
+        "name": "faceless protagonist"
+      },
+      {
+        "id": 4939,
+        "name": "gravity control"
+      },
+      {
+        "id": 4991,
+        "name": "secret area"
+      },
+      {
+        "id": 5262,
+        "name": "steam play"
+      },
+      {
+        "id": 5277,
+        "name": "post-credits plot twist"
+      },
+      {
+        "id": 5328,
+        "name": "playstation tv support"
+      },
+      {
+        "id": 5441,
+        "name": "moving platforms"
+      },
+      {
+        "id": 5449,
+        "name": "conveyor belt"
+      },
+      {
+        "id": 5533,
+        "name": "no hud"
+      },
+      {
+        "id": 5608,
+        "name": "evolving title screen"
+      },
+      {
+        "id": 5633,
+        "name": "xbox one backwards compatibility"
+      },
+      {
+        "id": 5657,
+        "name": "gamersgate"
+      },
+      {
+        "id": 5720,
+        "name": "igf awards"
+      },
+      {
+        "id": 5736,
+        "name": "game with chapters"
+      },
+      {
+        "id": 5814,
+        "name": "onlive"
+      },
+      {
+        "id": 6126,
+        "name": "over 100% completion"
+      },
+      {
+        "id": 6137,
+        "name": "linear gameplay"
+      },
+      {
+        "id": 6326,
+        "name": "ambient music"
+      },
+      {
+        "id": 6749,
+        "name": "balance platforms"
+      },
+      {
+        "id": 7215,
+        "name": "context sensitive"
+      },
+      {
+        "id": 8854,
+        "name": "forced slow walking"
+      },
+      {
+        "id": 9045,
+        "name": "breaking through windows"
+      },
+      {
+        "id": 9394,
+        "name": "rotating platforms"
+      },
+      {
+        "id": 11208,
+        "name": "avatar awards"
+      },
+      {
+        "id": 12067,
+        "name": "interactive achievement awards 2011"
+      },
+      {
+        "id": 12306,
+        "name": "spike video game awards 2010"
+      },
+      {
+        "id": 12388,
+        "name": "game developers choice awards 2011"
+      },
+      {
+        "id": 12730,
+        "name": "summer of arcade 2010"
+      },
+      {
+        "id": 12748,
+        "name": "pax east 2010"
+      },
+      {
+        "id": 23933,
+        "name": "male protagonist"
+      }
+    ],
+    "name": "Limbo",
+    "slug": "limbo",
+    "summary": "Limbo is a black and white puzzle-platforming adventure. Players take the role of a young boy traveling through an eerie and treacherous world in an attempt to discover the fate of his sister.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 19,
+        "name": "Horror"
+      }
+    ],
+    "total_rating_count": 1638,
+    "websites": [
+      {
+        "id": 309275,
+        "url": "https://twitter.com/playdead",
+        "type": 5
+      },
+      {
+        "id": 147920,
+        "url": "https://www.reddit.com/r/limbogame",
+        "type": 14
+      },
+      {
+        "id": 309276,
+        "url": "https://www.facebook.com/playdeadstudios/",
+        "type": 4
+      },
+      {
+        "id": 120209,
+        "url": "https://www.epicgames.com/store/en-US/product/limbo/home",
+        "type": 16
+      },
+      {
+        "id": 18032,
+        "url": "https://store.steampowered.com/app/48000",
+        "type": 13
+      },
+      {
+        "id": 332739,
+        "url": "https://www.twitch.tv/directory/game/Limbo",
+        "type": 6
+      },
+      {
+        "id": 794500,
+        "url": "https://www.xbox.com/en-us/games/store/limbo/BTQMHK78ZPF9",
+        "type": 22
+      },
+      {
+        "id": 794501,
+        "url": "https://store.playstation.com/en-us/concept/202533",
+        "type": 23
+      },
+      {
+        "id": 794502,
+        "url": "https://www.nintendo.com/games/detail/limbo-switch/",
+        "type": 24
+      },
+      {
+        "id": 147919,
+        "url": "https://limbo.fandom.com/wiki/Limbo_Wiki",
+        "type": 2
+      },
+      {
+        "id": 66941,
+        "url": "http://playdead.com/limbo",
+        "type": 1
+      },
+      {
+        "id": 71290,
+        "url": "https://itunes.apple.com/app/limbo/id656951157?mt=8",
+        "type": 10
+      },
+      {
+        "id": 72500,
+        "url": "https://itunes.apple.com/us/app/limbo/id656951157?mt=8&uo=4",
+        "type": 11
+      },
+      {
+        "id": 132164,
+        "url": "https://playdead.itch.io/limbo",
+        "type": 15
+      },
+      {
+        "id": 309274,
+        "url": "https://www.instagram.com/playdeadgames/",
+        "type": 8
+      },
+      {
+        "id": 316812,
+        "url": "https://youtube.com/c/Playdead",
+        "type": 9
+      },
+      {
+        "id": 71291,
+        "url": "https://play.google.com/store/apps/details?id=com.playdead.limbo.full&hl=en",
+        "type": 12
+      },
+      {
+        "id": 52594,
+        "url": "https://en.wikipedia.org/wiki/Limbo_(video_game)",
+        "type": 3
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 8456,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 8457,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 8451,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 8453,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 8455,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 8459,
+        "language": {
+          "id": 24
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 8452,
+        "language": {
+          "id": 20
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 8454,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 8458,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 8446,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 8447,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 8448,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 8449,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 8450,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      }
+    ]
+  },
+  {
+    "id": 2853,
+    "cover": {
+      "id": 100638,
+      "image_id": "co25ni"
+    },
+    "first_release_date": 1217980800,
+    "genres": [
+      {
+        "id": 8,
+        "name": "Platform"
+      },
+      {
+        "id": 9,
+        "name": "Puzzle"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 59566,
+        "company": {
+          "id": 1335,
+          "name": "Number None Inc."
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 59569,
+        "company": {
+          "id": 4132,
+          "name": "icculus.org"
+        },
+        "developer": false,
+        "publisher": false
+      },
+      {
+        "id": 109400,
+        "company": {
+          "id": 53,
+          "country": 840,
+          "name": "Microsoft Game Studios"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 243479,
+        "company": {
+          "id": 1051,
+          "country": 124,
+          "name": "Hothead Games"
+        },
+        "developer": false,
+        "publisher": false
+      },
+      {
+        "id": 243480,
+        "company": {
+          "id": 1335,
+          "name": "Number None Inc."
+        },
+        "developer": true,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 170,
+        "name": "time travel"
+      },
+      {
+        "id": 826,
+        "name": "time manipulation"
+      },
+      {
+        "id": 1059,
+        "name": "side-scrolling"
+      },
+      {
+        "id": 1158,
+        "name": "steam"
+      },
+      {
+        "id": 1293,
+        "name": "achievements"
+      },
+      {
+        "id": 1381,
+        "name": "princess"
+      },
+      {
+        "id": 2280,
+        "name": "climbing"
+      },
+      {
+        "id": 3486,
+        "name": "boss fight"
+      },
+      {
+        "id": 4004,
+        "name": "steam achievements"
+      },
+      {
+        "id": 4134,
+        "name": "digital distribution"
+      },
+      {
+        "id": 4135,
+        "name": "xbox controller support for pc"
+      },
+      {
+        "id": 4138,
+        "name": "single-player only"
+      },
+      {
+        "id": 4150,
+        "name": "steam cloud"
+      },
+      {
+        "id": 4180,
+        "name": "time rewind"
+      },
+      {
+        "id": 4245,
+        "name": "playstation trophies"
+      },
+      {
+        "id": 4396,
+        "name": "damsel in distress"
+      },
+      {
+        "id": 4452,
+        "name": "licensed soundtrack"
+      },
+      {
+        "id": 4484,
+        "name": "collectibles"
+      },
+      {
+        "id": 4527,
+        "name": "puzzle platformer"
+      },
+      {
+        "id": 4541,
+        "name": "original soundtrack release"
+      },
+      {
+        "id": 4578,
+        "name": "motion blur"
+      },
+      {
+        "id": 4609,
+        "name": "humble bundle"
+      },
+      {
+        "id": 4897,
+        "name": "auto-saving"
+      },
+      {
+        "id": 5262,
+        "name": "steam play"
+      },
+      {
+        "id": 5358,
+        "name": "violent plants"
+      },
+      {
+        "id": 5441,
+        "name": "moving platforms"
+      },
+      {
+        "id": 5447,
+        "name": "canonical death"
+      },
+      {
+        "id": 5450,
+        "name": "digital rights management"
+      },
+      {
+        "id": 5500,
+        "name": "nuclear bomb"
+      },
+      {
+        "id": 5538,
+        "name": "real-time waiting"
+      },
+      {
+        "id": 5541,
+        "name": "non-linear storytelling"
+      },
+      {
+        "id": 5575,
+        "name": "playstation now"
+      },
+      {
+        "id": 5601,
+        "name": "harder versions of earlier levels"
+      },
+      {
+        "id": 5630,
+        "name": "misrepresentative box art"
+      },
+      {
+        "id": 5633,
+        "name": "xbox one backwards compatibility"
+      },
+      {
+        "id": 5657,
+        "name": "gamersgate"
+      },
+      {
+        "id": 5814,
+        "name": "onlive"
+      },
+      {
+        "id": 5850,
+        "name": "high definition graphics"
+      },
+      {
+        "id": 5962,
+        "name": "speedrun"
+      },
+      {
+        "id": 5963,
+        "name": "plot twist"
+      },
+      {
+        "id": 6714,
+        "name": "puzzle games with stories"
+      },
+      {
+        "id": 6765,
+        "name": "time trials"
+      },
+      {
+        "id": 7603,
+        "name": "foreshadowing"
+      },
+      {
+        "id": 8109,
+        "name": "unrequited love"
+      },
+      {
+        "id": 8979,
+        "name": "respawn justification"
+      },
+      {
+        "id": 9605,
+        "name": "cold open"
+      },
+      {
+        "id": 13928,
+        "name": "fate"
+      },
+      {
+        "id": 13941,
+        "name": "interactive achievement awards 2009"
+      },
+      {
+        "id": 14514,
+        "name": "summer of arcade 2008"
+      },
+      {
+        "id": 23933,
+        "name": "male protagonist"
+      },
+      {
+        "id": 26969,
+        "name": "speedrun mode"
+      },
+      {
+        "id": 49308,
+        "name": "previously on - xbox gamepass"
+      }
+    ],
+    "name": "Braid",
+    "slug": "braid",
+    "summary": "Braid is a puzzle-platformer, drawn in a painterly style, where you can manipulate the flow of time in strange and unusual ways. From a house in the city, journey to a series of worlds and solve puzzles to rescue an abducted princess. In each world, you have a different power to affect the way time behaves, and it is time's strangeness that creates the puzzles. The time behaviors include: the ability to rewind, objects that are immune to being rewound, time that is tied to space, parallel realities, time dilation, and perhaps more.\n\nBraid treats your time and attention as precious; there is no filler in this game. Every puzzle shows you something new and interesting about the game world.",
+    "themes": [
+      {
+        "id": 17,
+        "name": "Fantasy"
+      }
+    ],
+    "total_rating_count": 620,
+    "websites": [
+      {
+        "id": 333993,
+        "url": "https://www.twitch.tv/directory/game/Braid",
+        "type": 6
+      },
+      {
+        "id": 16305,
+        "url": "https://en.wikipedia.org/wiki/Braid_%28video_game%29",
+        "type": 3
+      },
+      {
+        "id": 40324,
+        "url": "https://store.steampowered.com/app/26800",
+        "type": 13
+      },
+      {
+        "id": 78709,
+        "url": "https://www.reddit.com/r/braid",
+        "type": 14
+      },
+      {
+        "id": 118654,
+        "url": "https://www.gog.com/game/braid",
+        "type": 17
+      },
+      {
+        "id": 16304,
+        "url": "http://braid.wikia.com/wiki/Braid_Wiki",
+        "type": 2
+      },
+      {
+        "id": 40325,
+        "url": "http://braid-game.com",
+        "type": 1
+      },
+      {
+        "id": 1093729,
+        "url": "https://www.xbox.com/en-us/games/store/braid/BZGPBRQ3LZ7G?msockid=3b7696149bb964f339cc80e19a7b6562",
+        "type": 22
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 475946,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475950,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475954,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475948,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475952,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475953,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475955,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475956,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 475957,
+        "language": {
+          "id": 20
+        },
+        "language_support_type": 3
+      }
+    ]
+  },
+  {
+    "id": 3278,
+    "cover": {
+      "id": 406256,
+      "image_id": "co8pgw"
+    },
+    "first_release_date": 1103846400,
+    "genres": [
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 96855,
+        "company": {
+          "id": 56,
+          "country": 840,
+          "name": "Valve"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 96854,
+        "company": {
+          "id": 1715,
+          "country": 826,
+          "name": "Facepunch Studios"
+        },
+        "developer": true,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 250,
+        "name": "3d"
+      },
+      {
+        "id": 5836,
+        "name": "mod support"
+      },
+      {
+        "id": 6315,
+        "name": "dedicated servers"
+      },
+      {
+        "id": 10587,
+        "name": "in-game anti-piracy effects"
+      },
+      {
+        "id": 17083,
+        "name": "vehicles"
+      }
+    ],
+    "name": "Garry's Mod",
+    "slug": "garry-s-mod",
+    "summary": "Garry's Mod is a physics-based sandbox game built on Valve's Source engine. In its base mode, there are no objectives. Players can spawn non-player characters, ragdolls, and props, then manipulate them using a physics gun that can pick up, rotate, and freeze objects in place. A tool gun provides additional functionality such as welding objects together or adjusting facial expressions on ragdolls. The game supports extensive Lua-based modding, and community-created game modes like Trouble in Terrorist Town and Prop Hunt have become widely popular in their own right. Originally released as a free mod for Half-Life 2 in 2004, it became a standalone commercial release in 2006 and holds the record as the best-selling PC-exclusive game.",
+    "themes": [
+      {
+        "id": 33,
+        "name": "Sandbox"
+      }
+    ],
+    "total_rating_count": 481,
+    "websites": [
+      {
+        "id": 602253,
+        "url": "http://gmod.facepunch.com/",
+        "type": 1
+      },
+      {
+        "id": 666017,
+        "url": "https://www.youtube.com/@fcpnch",
+        "type": 9
+      },
+      {
+        "id": 666018,
+        "url": "https://wiki.facepunch.com/gmod",
+        "type": 2
+      },
+      {
+        "id": 732099,
+        "url": "https://www.instagram.com/fcpnch",
+        "type": 8
+      },
+      {
+        "id": 13578,
+        "url": "https://www.facebook.com/grrysmd",
+        "type": 4
+      },
+      {
+        "id": 13580,
+        "url": "https://store.steampowered.com/app/4000",
+        "type": 13
+      },
+      {
+        "id": 274099,
+        "url": "https://www.reddit.com/r/gmod",
+        "type": 14
+      },
+      {
+        "id": 274098,
+        "url": "https://discord.gg/invite/gmod",
+        "type": 18
+      },
+      {
+        "id": 332472,
+        "url": "https://www.twitch.tv/directory/game/Garry's%20Mod",
+        "type": 6
+      },
+      {
+        "id": 13579,
+        "url": "https://twitter.com/GModOfficial",
+        "type": 5
+      },
+      {
+        "id": 13577,
+        "url": "https://en.wikipedia.org/wiki/Garry's_Mod",
+        "type": 3
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 233771,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233779,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233772,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233774,
+        "language": {
+          "id": 5
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233775,
+        "language": {
+          "id": 6
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233769,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233785,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233784,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233768,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 233780,
+        "language": {
+          "id": 18
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233790,
+        "language": {
+          "id": 28
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233777,
+        "language": {
+          "id": 14
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233786,
+        "language": {
+          "id": 23
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233766,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233773,
+        "language": {
+          "id": 4
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233770,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233781,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233776,
+        "language": {
+          "id": 11
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233787,
+        "language": {
+          "id": 25
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233783,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233782,
+        "language": {
+          "id": 20
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233789,
+        "language": {
+          "id": 24
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233767,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 233778,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233788,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1364795,
+        "language": {
+          "id": 26
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1364796,
+        "language": {
+          "id": 13
+        },
+        "language_support_type": 3
+      }
+    ]
+  },
+  {
+    "id": 7086,
+    "cover": {
+      "id": 418062,
+      "image_id": "co8yku"
+    },
+    "first_release_date": 1289174400,
+    "genres": [
+      {
+        "id": 8,
+        "name": "Platform"
+      },
+      {
+        "id": 9,
+        "name": "Puzzle"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 291990,
+        "company": {
+          "id": 933,
+          "country": 752,
+          "name": "SouthEnd Interactive"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 291991,
+        "company": {
+          "id": 53,
+          "country": 840,
+          "name": "Microsoft Game Studios"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 137,
+        "name": "gravity"
+      },
+      {
+        "id": 1075,
+        "name": "crossover"
+      },
+      {
+        "id": 1293,
+        "name": "achievements"
+      },
+      {
+        "id": 1495,
+        "name": "abstract"
+      },
+      {
+        "id": 4134,
+        "name": "digital distribution"
+      },
+      {
+        "id": 4355,
+        "name": "windows store"
+      },
+      {
+        "id": 4477,
+        "name": "cameo appearance"
+      },
+      {
+        "id": 4484,
+        "name": "collectibles"
+      },
+      {
+        "id": 4510,
+        "name": "touch controls"
+      },
+      {
+        "id": 4527,
+        "name": "puzzle platformer"
+      },
+      {
+        "id": 4541,
+        "name": "original soundtrack release"
+      },
+      {
+        "id": 4890,
+        "name": "xbox live"
+      },
+      {
+        "id": 5450,
+        "name": "digital rights management"
+      },
+      {
+        "id": 5633,
+        "name": "xbox one backwards compatibility"
+      },
+      {
+        "id": 7558,
+        "name": "on-the-fly character switching"
+      },
+      {
+        "id": 11122,
+        "name": "pax prime 2010"
+      },
+      {
+        "id": 11208,
+        "name": "avatar awards"
+      }
+    ],
+    "name": "Ilomilo",
+    "slug": "ilomilo",
+    "summary": "ilomilo is a puzzle game developed by Southend Interactive and Microsoft Game Studios. It was released on Windows Phone 7 on November 8, 2010 for AT&T customers.[2] On November 26, 2010, a \"secret\" website was made available where players could get a code to download a trial and purchase the game early, while the game was officially released on Xbox Live Arcade on January 5, 2011.",
+    "themes": [
+      {
+        "id": 17,
+        "name": "Fantasy"
+      }
+    ],
+    "total_rating_count": 14,
+    "websites": [
+      {
+        "id": 172512,
+        "url": "https://en.wikipedia.org/wiki/Ilomilo",
+        "type": 3
+      },
+      {
+        "id": 396216,
+        "url": "https://www.twitch.tv/directory/game/ilomilo",
+        "type": 6
+      },
+      {
+        "id": 1757,
+        "url": "http://blog.ilomilo.com/",
+        "type": 1
+      }
+    ]
+  },
+  {
+    "id": 7603,
+    "cover": {
+      "id": 120801,
+      "image_id": "co2l7l"
+    },
+    "first_release_date": 1502064000,
+    "genres": [
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 25,
+        "name": "Hack and slash/Beat 'em up"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 18,
+    "involved_companies": [
+      {
+        "id": 128332,
+        "company": {
+          "id": 795,
+          "country": 826,
+          "name": "Ninja Theory"
+        },
+        "developer": true,
+        "publisher": true
+      },
+      {
+        "id": 396567,
+        "company": {
+          "id": 17966,
+          "country": 840,
+          "name": "Xbox Game Studios"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 962,
+        "name": "female protagonist"
+      },
+      {
+        "id": 2472,
+        "name": "sword & sorcery"
+      },
+      {
+        "id": 4134,
+        "name": "digital distribution"
+      },
+      {
+        "id": 4287,
+        "name": "voice acting"
+      },
+      {
+        "id": 4345,
+        "name": "bink video"
+      },
+      {
+        "id": 4473,
+        "name": "photo mode"
+      },
+      {
+        "id": 4514,
+        "name": "full motion video"
+      },
+      {
+        "id": 4918,
+        "name": "real-time combat"
+      },
+      {
+        "id": 5019,
+        "name": "parrying"
+      },
+      {
+        "id": 5317,
+        "name": "gamescom 2014"
+      },
+      {
+        "id": 5850,
+        "name": "high definition graphics"
+      },
+      {
+        "id": 6752,
+        "name": "character models based on actual people"
+      },
+      {
+        "id": 12087,
+        "name": "the game awards 2017"
+      },
+      {
+        "id": 12105,
+        "name": "best performance: winner - 2017 (the game awards)"
+      },
+      {
+        "id": 12556,
+        "name": "the game awards - nominee"
+      },
+      {
+        "id": 39011,
+        "name": "the game awards - best audio design - nominee"
+      },
+      {
+        "id": 39012,
+        "name": "the game awards - best audio design - winner"
+      },
+      {
+        "id": 39028,
+        "name": "the game awards - best independent game - nominee"
+      },
+      {
+        "id": 39034,
+        "name": "the game awards - best narrative - nominee"
+      },
+      {
+        "id": 39038,
+        "name": "the game awards - best performance - nominee"
+      },
+      {
+        "id": 39039,
+        "name": "the game awards - best performance - winner"
+      },
+      {
+        "id": 39045,
+        "name": "the game awards - games for impact - winner"
+      },
+      {
+        "id": 39048,
+        "name": "the game awards - games for impact - nominee"
+      }
+    ],
+    "name": "Hellblade: Senua's Sacrifice",
+    "slug": "hellblade-senuas-sacrifice",
+    "summary": "Hellblade: Senua's Sacrifice is a single-player action-adventure game set in a dark fantasy world inspired by Norse mythology and Celtic culture. Players control Senua, a Pict warrior who journeys into the Norse underworld to rescue the soul of her dead lover from the goddess Hela. The game blends melee combat, puzzle solving, and psychological horror, with Senua's psychosis shaping how the world is perceived, including voices that provide guidance or attempt to mislead the player.\n\nThe game was developed by a team of around twenty people and features no heads-up display or tutorials. Instead, audio cues from voices in Senua's head guide the player through combat and environmental challenges. The portrayal of psychosis was developed in collaboration with neuroscientists and people who experience the condition.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 17,
+        "name": "Fantasy"
+      },
+      {
+        "id": 22,
+        "name": "Historical"
+      }
+    ],
+    "total_rating_count": 1115,
+    "websites": [
+      {
+        "id": 76109,
+        "url": "https://www.youtube.com/user/OfficialNinjaTheory",
+        "type": 9
+      },
+      {
+        "id": 66152,
+        "url": "https://store.steampowered.com/app/414340",
+        "type": 13
+      },
+      {
+        "id": 822575,
+        "url": "https://www.xbox.com/en-us/games/store/hellblade-senua's-sacrifice/C4Z7QM8FSXM2",
+        "type": 22
+      },
+      {
+        "id": 76107,
+        "url": "https://www.facebook.com/ninjatheory",
+        "type": 4
+      },
+      {
+        "id": 822576,
+        "url": "https://store.playstation.com/en-us/concept/227151",
+        "type": 23
+      },
+      {
+        "id": 822577,
+        "url": "https://www.nintendo.com/games/detail/hellblade-senuas-sacrifice-switch/",
+        "type": 24
+      },
+      {
+        "id": 120933,
+        "url": "https://www.gog.com/game/hellblade_senuas_sacrifice_pack",
+        "type": 17
+      },
+      {
+        "id": 76108,
+        "url": "https://twitter.com/NinjaTheory",
+        "type": 5
+      },
+      {
+        "id": 76118,
+        "url": "https://www.reddit.com/r/hellblade",
+        "type": 14
+      },
+      {
+        "id": 54903,
+        "url": "https://en.wikipedia.org/wiki/Hellblade:_Senua%27s_Sacrifice",
+        "type": 3
+      },
+      {
+        "id": 66153,
+        "url": "http://www.hellblade.com/",
+        "type": 1
+      },
+      {
+        "id": 341611,
+        "url": "https://www.twitch.tv/directory/game/Hellblade",
+        "type": 6
+      },
+      {
+        "id": 521192,
+        "url": "https://thehellblade.wikia.com/wiki/Hellblade:_Senua%27s_Sacrifice",
+        "type": 2
+      },
+      {
+        "id": 521191,
+        "url": "https://www.instagram.com/officialninjatheory",
+        "type": 8
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 32908,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32912,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32913,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32914,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32915,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32916,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32917,
+        "language": {
+          "id": 23
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32882,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32884,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32890,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32904,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32907,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32906,
+        "language": {
+          "id": 18
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32918,
+        "language": {
+          "id": 23
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32920,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32891,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32905,
+        "language": {
+          "id": 18
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32910,
+        "language": {
+          "id": 20
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32919,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32921,
+        "language": {
+          "id": 24
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32887,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32886,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32885,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32888,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32889,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32892,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32895,
+        "language": {
+          "id": 5
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32893,
+        "language": {
+          "id": 1
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32894,
+        "language": {
+          "id": 1
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32896,
+        "language": {
+          "id": 5
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32898,
+        "language": {
+          "id": 6
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32897,
+        "language": {
+          "id": 6
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32899,
+        "language": {
+          "id": 11
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32900,
+        "language": {
+          "id": 11
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32901,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32903,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32883,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 32902,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 32909,
+        "language": {
+          "id": 20
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32911,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 32922,
+        "language": {
+          "id": 24
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 162985,
+        "language": {
+          "id": 8
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 162987,
+        "language": {
+          "id": 8
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 163002,
+        "language": {
+          "id": 10
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 162999,
+        "language": {
+          "id": 10
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 162990,
+        "language": {
+          "id": 8
+        },
+        "language_support_type": 2
+      }
+    ]
+  },
+  {
+    "id": 9046,
+    "cover": {
+      "id": 76867,
+      "image_id": "co1nb7"
+    },
+    "first_release_date": 1430352000,
+    "genres": [
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 16,
+        "name": "Turn-based strategy (TBS)"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 2,
+    "involved_companies": [
+      {
+        "id": 64042,
+        "company": {
+          "id": 248,
+          "country": 392,
+          "name": "Bandai Namco Entertainment"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 133453,
+        "company": {
+          "id": 5456,
+          "country": 76,
+          "name": "Behold Studios"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 133454,
+        "company": {
+          "id": 1460,
+          "country": 250,
+          "name": "Plug In Digital"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 98,
+        "name": "monsters"
+      },
+      {
+        "id": 413,
+        "name": "parody"
+      },
+      {
+        "id": 997,
+        "name": "based on - tv show"
+      },
+      {
+        "id": 1158,
+        "name": "steam"
+      },
+      {
+        "id": 1448,
+        "name": "mecha"
+      },
+      {
+        "id": 1494,
+        "name": "steam trading cards"
+      },
+      {
+        "id": 1607,
+        "name": "base management"
+      },
+      {
+        "id": 2493,
+        "name": "steam greenlight"
+      },
+      {
+        "id": 4004,
+        "name": "steam achievements"
+      },
+      {
+        "id": 4134,
+        "name": "digital distribution"
+      },
+      {
+        "id": 4248,
+        "name": "tactical turn-based combat"
+      },
+      {
+        "id": 4272,
+        "name": "customizable characters"
+      },
+      {
+        "id": 5316,
+        "name": "pax prime 2014"
+      },
+      {
+        "id": 5327,
+        "name": "pax east 2014"
+      },
+      {
+        "id": 49307,
+        "name": "previously on - utomik"
+      }
+    ],
+    "name": "Chroma Squad",
+    "slug": "chroma-squad",
+    "summary": "Chroma Squad is a tactical RPG about five stunt actors who decide to quit their jobs and start their own Power Rangers-inspired TV show! Cast actors, purchase equipment and upgrades for your studio, craft weapons and giant Mechas out of cardboard and duct tape.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 17,
+        "name": "Fantasy"
+      },
+      {
+        "id": 27,
+        "name": "Comedy"
+      }
+    ],
+    "total_rating_count": 51,
+    "websites": [
+      {
+        "id": 47686,
+        "url": "https://store.steampowered.com/app/251130",
+        "type": 13
+      },
+      {
+        "id": 836087,
+        "url": "https://store.playstation.com/en-us/concept/216962",
+        "type": 23
+      },
+      {
+        "id": 307492,
+        "url": "http://itunes.apple.com/us/app/id1208253299#?platform=ipad",
+        "type": 11
+      },
+      {
+        "id": 307491,
+        "url": "http://itunes.apple.com/us/app/id1208253299#?platform=iphone",
+        "type": 10
+      },
+      {
+        "id": 836088,
+        "url": "https://www.nintendo.com/games/detail/chroma-squad-switch/",
+        "type": 24
+      },
+      {
+        "id": 341536,
+        "url": "https://www.twitch.tv/directory/game/Chroma%20Squad",
+        "type": 6
+      },
+      {
+        "id": 47685,
+        "url": "http://www.chromasquad.com",
+        "type": 1
+      },
+      {
+        "id": 77403,
+        "url": "https://en.wikipedia.org/wiki/Chroma_Squad",
+        "type": 3
+      },
+      {
+        "id": 118442,
+        "url": "https://www.gog.com/game/chroma_squad",
+        "type": 17
+      },
+      {
+        "id": 1103126,
+        "url": "https://www.xbox.com/en-us/games/store/chroma-squad/BWTWXQRHVX6F",
+        "type": 22
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 71392,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 71393,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71394,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 71395,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71396,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 71397,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71391,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71398,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 71399,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71400,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 71401,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71402,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 498165,
+        "language": {
+          "id": 20
+        },
+        "language_support_type": 3
+      }
+    ]
+  },
+  {
+    "id": 9182,
+    "cover": {
+      "id": 76857,
+      "image_id": "co1nax"
+    },
+    "first_release_date": 1533859200,
+    "genres": [
+      {
+        "id": 5,
+        "name": "Shooter"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 37,
+    "involved_companies": [
+      {
+        "id": 96284,
+        "company": {
+          "id": 11262,
+          "country": 840,
+          "name": "Gearbox Publishing"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 96285,
+        "company": {
+          "id": 1924,
+          "country": 124,
+          "name": "Compulsion Games"
+        },
+        "developer": true,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 131,
+        "name": "psychological horror"
+      },
+      {
+        "id": 416,
+        "name": "roguelike"
+      },
+      {
+        "id": 429,
+        "name": "dystopian"
+      },
+      {
+        "id": 1980,
+        "name": "procedurally generated"
+      },
+      {
+        "id": 2425,
+        "name": "crowdfunding - kickstarter"
+      },
+      {
+        "id": 4356,
+        "name": "xbox play anywhere"
+      },
+      {
+        "id": 4357,
+        "name": "xbox one x enhanced"
+      },
+      {
+        "id": 4871,
+        "name": "pax east 2016"
+      },
+      {
+        "id": 16826,
+        "name": "4k ultra hd"
+      },
+      {
+        "id": 44629,
+        "name": "steam families"
+      }
+    ],
+    "name": "We Happy Few",
+    "slug": "we-happy-few",
+    "summary": "We Happy Few is the tale of a plucky bunch of moderately terrible people trying to escape from a lifetime of cheerful denial. Set in a drug-fuelled, retrofuturistic city in an alternative 1960s England, you'll have to blend in with its other inhabitants, who don't take kindly to people who don't abide by their not-so-normal rules.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 17,
+        "name": "Fantasy"
+      },
+      {
+        "id": 19,
+        "name": "Horror"
+      },
+      {
+        "id": 21,
+        "name": "Survival"
+      },
+      {
+        "id": 22,
+        "name": "Historical"
+      },
+      {
+        "id": 23,
+        "name": "Stealth"
+      },
+      {
+        "id": 38,
+        "name": "Open world"
+      }
+    ],
+    "total_rating_count": 105,
+    "websites": [
+      {
+        "id": 66403,
+        "url": "http://wehappyfewgame.com",
+        "type": 1
+      },
+      {
+        "id": 56967,
+        "url": "https://en.wikipedia.org/wiki/We_Happy_Few",
+        "type": 3
+      },
+      {
+        "id": 523488,
+        "url": "https://www.instagram.com/wehappyfewgame",
+        "type": 8
+      },
+      {
+        "id": 523487,
+        "url": "https://twitter.com/wehappyfewgame",
+        "type": 5
+      },
+      {
+        "id": 842462,
+        "url": "https://www.xbox.com/en-us/games/store/we-happy-few/BPR2TBS2KMQJ",
+        "type": 22
+      },
+      {
+        "id": 842463,
+        "url": "https://store.playstation.com/en-us/concept/228890",
+        "type": 23
+      },
+      {
+        "id": 46819,
+        "url": "https://store.steampowered.com/app/320240",
+        "type": 13
+      },
+      {
+        "id": 68746,
+        "url": "https://wehappyfew.gamepedia.com/We_Happy_Few_Wiki",
+        "type": 2
+      },
+      {
+        "id": 78142,
+        "url": "https://www.reddit.com/r/wehappyfew",
+        "type": 14
+      },
+      {
+        "id": 120064,
+        "url": "https://www.gog.com/game/we_happy_few",
+        "type": 17
+      },
+      {
+        "id": 523486,
+        "url": "https://www.facebook.com/wehappyfewgame",
+        "type": 4
+      },
+      {
+        "id": 332794,
+        "url": "https://www.twitch.tv/directory/game/We%20Happy%20Few",
+        "type": 6
+      },
+      {
+        "id": 523485,
+        "url": "https://www.youtube.com/user/ContrastGame",
+        "type": 9
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 161251,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 161273,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 161288,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 161258,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 161256,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 161261,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 161252,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 161269,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 161255,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 161291,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 161254,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 161264,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 161253,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 161267,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 161275,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 161277,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 161282,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 161285,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 161279,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 2
+      }
+    ]
+  },
+  {
+    "id": 10088,
+    "cover": {
+      "id": 362832,
+      "image_id": "co7ryo"
+    },
+    "first_release_date": 1407801600,
+    "genres": [
+      {
+        "id": 7,
+        "name": "Music"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 68287,
+        "company": {
+          "id": 15156,
+          "country": 826,
+          "name": "Rekim Games"
+        },
+        "developer": false,
+        "publisher": false
+      },
+      {
+        "id": 181889,
+        "company": {
+          "id": 15512,
+          "country": 840,
+          "name": "SCE Santa Monica Studio"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 181890,
+        "company": {
+          "id": 13634,
+          "country": 392,
+          "name": "Sony Computer Entertainment"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 180931,
+        "company": {
+          "id": 11662,
+          "country": 840,
+          "name": "Annapurna Interactive"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 180932,
+        "company": {
+          "id": 5447,
+          "country": 826,
+          "name": "Honeyslug"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 181012,
+        "company": {
+          "id": 18659,
+          "country": 826,
+          "name": "Richard Hogg"
+        },
+        "developer": true,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 4134,
+        "name": "digital distribution"
+      },
+      {
+        "id": 4452,
+        "name": "licensed soundtrack"
+      },
+      {
+        "id": 4718,
+        "name": "cross buy"
+      },
+      {
+        "id": 5305,
+        "name": "pax prime 2013"
+      },
+      {
+        "id": 5314,
+        "name": "cross-save"
+      },
+      {
+        "id": 5317,
+        "name": "gamescom 2014"
+      },
+      {
+        "id": 5328,
+        "name": "playstation tv support"
+      },
+      {
+        "id": 6105,
+        "name": "psn play"
+      }
+    ],
+    "name": "Hohokum",
+    "slug": "hohokum",
+    "summary": "Hohokum is a colorful exploration based adventure game. Players control a space worm, flying around rescuing people from their city under distress.\n\nHohokum is a collaboration between Honeyslug, an independent game developer based in North London, and Richard Hogg, an artist and designer. After launching as a web-based gaming experiment in 2010, Hohokum comes to PlayStation consoles now fully formed thanks to a collaboration with game design studios Honeyslug and SCE Studios Santa Monica, delivering the same unique exploration experience in a refined and expansive adventure waiting to be explored!",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 33,
+        "name": "Sandbox"
+      }
+    ],
+    "total_rating_count": 31,
+    "websites": [
+      {
+        "id": 762685,
+        "url": "https://store.playstation.com/en-us/concept/201943",
+        "type": 23
+      },
+      {
+        "id": 137943,
+        "url": "https://en.wikipedia.org/wiki/Hohokum",
+        "type": 3
+      },
+      {
+        "id": 299150,
+        "url": "https://store.steampowered.com/app/1210550/Hohokum",
+        "type": 13
+      },
+      {
+        "id": 336249,
+        "url": "https://www.twitch.tv/directory/game/Hohokum",
+        "type": 6
+      },
+      {
+        "id": 3453,
+        "url": "http://hohokum.playstation.com/",
+        "type": 1
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 66999,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 67018,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 67024,
+        "language": {
+          "id": 23
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 67000,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 67001,
+        "language": {
+          "id": 5
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 67002,
+        "language": {
+          "id": 5
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 67004,
+        "language": {
+          "id": 6
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 67003,
+        "language": {
+          "id": 6
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 67006,
+        "language": {
+          "id": 11
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 67007,
+        "language": {
+          "id": 11
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 67008,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 67009,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 67011,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 67010,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 67012,
+        "language": {
+          "id": 18
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 66998,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 67013,
+        "language": {
+          "id": 18
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 67023,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 67016,
+        "language": {
+          "id": 20
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 66991,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 66992,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 67019,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 66996,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 66993,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 66995,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 66997,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 67014,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 67017,
+        "language": {
+          "id": 20
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 67020,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 67022,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 67025,
+        "language": {
+          "id": 23
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 67026,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 67027,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 66994,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 67015,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 67021,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 2
+      }
+    ]
+  },
+  {
+    "id": 26352,
+    "cover": {
+      "id": 140698,
+      "image_id": "co30ka"
+    },
+    "first_release_date": 1357862400,
+    "genres": [
+      {
+        "id": 8,
+        "name": "Platform"
+      },
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 301439,
+        "company": {
+          "id": 6025,
+          "country": 392,
+          "name": "Robinson Technologies"
+        },
+        "developer": true,
+        "publisher": true
+      },
+      {
+        "id": 301441,
+        "company": {
+          "id": 104,
+          "country": 250,
+          "name": "Ubisoft Entertainment"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 301442,
+        "company": {
+          "id": 3655,
+          "country": 356,
+          "name": "Ubisoft Pune"
+        },
+        "developer": false,
+        "publisher": false
+      },
+      {
+        "id": 301443,
+        "company": {
+          "id": 60706,
+          "country": 784,
+          "name": "Ubisoft Abu Dhabi"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 301440,
+        "company": {
+          "id": 11746,
+          "name": "Hamumu Software"
+        },
+        "developer": false,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 4365,
+        "name": "daily challenge"
+      }
+    ],
+    "name": "Growtopia",
+    "slug": "growtopia",
+    "summary": "Growtopia is a free-to-play sandbox MMO game with almost endless possibilities for world creation, customization and having fun with your friends. Enjoy thousands of items, challenges and events.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 33,
+        "name": "Sandbox"
+      },
+      {
+        "id": 35,
+        "name": "Kids"
+      }
+    ],
+    "total_rating_count": 13,
+    "websites": [
+      {
+        "id": 124800,
+        "url": "https://play.google.com/store/apps/details?id=com.rtsoft.growtopia",
+        "type": 12
+      },
+      {
+        "id": 785526,
+        "url": "https://www.nintendo.com/games/detail/growtopia-switch/",
+        "type": 24
+      },
+      {
+        "id": 124795,
+        "url": "https://www.facebook.com/growtopia",
+        "type": 4
+      },
+      {
+        "id": 124799,
+        "url": "https://apps.apple.com/app/id590495115",
+        "type": 10
+      },
+      {
+        "id": 10867,
+        "url": "https://www.growtopiagame.com/",
+        "type": 1
+      },
+      {
+        "id": 124797,
+        "url": "https://www.instagram.com/growtopia",
+        "type": 8
+      },
+      {
+        "id": 124796,
+        "url": "https://twitter.com/growtopiagame",
+        "type": 5
+      },
+      {
+        "id": 332736,
+        "url": "https://www.twitch.tv/directory/game/Growtopia",
+        "type": 6
+      },
+      {
+        "id": 124793,
+        "url": "https://growtopia.fandom.com/wiki/Growtopia_Wiki",
+        "type": 2
+      },
+      {
+        "id": 124794,
+        "url": "https://en.wikipedia.org/wiki/Growtopia",
+        "type": 3
+      },
+      {
+        "id": 124801,
+        "url": "https://www.reddit.com/r/growtopia",
+        "type": 14
+      },
+      {
+        "id": 658124,
+        "url": "https://discord.gg/growtopia",
+        "type": 18
+      },
+      {
+        "id": 622273,
+        "url": "https://store.steampowered.com/app/866020",
+        "type": 13
+      },
+      {
+        "id": 124798,
+        "url": "https://www.youtube.com/channel/UCNFTBaDHB4_Y8eFa8YssSMQ",
+        "type": 9
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 935793,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 935794,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      }
+    ]
+  },
+  {
+    "id": 46800,
+    "cover": {
+      "id": 75066,
+      "image_id": "co1lx6"
+    },
+    "first_release_date": 1590105600,
+    "genres": [
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 11,
+    "involved_companies": [
+      {
+        "id": 144307,
+        "company": {
+          "id": 15688,
+          "name": "Blindside Interactive"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 144308,
+        "company": {
+          "id": 36607,
+          "name": "Shipwright Studios"
+        },
+        "developer": false,
+        "publisher": false
+      },
+      {
+        "id": 167332,
+        "company": {
+          "id": 423,
+          "country": 276,
+          "name": "Deep Silver"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 144306,
+        "company": {
+          "id": 743,
+          "country": 840,
+          "name": "Tripwire Interactive"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 129,
+        "name": "bloody"
+      },
+      {
+        "id": 138,
+        "name": "underwater"
+      },
+      {
+        "id": 153,
+        "name": "animals"
+      },
+      {
+        "id": 403,
+        "name": "shark"
+      },
+      {
+        "id": 962,
+        "name": "female protagonist"
+      },
+      {
+        "id": 968,
+        "name": "animal protagonist"
+      },
+      {
+        "id": 1308,
+        "name": "gore"
+      },
+      {
+        "id": 1494,
+        "name": "steam trading cards"
+      },
+      {
+        "id": 4004,
+        "name": "steam achievements"
+      },
+      {
+        "id": 4150,
+        "name": "steam cloud"
+      },
+      {
+        "id": 4353,
+        "name": "human"
+      },
+      {
+        "id": 4844,
+        "name": "alligator"
+      },
+      {
+        "id": 44629,
+        "name": "steam families"
+      }
+    ],
+    "name": "Maneater",
+    "slug": "maneater",
+    "summary": "You were cut from your mother's body and left to die in the unforgiving waters of the Gulf Coast. Your only tools are your wits, your jaws, and an uncanny ability to evolve as you feed. Anything and everything is on the menu... provided you kill it before it kills you.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 38,
+        "name": "Open world"
+      }
+    ],
+    "total_rating_count": 122,
+    "websites": [
+      {
+        "id": 821691,
+        "url": "https://www.nintendo.com/games/detail/maneater-switch/",
+        "type": 24
+      },
+      {
+        "id": 821689,
+        "url": "https://www.xbox.com/en-us/games/store/maneater/9P5B81KVDGP1",
+        "type": 22
+      },
+      {
+        "id": 821690,
+        "url": "https://store.playstation.com/en-us/concept/233202",
+        "type": 23
+      },
+      {
+        "id": 53610,
+        "url": "https://store.steampowered.com/app/629820",
+        "type": 13
+      },
+      {
+        "id": 80214,
+        "url": "https://www.facebook.com/maneatergame",
+        "type": 4
+      },
+      {
+        "id": 120117,
+        "url": "https://www.epicgames.com/store/en-US/product/maneater/home",
+        "type": 16
+      },
+      {
+        "id": 210477,
+        "url": "https://maneatergame.com/",
+        "type": 1
+      },
+      {
+        "id": 221605,
+        "url": "https://www.youtube.com/user/tripwireinteractive/featured",
+        "type": 9
+      },
+      {
+        "id": 221606,
+        "url": "http://discord.gg/maneater",
+        "type": 18
+      },
+      {
+        "id": 210478,
+        "url": "https://en.wikipedia.org/wiki/Maneater_(video_game)",
+        "type": 3
+      },
+      {
+        "id": 274122,
+        "url": "https://www.reddit.com/r/maneater",
+        "type": 14
+      },
+      {
+        "id": 385516,
+        "url": "https://www.twitch.tv/directory/game/Maneater",
+        "type": 6
+      },
+      {
+        "id": 80215,
+        "url": "https://twitter.com/maneatergame",
+        "type": 5
+      },
+      {
+        "id": 221604,
+        "url": "https://www.instagram.com/tripwireinteractive/",
+        "type": 8
+      },
+      {
+        "id": 274123,
+        "url": "https://maneater.fandom.com/wiki/Maneater_Wiki",
+        "type": 2
+      },
+      {
+        "id": 1095574,
+        "url": "https://www.gog.com/game/maneater",
+        "type": 17
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 124255,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 124256,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 124258,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 124259,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 124260,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 124261,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 124254,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 124257,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 124262,
+        "language": {
+          "id": 24
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 124263,
+        "language": {
+          "id": 24
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 124234,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 124235,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 124236,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 124237,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 124238,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 124239,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 124240,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 124241,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 124242,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 124243,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 124244,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 124245,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 124246,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 124247,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 124248,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 124249,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 124250,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 124251,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 124252,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 124253,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 158534,
+        "language": {
+          "id": 10
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 158535,
+        "language": {
+          "id": 10
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 158536,
+        "language": {
+          "id": 10
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 207138,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 503702,
+        "language": {
+          "id": 20
+        },
+        "language_support_type": 3
+      }
+    ]
+  },
+  {
+    "id": 82117,
+    "cover": {
+      "id": 97393,
+      "image_id": "co235d"
+    },
+    "first_release_date": 1535500800,
+    "genres": [
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 7,
+    "involved_companies": [
+      {
+        "id": 396167,
+        "company": {
+          "id": 14440,
+          "country": 826,
+          "name": "Two Point Studios"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 396168,
+        "company": {
+          "id": 112,
+          "country": 392,
+          "name": "Sega"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 126,
+        "name": "retro"
+      },
+      {
+        "id": 994,
+        "name": "management"
+      },
+      {
+        "id": 1296,
+        "name": "hospital"
+      },
+      {
+        "id": 2760,
+        "name": "family friendly"
+      },
+      {
+        "id": 3560,
+        "name": "cartoony"
+      },
+      {
+        "id": 49326,
+        "name": "previously on - prime gaming"
+      },
+      {
+        "id": 49376,
+        "name": "available on - luna plus"
+      }
+    ],
+    "name": "Two Point Hospital",
+    "slug": "two-point-hospital",
+    "summary": "Design stunning hospitals, cure peculiar illnesses and manage troublesome staff as you spread your budding healthcare organisation across Two Point County.\nBuild and customise your hospital - it is yours after all - with specialist diagnosis and treatment facilities, as well as the very latest in ornamental technology!",
+    "themes": [
+      {
+        "id": 27,
+        "name": "Comedy"
+      },
+      {
+        "id": 28,
+        "name": "Business"
+      }
+    ],
+    "total_rating_count": 154,
+    "websites": [
+      {
+        "id": 816816,
+        "url": "https://www.xbox.com/en-us/games/store/two-point-hospital/9N08S5VPC4SX",
+        "type": 22
+      },
+      {
+        "id": 69085,
+        "url": "https://store.steampowered.com/app/535930",
+        "type": 13
+      },
+      {
+        "id": 816819,
+        "url": "https://x.com/TwoPointStudios",
+        "type": 5
+      },
+      {
+        "id": 816822,
+        "url": "https://www.youtube.com/@twopointstudios",
+        "type": 9
+      },
+      {
+        "id": 836006,
+        "url": "https://store.playstation.com/en-us/concept/234969",
+        "type": 23
+      },
+      {
+        "id": 830995,
+        "url": "https://discord.com/invite/twopointstudios",
+        "type": 18
+      },
+      {
+        "id": 816820,
+        "url": "https://www.facebook.com/twopointstudios/",
+        "type": 4
+      },
+      {
+        "id": 816821,
+        "url": "https://www.instagram.com/twopointstudios",
+        "type": 8
+      },
+      {
+        "id": 752925,
+        "url": "https://www.twitch.tv/directory/category/two-point-hospital",
+        "type": 6
+      },
+      {
+        "id": 287647,
+        "url": "https://www.gog.com/en/game/two_point_hospital",
+        "type": 17
+      },
+      {
+        "id": 306765,
+        "url": "https://two-point-hospital.fandom.com/",
+        "type": 2
+      },
+      {
+        "id": 81232,
+        "url": "https://en.wikipedia.org/wiki/Two_Point_Hospital",
+        "type": 3
+      },
+      {
+        "id": 993425,
+        "url": "https://store.epicgames.com/p/two-point-hospital",
+        "type": 16
+      },
+      {
+        "id": 993426,
+        "url": "https://www.nintendo.com/us/store/products/two-point-hospital-switch/",
+        "type": 24
+      },
+      {
+        "id": 663932,
+        "url": "https://www.twopointstudios.com/en/games/two-point-hospital",
+        "type": 1
+      },
+      {
+        "id": 544065,
+        "url": "https://www.reddit.com/r/TwoPointHospital/",
+        "type": 14
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 103096,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 103097,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 103098,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 103099,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 103100,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 103101,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 103102,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 103103,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 103090,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 103091,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 103092,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 103093,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 103094,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 103095,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 1
+      }
+    ]
+  },
+  {
+    "id": 84731,
+    "cover": {
+      "id": 96697,
+      "image_id": "co22m1"
+    },
+    "first_release_date": 1510876800,
+    "genres": [
+      {
+        "id": 4,
+        "name": "Fighting"
+      },
+      {
+        "id": 5,
+        "name": "Shooter"
+      },
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      },
+      {
+        "id": 33,
+        "name": "Arcade"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 123977,
+        "company": {
+          "id": 6987,
+          "country": 276,
+          "name": "HandyGames"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 166,
+        "name": "shoot 'em up"
+      }
+    ],
+    "name": "Aces of the Luftwaffe: Squadron",
+    "slug": "aces-of-the-luftwaffe-squadron",
+    "summary": "The Aces of the Luftwaffe have returned! Dodge a hail of bullets and face their fearsome war machines in bombastic air battles and boss fights!\n\nAces of the Luftwaffe: Squadron is an action-packed, vertically scrolling shoot ‘em up with a captivating and fully voiced narrative. Dodge bullets, collect massive power ups and wisely use special abilities as you defeat waves of enemies. Upgrade each member of your squadron with their personal skill tree as you level up. But don’t go to war alone! You can take on the Aces with up to 3 friends in an epic 4 player local co-op battle. Are you up to the task?",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 22,
+        "name": "Historical"
+      }
+    ],
+    "total_rating_count": 2,
+    "websites": [
+      {
+        "id": 84065,
+        "url": "https://handy-games.com/games/aces-of-the-luftwaffe-squadron/",
+        "type": 1
+      },
+      {
+        "id": 297492,
+        "url": "http://itunes.apple.com/us/app/id1481181827#?platform=ipad",
+        "type": 11
+      },
+      {
+        "id": 407441,
+        "url": "https://www.twitch.tv/directory/game/Aces%20of%20the%20Luftwaffe:%20Squadron",
+        "type": 6
+      },
+      {
+        "id": 821856,
+        "url": "https://www.youtube.com/@handygames/",
+        "type": 9
+      },
+      {
+        "id": 297491,
+        "url": "http://itunes.apple.com/us/app/id1481181827#?platform=iphone",
+        "type": 10
+      },
+      {
+        "id": 783671,
+        "url": "https://www.nintendo.com/games/detail/aces-of-the-luftwaffe-squadron-switch/",
+        "type": 24
+      },
+      {
+        "id": 783672,
+        "url": "https://store.playstation.com/en-us/concept/228674",
+        "type": 23
+      },
+      {
+        "id": 821855,
+        "url": "https://x.com/handy_games",
+        "type": 5
+      },
+      {
+        "id": 821854,
+        "url": "https://www.facebook.com/HandyGames/",
+        "type": 4
+      },
+      {
+        "id": 821857,
+        "url": "https://discord.gg/handygames",
+        "type": 18
+      },
+      {
+        "id": 84064,
+        "url": "https://store.steampowered.com/app/859350",
+        "type": 13
+      },
+      {
+        "id": 1104391,
+        "url": "https://www.xbox.com/en-us/games/store/aces-of-the-luftwaffe-squadron/C4DZWT2ZJZ2H",
+        "type": 22
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 126180,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 126181,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 126182,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 126183,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 126184,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 126185,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 126186,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 126187,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 126188,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 126189,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 126190,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 126191,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 126192,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 2
+      }
+    ]
+  },
+  {
+    "id": 122666,
+    "cover": {
+      "id": 340691,
+      "image_id": "co7avn"
+    },
+    "first_release_date": 1650499200,
+    "genres": [
+      {
+        "id": 9,
+        "name": "Puzzle"
+      },
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 5,
+    "involved_companies": [
+      {
+        "id": 88159,
+        "company": {
+          "id": 21884,
+          "country": 752,
+          "name": "Tuxedo Labs"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 160,
+        "name": "destruction"
+      },
+      {
+        "id": 243,
+        "name": "heist"
+      },
+      {
+        "id": 287,
+        "name": "physics"
+      },
+      {
+        "id": 308,
+        "name": "experimental"
+      },
+      {
+        "id": 531,
+        "name": "creative"
+      },
+      {
+        "id": 577,
+        "name": "procedural generation"
+      },
+      {
+        "id": 595,
+        "name": "voxel"
+      }
+    ],
+    "name": "Teardown",
+    "slug": "teardown",
+    "summary": "Prepare the perfect heist in this simulated and fully destructible voxel world. Tear down walls with vehicles or explosives to create shortcuts. Stack objects to reach higher. Use the environment to your advantage in the most creative way you can think of.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 33,
+        "name": "Sandbox"
+      }
+    ],
+    "total_rating_count": 62,
+    "websites": [
+      {
+        "id": 117376,
+        "url": "http://teardowngame.com/",
+        "type": 1
+      },
+      {
+        "id": 117377,
+        "url": "https://store.steampowered.com/app/1167630",
+        "type": 13
+      },
+      {
+        "id": 778128,
+        "url": "https://www.xbox.com/en-us/games/store/teardown/9MVDW9JCKL8Z",
+        "type": 22
+      },
+      {
+        "id": 126621,
+        "url": "https://twitter.com/tuxedolabs",
+        "type": 5
+      },
+      {
+        "id": 778129,
+        "url": "https://store.playstation.com/en-us/concept/10007904",
+        "type": 23
+      },
+      {
+        "id": 1076326,
+        "url": "https://www.facebook.com/PlayTeardownGame/",
+        "type": 4
+      },
+      {
+        "id": 515537,
+        "url": "https://en.wikipedia.org/wiki/Teardown_(video_game)",
+        "type": 3
+      },
+      {
+        "id": 390681,
+        "url": "https://www.twitch.tv/directory/game/Teardown",
+        "type": 6
+      },
+      {
+        "id": 1076328,
+        "url": "https://youtube.com/@TeardownGame/",
+        "type": 9
+      },
+      {
+        "id": 1076330,
+        "url": "https://discord.gg/teardown",
+        "type": 18
+      },
+      {
+        "id": 1076325,
+        "url": "https://teardown.fandom.com/wiki/Teardown_Wiki",
+        "type": 2
+      },
+      {
+        "id": 1076327,
+        "url": "https://www.instagram.com/teardowngame/",
+        "type": 8
+      },
+      {
+        "id": 1076329,
+        "url": "https://www.reddit.com/r/TeardownGame/",
+        "type": 14
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 409883,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 845755,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 845756,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 845757,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 845758,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 845759,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 845948,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 845760,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 845761,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      }
+    ]
+  },
+  {
+    "id": 135998,
+    "cover": {
+      "id": 258150,
+      "image_id": "co5j6u"
+    },
+    "first_release_date": 1669766400,
+    "genres": [
+      {
+        "id": 5,
+        "name": "Shooter"
+      },
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 11,
+    "involved_companies": [
+      {
+        "id": 294285,
+        "company": {
+          "id": 860,
+          "country": 752,
+          "name": "Fatshark"
+        },
+        "developer": true,
+        "publisher": true
+      },
+      {
+        "id": 368118,
+        "company": {
+          "id": 17345,
+          "country": 752,
+          "name": "Ritualen"
+        },
+        "developer": false,
+        "publisher": false
+      }
+    ],
+    "name": "Warhammer 40,000: Darktide",
+    "slug": "warhammer-40000-darktide",
+    "summary": "From the developers of the best-selling and award-winning franchise Vermintide, Warhammer 40,000: Darktide is a visceral 4-player co-op action game set in the hive city of Tertium. Fight together with your friends against hordes of enemies in this new Warhammer 40,000 experience.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      }
+    ],
+    "total_rating_count": 74,
+    "websites": [
+      {
+        "id": 148104,
+        "url": "https://en.wikipedia.org/wiki/Warhammer_40,000:_Darktide",
+        "type": 3
+      },
+      {
+        "id": 148105,
+        "url": "https://www.facebook.com/PlayDarktide",
+        "type": 4
+      },
+      {
+        "id": 147669,
+        "url": "https://store.steampowered.com/app/1361210",
+        "type": 13
+      },
+      {
+        "id": 789784,
+        "url": "https://store.playstation.com/en-us/concept/10010263",
+        "type": 23
+      },
+      {
+        "id": 789785,
+        "url": "https://www.xbox.com/en-us/games/store/warhammer-40,000-darktide/9NT3WC6RKBVQ",
+        "type": 22
+      },
+      {
+        "id": 818617,
+        "url": "https://reddit.com/r/darktide",
+        "type": 14
+      },
+      {
+        "id": 148107,
+        "url": "https://instagram.com/playdarktide",
+        "type": 8
+      },
+      {
+        "id": 148103,
+        "url": "https://www.playdarktide.com/",
+        "type": 1
+      },
+      {
+        "id": 148108,
+        "url": "https://www.youtube.com/channel/UCfhGCMntOdvnorxaMNCbDOg",
+        "type": 9
+      },
+      {
+        "id": 148106,
+        "url": "https://twitter.com/Darktide40K",
+        "type": 5
+      },
+      {
+        "id": 148109,
+        "url": "https://discord.gg/Gf44efP",
+        "type": 18
+      },
+      {
+        "id": 369648,
+        "url": "https://www.twitch.tv/directory/game/Warhammer%2040%2C000%3A%20Darktide",
+        "type": 6
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 222188,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 222189,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 222190,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 222191,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 222192,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 222193,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 222194,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 222195,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 222196,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 222197,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 222198,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 222199,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 222200,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 222201,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 222202,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 222203,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 222204,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 222205,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 222206,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 222207,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 222208,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 222209,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 222210,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 222211,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 222212,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 810964,
+        "language": {
+          "id": 8
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 810965,
+        "language": {
+          "id": 8
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 810966,
+        "language": {
+          "id": 8
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 810967,
+        "language": {
+          "id": 20
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 810968,
+        "language": {
+          "id": 20
+        },
+        "language_support_type": 2
+      }
+    ]
+  },
+  {
+    "id": 138590,
+    "cover": {
+      "id": 347852,
+      "image_id": "co7gek"
+    },
+    "first_release_date": 1657756800,
+    "genres": [
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 1,
+    "involved_companies": [
+      {
+        "id": 221176,
+        "company": {
+          "id": 26,
+          "country": 392,
+          "name": "Square Enix"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 221177,
+        "company": {
+          "id": 4441,
+          "country": 826,
+          "name": "FuturLab"
+        },
+        "developer": true,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 250,
+        "name": "3d"
+      },
+      {
+        "id": 988,
+        "name": "online co-op"
+      },
+      {
+        "id": 1511,
+        "name": "funny"
+      },
+      {
+        "id": 1697,
+        "name": "atmospheric"
+      },
+      {
+        "id": 2084,
+        "name": "relaxing"
+      },
+      {
+        "id": 2426,
+        "name": "story rich"
+      },
+      {
+        "id": 2760,
+        "name": "family friendly"
+      },
+      {
+        "id": 3138,
+        "name": "colorful"
+      },
+      {
+        "id": 5789,
+        "name": "realism"
+      },
+      {
+        "id": 17083,
+        "name": "vehicles"
+      },
+      {
+        "id": 17092,
+        "name": "immersive"
+      },
+      {
+        "id": 23931,
+        "name": "wholesome"
+      },
+      {
+        "id": 24685,
+        "name": "cozy"
+      }
+    ],
+    "name": "PowerWash Simulator",
+    "slug": "powerwash-simulator",
+    "summary": "Release the Pressure with PowerWash Simulator! Wash away your worries with the soothing sounds of high-pressure water. Fire up your power washer and blast away every speck of dirt and grime you can find, all with the simple satisfaction of power-washing to a sparkling finish.",
+    "themes": [
+      {
+        "id": 28,
+        "name": "Business"
+      },
+      {
+        "id": 33,
+        "name": "Sandbox"
+      }
+    ],
+    "total_rating_count": 127,
+    "websites": [
+      {
+        "id": 179451,
+        "url": "https://futurlab.co.uk/game/powerwash-simulator",
+        "type": 1
+      },
+      {
+        "id": 771605,
+        "url": "https://www.xbox.com/en-us/games/store/powerwash-simulator/9NHDJC0NW20M",
+        "type": 22
+      },
+      {
+        "id": 729522,
+        "url": "https://bsky.app/profile/powerwashsimulator.co.uk",
+        "type": 19
+      },
+      {
+        "id": 921440,
+        "url": "https://www.twitch.tv/directory/category/powerwash-simulator",
+        "type": 6
+      },
+      {
+        "id": 771603,
+        "url": "https://www.nintendo.com/store/products/powerwash-simulator-switch/",
+        "type": 24
+      },
+      {
+        "id": 771604,
+        "url": "https://store.playstation.com/en-us/concept/10003654",
+        "type": 23
+      },
+      {
+        "id": 179450,
+        "url": "https://futurlab.itch.io/powerwash-simulator",
+        "type": 15
+      },
+      {
+        "id": 179453,
+        "url": "https://www.reddit.com/r/PowerWashSimulator",
+        "type": 14
+      },
+      {
+        "id": 268650,
+        "url": "https://www.facebook.com/futurlab",
+        "type": 4
+      },
+      {
+        "id": 268649,
+        "url": "https://www.youtube.com/c/FuturLab",
+        "type": 9
+      },
+      {
+        "id": 298184,
+        "url": "https://store.steampowered.com/app/1290000",
+        "type": 13
+      },
+      {
+        "id": 954480,
+        "url": "https://apps.apple.com/app/id6477445344",
+        "type": 11
+      },
+      {
+        "id": 954481,
+        "url": "https://apps.apple.com/app/id6477445344",
+        "type": 10
+      },
+      {
+        "id": 921441,
+        "url": "https://x.com/PowerWashSim",
+        "type": 5
+      },
+      {
+        "id": 921442,
+        "url": "https://www.instagram.com/powerwashsim/",
+        "type": 8
+      },
+      {
+        "id": 268652,
+        "url": "https://discord.gg/powerwashsimulator",
+        "type": 18
+      },
+      {
+        "id": 268653,
+        "url": "https://powerwash-simulator.fandom.com/wiki/PowerWash_Simulator_Wiki",
+        "type": 2
+      },
+      {
+        "id": 268654,
+        "url": "https://en.wikipedia.org/wiki/PowerWash_Simulator",
+        "type": 3
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 146952,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 146950,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 146938,
+        "language": {
+          "id": 8
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 146936,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 146940,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 146944,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 146942,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 146946,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 146954,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 146956,
+        "language": {
+          "id": 24
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 146948,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 489554,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 489555,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 628369,
+        "language": {
+          "id": 20
+        },
+        "language_support_type": 3
+      }
+    ]
+  },
+  {
+    "id": 141543,
+    "cover": {
+      "id": 336859,
+      "image_id": "co77x7"
+    },
+    "first_release_date": 1629072000,
+    "genres": [
+      {
+        "id": 9,
+        "name": "Puzzle"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 4,
+    "involved_companies": [
+      {
+        "id": 184131,
+        "company": {
+          "id": 15657,
+          "country": 250,
+          "name": "DigixArt"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 184130,
+        "company": {
+          "id": 9043,
+          "country": 276,
+          "name": "Ravenscourt"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 1113,
+        "name": "mature"
+      },
+      {
+        "id": 1697,
+        "name": "atmospheric"
+      },
+      {
+        "id": 2426,
+        "name": "story rich"
+      },
+      {
+        "id": 3138,
+        "name": "colorful"
+      }
+    ],
+    "name": "Road 96",
+    "slug": "road-96",
+    "summary": "Road 96 is a crazy, beautiful road-trip. The discovery of exciting places, and unusual people on your own personal journey to freedom. An ever-evolving story-driven adventure inspired by Tarantino, The Coen Brothers, and Bong Joon-ho. Moments of action, exploration, contemplative melancholy, human encounters and wacky situations. Set against a backdrop of authoritarian rule and oppression. A stunning visual style, a soundtrack filled with 90s hits, and a thousand routes through the game combine so each player can create their own unique stories on Road 96.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 27,
+        "name": "Comedy"
+      },
+      {
+        "id": 43,
+        "name": "Mystery"
+      }
+    ],
+    "total_rating_count": 152,
+    "websites": [
+      {
+        "id": 163398,
+        "url": "https://www.youtube.com/digixart",
+        "type": 9
+      },
+      {
+        "id": 185644,
+        "url": "https://www.facebook.com/digixart",
+        "type": 4
+      },
+      {
+        "id": 197513,
+        "url": "https://www.gog.com/game/road_96",
+        "type": 17
+      },
+      {
+        "id": 784803,
+        "url": "https://www.nintendo.com/games/detail/road-96-switch/",
+        "type": 24
+      },
+      {
+        "id": 784804,
+        "url": "https://store.playstation.com/en-us/concept/10003593",
+        "type": 23
+      },
+      {
+        "id": 784805,
+        "url": "https://www.xbox.com/en-us/games/store/road-96/9NVBKDF85W8T",
+        "type": 22
+      },
+      {
+        "id": 163397,
+        "url": "https://store.steampowered.com/app/1466640/Road_96",
+        "type": 13
+      },
+      {
+        "id": 185645,
+        "url": "https://www.instagram.com/digixart",
+        "type": 8
+      },
+      {
+        "id": 222114,
+        "url": "https://www.epicgames.com/store/p/road-96",
+        "type": 16
+      },
+      {
+        "id": 293064,
+        "url": "https://discord.gg/invite/PckWFcTexV",
+        "type": 18
+      },
+      {
+        "id": 523632,
+        "url": "https://ravenscourt.games/en-US/games/road96",
+        "type": 1
+      },
+      {
+        "id": 505093,
+        "url": "https://www.twitch.tv/directory/game/Road%2096",
+        "type": 6
+      },
+      {
+        "id": 523633,
+        "url": "https://en.wikipedia.org/wiki/Road_96",
+        "type": 3
+      },
+      {
+        "id": 163399,
+        "url": "https://twitter.com/Digixart",
+        "type": 5
+      },
+      {
+        "id": 660894,
+        "url": "https://road96.fandom.com/wiki/Road_96_Wiki",
+        "type": 2
+      },
+      {
+        "id": 660893,
+        "url": "https://www.reddit.com/r/Road96/",
+        "type": 14
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 71297,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71299,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71298,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 71300,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 71301,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71289,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71290,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 71291,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71285,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71286,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 71287,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71282,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71283,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 71284,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 71288,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 71293,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71295,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71302,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 71292,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 71294,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 71296,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 71303,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 71304,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 156903,
+        "language": {
+          "id": 8
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 156905,
+        "language": {
+          "id": 8
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 156907,
+        "language": {
+          "id": 8
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 504309,
+        "language": {
+          "id": 20
+        },
+        "language_support_type": 3
+      }
+    ]
+  },
+  {
+    "id": 265111,
+    "cover": {
+      "id": 480815,
+      "image_id": "coaazz"
+    },
+    "first_release_date": 1718755200,
+    "genres": [
+      {
+        "id": 8,
+        "name": "Platform"
+      },
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 8,
+    "involved_companies": [
+      {
+        "id": 419152,
+        "company": {
+          "id": 57095,
+          "name": "Anegar Games"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 419154,
+        "company": {
+          "id": 19967,
+          "country": 826,
+          "name": "Lab42 Games"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 419153,
+        "company": {
+          "id": 36610,
+          "country": 826,
+          "name": "Secret Mode"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 122,
+        "name": "hell"
+      },
+      {
+        "id": 2280,
+        "name": "climbing"
+      },
+      {
+        "id": 2823,
+        "name": "link"
+      },
+      {
+        "id": 31253,
+        "name": "foddian"
+      }
+    ],
+    "name": "Chained Together",
+    "slug": "chained-together",
+    "summary": "From the depths of hell, climb chained to your friends through diverse worlds. Solo or co-op, try to reach the summit and discover what awaits you there...",
+    "themes": [
+      {
+        "id": 27,
+        "name": "Comedy"
+      },
+      {
+        "id": 43,
+        "name": "Mystery"
+      }
+    ],
+    "total_rating_count": 73,
+    "websites": [
+      {
+        "id": 646437,
+        "url": "https://www.twitch.tv/directory/category/chained-together",
+        "type": 6
+      },
+      {
+        "id": 646438,
+        "url": "https://twitter.com/AnegarG",
+        "type": 5
+      },
+      {
+        "id": 646439,
+        "url": "https://discord.gg/3mp7R8R7Jr",
+        "type": 18
+      },
+      {
+        "id": 579456,
+        "url": "https://store.steampowered.com/app/2567870",
+        "type": 13
+      },
+      {
+        "id": 1130231,
+        "url": "https://www.instagram.com/officialchainedtogether/",
+        "type": 8
+      },
+      {
+        "id": 1099785,
+        "url": "https://en.wikipedia.org/wiki/Chained_Together",
+        "type": 3
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 790375,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 790376,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 790374,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      }
+    ]
+  }
+]

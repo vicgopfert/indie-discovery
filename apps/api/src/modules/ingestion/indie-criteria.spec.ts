@@ -377,4 +377,44 @@ describe('regressão dos casos reais conferidos à mão', () => {
       ['Aurora: The Lost Medallion - The Cave', { accepted: true }],
     ]);
   });
+
+  it('a amostra de falsos negativos do B-59, agora aceita, menos Alter Ego', () => {
+    expectVerdicts('criteria-false-negatives.json', [
+      ['World of Goo', { accepted: true }],
+      ['Skullgirls', { accepted: true }],
+      ['PixelJunk: 4am', { accepted: true }],
+      ['Goetia', { accepted: true }],
+      ['Attractio', { accepted: true }],
+      ['Wakfu', { accepted: true }],
+      ['Sea of Solitude', { accepted: true }],
+      ['Tales of Kenzera: Zau', { accepted: true }],
+      ['Dinkum', { accepted: true }],
+      ['Alter Ego', controlled('Activision', 'Activision', '1986-04-27')],
+    ]);
+  });
+
+  it('os casos de data apertada, coautoria e crédito de porte', () => {
+    expectVerdicts('criteria-control-cases.json', [
+      ['Limbo', { accepted: true }],
+      ['Braid', { accepted: true }],
+      ["Garry's Mod", { accepted: true }],
+      ['Chroma Squad', { accepted: true }],
+      ['PowerWash Simulator', { accepted: true }],
+      ["Hellblade: Senua's Sacrifice", { accepted: true }],
+      ['Two Point Hospital', { accepted: true }],
+      ['Aces of the Luftwaffe: Squadron', { accepted: true }],
+      ['Maneater', { accepted: true }],
+      ['Teardown', { accepted: true }],
+      ['Road 96', controlled('DigixArt', 'Embracer Group', '2021-08-16')],
+      ['We Happy Few', controlled('Compulsion Games', 'Xbox Game Studios', '2018-08-10')],
+      ['Warhammer 40,000: Darktide', controlled('Fatshark', 'Tencent Holdings', '2022-11-30')],
+      [
+        'Hohokum',
+        controlled('SCE Santa Monica Studio', 'Sony Interactive Entertainment', '2014-08-12'),
+      ],
+      ['Growtopia', { accepted: true }],
+      ['Ilomilo', { accepted: true }],
+      ['Chained Together', { accepted: true }],
+    ]);
+  });
 });
