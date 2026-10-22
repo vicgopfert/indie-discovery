@@ -11,7 +11,9 @@ function loadFixture(file: string): IgdbGame[] {
   return raw.map((game) => igdbGameSchema.parse(game));
 }
 
-const allGames = readdirSync(FIXTURES_DIR).flatMap(loadFixture);
+const allGames = readdirSync(FIXTURES_DIR)
+  .filter((file) => file.startsWith('games.'))
+  .flatMap(loadFixture);
 
 function fixtureGame(name: string) {
   const game = allGames.find((g) => g.name === name);
