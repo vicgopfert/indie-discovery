@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { igdbGameSchema } from './igdb-game.schema';
 import { type MappedGame, mapIgdbGame } from './igdb.mapper';
 import {
+  type CriteriaVerdict,
   evaluateIndieCriteria,
   type IndieCriteria,
   indieCriteriaSchema,
@@ -240,5 +241,43 @@ describe('política das listas de exceção', () => {
         overrides: { ...raw.overrides, alwaysInclude: tooMany },
       }),
     ).toThrow('o problema é a regra');
+  });
+});
+
+// Casos reais conferidos à mão em 21/10/2026 (docs/criterio-indie-casos.md).
+describe('regressão dos casos reais conferidos à mão', () => {
+  const games = fixture('criteria-cases.json');
+
+  it.each<[string, CriteriaVerdict]>([
+    ['Hotline Miami', { accepted: true }],
+    ['Outer Wilds', { accepted: true }],
+    ['Prison Architect', { accepted: true }],
+    ['Stardew Valley', { accepted: true }],
+    ['Papers, Please', { accepted: true }],
+    ['Celeste', { accepted: true }],
+    ['Journey', { accepted: true }],
+    ['Two Point Campus', { accepted: false, reason: 'MAJOR_PUBLISHER' }],
+    ['Fall Guys', { accepted: false, reason: 'MAJOR_PUBLISHER' }],
+    ['HuniePop', { accepted: false, reason: 'EXCLUDED_THEME' }],
+    ['Katawa Shoujo', { accepted: false, reason: 'EXCLUDED_THEME' }],
+    ['Ori and the Blind Forest', { accepted: false, reason: 'NOT_INDIE' }],
+    ['Unravel', { accepted: false, reason: 'NOT_INDIE' }],
+    ['Squadron 42', { accepted: false, reason: 'MANUALLY_EXCLUDED' }],
+    ['Feed It', { accepted: true }],
+    ['Forest 3', { accepted: true }],
+    ['Mushroom 11', { accepted: true }],
+    ['Dark Anarchy', { accepted: true }],
+    ['Metal Drift', { accepted: true }],
+    ['Lunark', { accepted: true }],
+    ['Resistor', { accepted: true }],
+    ['Aurora: The Lost Medallion - The Cave', { accepted: true }],
+  ])('%s', (name, verdict) => {
+    const game = games.find((g) => g.name === name);
+
+    expect(game && evaluateIndieCriteria(game, criteria)).toEqual(verdict);
+  });
+
+  it('cobre todos os jogos da fixture', () => {
+    expect(games).toHaveLength(22);
   });
 });
