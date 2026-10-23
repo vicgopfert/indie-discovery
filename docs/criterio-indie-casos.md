@@ -339,6 +339,17 @@ DotEmu (https://www.gematsu.com/2021/08/focus-home-interactive-acquires-dotemu),
 (https://investor.hasbro.com/news-releases/news-release-details/hasbro-strengthens-mobile-gaming-expertise-purchase-majority)
 e Cygames (https://en.wikipedia.org/wiki/Cygames).
 
+**Questão em aberto: o ramo do orçamento AAA.** A recusa pelo canal não fecha o
+segundo ramo do teste. Como está escrito, com "ou", a CyberAgent passa no teste no dia
+em que o orçamento de um título da Cygames for publicado. **A CyberAgent é o caso que
+vai cobrar a resposta.** Restringir o ramo a conglomerados não resolve, porque o
+esvazia: conglomerado já entra sozinho, e o ramo não faria trabalho nenhum. Hoje ele
+tem zero entradas e nenhuma fonte. As duas saídas, a decidir fora do B-60:
+
+- o ramo sai, e o teste passa a ser canal de distribuição ou conglomerado AAA, o que já
+  descreve as 53 entradas;
+- o ramo ganha um limiar de orçamento e uma fonte por empresa.
+
 #### As outras 96
 
 Ficam fora sem argumento para entrar, por não terem plataforma nem estúdio AAA:
@@ -580,6 +591,11 @@ candidato: a IGDB o classifica como Racing e Simulator, sem Indie.
   ingestão (B-13) sinaliza para verificação o jogo cuja desenvolvedora tem empresa-mãe
   na IGDB fora da lista de grandes, ou na lista mas fora dos estúdios controlados, e o
   jogo de estúdio "sem efeito atual".
+- **O jogo sem data é avaliado pela data da ingestão.** Quando ele ganha data de
+  lançamento, a regra da data passa a ter o que comparar. Essa transição é frequente,
+  porque o catálogo inclui pré-lançamentos de propósito (quatro dos seis jogos das
+  entrevistas da BGS estavam sem lançamento). O alerta de jogo novo não a cobre; a
+  reavaliação nessa transição é critério do B-13.
 - **Jogos sem desenvolvedora creditada são aceitos.** São 1,54% das avaliações do
   catálogo e 23,15% dos jogos aceitos (achado 2 do B-60). Não há regra de reserva; a
   limitação foi escalada ao M0.
