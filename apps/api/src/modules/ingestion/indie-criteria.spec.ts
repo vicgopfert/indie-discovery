@@ -441,4 +441,35 @@ describe('regressão dos casos reais conferidos à mão', () => {
       ['Chained Together', { accepted: true }],
     ]);
   });
+
+  it('as lacunas da lista de grandes e os créditos conferidos no B-60', () => {
+    expectVerdicts('criteria-b60-cases.json', [
+      ['Oxenfree', { accepted: true }],
+      ['Oxenfree II: Lost Signals', controlled('Night School Studio', 'Netflix', '2023-07-12')],
+      [
+        'All in Abyss: Judge the Fake',
+        controlled('ACQUIRE Corp.', 'Kadokawa Corporation', '2025-04-10'),
+      ],
+      [
+        'Black Finger Jet',
+        {
+          accepted: false,
+          reason: 'CONTROLLED_DEVELOPER',
+          developer: 'ACQUIRE Corp.',
+          owner: 'Kadokawa Corporation',
+          referenceDate: '2026-10-22',
+          referenceDateSource: 'EVALUATION',
+        },
+      ],
+      ['A Storied Life: Tabitha', controlled('Lab42 Games', 'Tencent Holdings', '2026-04-14')],
+      ['Raging Loop', { accepted: true }],
+      ['Yume Nikki: Dream Diary', { accepted: true }],
+      ['Beat Saber', { accepted: true }],
+      ['Where the Heart Leads', { accepted: true }],
+      [
+        'Steel Sword Story',
+        controlled('Kadokawa Corporation', 'Kadokawa Corporation', '2019-06-21'),
+      ],
+    ]);
+  });
 });
