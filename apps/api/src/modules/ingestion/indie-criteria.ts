@@ -5,6 +5,13 @@ import { FeatureType, ReleaseStatus } from '../../generated/prisma/client';
 import type { MappedCompany, MappedGame } from './igdb.mapper';
 
 const igdbEntity = z.object({ igdbId: z.number().int(), name: z.string().min(1) });
+const majorCompany = igdbEntity.extend({
+  via: z.enum(['platform', 'aaa_budget', 'conglomerate']),
+  note: z.string().min(1).optional(),
+});
+
+const hasUniqueIds = (entries: { igdbId: number }[]) =>
+  new Set(entries.map((e) => e.igdbId)).size === entries.length;
 const publicSource = z.url({ protocol: /^https?$/ });
 
 const override = igdbEntity.extend({
@@ -28,14 +35,18 @@ export const indieCriteriaSchema = z
     indieGenre: igdbEntity,
     excludedThemes: z.array(igdbEntity),
     majorCompaniesRule: z.string().min(1),
-    majorCompanies: z.array(igdbEntity),
+    majorCompanies: z.array(majorCompany).refine(hasUniqueIds, {
+      message: 'Empresa repetida na lista de grandes.',
+    }),
     controlledStudiosPolicy: z.object({
       control: z.string().min(1),
       coDevelopment: z.string().min(1),
       evidence: z.string().min(1),
       controlValues: z.string().min(1),
     }),
-    controlledStudios: z.array(controlledStudio),
+    controlledStudios: z.array(controlledStudio).refine(hasUniqueIds, {
+      message: 'Estúdio repetido na lista de controlados.',
+    }),
     completeEntry: z.object({ minSummaryLength: z.number().int().nonnegative() }),
     interestSignals: z.object({ ratingsOnlyBefore: z.coerce.date() }),
     overridesPolicy: z.object({

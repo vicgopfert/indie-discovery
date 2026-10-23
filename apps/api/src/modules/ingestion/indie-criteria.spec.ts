@@ -276,6 +276,7 @@ describe('validação do arquivo de critério', () => {
   > & {
     overrides: { alwaysInclude: Record<string, unknown>[]; alwaysExclude: unknown[] };
     overridesPolicy: { maxEntries: number };
+    majorCompanies: Record<string, unknown>[];
     controlledStudios: Record<string, unknown>[];
   };
   const [firstOverride] = raw.overrides.alwaysInclude;
@@ -320,6 +321,29 @@ describe('validação do arquivo de critério', () => {
     expect(() => indieCriteriaSchema.parse({ ...raw, controlledStudios: [inverted] })).toThrow(
       'posterior à aquisição',
     );
+  });
+
+  it('exige o ramo do teste de entrada em cada grande empresa', () => {
+    const [firstMajor] = raw.majorCompanies;
+    const withoutVia = { ...firstMajor, via: undefined };
+
+    expect(() => indieCriteriaSchema.parse({ ...raw, majorCompanies: [withoutVia] })).toThrow(
+      'via',
+    );
+  });
+
+  it('recusa empresa ou estúdio repetido pelo id da IGDB', () => {
+    const [firstMajor] = raw.majorCompanies;
+
+    expect(() =>
+      indieCriteriaSchema.parse({ ...raw, majorCompanies: [...raw.majorCompanies, firstMajor] }),
+    ).toThrow('repetida');
+    expect(() =>
+      indieCriteriaSchema.parse({
+        ...raw,
+        controlledStudios: [...raw.controlledStudios, firstStudio],
+      }),
+    ).toThrow('repetido');
   });
 
   it('exige fonte pública em cada estúdio controlado', () => {
@@ -415,6 +439,37 @@ describe('regressão dos casos reais conferidos à mão', () => {
       ['Growtopia', { accepted: true }],
       ['Ilomilo', { accepted: true }],
       ['Chained Together', { accepted: true }],
+    ]);
+  });
+
+  it('as lacunas da lista de grandes e os créditos conferidos no B-60', () => {
+    expectVerdicts('criteria-b60-cases.json', [
+      ['Oxenfree', { accepted: true }],
+      ['Oxenfree II: Lost Signals', controlled('Night School Studio', 'Netflix', '2023-07-12')],
+      [
+        'All in Abyss: Judge the Fake',
+        controlled('ACQUIRE Corp.', 'Kadokawa Corporation', '2025-04-10'),
+      ],
+      [
+        'Black Finger Jet',
+        {
+          accepted: false,
+          reason: 'CONTROLLED_DEVELOPER',
+          developer: 'ACQUIRE Corp.',
+          owner: 'Kadokawa Corporation',
+          referenceDate: '2026-10-22',
+          referenceDateSource: 'EVALUATION',
+        },
+      ],
+      ['A Storied Life: Tabitha', controlled('Lab42 Games', 'Tencent Holdings', '2026-04-14')],
+      ['Raging Loop', { accepted: true }],
+      ['Yume Nikki: Dream Diary', { accepted: true }],
+      ['Beat Saber', { accepted: true }],
+      ['Where the Heart Leads', { accepted: true }],
+      [
+        'Steel Sword Story',
+        controlled('Kadokawa Corporation', 'Kadokawa Corporation', '2019-06-21'),
+      ],
     ]);
   });
 });

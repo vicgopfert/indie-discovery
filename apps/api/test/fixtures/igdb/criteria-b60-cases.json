@@ -1,0 +1,2397 @@
+[
+  {
+    "id": 14587,
+    "cover": {
+      "id": 116126,
+      "image_id": "co2hlq"
+    },
+    "first_release_date": 1452729600,
+    "genres": [
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 96578,
+        "company": {
+          "id": 7260,
+          "country": 840,
+          "name": "Night School Studio"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 16,
+        "name": "ghosts"
+      },
+      {
+        "id": 19,
+        "name": "world war ii - ww2"
+      },
+      {
+        "id": 962,
+        "name": "female protagonist"
+      },
+      {
+        "id": 1105,
+        "name": "supernatural"
+      },
+      {
+        "id": 1914,
+        "name": "choice and consequence"
+      },
+      {
+        "id": 4520,
+        "name": "ea app"
+      },
+      {
+        "id": 5025,
+        "name": "games with gold"
+      },
+      {
+        "id": 12556,
+        "name": "the game awards - nominee"
+      },
+      {
+        "id": 14051,
+        "name": "the game awards 2016"
+      },
+      {
+        "id": 33744,
+        "name": "netflix games"
+      },
+      {
+        "id": 39034,
+        "name": "the game awards - best narrative - nominee"
+      },
+      {
+        "id": 49395,
+        "name": "previously on - origin access"
+      }
+    ],
+    "name": "Oxenfree",
+    "slug": "oxenfree",
+    "summary": "Oxenfree is a single-player graphic adventure game played from a 2.5D perspective, with the player controlling a teenager named Alex. Its central mechanic is a \"walk and talk\" system, where dialogue appears as speech bubbles and the player chooses responses in real time while still moving and exploring, shaping relationships with the other characters. Puzzles are solved largely by tuning a handheld radio to specific frequencies or adjusting tape recorders. The game has no fail state, and the player's choices lead to one of several possible endings. It was followed by a sequel, Oxenfree II: Lost Signals.",
+    "themes": [
+      {
+        "id": 17,
+        "name": "Fantasy"
+      },
+      {
+        "id": 18,
+        "name": "Science fiction"
+      },
+      {
+        "id": 20,
+        "name": "Thriller"
+      },
+      {
+        "id": 31,
+        "name": "Drama"
+      }
+    ],
+    "total_rating_count": 439,
+    "websites": [
+      {
+        "id": 835441,
+        "url": "https://www.xbox.com/en-us/games/store/oxenfree/BSK1GN27RB8R",
+        "type": 22
+      },
+      {
+        "id": 835443,
+        "url": "https://www.nintendo.com/games/detail/oxenfree-switch/",
+        "type": 24
+      },
+      {
+        "id": 835442,
+        "url": "https://store.playstation.com/en-us/concept/217578",
+        "type": 23
+      },
+      {
+        "id": 58763,
+        "url": "http://oxenfree.wikia.com/wiki/Oxenfree",
+        "type": 2
+      },
+      {
+        "id": 72105,
+        "url": "https://itunes.apple.com/us/app/oxenfree/id1179177872?mt=8&uo=4",
+        "type": 10
+      },
+      {
+        "id": 79150,
+        "url": "https://www.youtube.com/channel/UCQHcsLEtdPdXG_B_UyiVPgg",
+        "type": 9
+      },
+      {
+        "id": 119393,
+        "url": "https://www.gog.com/game/oxenfree",
+        "type": 17
+      },
+      {
+        "id": 120218,
+        "url": "https://www.epicgames.com/store/en-US/product/oxenfree/home",
+        "type": 16
+      },
+      {
+        "id": 79149,
+        "url": "https://www.instagram.com/nightschoolstudio",
+        "type": 8
+      },
+      {
+        "id": 79148,
+        "url": "https://twitter.com/nightschoolers",
+        "type": 5
+      },
+      {
+        "id": 238017,
+        "url": "https://night-school-studio.itch.io/oxenfree",
+        "type": 15
+      },
+      {
+        "id": 332958,
+        "url": "https://www.twitch.tv/directory/game/Oxenfree",
+        "type": 6
+      },
+      {
+        "id": 49263,
+        "url": "https://store.steampowered.com/app/388880",
+        "type": 13
+      },
+      {
+        "id": 317729,
+        "url": "http://itunes.apple.com/us/app/id1179177872#?platform=ipad",
+        "type": 11
+      },
+      {
+        "id": 58764,
+        "url": "https://en.wikipedia.org/wiki/Oxenfree",
+        "type": 3
+      },
+      {
+        "id": 49262,
+        "url": "http://nightschoolstudio.com/oxenfree/",
+        "type": 1
+      },
+      {
+        "id": 79152,
+        "url": "https://www.reddit.com/r/OXENFREE",
+        "type": 14
+      },
+      {
+        "id": 79151,
+        "url": "https://play.google.com/store/apps/details?id=com.NightSchool.Oxenfree&hl=en",
+        "type": 12
+      },
+      {
+        "id": 79147,
+        "url": "https://www.facebook.com/nightschoolstudio",
+        "type": 4
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 65354,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 65355,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 65356,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 65358,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 65349,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 65350,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 65351,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 65352,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 65353,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 65348,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 65357,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 65359,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 65345,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 65346,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 65347,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      }
+    ]
+  },
+  {
+    "id": 26700,
+    "cover": {
+      "id": 85531,
+      "image_id": "co1tzv"
+    },
+    "first_release_date": 1449100800,
+    "genres": [
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      },
+      {
+        "id": 34,
+        "name": "Visual Novel"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 58351,
+        "company": {
+          "id": 6485,
+          "country": 392,
+          "name": "DWANGO"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 58350,
+        "company": {
+          "id": 1281,
+          "country": 392,
+          "name": "Kemco"
+        },
+        "developer": true,
+        "publisher": true
+      },
+      {
+        "id": 83050,
+        "company": {
+          "id": 4091,
+          "country": 826,
+          "name": "PQube"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 131,
+        "name": "psychological horror"
+      },
+      {
+        "id": 845,
+        "name": "werewolf"
+      },
+      {
+        "id": 1313,
+        "name": "multiple endings"
+      },
+      {
+        "id": 2027,
+        "name": "japanese mythology"
+      },
+      {
+        "id": 3137,
+        "name": "mafia"
+      },
+      {
+        "id": 17088,
+        "name": "branching paths"
+      },
+      {
+        "id": 49355,
+        "name": "available on - crunchyroll game vault"
+      }
+    ],
+    "name": "Raging Loop",
+    "slug": "raging-loop",
+    "summary": "Immerse yourself in a thrilling psychological horror visual novel taking place in the secluded Japanese village of Yasumizu. A heavy fog surrounds the village, preventing everyone from ever leaving. Ancient Gods have come back to hunt the villagers down one by one. The Feast has begun, can you escape the village alive?",
+    "themes": [
+      {
+        "id": 19,
+        "name": "Horror"
+      },
+      {
+        "id": 43,
+        "name": "Mystery"
+      }
+    ],
+    "total_rating_count": 23,
+    "websites": [
+      {
+        "id": 858709,
+        "url": "https://www.nintendo.com/games/detail/raging-loop-switch/",
+        "type": 24
+      },
+      {
+        "id": 858708,
+        "url": "https://store.playstation.com/en-us/concept/234266",
+        "type": 23
+      },
+      {
+        "id": 62208,
+        "url": "https://store.steampowered.com/app/648100",
+        "type": 13
+      },
+      {
+        "id": 113379,
+        "url": "https://pqube.co.uk/raging-loop/",
+        "type": 1
+      },
+      {
+        "id": 347801,
+        "url": "https://www.twitch.tv/directory/game/Rei-Jin-G-Lu-P",
+        "type": 6
+      },
+      {
+        "id": 1103651,
+        "url": "https://www.xbox.com/en-us/games/store/raging-loop/9NH1CRRDHZ4F",
+        "type": 22
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 244093,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 244094,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 244095,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 244096,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 244092,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      }
+    ]
+  },
+  {
+    "id": 81350,
+    "cover": {
+      "id": 101480,
+      "image_id": "co26aw"
+    },
+    "first_release_date": 1519257600,
+    "genres": [
+      {
+        "id": 9,
+        "name": "Puzzle"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 60549,
+        "company": {
+          "id": 836,
+          "country": 392,
+          "name": "Kadokawa Games"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 132372,
+        "company": {
+          "id": 6938,
+          "country": 392,
+          "name": "Active Gaming Media"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 209225,
+        "company": {
+          "id": 23125,
+          "country": 392,
+          "name": "PLAYISM"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "name": "Yume Nikki: Dream Diary",
+    "slug": "yume-nikki-dream-diary",
+    "summary": "Yume Nikki: Dream Diary is a collaborative show of the utmost respect for auteur Kikiyama’s seminal release.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 17,
+        "name": "Fantasy"
+      },
+      {
+        "id": 19,
+        "name": "Horror"
+      },
+      {
+        "id": 43,
+        "name": "Mystery"
+      }
+    ],
+    "total_rating_count": 8,
+    "websites": [
+      {
+        "id": 768185,
+        "url": "https://www.nintendo.com/games/detail/yumenikki-dream-diary-switch/",
+        "type": 24
+      },
+      {
+        "id": 813413,
+        "url": "https://www.facebook.com/PLAYISM/",
+        "type": 4
+      },
+      {
+        "id": 813414,
+        "url": "https://www.youtube.com/ActiveGamingMedia/",
+        "type": 9
+      },
+      {
+        "id": 69750,
+        "url": "https://store.steampowered.com/app/774811",
+        "type": 13
+      },
+      {
+        "id": 69967,
+        "url": "https://twitter.com/Y_DREAMDIARY",
+        "type": 5
+      },
+      {
+        "id": 69749,
+        "url": "http://yume-nikki.com",
+        "type": 1
+      },
+      {
+        "id": 681731,
+        "url": "https://www.twitch.tv/directory/category/yume-nikki-dream-diary",
+        "type": 6
+      },
+      {
+        "id": 681732,
+        "url": "https://yume.wiki/yume/YUMENIKKI_%E2%80%93DREAM_DIARY%E2%80%93",
+        "type": 2
+      },
+      {
+        "id": 681733,
+        "url": "https://en.wikipedia.org/wiki/Yume_Nikki:_Dream_Diary",
+        "type": 3
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 54845,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 54847,
+        "language": {
+          "id": 20
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 54827,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 54829,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 54833,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 54831,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 54835,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 54837,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 54839,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 54841,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 54843,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      }
+    ]
+  },
+  {
+    "id": 83731,
+    "cover": {
+      "id": 609500,
+      "image_id": "cod2ak"
+    },
+    "first_release_date": 1525132800,
+    "genres": [
+      {
+        "id": 7,
+        "name": "Music"
+      },
+      {
+        "id": 14,
+        "name": "Sport"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      },
+      {
+        "id": 33,
+        "name": "Arcade"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 401570,
+        "company": {
+          "id": 13383,
+          "country": 203,
+          "name": "Beat Games"
+        },
+        "developer": true,
+        "publisher": true
+      },
+      {
+        "id": 401571,
+        "company": {
+          "id": 14481,
+          "country": 203,
+          "name": "Hyperbolic Magnetism"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 101,
+        "name": "casual"
+      },
+      {
+        "id": 524,
+        "name": "fast paced"
+      },
+      {
+        "id": 546,
+        "name": "pvp"
+      },
+      {
+        "id": 705,
+        "name": "swordplay"
+      },
+      {
+        "id": 905,
+        "name": "difficult"
+      },
+      {
+        "id": 923,
+        "name": "futuristic"
+      },
+      {
+        "id": 1687,
+        "name": "music based"
+      },
+      {
+        "id": 1699,
+        "name": "dancing"
+      },
+      {
+        "id": 3403,
+        "name": "great soundtrack"
+      },
+      {
+        "id": 4137,
+        "name": "music and rhythm"
+      },
+      {
+        "id": 19205,
+        "name": "rhythm game"
+      },
+      {
+        "id": 23157,
+        "name": "virtual reality experience"
+      },
+      {
+        "id": 30952,
+        "name": "vr only"
+      },
+      {
+        "id": 34315,
+        "name": "real world fitness"
+      }
+    ],
+    "name": "Beat Saber",
+    "slug": "beat-saber",
+    "summary": "Beat Saber is an immersive rhythm experience you have never seen before! Enjoy tons of handcrafted levels and swing your way through the pulsing music beats, surrounded by a futuristic world. Use your sabers to slash the beats as they come flying at you – every beat indicates which saber you need to use and the direction you need to match. With Beat Saber you become a dancing superhero!",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 18,
+        "name": "Science fiction"
+      },
+      {
+        "id": 35,
+        "name": "Kids"
+      },
+      {
+        "id": 40,
+        "name": "Party"
+      }
+    ],
+    "total_rating_count": 195,
+    "websites": [
+      {
+        "id": 74759,
+        "url": "https://store.steampowered.com/app/620980",
+        "type": 13
+      },
+      {
+        "id": 113129,
+        "url": "https://www.instagram.com/beatsaber",
+        "type": 8
+      },
+      {
+        "id": 827950,
+        "url": "https://store.playstation.com/en-us/concept/232492",
+        "type": 23
+      },
+      {
+        "id": 98653,
+        "url": "https://www.youtube.com/beatsaber",
+        "type": 9
+      },
+      {
+        "id": 113125,
+        "url": "https://beatsaber.com/",
+        "type": 1
+      },
+      {
+        "id": 113130,
+        "url": "https://www.reddit.com/r/beatsaber",
+        "type": 14
+      },
+      {
+        "id": 113128,
+        "url": "https://twitter.com/BeatSaber",
+        "type": 5
+      },
+      {
+        "id": 113126,
+        "url": "https://en.wikipedia.org/wiki/Beat_Saber",
+        "type": 3
+      },
+      {
+        "id": 515745,
+        "url": "https://www.twitch.tv/directory/game/Beat%20Saber",
+        "type": 6
+      },
+      {
+        "id": 113127,
+        "url": "https://www.facebook.com/beatsaber",
+        "type": 4
+      },
+      {
+        "id": 1083634,
+        "url": "https://www.meta.com/en-us/experiences/beat-saber/2448060205267927/",
+        "type": 25
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 233663,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233664,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 233665,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233667,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 233669,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233671,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 233673,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233675,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 233679,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 233681,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233677,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 233683,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 939182,
+        "language": {
+          "id": 10
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 939183,
+        "language": {
+          "id": 10
+        },
+        "language_support_type": 1
+      }
+    ]
+  },
+  {
+    "id": 112949,
+    "cover": {
+      "id": 189339,
+      "image_id": "co423f"
+    },
+    "first_release_date": 1561075200,
+    "genres": [
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 178033,
+        "company": {
+          "id": 23125,
+          "country": 392,
+          "name": "PLAYISM"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 178034,
+        "company": {
+          "id": 16467,
+          "name": "8bits Fanatics"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 178035,
+        "company": {
+          "id": 7707,
+          "country": 392,
+          "name": "Kadokawa Corporation"
+        },
+        "developer": true,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 126,
+        "name": "retro"
+      },
+      {
+        "id": 1780,
+        "name": "pixel graphics"
+      }
+    ],
+    "name": "Steel Sword Story",
+    "slug": "steel-sword-story",
+    "summary": "This is a game created especially for all the old school, classic 2D action game fans out there. From 8bits Fanatics, the creator of the fatally difficult action title 1001 Spikes, comes a true 2D dark fantasy-action game full of swords and magic.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      }
+    ],
+    "total_rating_count": 1,
+    "websites": [
+      {
+        "id": 96347,
+        "url": "https://store.steampowered.com/app/978190",
+        "type": 13
+      },
+      {
+        "id": 932184,
+        "url": "https://x.com/PixelGameMaker",
+        "type": 5
+      },
+      {
+        "id": 932182,
+        "url": "https://www.facebook.com/PixelGameMaker/",
+        "type": 4
+      },
+      {
+        "id": 104948,
+        "url": "https://tkool.jp/act/",
+        "type": 1
+      },
+      {
+        "id": 368781,
+        "url": "https://www.twitch.tv/directory/game/Steel%20Sword%20Story",
+        "type": 6
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 274037,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 274038,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 274039,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 274042,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 274041,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 274040,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 2
+      }
+    ]
+  },
+  {
+    "id": 135615,
+    "cover": {
+      "id": 202577,
+      "image_id": "co4cb5"
+    },
+    "first_release_date": 1626134400,
+    "genres": [
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 229720,
+        "company": {
+          "id": 3226,
+          "country": 840,
+          "name": "Armature Studio"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 1914,
+        "name": "choice and consequence"
+      },
+      {
+        "id": 17378,
+        "name": "narrative adventure"
+      }
+    ],
+    "name": "Where the Heart Leads",
+    "slug": "where-the-heart-leads",
+    "summary": "On the kind of stormy night that can change a person's destiny, an enormous sinkhole opens in the middle of Whit Anderson's farm. Braving the rumbling thunder and the driving rain, Casey - their curious Golden Retriever - ventures too close to the gaping maw and tumbles in. Desperate to save her, Whit descends into the darkness, and emerges in a realm beyond his imagining.\n\nIn this strange world, constantly shifting like the stops and starts of a dream, Whit bears witness to the story of his life and gains the power to change it.",
+    "themes": [
+      {
+        "id": 31,
+        "name": "Drama"
+      }
+    ],
+    "total_rating_count": 5,
+    "websites": [
+      {
+        "id": 369394,
+        "url": "https://www.twitch.tv/directory/game/Where%20the%20Heart%20Is",
+        "type": 6
+      },
+      {
+        "id": 755976,
+        "url": "https://store.playstation.com/en-us/concept/231985",
+        "type": 23
+      },
+      {
+        "id": 164170,
+        "url": "http://armature.com/games/where-the-heart-Leads",
+        "type": 1
+      },
+      {
+        "id": 247341,
+        "url": "https://store.steampowered.com/app/1553140",
+        "type": 13
+      },
+      {
+        "id": 255257,
+        "url": "https://www.instagram.com/wheretheheartleadsgame/",
+        "type": 8
+      },
+      {
+        "id": 255259,
+        "url": "https://www.facebook.com/armaturestudio",
+        "type": 4
+      },
+      {
+        "id": 255258,
+        "url": "https://twitter.com/ArmatureStudio",
+        "type": 5
+      },
+      {
+        "id": 1006938,
+        "url": "https://www.youtube.com/channel/UCS715p6PBnnQw_wxYqduBpg/",
+        "type": 9
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 138372,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      }
+    ]
+  },
+  {
+    "id": 145784,
+    "cover": {
+      "id": 298828,
+      "image_id": "co6eks"
+    },
+    "first_release_date": 1689120000,
+    "genres": [
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 7,
+    "involved_companies": [
+      {
+        "id": 174715,
+        "company": {
+          "id": 7260,
+          "country": 840,
+          "name": "Night School Studio"
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 197941,
+        "company": {
+          "id": 27224,
+          "country": 840,
+          "name": "Netflix"
+        },
+        "developer": false,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 962,
+        "name": "female protagonist"
+      },
+      {
+        "id": 1313,
+        "name": "multiple endings"
+      },
+      {
+        "id": 17686,
+        "name": "netflix"
+      },
+      {
+        "id": 25527,
+        "name": "meaningful choices"
+      }
+    ],
+    "name": "Oxenfree II: Lost Signals",
+    "slug": "oxenfree-ii-lost-signals",
+    "summary": "Five years after the events of Oxenfree, Riley returns to her hometown of Camena to investigate mysterious radio signals. What she finds is more than she bargained for.",
+    "themes": [
+      {
+        "id": 17,
+        "name": "Fantasy"
+      },
+      {
+        "id": 18,
+        "name": "Science fiction"
+      },
+      {
+        "id": 19,
+        "name": "Horror"
+      },
+      {
+        "id": 31,
+        "name": "Drama"
+      }
+    ],
+    "total_rating_count": 37,
+    "websites": [
+      {
+        "id": 177563,
+        "url": "https://store.steampowered.com/app/1574310/OXENFREE_II_Lost_Signals",
+        "type": 13
+      },
+      {
+        "id": 564670,
+        "url": "http://itunes.apple.com/us/app/id1600733369#?platform=ipad",
+        "type": 11
+      },
+      {
+        "id": 771076,
+        "url": "https://www.nintendo.com/games/detail/oxenfree-ii-lost-signals-switch/",
+        "type": 24
+      },
+      {
+        "id": 771080,
+        "url": "https://store.playstation.com/en-us/concept/10004538",
+        "type": 23
+      },
+      {
+        "id": 288963,
+        "url": "https://twitter.com/nightschoolers",
+        "type": 5
+      },
+      {
+        "id": 185973,
+        "url": "https://nightschoolstudio.com/oxenfree-ii",
+        "type": 1
+      },
+      {
+        "id": 288962,
+        "url": "https://www.facebook.com/nightschoolstudio",
+        "type": 4
+      },
+      {
+        "id": 288961,
+        "url": "https://www.youtube.com/c/NightSchoolStudio",
+        "type": 9
+      },
+      {
+        "id": 454208,
+        "url": "https://www.twitch.tv/directory/game/Oxenfree%20II:%20Lost%20Signals",
+        "type": 6
+      },
+      {
+        "id": 564669,
+        "url": "http://itunes.apple.com/us/app/id1600733369#?platform=iphone",
+        "type": 10
+      },
+      {
+        "id": 288964,
+        "url": "https://instagram.com/nightschoolstudio",
+        "type": 8
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 119939,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 119934,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 119935,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 119937,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 119936,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 119938,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 119940,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 119924,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 119926,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 119928,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 119930,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 119932,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 119933,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 680045,
+        "language": {
+          "id": 11
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 680046,
+        "language": {
+          "id": 14
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 680047,
+        "language": {
+          "id": 14
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 680048,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 680049,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 680050,
+        "language": {
+          "id": 18
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 680051,
+        "language": {
+          "id": 18
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 680052,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 680053,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 680054,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 680055,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 680056,
+        "language": {
+          "id": 20
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 680057,
+        "language": {
+          "id": 20
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 680058,
+        "language": {
+          "id": 23
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 680059,
+        "language": {
+          "id": 23
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 680060,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 680061,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 680062,
+        "language": {
+          "id": 24
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 680063,
+        "language": {
+          "id": 24
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 680064,
+        "language": {
+          "id": 28
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 680065,
+        "language": {
+          "id": 28
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 680066,
+        "language": {
+          "id": 26
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 680067,
+        "language": {
+          "id": 26
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 680068,
+        "language": {
+          "id": 13
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 680069,
+        "language": {
+          "id": 13
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 724384,
+        "language": {
+          "id": 1
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 724385,
+        "language": {
+          "id": 4
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 724386,
+        "language": {
+          "id": 5
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 724387,
+        "language": {
+          "id": 6
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 724388,
+        "language": {
+          "id": 11
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 724389,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 724390,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 724391,
+        "language": {
+          "id": 10
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 724392,
+        "language": {
+          "id": 25
+        },
+        "language_support_type": 3
+      }
+    ]
+  },
+  {
+    "id": 250684,
+    "cover": {
+      "id": 305070,
+      "image_id": "co6je6"
+    },
+    "genres": [
+      {
+        "id": 5,
+        "name": "Shooter"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 3,
+    "involved_companies": [
+      {
+        "id": 288642,
+        "company": {
+          "id": 58547,
+          "country": 784,
+          "name": "Red Dunes Games"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 288640,
+        "company": {
+          "id": 1383,
+          "country": 392,
+          "name": "ACQUIRE Corp."
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 288641,
+        "company": {
+          "id": 58546,
+          "country": 392,
+          "name": "Kohachi Studio"
+        },
+        "developer": true,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 660,
+        "name": "run and gun"
+      },
+      {
+        "id": 1059,
+        "name": "side-scrolling"
+      }
+    ],
+    "name": "Black Finger Jet",
+    "slug": "black-finger-jet",
+    "summary": "\"Black Finger JET\" is a Run&Gun game. This is a completely new game from a team that has released many action shooting games.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      }
+    ],
+    "websites": [
+      {
+        "id": 920350,
+        "url": "http://kohachistudio.com/",
+        "type": 1
+      },
+      {
+        "id": 553456,
+        "url": "https://store.steampowered.com/app/2415500",
+        "type": 13
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 698363,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 698364,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 698365,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 698366,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 698367,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 698368,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 698369,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 698370,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 2
+      }
+    ]
+  },
+  {
+    "id": 302693,
+    "cover": {
+      "id": 385021,
+      "image_id": "co8931"
+    },
+    "first_release_date": 1744243200,
+    "genres": [
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      },
+      {
+        "id": 34,
+        "name": "Visual Novel"
+      },
+      {
+        "id": 35,
+        "name": "Card & Board Game"
+      }
+    ],
+    "hypes": 5,
+    "involved_companies": [
+      {
+        "id": 267787,
+        "company": {
+          "id": 1383,
+          "country": 392,
+          "name": "ACQUIRE Corp."
+        },
+        "developer": true,
+        "publisher": false
+      },
+      {
+        "id": 267785,
+        "company": {
+          "id": 48816,
+          "country": 392,
+          "name": "Alliance Arts"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 267786,
+        "company": {
+          "id": 34665,
+          "country": 392,
+          "name": "WSS playground"
+        },
+        "developer": false,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 154,
+        "name": "poker"
+      }
+    ],
+    "name": "All in Abyss: Judge the Fake",
+    "slug": "all-in-abyss-judge-the-fake",
+    "summary": "Asuha, a self-proclaimed gambling prodigy, challenges the Witch ruling the gambling district. Poised to win, she is defeated by a mysterious power. An adventure of gambling, exposing frauds and earning fortunes through poker.",
+    "themes": [
+      {
+        "id": 1,
+        "name": "Action"
+      },
+      {
+        "id": 43,
+        "name": "Mystery"
+      }
+    ],
+    "websites": [
+      {
+        "id": 780517,
+        "url": "https://www.nintendo.com/us/store/products/all-in-abyss-judge-the-fake-switch/",
+        "type": 24
+      },
+      {
+        "id": 780512,
+        "url": "https://store.playstation.com/en-us/concept/10013683",
+        "type": 23
+      },
+      {
+        "id": 639749,
+        "url": "https://store.steampowered.com/app/2514640/All_in_Abyss_Judge_the_Fake/",
+        "type": 13
+      },
+      {
+        "id": 727077,
+        "url": "https://www.youtube.com/@AllianceArtsOfficial",
+        "type": 9
+      },
+      {
+        "id": 727076,
+        "url": "https://www.twitch.tv/directory/category/all-in-abyss-judge-the-fake",
+        "type": 6
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 1002266,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1002267,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1002268,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1002269,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1002270,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1002271,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1002272,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1002273,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1002274,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1002275,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1216633,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 1
+      }
+    ]
+  },
+  {
+    "id": 362283,
+    "cover": {
+      "id": 481428,
+      "image_id": "coabh0"
+    },
+    "first_release_date": 1776124800,
+    "genres": [
+      {
+        "id": 2,
+        "name": "Point-and-click"
+      },
+      {
+        "id": 9,
+        "name": "Puzzle"
+      },
+      {
+        "id": 13,
+        "name": "Simulator"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      }
+    ],
+    "hypes": 2,
+    "involved_companies": [
+      {
+        "id": 338392,
+        "company": {
+          "id": 36610,
+          "country": 826,
+          "name": "Secret Mode"
+        },
+        "developer": false,
+        "publisher": true
+      },
+      {
+        "id": 346367,
+        "company": {
+          "id": 19967,
+          "country": 826,
+          "name": "Lab42 Games"
+        },
+        "developer": true,
+        "publisher": false
+      }
+    ],
+    "keywords": [
+      {
+        "id": 101,
+        "name": "casual"
+      },
+      {
+        "id": 218,
+        "name": "interactive fiction"
+      },
+      {
+        "id": 225,
+        "name": "investigation"
+      },
+      {
+        "id": 570,
+        "name": "cats"
+      },
+      {
+        "id": 962,
+        "name": "female protagonist"
+      },
+      {
+        "id": 1313,
+        "name": "multiple endings"
+      },
+      {
+        "id": 1387,
+        "name": "cute"
+      },
+      {
+        "id": 1575,
+        "name": "england"
+      },
+      {
+        "id": 1669,
+        "name": "crime"
+      },
+      {
+        "id": 2084,
+        "name": "relaxing"
+      },
+      {
+        "id": 2202,
+        "name": "emotional"
+      },
+      {
+        "id": 2426,
+        "name": "story rich"
+      },
+      {
+        "id": 2489,
+        "name": "inventory management"
+      },
+      {
+        "id": 2814,
+        "name": "hand-drawn"
+      },
+      {
+        "id": 3534,
+        "name": "choices matter"
+      },
+      {
+        "id": 7369,
+        "name": "secret achievements"
+      },
+      {
+        "id": 9329,
+        "name": "secret past"
+      },
+      {
+        "id": 24685,
+        "name": "cozy"
+      },
+      {
+        "id": 43393,
+        "name": "united kingdom"
+      },
+      {
+        "id": 43861,
+        "name": "isometric"
+      },
+      {
+        "id": 45931,
+        "name": "hidden secrets"
+      },
+      {
+        "id": 50690,
+        "name": "witch"
+      },
+      {
+        "id": 50828,
+        "name": "secrets"
+      },
+      {
+        "id": 54725,
+        "name": "organizing"
+      }
+    ],
+    "name": "A Storied Life: Tabitha",
+    "slug": "a-storied-life-tabitha",
+    "summary": "A wholesome narrative puzzle game about the objects we leave behind and the stories they tell. Complete a loved one's damaged memoirs by exploring their home and packing away their things.",
+    "websites": [
+      {
+        "id": 855365,
+        "url": "https://www.twitch.tv/directory/category/a-storied-life-tabitha",
+        "type": 6
+      },
+      {
+        "id": 855357,
+        "url": "https://store.steampowered.com/app/3749330",
+        "type": 13
+      },
+      {
+        "id": 855362,
+        "url": "https://www.facebook.com/WeAreSecretMode",
+        "type": 4
+      },
+      {
+        "id": 855361,
+        "url": "https://instagram.com/WeAreSecretMode",
+        "type": 8
+      },
+      {
+        "id": 855358,
+        "url": "https://discord.com/invite/TYXxVxbvCC",
+        "type": 18
+      },
+      {
+        "id": 855359,
+        "url": "https://www.youtube.com/c/SecretMode",
+        "type": 9
+      },
+      {
+        "id": 855360,
+        "url": "https://x.com/WeAreSecretMode",
+        "type": 5
+      },
+      {
+        "id": 855363,
+        "url": "https://bsky.app/profile/wearesecretmode.com",
+        "type": 19
+      },
+      {
+        "id": 1093541,
+        "url": "https://en.wikipedia.org/wiki/A_Storied_Life:_Tabitha",
+        "type": 3
+      },
+      {
+        "id": 1038097,
+        "url": "https://www.nintendo.com/us/store/products/a-storied-life-tabitha-switch/",
+        "type": 24
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 1350905,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1350906,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1350907,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1350908,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1350909,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1350910,
+        "language": {
+          "id": 16
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1350899,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1350900,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1350901,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1350902,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1350903,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1350904,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1350911,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1350912,
+        "language": {
+          "id": 17
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1350913,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1350914,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1350915,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1350916,
+        "language": {
+          "id": 22
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1350917,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1350918,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1350919,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1350920,
+        "language": {
+          "id": 3
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1350921,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1350922,
+        "language": {
+          "id": 19
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1350923,
+        "language": {
+          "id": 24
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1350924,
+        "language": {
+          "id": 24
+        },
+        "language_support_type": 2
+      }
+    ]
+  }
+]

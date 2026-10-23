@@ -255,6 +255,14 @@ Populares e Descobertas tratarem lançamentos aguardados como conhecidos.
   excluídos só por ela estavam *Limbo*, *Braid* e *Chroma Squad*). A regra passou a
   excluir pelo **controle do estúdio na data de lançamento**, com 56 estúdios
   verificados em fonte pública; publicar um jogo não exclui mais.
+- **Medido no B-60 (23/10/2026):** as amostras da regra de controle deram 10 exclusões
+  corretas em 10, e 6 aceitos corretos em 10, com os outros 4 sem desenvolvedora
+  creditada. A lista de grandes passou a sair de um teste de entrada escrito (controle de
+  um canal pelo qual jogos chegam ao jogador, ou de estúdio com orçamento AAA
+  documentado), aplicado
+  às 134 empresas no topo das cadeias de empresa-mãe; entraram Netflix, Kadokawa, Meta,
+  NCSOFT e Amazon, e 106 foram avaliadas e recusadas. A falta de desenvolvedora
+  creditada foi escalada (seção 8.10).
 
 ### 8.6 Qualidade dos dados para a recomendação (B-12) e a ficha (F-07)
 
@@ -333,12 +341,33 @@ Medido no B-12 sobre o catálogo aceito (19.998 jogos), depois do descarte do TF
   não distingue nada e o desempate vira o ranqueador.
 - Jogos das entrevistas da BGS: *Bloodfang* (E3) não está na IGDB; *POPAPOM* (E5) está,
   mas fica fora do catálogo por não ter sinal de interesse; *Aviãozinho do Tráfico 3*
-  (E6) provavelmente está, com o nome em inglês, a confirmar; *AFANTASIA* (E1) e
+  (E6) está, com o nome em inglês; *AFANTASIA* (E1, "[Afantasia]" na IGDB) e
   *Tape Us Out* (E2) entram com vetor de 4 e 3 etiquetas.
 
 Decisão do M0 a tomar: ampliar os campos usados na recomendação (por exemplo, resumo,
 modos de jogo ou perspectiva) ou aceitar recomendação degradada nessa fatia e registrá-la
 como limitação. O escopo do B-12 não foi ampliado.
+
+### 8.10 Cobertura de desenvolvedora para o critério indie — aberto em 23/10/2026, registrada como limitação
+
+Medido no B-60 sobre o catálogo aceito (20.014 jogos; detalhes em
+`docs/criterio-indie-casos.md`). Jogo sem desenvolvedora creditada nunca é excluído
+pela regra de controle, porque não há o que avaliar.
+
+- **Ponderada pela visibilidade: 1,54%** das avaliações do catálogo são de jogos sem
+  desenvolvedora.
+- **Bruta: 23,15%** dos jogos aceitos (4.634).
+- A fração cai com a visibilidade: 16,49% dos lançados, 11,83% dos que têm alguma
+  avaliação, 3,10% dos que têm 5 ou mais (141 jogos) e 0,92% dos que têm 20 ou mais
+  (14 jogos). Os 14 foram lidos um a um, e nenhum é de estúdio controlado; os 141 foram
+  revisados pelo nome e pela publisher, e nenhum tem publisher da lista de grandes.
+- **Assimetria:** o crédito ausente faz a regra falhar abrindo (aceitar), um erro que
+  aparece no catálogo. O crédito presente mas errado falha nos dois sentidos, e a
+  exclusão errada parece resultado correto: só a verificação manual a encontra.
+
+Decisão: limitação registrada, **sem regra de reserva** (excluir pela publisher quando
+falta a desenvolvedora traria de volta a regra derrubada no B-59). Fica para o M0
+confirmar se a limitação é aceita como está.
 
 ## Fixtures
 

@@ -10,163 +10,286 @@
       "name": "Erotic"
     }
   ],
-  "majorCompaniesRule": "Donas de plataforma e grandes conglomerados de jogos AAA. Publicar um jogo não exclui: excluem só o desenvolvimento pela própria empresa ou por estúdio que ela controla.",
+  "majorCompaniesRule": "Teste de entrada: entra a empresa que controla um canal pelo qual jogos chegam ao jogador (hardware, loja, sistema operacional, plataforma de realidade virtual ou serviço de assinatura de jogos) ou que controla, integral ou majoritariamente, estúdio cujos títulos têm orçamento AAA publicamente documentado. O campo via diz por qual ramo cada empresa entra: platform (canal de distribuição), aaa_budget (orçamento AAA com fonte) ou conglomerate (conglomerado AAA notório, ainda sem fonte de orçamento). Porte, número de funcionários, volume de publicação e compra de estúdios pequenos não contam, nem a autonomia declarada dos estúdios. A lista é o resultado desse teste aplicado às empresas no topo das cadeias de empresa-mãe das desenvolvedoras do catálogo (varredura do B-60), mais as variantes de nome que a IGDB registra para a mesma empresa; as avaliadas e recusadas estão em docs/criterio-indie-casos.md. Publicar um jogo não exclui: excluem só o desenvolvimento pela própria empresa ou por estúdio que ela controla.",
   "majorCompanies": [
     {
       "igdbId": 1,
-      "name": "Electronic Arts"
+      "name": "Electronic Arts",
+      "via": "conglomerate"
     },
     {
       "igdbId": 19200,
-      "name": "EA Games"
+      "name": "EA Games",
+      "via": "conglomerate"
     },
     {
       "igdbId": 104,
-      "name": "Ubisoft Entertainment"
+      "name": "Ubisoft Entertainment",
+      "via": "conglomerate"
     },
     {
       "igdbId": 66,
-      "name": "Activision"
+      "name": "Activision",
+      "via": "conglomerate"
     },
     {
       "igdbId": 179,
-      "name": "Activision Blizzard"
+      "name": "Activision Blizzard",
+      "via": "conglomerate"
     },
     {
       "igdbId": 51,
-      "name": "Blizzard Entertainment"
+      "name": "Blizzard Entertainment",
+      "via": "conglomerate"
     },
     {
       "igdbId": 139,
-      "name": "Take-Two Interactive"
+      "name": "Take-Two Interactive",
+      "via": "conglomerate"
     },
     {
       "igdbId": 29,
-      "name": "Rockstar Games"
+      "name": "Rockstar Games",
+      "via": "conglomerate"
     },
     {
       "igdbId": 8,
-      "name": "2K Games"
+      "name": "2K Games",
+      "via": "conglomerate"
     },
     {
       "igdbId": 20228,
-      "name": "2K"
+      "name": "2K",
+      "via": "conglomerate"
     },
     {
       "igdbId": 26,
-      "name": "Square Enix"
+      "name": "Square Enix",
+      "via": "conglomerate"
     },
     {
       "igdbId": 37,
-      "name": "Capcom"
+      "name": "Capcom",
+      "via": "conglomerate"
     },
     {
       "igdbId": 129,
-      "name": "Konami"
+      "name": "Konami",
+      "via": "conglomerate"
     },
     {
       "igdbId": 248,
-      "name": "Bandai Namco Entertainment"
+      "name": "Bandai Namco Entertainment",
+      "via": "conglomerate"
     },
     {
       "igdbId": 3958,
-      "name": "Bandai Namco Games"
+      "name": "Bandai Namco Games",
+      "via": "conglomerate"
     },
     {
       "igdbId": 112,
-      "name": "Sega"
+      "name": "Sega",
+      "via": "conglomerate"
     },
     {
       "igdbId": 70,
-      "name": "Nintendo"
+      "name": "Nintendo",
+      "via": "platform"
     },
     {
       "igdbId": 10100,
-      "name": "Sony Interactive Entertainment"
+      "name": "Sony Interactive Entertainment",
+      "via": "platform"
     },
     {
       "igdbId": 13634,
-      "name": "Sony Computer Entertainment"
+      "name": "Sony Computer Entertainment",
+      "via": "platform"
     },
     {
       "igdbId": 53,
-      "name": "Microsoft Game Studios"
+      "name": "Microsoft Game Studios",
+      "via": "platform"
     },
     {
       "igdbId": 17966,
-      "name": "Xbox Game Studios"
+      "name": "Xbox Game Studios",
+      "via": "platform"
     },
     {
       "igdbId": 16565,
-      "name": "Bethesda Softworks"
+      "name": "Bethesda Softworks",
+      "via": "conglomerate"
     },
     {
       "igdbId": 245,
-      "name": "ZeniMax Media"
+      "name": "ZeniMax Media",
+      "via": "conglomerate"
     },
     {
       "igdbId": 14055,
-      "name": "Warner Bros. Interactive Entertainment"
+      "name": "Warner Bros. Interactive Entertainment",
+      "via": "conglomerate"
     },
     {
       "igdbId": 21315,
-      "name": "Tencent"
+      "name": "Tencent",
+      "via": "platform"
     },
     {
       "igdbId": 32410,
-      "name": "NetEase"
+      "name": "NetEase",
+      "via": "conglomerate"
     },
     {
       "igdbId": 42782,
-      "name": "Embracer Group"
+      "name": "Embracer Group",
+      "via": "conglomerate"
     },
     {
       "igdbId": 41542,
-      "name": "Krafton"
+      "name": "Krafton",
+      "via": "conglomerate"
     },
     {
       "igdbId": 17463,
-      "name": "Epic Games"
+      "name": "Epic Games",
+      "via": "platform"
     },
     {
       "igdbId": 56,
-      "name": "Valve"
+      "name": "Valve",
+      "via": "platform"
     },
     {
       "igdbId": 41,
-      "name": "Riot Games"
+      "name": "Riot Games",
+      "via": "conglomerate"
     },
     {
       "igdbId": 15932,
-      "name": "miHoYo"
+      "name": "miHoYo",
+      "via": "conglomerate"
     },
     {
       "igdbId": 42,
-      "name": "Tencent Holdings"
+      "name": "Tencent Holdings",
+      "via": "platform"
     },
     {
       "igdbId": 3595,
-      "name": "Tencent Games"
+      "name": "Tencent Games",
+      "via": "platform"
     },
     {
       "igdbId": 128,
-      "name": "Microsoft"
+      "name": "Microsoft",
+      "via": "platform"
     },
     {
       "igdbId": 1010,
-      "name": "Microsoft Studios"
+      "name": "Microsoft Studios",
+      "via": "platform"
     },
     {
       "igdbId": 10282,
-      "name": "Sony"
+      "name": "Sony",
+      "via": "platform"
     },
     {
       "igdbId": 2289,
-      "name": "Sony Interactive Entertainment Worldwide Studios"
+      "name": "Sony Interactive Entertainment Worldwide Studios",
+      "via": "platform"
     },
     {
       "igdbId": 6330,
-      "name": "Namco Bandai Games"
+      "name": "Namco Bandai Games",
+      "via": "conglomerate"
+    },
+    {
+      "igdbId": 39621,
+      "name": "Meta",
+      "via": "platform",
+      "note": "Dona de plataforma (Quest)."
+    },
+    {
+      "igdbId": 11586,
+      "name": "Oculus Studios",
+      "via": "platform",
+      "note": "Variante da Meta na IGDB."
+    },
+    {
+      "igdbId": 27224,
+      "name": "Netflix",
+      "via": "platform",
+      "note": "Controla canal de distribuição de jogos (serviço de assinatura no Netflix) e estúdios (Night School)."
+    },
+    {
+      "igdbId": 2812,
+      "name": "Amazon Digital Services, Inc",
+      "via": "platform",
+      "note": "Controla canal de distribuição de jogos (Amazon Appstore, Luna, Prime Gaming) e a Amazon Games."
+    },
+    {
+      "igdbId": 7707,
+      "name": "Kadokawa Corporation",
+      "via": "conglomerate",
+      "note": "Entra por controlar a FromSoftware. A Sony tem cerca de 10% da Kadokawa desde janeiro de 2025; é participação minoritária e não muda nada pela regra."
+    },
+    {
+      "igdbId": 8548,
+      "name": "KADOKAWA DWANGO CORPORATION",
+      "via": "conglomerate",
+      "note": "Variante da Kadokawa na IGDB (holding de 2014 a 2019)."
+    },
+    {
+      "igdbId": 256,
+      "name": "NCSOFT",
+      "via": "conglomerate",
+      "note": "Controla estúdios AAA (NCSOFT, ArenaNet)."
+    },
+    {
+      "igdbId": 13016,
+      "name": "The Walt Disney Company",
+      "via": "conglomerate",
+      "note": "Conglomerado; controlou estúdios AAA (LucasArts, Disney Interactive)."
+    },
+    {
+      "igdbId": 4291,
+      "name": "CD Projekt",
+      "via": "platform",
+      "note": "Dona de loja (GOG) e de estúdio AAA (CD Projekt Red)."
+    },
+    {
+      "igdbId": 2746,
+      "name": "Pearl Abyss",
+      "via": "conglomerate",
+      "note": "Controla estúdio AAA (Pearl Abyss, CCP)."
+    },
+    {
+      "igdbId": 10402,
+      "name": "Nordisk Film",
+      "via": "conglomerate",
+      "note": "Controla estúdio AAA (Avalanche Studios Group)."
+    },
+    {
+      "igdbId": 5024,
+      "name": "Bandai Namco Holdings",
+      "via": "conglomerate",
+      "note": "Variante da Bandai Namco na IGDB."
+    },
+    {
+      "igdbId": 2211,
+      "name": "Sega Sammy Holdings",
+      "via": "conglomerate",
+      "note": "Variante da Sega na IGDB."
+    },
+    {
+      "igdbId": 34855,
+      "name": "Warner",
+      "via": "conglomerate",
+      "note": "Variante da Warner Bros. na IGDB."
     }
   ],
   "controlledStudiosPolicy": {
@@ -194,6 +317,15 @@
       "acquiredAt": "2022-02-14",
       "source": "https://5minlab.com/en/2022/02/14/220214_us/",
       "note": "Krafton comprou 100% das ações"
+    },
+    {
+      "igdbId": 1383,
+      "name": "ACQUIRE Corp.",
+      "ownerIgdbId": 7707,
+      "control": "wholly_owned",
+      "acquiredAt": "2024-02-08",
+      "source": "https://gematsu.com/2024/02/kadokawa-corporation-acquires-acquire",
+      "note": "Comprada da GungHo; subsidiária integral divulgada no balanço do trimestre encerrado em 31/12/2023"
     },
     {
       "igdbId": 5145,
@@ -506,6 +638,15 @@
       "acquiredAt": "2017-01-01",
       "source": "https://www.mcvuk.com/tencent-signs-publishing-agreement-with-team17-for-crown-trick/",
       "note": "Estúdio interno da Tencent; data de criação aproximada"
+    },
+    {
+      "igdbId": 7260,
+      "name": "Night School Studio",
+      "ownerIgdbId": 27224,
+      "control": "acquired",
+      "acquiredAt": "2021-09-28",
+      "source": "https://techcrunch.com/2021/09/28/netflix-acquires-its-first-games-studio-oxenfree-developer-night-school/",
+      "note": "Primeiro estúdio comprado pela Netflix; Oxenfree II (2023) saiu pela MWM Interactive, mas foi desenvolvido sob controle da Netflix"
     },
     {
       "igdbId": 795,
