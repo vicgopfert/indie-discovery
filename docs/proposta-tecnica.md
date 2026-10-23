@@ -879,13 +879,15 @@ pop_j = log(1 + p_j) / log(1 + p_max)          popularidade normalizada entre 0 
 
 `p_j` é o número de pessoas que marcaram o jogo como "quero jogar" na IGDB (primitivo "Want to Play" do PopScore), o mesmo indicador para jogos lançados e não lançados; zero quando não houver valor. **Decidido no M0** (relatório do M0, `docs/m0-relatorio-igdb.md`, seção 8): substitui a proposta original (contagem de avaliações e, para não lançados, `hypes`), porque existe para 91% dos jogos lançados e 43% dos não lançados, enquanto as avaliações existem em 47% do catálogo (praticamente só lançados) e os `hypes` em 27% dos não lançados. A escala logarítmica evita que poucos sucessos dominem a normalização.
 
-**4. Seleção.** Candidatos são todos os jogos indie que o usuário não avaliou e que não estão em nenhuma de suas listas. Ordenação por pontuação; empate resolvido por popularidade e depois por identificador, para que o mesmo estado produza sempre a mesma lista. Filtros opcionais da requisição (por exemplo, só "em breve") são aplicados antes do corte.
+**4. Seleção.** Candidatos são todos os jogos indie que o usuário não avaliou e que não estão em nenhuma de suas listas. Ordenação por pontuação; empate resolvido pelo identificador, para que o mesmo estado produza sempre a mesma lista. A popularidade não entra no desempate (decisão do B-12): ela já está no termo λ do modo e, no desempate, contaria duas vezes, uma delas invisível. Os empates são frequentes (ver `docs/vetorizacao-tfidf.md`) e o tratamento deles é do B-32. Filtros opcionais da requisição (por exemplo, só "em breve") são aplicados antes do corte.
 
 **5. Explicação.** A contribuição de cada atributo k para a similaridade é `u_k · v_jk / (‖u‖ · ‖v_j‖)`. Os 1 a 3 atributos com maior contribuição positiva viram o texto "Recomendado por: Roguelike, Pixel art". No modo Descobertas, quando o termo de popularidade foi decisivo, o cartão acrescenta "pouco conhecido".
 
 **6. Execução.** O `ContentIndex` carrega os vetores de todos os jogos indie na memória da API ao iniciar (B-31). Cada recomendação é uma varredura sobre vetores esparsos de cerca de 20 mil jogos, sem consulta pesada ao banco. O tempo de resposta e a memória ocupada são medidos com o catálogo real no M2 (RNF-03).
 
 Todos os pesos (bônus de lista, β, peso por tipo de atributo, limites de descarte e λ por modo) ficam em um arquivo de configuração versionado e são ajustados no B-37 com o protocolo abaixo, não por intuição.
+
+**Vetorização (B-12, 22–23/10/2026).** Configuração em `apps/api/config/recommendation.json` e medições em `docs/vetorizacao-tfidf.md`. Atributo mantido se aparece em pelo menos 3 jogos e em no máximo 80% deles, e 245 palavras-chave de metadados (loja, plataforma, eventos, prêmios, financiamento, opções técnicas) ficam de fora. A normalização padrão é **por bloco**: gênero, tema e palavra-chave normalizados separadamente, com fatias de 40/30/30, e a fatia de um bloco ausente redistribuída entre os presentes. Foi adotada pelo argumento estrutural (com a normalização global, palavras-chave raras, com IDF até 14 vezes o de um gênero comum, dominam o vetor e o motivo exibido) e porque a plataforma é de descoberta; a medição preliminar com 14 pares não a confirmou no ranqueamento, e o modo global segue configurável para o B-37. A cobertura de etiquetas (21,1% do catálogo com vetor idêntico ao de 10 ou mais jogos) foi escalada como decisão do M0.
 
 ### Casos-limite e contingências
 
@@ -959,7 +961,8 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | B-11 | Critério indie configurável em JSON (F-03), incluindo o recorte do catálogo aprovado no M0 e a exclusão do tema Erotic (relatório do M0, `docs/m0-relatorio-igdb.md`, seção 8) | P0 | B-10 | Conjunto de casos reais documentado com acertos e erros; jogo com publisher pequena não é excluído | M |
 | B-12 | Cálculo de IDF e vetores TF-IDF normalizados (F-04) | P0 | B-08, B-10 | Testes com catálogo sintético verificam pesos, norma 1 e descarte por limites | M |
 | B-13 | `RunIngestionUseCase` em aplicação standalone: busca, mapeia, filtra, grava em lote, busca a popularidade "Want to Play" do PopScore, calcula vetores, registra `IngestionRun` (F-02) | P0 | B-09, B-11, B-12 | Duas execuções seguidas não duplicam registros; falha parcial fica registrada com resumo de erros; jogo novo de estúdio da tabela "sem efeito atual" de `docs/criterio-indie-casos.md` é sinalizado para verificação | G |
-| B-14 | Carga inicial do catálogo real no banco de produção | P0 | B-13, B-38 | Catálogo carregado; tamanho do banco e contagens registrados | P |
+| B-14 | Carga inicial do catálogo real no banco de produção | P0 | B-13, B-38, B-60 | Catálogo carregado; tamanho do banco e contagens registrados | P |
+| B-60 | Medição da regra de controle do critério indie: duas amostras de cerca de 10 jogos, uma dos excluídos pela regra e outra dos aceitos, classificadas à mão | P0 | B-59 | Amostras classificadas e registradas em `docs/criterio-indie-casos.md`, com a taxa de erro em cada sentido; a amostra dos aceitos mede o erro mais provável da regra nova (aceitar jogo de estúdio controlado fora da lista) | P |
 | B-59 | Medição dos falsos negativos do critério indie: sortear de 8 a 10 jogos excluídos pela regra e classificá-los à mão | P0 | B-11 | Amostra classificada e registrada em `docs/criterio-indie-casos.md`, com a taxa de indies legítimos excluídos; se a taxa for alta, a regra de publisher é revista antes do B-14. **Concluído em 22/10/2026:** taxa de 8 em 10; regra trocada pela de controle do estúdio na data de lançamento, com 56 estúdios verificados em fonte. Estimado como P, concluído como M: a revisão exigiu verificar a aquisição de cerca de 60 estúdios | M |
 | B-56 | Enriquecimento do país do estúdio pelo Wikidata na ingestão (F-06) | P0 | B-13 | Jogos sem país na IGDB recebem o do Wikidata quando existir, cruzando pelo identificador da IGDB; origem do dado gravada; cobertura final medida e registrada | P |
 
@@ -1050,11 +1053,11 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 
 | Conjunto | Itens P / M / G | Estimativa (mínimo · ponto médio · máximo) |
 | --- | --- | --- |
-| P0 de desenvolvimento (E0 a E7) | 21 / 25 / 2 | 191 h · **283 h** · 374 h |
+| P0 de desenvolvimento (E0 a E7) | 22 / 25 / 2 | 193 h · **286 h** · 378 h |
 | Capacidade de desenvolvimento nas semanas 1 a 22 (12 h × 22) | — | 264 h |
 | Semanas 23 e 24 (15 h × 2), sem item novo | — | 30 h, divididas entre ensaios, slides e absorção de atraso |
 
-Com os itens acrescentados no M0 (B-56 a B-58), o ponto médio do P0 passou de 257 h para 275 h, e com o B-59 (aberto no B-11 como P e concluído como M), para 283 h, 19 h acima da capacidade das semanas 1 a 22. O autor decidiu não trocar nenhuma funcionalidade: a diferença é coberta pelas semanas 23 e 24 e pelo ritmo observado na semana 1, em que todo o E0 planejado para a sprint foi feito em um dia. O ritmo real é conferido a cada marco. Se a execução se aproximar do máximo, o plano de corte da seção 16 é aplicado nos marcos M1 e M2, e não na véspera da defesa. Os itens P1 só entram com horas que sobrarem depois do M2.
+Com os itens acrescentados no M0 (B-56 a B-58), o ponto médio do P0 passou de 257 h para 275 h, e com o B-59 (aberto no B-11 como P e concluído como M), para 283 h, e com o B-60 para 286 h, 22 h acima da capacidade das semanas 1 a 22. O autor decidiu não trocar nenhuma funcionalidade: a diferença é coberta pelas semanas 23 e 24 e pelo ritmo observado na semana 1, em que todo o E0 planejado para a sprint foi feito em um dia. O ritmo real é conferido a cada marco. Se a execução se aproximar do máximo, o plano de corte da seção 16 é aplicado nos marcos M1 e M2, e não na véspera da defesa. Os itens P1 só entram com horas que sobrarem depois do M2.
 
 ## 14. Cronograma até a defesa (Fase A)
 
@@ -1080,7 +1083,7 @@ A sprint S6 (semanas 11–12, entregando o M1) atravessa o recesso de fim de ano
 | S1 | 1–2 | Fundação e viabilidade dos dados | B-01, B-02, B-03, B-04, B-07 | Monorrepositório rodando local com hooks; **M0** | R-04, R-05, R-06 |
 | S2 | 3–4 | Implantação e CI desde o início | B-05, B-08, B-38, B-39, B-40 | API e frontend vazios implantados, banco remoto com migrations, CI verde | R-09, R-13 |
 | S3 | 5–6 | Integração com a IGDB | B-06, B-09, B-10, B-11 | Cliente e mapeador testados com fixtures; critério indie validado contra casos reais | R-04 |
-| S4 | 7–8 | Catálogo real no banco | B-12, B-13, B-14, B-56, B-59 | Ingestão completa executada em produção e registrada | R-11, R-12 |
+| S4 | 7–8 | Catálogo real no banco | B-12, B-13, B-14, B-56, B-59, B-60 | Ingestão completa executada em produção e registrada | R-11, R-12 |
 | S5 | 9–10 | Contas e segurança | B-15, B-16, B-17, B-18, B-22 | Cadastro, login e logout funcionando no ambiente implantado | R-03 |
 | S6 | 11–12 | Interface pública de descoberta | B-20, B-21, B-23, B-24 | **M1** | R-01 |
 | S7 | 13–14 | Biblioteca, índice de conteúdo e coleções | B-19, B-26, B-27, B-31, B-57 | Avaliações e listas pela API; índice carregado com memória medida; e2e de autenticação no CI | R-07, R-09 |
@@ -1114,7 +1117,7 @@ Reuniões com o orientador a cada sprint, levando o que foi implantado e o trech
 ### Margem explícita
 
 1. **Semanas 23 e 24 sem nenhum item de desenvolvimento.** Os ensaios e slides ocupam parte das 30 horas; o restante absorve atrasos.
-2. **Folga das estimativas.** O ponto médio do P0 (283 h, depois do M0 e do B-59) passa 19 h da capacidade das semanas 1 a 22 (264 h); a diferença sai das semanas 23 e 24 se o ritmo da semana 1 não se mantiver.
+2. **Folga das estimativas.** O ponto médio do P0 (286 h, depois do M0, do B-59 e do B-60) passa 22 h da capacidade das semanas 1 a 22 (264 h); a diferença sai das semanas 23 e 24 se o ritmo da semana 1 não se mantiver.
 3. **Plano de corte (seção 16)**, aplicado em M1 ou M2 se o atraso acumulado passar de uma sprint.
 4. **Itens P1 fora do caminho crítico.** Nenhum P0 depende deles; só entram depois do M2 com horas que sobrarem.
 

@@ -320,6 +320,26 @@ Decisões aprovadas pelo autor:
    O ponto médio do P0 passa de 257 h para 275 h, e o autor decidiu absorver a
    diferença sem cortar escopo.
 
+### 8.9 Cobertura de etiquetas para a recomendação — aberto em 23/10/2026, decisão pendente
+
+Medido no B-12 sobre o catálogo aceito (19.998 jogos), depois do descarte do TF-IDF
+(detalhes em `docs/vetorizacao-tfidf.md`):
+
+- 65,1% dos jogos têm ao menos uma palavra-chave, 83,2% um tema, 95,4% um gênero além
+  de Indie; só 56,1% têm os três.
+- 40,5% dos jogos ficam com no máximo 4 etiquetas no vetor, e 17,8% com no máximo 2.
+- 21,1% do catálogo tem vetor idêntico ao de pelo menos 10 outros jogos (476 jogos só
+  com *Adventure* e *Action*, por exemplo). Para essa fatia, a recomendação por conteúdo
+  não distingue nada e o desempate vira o ranqueador.
+- Jogos das entrevistas da BGS: *Bloodfang* (E3) não está na IGDB; *POPAPOM* (E5) está,
+  mas fica fora do catálogo por não ter sinal de interesse; *Aviãozinho do Tráfico 3*
+  (E6) provavelmente está, com o nome em inglês, a confirmar; *AFANTASIA* (E1) e
+  *Tape Us Out* (E2) entram com vetor de 4 e 3 etiquetas.
+
+Decisão do M0 a tomar: ampliar os campos usados na recomendação (por exemplo, resumo,
+modos de jogo ou perspectiva) ou aceitar recomendação degradada nessa fatia e registrá-la
+como limitação. O escopo do B-12 não foi ampliado.
+
 ## Fixtures
 
 Salvas em `apps/api/test/fixtures/igdb/` para os testes do B-10 e do B-11:
