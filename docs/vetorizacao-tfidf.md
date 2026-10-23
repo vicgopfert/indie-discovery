@@ -114,12 +114,12 @@ lançamento nas entrevistas.
 
 | | Jogo | Na IGDB | Critério indie | Blocos | Etiquetas no vetor |
 | --- | --- | --- | --- | --- | --- |
-| E1 | AFANTASIA (noidnoidnoid) | Sim, como "[Afantasia]", sem data | Aceito | só gênero | 4 |
+| E1 | AFANTASIA (noidnoidnoid) | Sim, como "[Afantasia]" (identidade confirmada pelo autor), sem data | Aceito | só gênero | 4 |
 | E2 | Tape Us Out (Digital Graveyard Studio) | Sim, 31/12/2026 | Aceito | gênero, palavra-chave | 3 |
 | E3 | Bloodfang (Ignite Dreams) | **Não**: a Ignite Dreams está na IGDB só com *Shattered Fate* | — | — | — |
 | E4 | Hell Clock (Rogue Snail) | Sim, lançado em 22/07/2025 | Aceito | os três | 7 |
 | E5 | POPAPOM (Nebula Devs) | Sim, sem data e sem estúdio creditado | **Excluído**: sem sinal de interesse | gênero, tema | 2 |
-| E6 | Aviãozinho do Tráfico 3 (Joeveno) | Provavelmente, como *Brazilian Drug Dealer 3: I Opened a Portal to Hell in the Favela…*, do mesmo estúdio, lançado em 17/09/2025; identidade a confirmar | Aceito | os três | 8 |
+| E6 | Aviãozinho do Tráfico 3 (Joeveno) | Sim, como *Brazilian Drug Dealer 3: I Opened a Portal to Hell in the Favela…*, lançado em 17/09/2025 (identidade confirmada pelo autor) | Aceito | os três | 8 |
 
 Um dos seis não está na IGDB, um fica fora do catálogo por não ter sinal de interesse e
 dois dos quatro restantes têm vetor de 3 ou 4 etiquetas. A análise parou aqui, como

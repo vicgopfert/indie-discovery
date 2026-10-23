@@ -24,9 +24,9 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [x] **B-10** (M) Mapeador IGDB → modelo interno
 - [x] **B-11** (M) Critério indie configurável em JSON, com o recorte do catálogo e a exclusão do tema Erotic aprovados no M0
 - [x] **B-12** (M) Cálculo de IDF e vetores TF-IDF normalizados
-- [ ] **B-13** (G) `RunIngestionUseCase` (aplicação standalone): busca, mapeia, filtra, grava, busca a popularidade "Want to Play", calcula vetores, registra `IngestionRun`, sinaliza jogo novo de estúdio "sem efeito atual" do critério indie
+- [ ] **B-13** (G) `RunIngestionUseCase` (aplicação standalone): busca, mapeia, filtra, grava, busca a popularidade "Want to Play", calcula vetores, registra `IngestionRun`, sinaliza para verificação o jogo novo de estúdio "sem efeito atual" do critério indie, ou cuja desenvolvedora tem empresa-mãe na IGDB fora da lista de grandes, ou na lista mas fora dos estúdios controlados
 - [ ] **B-14** (P) Carga inicial do catálogo real em produção (depois do B-60)
-- [ ] **B-60** (P) Medir a regra de controle do critério indie: amostras de ~10 excluídos e ~10 aceitos, classificadas à mão
+- [x] **B-60** (P) Medir a regra de controle do critério indie: amostras de ~10 excluídos e ~10 aceitos, classificadas à mão — 10 de 10 exclusões corretas; achados: lacuna na lista de grandes (teste de entrada escrito, 5 empresas acrescentadas, 106 avaliadas e recusadas) e aceitos sem desenvolvedora (1,54% das avaliações; 23,15% dos jogos), escalado ao M0
 - [x] **B-59** (M, estimado P) Medir falsos negativos do critério indie: sortear 8 a 10 jogos excluídos pela regra e classificar à mão — taxa de 8 em 10 levou à troca da regra de publisher pela de controle do estúdio
 - [ ] **B-56** (P) Enriquecimento do país do estúdio pelo Wikidata na ingestão
 
@@ -109,6 +109,7 @@ Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de en
 
 - [x] **M0** (semana 2): relatório da IGDB concluído, termos confirmados, portão do B-21 decidido
   - [ ] Reaberto no B-12: decidir a cobertura de etiquetas para a recomendação (relatório do M0, seção 8.9)
+  - [ ] Reaberto no B-60: confirmar a falta de desenvolvedora creditada como limitação, sem regra de reserva (relatório do M0, seção 8.10)
 - [ ] **M1** (semana 12): catálogo real navegável + contas implantadas
 - [ ] **M2** (semana 16): recomendação ponta a ponta pela API, testada e implantada
 - [ ] **Congelamento** (semana 20): todos os P0 implementados, nenhuma funcionalidade nova depois disso
