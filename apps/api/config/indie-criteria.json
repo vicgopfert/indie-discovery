@@ -14,159 +14,198 @@
   "majorCompanies": [
     {
       "igdbId": 1,
-      "name": "Electronic Arts"
+      "name": "Electronic Arts",
+      "via": "conglomerate"
     },
     {
       "igdbId": 19200,
-      "name": "EA Games"
+      "name": "EA Games",
+      "via": "conglomerate"
     },
     {
       "igdbId": 104,
-      "name": "Ubisoft Entertainment"
+      "name": "Ubisoft Entertainment",
+      "via": "conglomerate"
     },
     {
       "igdbId": 66,
-      "name": "Activision"
+      "name": "Activision",
+      "via": "conglomerate"
     },
     {
       "igdbId": 179,
-      "name": "Activision Blizzard"
+      "name": "Activision Blizzard",
+      "via": "conglomerate"
     },
     {
       "igdbId": 51,
-      "name": "Blizzard Entertainment"
+      "name": "Blizzard Entertainment",
+      "via": "conglomerate"
     },
     {
       "igdbId": 139,
-      "name": "Take-Two Interactive"
+      "name": "Take-Two Interactive",
+      "via": "conglomerate"
     },
     {
       "igdbId": 29,
-      "name": "Rockstar Games"
+      "name": "Rockstar Games",
+      "via": "conglomerate"
     },
     {
       "igdbId": 8,
-      "name": "2K Games"
+      "name": "2K Games",
+      "via": "conglomerate"
     },
     {
       "igdbId": 20228,
-      "name": "2K"
+      "name": "2K",
+      "via": "conglomerate"
     },
     {
       "igdbId": 26,
-      "name": "Square Enix"
+      "name": "Square Enix",
+      "via": "conglomerate"
     },
     {
       "igdbId": 37,
-      "name": "Capcom"
+      "name": "Capcom",
+      "via": "conglomerate"
     },
     {
       "igdbId": 129,
-      "name": "Konami"
+      "name": "Konami",
+      "via": "conglomerate"
     },
     {
       "igdbId": 248,
-      "name": "Bandai Namco Entertainment"
+      "name": "Bandai Namco Entertainment",
+      "via": "conglomerate"
     },
     {
       "igdbId": 3958,
-      "name": "Bandai Namco Games"
+      "name": "Bandai Namco Games",
+      "via": "conglomerate"
     },
     {
       "igdbId": 112,
-      "name": "Sega"
+      "name": "Sega",
+      "via": "conglomerate"
     },
     {
       "igdbId": 70,
-      "name": "Nintendo"
+      "name": "Nintendo",
+      "via": "platform"
     },
     {
       "igdbId": 10100,
-      "name": "Sony Interactive Entertainment"
+      "name": "Sony Interactive Entertainment",
+      "via": "platform"
     },
     {
       "igdbId": 13634,
-      "name": "Sony Computer Entertainment"
+      "name": "Sony Computer Entertainment",
+      "via": "platform"
     },
     {
       "igdbId": 53,
-      "name": "Microsoft Game Studios"
+      "name": "Microsoft Game Studios",
+      "via": "platform"
     },
     {
       "igdbId": 17966,
-      "name": "Xbox Game Studios"
+      "name": "Xbox Game Studios",
+      "via": "platform"
     },
     {
       "igdbId": 16565,
-      "name": "Bethesda Softworks"
+      "name": "Bethesda Softworks",
+      "via": "conglomerate"
     },
     {
       "igdbId": 245,
-      "name": "ZeniMax Media"
+      "name": "ZeniMax Media",
+      "via": "conglomerate"
     },
     {
       "igdbId": 14055,
-      "name": "Warner Bros. Interactive Entertainment"
+      "name": "Warner Bros. Interactive Entertainment",
+      "via": "conglomerate"
     },
     {
       "igdbId": 21315,
-      "name": "Tencent"
+      "name": "Tencent",
+      "via": "platform"
     },
     {
       "igdbId": 32410,
-      "name": "NetEase"
+      "name": "NetEase",
+      "via": "conglomerate"
     },
     {
       "igdbId": 42782,
-      "name": "Embracer Group"
+      "name": "Embracer Group",
+      "via": "conglomerate"
     },
     {
       "igdbId": 41542,
-      "name": "Krafton"
+      "name": "Krafton",
+      "via": "conglomerate"
     },
     {
       "igdbId": 17463,
-      "name": "Epic Games"
+      "name": "Epic Games",
+      "via": "platform"
     },
     {
       "igdbId": 56,
-      "name": "Valve"
+      "name": "Valve",
+      "via": "platform"
     },
     {
       "igdbId": 41,
-      "name": "Riot Games"
+      "name": "Riot Games",
+      "via": "conglomerate"
     },
     {
       "igdbId": 15932,
-      "name": "miHoYo"
+      "name": "miHoYo",
+      "via": "conglomerate"
     },
     {
       "igdbId": 42,
-      "name": "Tencent Holdings"
+      "name": "Tencent Holdings",
+      "via": "platform"
     },
     {
       "igdbId": 3595,
-      "name": "Tencent Games"
+      "name": "Tencent Games",
+      "via": "platform"
     },
     {
       "igdbId": 128,
-      "name": "Microsoft"
+      "name": "Microsoft",
+      "via": "platform"
     },
     {
       "igdbId": 1010,
-      "name": "Microsoft Studios"
+      "name": "Microsoft Studios",
+      "via": "platform"
     },
     {
       "igdbId": 10282,
-      "name": "Sony"
+      "name": "Sony",
+      "via": "platform"
     },
     {
       "igdbId": 2289,
-      "name": "Sony Interactive Entertainment Worldwide Studios"
+      "name": "Sony Interactive Entertainment Worldwide Studios",
+      "via": "platform"
     },
     {
       "igdbId": 6330,
-      "name": "Namco Bandai Games"
+      "name": "Namco Bandai Games",
+      "via": "conglomerate"
     }
   ],
   "controlledStudiosPolicy": {

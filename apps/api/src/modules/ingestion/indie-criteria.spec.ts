@@ -276,6 +276,7 @@ describe('validação do arquivo de critério', () => {
   > & {
     overrides: { alwaysInclude: Record<string, unknown>[]; alwaysExclude: unknown[] };
     overridesPolicy: { maxEntries: number };
+    majorCompanies: Record<string, unknown>[];
     controlledStudios: Record<string, unknown>[];
   };
   const [firstOverride] = raw.overrides.alwaysInclude;
@@ -320,6 +321,29 @@ describe('validação do arquivo de critério', () => {
     expect(() => indieCriteriaSchema.parse({ ...raw, controlledStudios: [inverted] })).toThrow(
       'posterior à aquisição',
     );
+  });
+
+  it('exige o ramo do teste de entrada em cada grande empresa', () => {
+    const [firstMajor] = raw.majorCompanies;
+    const withoutVia = { ...firstMajor, via: undefined };
+
+    expect(() => indieCriteriaSchema.parse({ ...raw, majorCompanies: [withoutVia] })).toThrow(
+      'via',
+    );
+  });
+
+  it('recusa empresa ou estúdio repetido pelo id da IGDB', () => {
+    const [firstMajor] = raw.majorCompanies;
+
+    expect(() =>
+      indieCriteriaSchema.parse({ ...raw, majorCompanies: [...raw.majorCompanies, firstMajor] }),
+    ).toThrow('repetida');
+    expect(() =>
+      indieCriteriaSchema.parse({
+        ...raw,
+        controlledStudios: [...raw.controlledStudios, firstStudio],
+      }),
+    ).toThrow('repetido');
   });
 
   it('exige fonte pública em cada estúdio controlado', () => {
