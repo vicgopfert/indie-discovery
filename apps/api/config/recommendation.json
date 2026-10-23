@@ -1,0 +1,62 @@
+{
+  "tfidf": {
+    "normalization": "block",
+    "normalizationRationale": "Por bloco foi adotado pelo argumento estrutural (o equilíbrio entre gêneros, temas e palavras-chave não pode depender de quantas etiquetas de cada tipo o jogo tem) e porque deixa o motivo da recomendação em gêneros e temas, não em palavras-chave raras. A medição preliminar do B-12 (14 pares) não o confirmou no ranqueamento; o modo global segue disponível para o B-37 decidir com o protocolo completo.",
+    "blockShares": {
+      "GENRE": 0.4,
+      "THEME": 0.3,
+      "KEYWORD": 0.3
+    },
+    "blockSharesRationale": "Cada tipo de atributo é normalizado separadamente e ocupa uma fatia fixa do vetor, para que o equilíbrio não dependa de quantas etiquetas de cada tipo o jogo tem; a fatia de um tipo ausente é redistribuída entre os presentes. Valores iniciais; a calibração é do B-37.",
+    "globalTypeWeights": {
+      "GENRE": 1,
+      "THEME": 1,
+      "KEYWORD": 0.5
+    },
+    "minDocumentFrequency": 3,
+    "maxDocumentRatio": 0.8,
+    "thresholdsRationale": "Medido no catálogo aceito em 22/10/2026 (19.998 jogos): com mínimo de 3 jogos ficam 98,2% das ocorrências de palavras-chave e nenhum jogo perde gênero ou tema; o máximo de 80% descarta só o gênero Indie (100%) e mantém Adventure (54%) e o tema Action (54%).",
+    "excludedKeywordsRule": "Palavras-chave que descrevem loja, plataforma, eventos, prêmios, financiamento ou opções técnicas, e não o conteúdo do jogo.",
+    "excludedKeywordPatterns": [
+      "^steam( |$)",
+      "next ?fest",
+      "^pax( |$)",
+      "the game awards",
+      "achievement",
+      "crowdfunding|kickstarter|indiegogo|patreon",
+      "^(xbox|playstation|nintendo|new nintendo|wii|games for windows|windows store)( |$)",
+      "controller (support|recommendation|required)",
+      "^(mouse|keyboard) only",
+      "leaderboard",
+      "^(free )?demo$",
+      "^(previously on|available on) ",
+      "awards?$|award:|^bafta|^game developers choice|^igf "
+    ],
+    "excludedKeywords": [
+      "digital distribution",
+      "digital distribution only",
+      "humble bundle",
+      "humble original",
+      "accessibility",
+      "accessibility options",
+      "custom volume controls",
+      "playable without timed input",
+      "subtitles",
+      "subtitled silence",
+      "stereo sound",
+      "surround sound",
+      "save anytime",
+      "cloud saves",
+      "60 fps on consoles",
+      "stereoscopic 3d",
+      "twitch",
+      "twitch integration",
+      "twitch plays",
+      "game jam",
+      "ludum dare",
+      "gog preservation program",
+      "samsung gear vr support",
+      "full controller support"
+    ]
+  }
+}
