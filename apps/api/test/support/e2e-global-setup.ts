@@ -9,7 +9,7 @@ import { assertE2eDatabase, databaseName, e2eDatabaseUrl } from './e2e-database'
 export default async function globalSetup() {
   if (!process.env.DATABASE_URL && existsSync(rootEnvFile)) process.loadEnvFile(rootEnvFile);
   const url = e2eDatabaseUrl(process.env);
-  assertE2eDatabase(url);
+  assertE2eDatabase(url, process.env.E2E_ALLOWED_HOST);
 
   const maintenance = new URL(url);
   maintenance.pathname = '/postgres';
