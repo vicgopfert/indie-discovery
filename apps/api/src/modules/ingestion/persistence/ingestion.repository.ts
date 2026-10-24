@@ -1,6 +1,11 @@
-import { IngestionStatus, type Prisma } from '../../../generated/prisma/client';
+import {
+  IngestionStatus,
+  type Prisma,
+  StudioCountrySource,
+} from '../../../generated/prisma/client';
 import type { PrismaService } from '../../../prisma/prisma.service';
 import type { MappedGame } from '../igdb/igdb.mapper';
+import type { StudioCountry } from '../studio-country/studio-country';
 import type { ReviewFlag, StoredGame } from '../review-flags/review-flags';
 import type { FeatureKey } from '../../recommendation/tfidf';
 
@@ -9,6 +14,7 @@ export interface CatalogGame {
   verdict: unknown;
   popularityCount: number;
   popularityNorm: number;
+  studioCountry: StudioCountry;
   weights: ReadonlyMap<FeatureKey, number>;
 }
 
@@ -84,6 +90,15 @@ export class IngestionRepository {
 
   // Todo jogo gravado foi avaliado pela última execução bem-sucedida, então a data dela é a da
   // avaliação anterior de cada um.
+  // Países que vieram do Wikidata na última gravação, para manter quando ele estiver fora do ar.
+  async wikidataCountries() {
+    const rows = await this.prisma.game.findMany({
+      where: { studioCountrySource: StudioCountrySource.WIKIDATA },
+      select: { igdbId: true, studioCountryCode: true },
+    });
+    return new Map(rows.map((r) => [r.igdbId, r.studioCountryCode!]));
+  }
+
   async storedGames(previous: PreviousRun | null) {
     const rows = await this.prisma.game.findMany({
       select: {
@@ -193,7 +208,7 @@ export class IngestionRepository {
       )
       SELECT gen_random_uuid(), t.igdb_id, t.slug, t.name, t.summary, t.cover, t.released::date,
         t.status::"ReleaseStatus", t.raw, t.norm, true, t.store, c."code",
-        CASE WHEN c."code" IS NULL THEN NULL ELSE 'IGDB'::"StudioCountrySource" END,
+        CASE WHEN c."code" IS NULL THEN NULL ELSE t.country_source::"StudioCountrySource" END,
         ${evaluatedAt}, t.verdict::jsonb, ${criteriaVersion}
       FROM unnest(
         ${rows.map((r) => r.game.igdbId)}::int[],
@@ -206,9 +221,10 @@ export class IngestionRepository {
         ${rows.map((r) => r.popularityCount)}::int[],
         ${rows.map((r) => r.popularityNorm)}::float8[],
         ${rows.map((r) => r.game.storeUrl)}::text[],
-        ${rows.map((r) => r.game.studioCountryCode)}::int[],
+        ${rows.map((r) => r.studioCountry.code)}::int[],
+        ${rows.map((r) => r.studioCountry.source)}::text[],
         ${rows.map((r) => JSON.stringify(r.verdict))}::text[]
-      ) AS t(igdb_id, slug, name, summary, cover, released, status, raw, norm, store, country, verdict)
+      ) AS t(igdb_id, slug, name, summary, cover, released, status, raw, norm, store, country, country_source, verdict)
       LEFT JOIN "Country" c ON c."code" = t.country
       ON CONFLICT ("igdbId") DO UPDATE SET
         "slug" = EXCLUDED."slug", "name" = EXCLUDED."name", "summary" = EXCLUDED."summary",
