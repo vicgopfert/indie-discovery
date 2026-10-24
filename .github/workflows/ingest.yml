@@ -78,6 +78,13 @@ jobs:
                 ELSE 'lançado' END AS grupo, count(*) AS jogos
               FROM \"Game\" WHERE \"inCatalog\" GROUP BY 1 ORDER BY 1"
             echo '```'
+            echo '## País do estúdio'
+            echo '```'
+            psql "$PSQL_URL" -X -q -c "
+              SELECT coalesce(\"studioCountrySource\"::text, 'não informado') AS origem,
+                count(*) AS jogos, round(100.0 * count(*) / sum(count(*)) OVER (), 1) AS percentual
+              FROM \"Game\" WHERE \"inCatalog\" GROUP BY 1 ORDER BY 2 DESC"
+            echo '```'
             echo '## Alertas da execução'
             echo '```'
             psql "$PSQL_URL" -X -q -c "
