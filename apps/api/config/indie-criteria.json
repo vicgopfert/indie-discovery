@@ -834,8 +834,1010 @@
     "minSummaryLength": 40
   },
   "interestSignals": {
-    "ratingsOnlyBefore": "2015-01-01"
+    "ratingsOnlyBefore": "2015-01-01",
+    "postLaunchGraceDays": 180,
+    "postLaunchGraceRationale": "Valor inicial, sem evidência. Só vale para jogo que estava no catálogo na execução anterior bem-sucedida: protege a passagem de por lançar a lançado, porque avaliações levam tempo para aparecer, e não admite jogo que nunca entrou. Na primeira carga ninguém tem carência. Dado para revisar o prazo: entre os lançados com ficha completa e sem sinal, 86% dos que saíram há 180 a 365 dias e 89% dos que saíram há 1 a 2 anos continuam sem sinal (B-13, 23/10/2026). O prazo não decide se o jogo é indie: só adia a exigência de sinal de interesse."
   },
+  "reviewedCompaniesPolicy": "Empresas já avaliadas, que não geram alerta de empresa-mãe na ingestão: estúdios sem efeito atual (só alertam quando o jogo é do ano da compra em diante), vínculos de empresa-mãe errados da IGDB, créditos errados, empresas recusadas pelo teste de entrada, vínculos que não indicam propriedade e estúdios pendentes de fonte. Empresa nova no topo de uma cadeia, ou estúdio novo sob uma grande, gera alerta até ser revisado aqui.",
+  "reviewedCompanies": [
+    {
+      "igdbId": 481,
+      "name": "Reflexive Entertainment",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Amazon",
+      "acquiredYear": 2008
+    },
+    {
+      "igdbId": 741,
+      "name": "Toys for Bob",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Activision",
+      "acquiredYear": 2005,
+      "note": "Independente de novo desde 2024: um jogo novo gera alerta para revisão."
+    },
+    {
+      "igdbId": 856,
+      "name": "Unknown Worlds Entertainment",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Krafton",
+      "acquiredYear": 2021
+    },
+    {
+      "igdbId": 47,
+      "name": "Obsidian Entertainment",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Microsoft",
+      "acquiredYear": 2018
+    },
+    {
+      "igdbId": 184,
+      "name": "id Software",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "ZeniMax",
+      "acquiredYear": 2009
+    },
+    {
+      "igdbId": 1973,
+      "name": "Twisted Pixel",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Meta",
+      "acquiredYear": 2022
+    },
+    {
+      "igdbId": 1898,
+      "name": "Sanzaru Games",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Meta (Oculus)",
+      "acquiredYear": 2020
+    },
+    {
+      "igdbId": 33130,
+      "name": "Deca Games",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Embracer",
+      "acquiredYear": 2020
+    },
+    {
+      "igdbId": 1006,
+      "name": "Housemarque",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Sony",
+      "acquiredYear": 2021
+    },
+    {
+      "igdbId": 747,
+      "name": "Tarsier Studios",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Embracer",
+      "acquiredYear": 2019
+    },
+    {
+      "igdbId": 5214,
+      "name": "The Molasses Flood",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "CD Projekt",
+      "acquiredYear": 2021
+    },
+    {
+      "igdbId": 2309,
+      "name": "Ntreev Soft",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "NCSOFT",
+      "acquiredYear": 2012
+    },
+    {
+      "igdbId": 437,
+      "name": "Avalanche Studios",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Nordisk Film",
+      "acquiredYear": 2018
+    },
+    {
+      "igdbId": 5093,
+      "name": "Expansive Worlds",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Nordisk Film",
+      "acquiredYear": 2018
+    },
+    {
+      "igdbId": 5783,
+      "name": "Days of Wonder",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Embracer (Asmodee)",
+      "acquiredYear": 2022
+    },
+    {
+      "igdbId": 845,
+      "name": "Grasshopper Manufacture",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "NetEase",
+      "acquiredYear": 2021
+    },
+    {
+      "igdbId": 711,
+      "name": "Psyonix",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Epic Games",
+      "acquiredYear": 2019
+    },
+    {
+      "igdbId": 13,
+      "name": "Demiurge Studios",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Embracer (Saber)",
+      "acquiredYear": 2021
+    },
+    {
+      "igdbId": 316,
+      "name": "Sierra",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Activision",
+      "acquiredYear": 2008
+    },
+    {
+      "igdbId": 7025,
+      "name": "Snapshot Games",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Embracer",
+      "acquiredYear": 2020
+    },
+    {
+      "igdbId": 7089,
+      "name": "Playdots",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Take-Two",
+      "acquiredYear": 2020
+    },
+    {
+      "igdbId": 7452,
+      "name": "Miniclip.com",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Tencent",
+      "acquiredYear": 2015
+    },
+    {
+      "igdbId": 10,
+      "name": "LucasArts",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Disney",
+      "acquiredYear": 2012
+    },
+    {
+      "igdbId": 4096,
+      "name": "Vertigo Games",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Embracer (Koch Media)",
+      "acquiredYear": 2020
+    },
+    {
+      "igdbId": 10809,
+      "name": "Gunfire Games",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Embracer (THQ Nordic)",
+      "acquiredYear": 2019
+    },
+    {
+      "igdbId": 834,
+      "name": "Insomniac Games",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Sony",
+      "acquiredYear": 2019
+    },
+    {
+      "igdbId": 3226,
+      "name": "Armature Studio",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Meta",
+      "acquiredYear": 2022
+    },
+    {
+      "igdbId": 11941,
+      "name": "Asmodee Digital",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Embracer (Asmodee)",
+      "acquiredYear": 2022
+    },
+    {
+      "igdbId": 853,
+      "name": "CCP",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Pearl Abyss",
+      "acquiredYear": 2018
+    },
+    {
+      "igdbId": 12961,
+      "name": "Firesprite Ltd",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Sony",
+      "acquiredYear": 2021
+    },
+    {
+      "igdbId": 5139,
+      "name": "Three Rings Design",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Sega",
+      "acquiredYear": 2011
+    },
+    {
+      "igdbId": 13383,
+      "name": "Beat Games",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Meta",
+      "acquiredYear": 2019
+    },
+    {
+      "igdbId": 3150,
+      "name": "New World Interactive",
+      "decision": "no_current_effect",
+      "decidedAt": "2026-10-23",
+      "group": "Embracer (Saber)",
+      "acquiredYear": 2020
+    },
+    {
+      "igdbId": 859,
+      "name": "Runic Games",
+      "decision": "wrong_igdb_parent",
+      "decidedAt": "2026-10-23",
+      "note": "Vínculo de empresa-mãe da IGDB conferido em fonte e errado (docs/criterio-indie-casos.md)."
+    },
+    {
+      "igdbId": 16148,
+      "name": "Echtra Games",
+      "decision": "wrong_igdb_parent",
+      "decidedAt": "2026-10-23",
+      "note": "Vínculo de empresa-mãe da IGDB conferido em fonte e errado (docs/criterio-indie-casos.md)."
+    },
+    {
+      "igdbId": 13490,
+      "name": "Jo-Mei Games",
+      "decision": "wrong_igdb_parent",
+      "decidedAt": "2026-10-23",
+      "note": "Vínculo de empresa-mãe da IGDB conferido em fonte e errado (docs/criterio-indie-casos.md)."
+    },
+    {
+      "igdbId": 8965,
+      "name": "GungHo Online Entertainment America, Inc.",
+      "decision": "wrong_igdb_parent",
+      "decidedAt": "2026-10-23",
+      "note": "Vínculo de empresa-mãe da IGDB conferido em fonte e errado (docs/criterio-indie-casos.md)."
+    },
+    {
+      "igdbId": 7905,
+      "name": "Gravity Interactive",
+      "decision": "wrong_igdb_parent",
+      "decidedAt": "2026-10-23",
+      "note": "Vínculo de empresa-mãe da IGDB conferido em fonte e errado (docs/criterio-indie-casos.md)."
+    },
+    {
+      "igdbId": 39120,
+      "name": "Grove Street Games",
+      "decision": "wrong_igdb_parent",
+      "decidedAt": "2026-10-23",
+      "note": "Vínculo de empresa-mãe da IGDB conferido em fonte e errado (docs/criterio-indie-casos.md)."
+    },
+    {
+      "igdbId": 66172,
+      "name": "SparklingBit",
+      "decision": "wrong_igdb_parent",
+      "decidedAt": "2026-10-23",
+      "note": "Vínculo de empresa-mãe da IGDB conferido em fonte e errado (docs/criterio-indie-casos.md)."
+    },
+    {
+      "igdbId": 888,
+      "name": "Digital Eclipse",
+      "decision": "wrong_igdb_parent",
+      "decidedAt": "2026-10-23",
+      "note": "Vínculo de empresa-mãe da IGDB conferido em fonte e errado (docs/criterio-indie-casos.md)."
+    },
+    {
+      "igdbId": 42432,
+      "name": "Kavalri Games",
+      "decision": "wrong_igdb_parent",
+      "decidedAt": "2026-10-23",
+      "note": "Vínculo de empresa-mãe da IGDB conferido em fonte e errado (docs/criterio-indie-casos.md)."
+    },
+    {
+      "igdbId": 24024,
+      "name": "Iron Gate Studios",
+      "decision": "wrong_igdb_parent",
+      "decidedAt": "2026-10-23",
+      "note": "Vínculo de empresa-mãe da IGDB conferido em fonte e errado (docs/criterio-indie-casos.md)."
+    },
+    {
+      "igdbId": 2488,
+      "name": "Atlus USA",
+      "decision": "wrong_credit",
+      "decidedAt": "2026-10-23",
+      "note": "Creditada como desenvolvedora de jogo que não desenvolveu (docs/criterio-indie-casos.md)."
+    },
+    {
+      "igdbId": 836,
+      "name": "Kadokawa Games",
+      "decision": "wrong_credit",
+      "decidedAt": "2026-10-23",
+      "note": "Creditada como desenvolvedora de jogo que não desenvolveu (docs/criterio-indie-casos.md)."
+    },
+    {
+      "igdbId": 6485,
+      "name": "DWANGO",
+      "decision": "wrong_credit",
+      "decidedAt": "2026-10-23",
+      "note": "Creditada como desenvolvedora de jogo que não desenvolveu (docs/criterio-indie-casos.md)."
+    },
+    {
+      "igdbId": 22154,
+      "name": "Mirage Game Studios",
+      "decision": "pending_source",
+      "decidedAt": "2026-10-23",
+      "note": "Pendente de fonte; acompanhada na tabela de pendentes de docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 42836,
+      "name": "Goose Byte",
+      "decision": "pending_source",
+      "decidedAt": "2026-10-23",
+      "note": "Pendente de fonte; acompanhada na tabela de pendentes de docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 55176,
+      "name": "Flyway Games",
+      "decision": "pending_source",
+      "decidedAt": "2026-10-23",
+      "note": "Pendente de fonte; acompanhada na tabela de pendentes de docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 71227,
+      "name": "PinCool, Inc",
+      "decision": "pending_source",
+      "decidedAt": "2026-10-23",
+      "note": "Pendente de fonte; acompanhada na tabela de pendentes de docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 1011,
+      "name": "Black Rock Studios",
+      "decision": "pending_source",
+      "decidedAt": "2026-10-23",
+      "note": "Pendente de fonte; acompanhada na tabela de pendentes de docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 24004,
+      "name": "Slipgate Ironworks",
+      "decision": "pending_source",
+      "decidedAt": "2026-10-23",
+      "note": "Pendente de fonte; acompanhada na tabela de pendentes de docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 3038,
+      "name": "Aicom",
+      "decision": "pending_source",
+      "decidedAt": "2026-10-23",
+      "note": "Pendente de fonte; acompanhada na tabela de pendentes de docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 110,
+      "name": "Focus Entertainment",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23",
+      "note": "Limítrofe recusada no B-60, com o efeito atual registrado em docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 193,
+      "name": "Jellyvision",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 197,
+      "name": "THQ",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 203,
+      "name": "Illusion Softworks",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 517,
+      "name": "Paradox Interactive",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23",
+      "note": "Limítrofe recusada no B-60, com o efeito atual registrado em docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 634,
+      "name": "Devolver Digital",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 783,
+      "name": "Kalypso Media",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 894,
+      "name": "DON'T NOD",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 946,
+      "name": "Saber Interactive",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 1260,
+      "name": "Behaviour Interactive",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23",
+      "note": "Limítrofe recusada no B-60, com o efeito atual registrado em docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 1405,
+      "name": "Nippon Ichi Software",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 2245,
+      "name": "Big Fish Games",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 2917,
+      "name": "JumpButton Studio",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 3225,
+      "name": "CreativeForge Games",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 3248,
+      "name": "Keywords Studios",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 3513,
+      "name": "Remote Control Productions",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 3731,
+      "name": "Weta Workshop Ltd.",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 3825,
+      "name": "Alliance Media Holdings",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 3912,
+      "name": "Asterizm Corporation",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 4109,
+      "name": "Kabam",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23",
+      "note": "Limítrofe recusada no B-60, com o efeito atual registrado em docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 4133,
+      "name": "11 bit studios",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 4440,
+      "name": "Adult Swim Games",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 4598,
+      "name": "Bloober Team",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 4741,
+      "name": "Forever Entertainment S.A.",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 5040,
+      "name": "tinyBuild",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 5048,
+      "name": "Curve Digital",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 5152,
+      "name": "Bithell Games",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 6071,
+      "name": "Marvelous",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 6333,
+      "name": "CyberAgent",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23",
+      "note": "Limítrofe recusada no B-60, com o efeito atual registrado em docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 6985,
+      "name": "Aterdux Entertainment",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 6999,
+      "name": "SOEDESCO Publishing",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 8483,
+      "name": "Two Tribes Publishing",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 9005,
+      "name": "PlayWay S.A.",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 9185,
+      "name": "Z-Software",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 9794,
+      "name": "Hasbro",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23",
+      "note": "Limítrofe recusada no B-60, com o efeito atual registrado em docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 9867,
+      "name": "Independent",
+      "decision": "not_ownership",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 10060,
+      "name": "Zonitron Productions",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 10184,
+      "name": "LakeFeperd",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 11683,
+      "name": "Zordix",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 11984,
+      "name": "Experimental Gameplay Group",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 12036,
+      "name": "Atari SA",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 12592,
+      "name": "COLOPL, Inc.",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 13188,
+      "name": "LINE Corporation",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23",
+      "note": "Limítrofe recusada no B-60, com o efeito atual registrado em docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 15666,
+      "name": "Gamedust",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 16332,
+      "name": "btf",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 16337,
+      "name": "Thunderful",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 16437,
+      "name": "Team17",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 21314,
+      "name": "Other Ocean Group",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 22059,
+      "name": "Wildlife Studios",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 22746,
+      "name": "Cryo Networks",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 22998,
+      "name": "Awaken Realms",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 24060,
+      "name": "PlayWay",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 24361,
+      "name": "Breda University of Applied Sciences",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 24377,
+      "name": "Joey Drew Studios",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 24760,
+      "name": "Nacon",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23",
+      "note": "Limítrofe recusada no B-60, com o efeito atual registrado em docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 24876,
+      "name": "Thunderful Publishing",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 25855,
+      "name": "Gionathan Pesaresi",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 27315,
+      "name": "Crytivo",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 28531,
+      "name": "Source Technology",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 29000,
+      "name": "CerebralFix",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 29412,
+      "name": "Room 8 Group",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 29837,
+      "name": "The Iterative Collective",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 32646,
+      "name": "Vibedy",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 32994,
+      "name": "AnimatronX",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 34659,
+      "name": "PocketPair",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 34741,
+      "name": "Ryan Pocock",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 35040,
+      "name": "TNgineers",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 36087,
+      "name": "RainyGames",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 36330,
+      "name": "Wangyuan Shengtang",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 36573,
+      "name": "Wemade Co Ltd",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23",
+      "note": "Limítrofe recusada no B-60, com o efeito atual registrado em docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 36888,
+      "name": "Wahoo Studios",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 37822,
+      "name": "Animoca Brands",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 39128,
+      "name": "67 Games",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 41720,
+      "name": "Enad Global 7",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23",
+      "note": "Limítrofe recusada no B-60, com o efeito atual registrado em docs/criterio-indie-casos.md."
+    },
+    {
+      "igdbId": 41724,
+      "name": "Curve Games",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 43324,
+      "name": "Fulqrum Publishing",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 44446,
+      "name": "REEL FX",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 44583,
+      "name": "Stillfront Group",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 46931,
+      "name": "Waddling Technology",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 47031,
+      "name": "Asmik Ace",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 47550,
+      "name": "Connor Warrington",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 49460,
+      "name": "Sven",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 51808,
+      "name": "100 Cozy Games",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 52305,
+      "name": "Mythos Makers",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 53109,
+      "name": "Maximum Entertainment",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 53304,
+      "name": "Batuhan Gündüz",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 53693,
+      "name": "GCL Asia",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 54334,
+      "name": "Terletski Comics",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 56503,
+      "name": "padSoft",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 57609,
+      "name": "Clever Trickster Productions",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 58858,
+      "name": "2 Wedges Studio",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 59199,
+      "name": "Animita Project",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 59508,
+      "name": "Millendream",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 60488,
+      "name": "Spatial Quotient Interactive",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 62241,
+      "name": "Bandello",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 65475,
+      "name": "ONE-UP",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 82995,
+      "name": "ACSoftware",
+      "decision": "rejected",
+      "decidedAt": "2026-10-23"
+    }
+  ],
   "overridesPolicy": {
     "purpose": "As listas corrigem erros de classificação indie. Não sobrepõem o filtro de conteúdo (temas excluídos).",
     "alwaysInclude": "Jogo desenvolvido por estúdios independentes na data de lançamento, excluído por um crédito da IGDB que não corresponde a esse desenvolvimento: publisher, estúdio de porte ou estúdio que assumiu o jogo depois do lançamento, creditados como desenvolvedores.",

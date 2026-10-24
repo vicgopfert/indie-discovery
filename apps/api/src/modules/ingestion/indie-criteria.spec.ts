@@ -1,4 +1,5 @@
-import { readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { igdbGameSchema } from './igdb-game.schema';
 import { type MappedCompany, type MappedGame, mapIgdbGame } from './igdb.mapper';
@@ -8,6 +9,7 @@ import {
   type IndieCriteria,
   indieCriteriaSchema,
   readIndieCriteria,
+  readVersionedIndieCriteria,
 } from './indie-criteria';
 
 const FIXTURES_DIR = join(__dirname, '../../../test/fixtures/igdb');
@@ -21,6 +23,10 @@ function fixture(file: string): MappedGame[] {
 
 function evaluate(game: MappedGame, rules: IndieCriteria = criteria) {
   return evaluateIndieCriteria(game, rules, NOW);
+}
+
+function daysBeforeNow(days: number) {
+  return new Date(NOW.getTime() - days * 86_400_000);
 }
 
 const amnesia = fixture('games.complete.json').find((g) => g.igdbId === 111)!;
@@ -137,6 +143,47 @@ describe('evaluateIndieCriteria', () => {
       ['anunciado sem data e sem hypes', { ...upcoming, firstReleaseDate: null }, false],
     ])('%s → aceito: %s', (_, changes, accepted) => {
       expect(evaluate(variant(changes)).accepted).toBe(accepted);
+    });
+
+    describe('carência pós-lançamento', () => {
+      const silent = (days: number) =>
+        variant({ firstReleaseDate: daysBeforeNow(days), ratingCount: 0, hypes: 0 });
+      const inCatalog = { wasInCatalog: true };
+
+      it('mantém o jogo que estava no catálogo e foi lançado há menos de 180 dias', () => {
+        expect(evaluateIndieCriteria(silent(179), criteria, NOW, inCatalog)).toEqual({
+          accepted: true,
+        });
+      });
+
+      it('não admite o jogo que não estava no catálogo, mesmo lançado há pouco', () => {
+        expect(evaluateIndieCriteria(silent(10), criteria, NOW, { wasInCatalog: false })).toEqual({
+          accepted: false,
+          reason: 'NO_INTEREST_SIGNAL',
+        });
+      });
+
+      it('tira o jogo do catálogo no fim do prazo', () => {
+        expect(evaluateIndieCriteria(silent(180), criteria, NOW, inCatalog)).toEqual({
+          accepted: false,
+          reason: 'NO_INTEREST_SIGNAL',
+        });
+      });
+
+      it('o prazo vem da configuração e só adia o sinal de interesse', () => {
+        const noGrace = {
+          ...criteria,
+          interestSignals: { ...criteria.interestSignals, postLaunchGraceDays: 0 },
+        };
+
+        expect(evaluateIndieCriteria(silent(10), noGrace, NOW, inCatalog)).toEqual({
+          accepted: false,
+          reason: 'NO_INTEREST_SIGNAL',
+        });
+        expect(
+          evaluateIndieCriteria({ ...silent(10), isCancelled: true }, criteria, NOW, inCatalog),
+        ).toEqual({ accepted: false, reason: 'CANCELLED' });
+      });
     });
   });
 
@@ -278,6 +325,7 @@ describe('validação do arquivo de critério', () => {
     overridesPolicy: { maxEntries: number };
     majorCompanies: Record<string, unknown>[];
     controlledStudios: Record<string, unknown>[];
+    reviewedCompanies: Record<string, unknown>[];
   };
   const [firstOverride] = raw.overrides.alwaysInclude;
   const [firstStudio] = raw.controlledStudios;
@@ -344,6 +392,39 @@ describe('validação do arquivo de critério', () => {
         controlledStudios: [...raw.controlledStudios, firstStudio],
       }),
     ).toThrow('repetido');
+  });
+
+  it('exige grupo e ano da compra no estúdio sem efeito atual', () => {
+    const noEffect = raw.reviewedCompanies.find((c) => c.decision === 'no_current_effect')!;
+    const withoutYear = { ...noEffect, acquiredYear: undefined };
+
+    expect(() => indieCriteriaSchema.parse({ ...raw, reviewedCompanies: [withoutYear] })).toThrow(
+      'ano da compra',
+    );
+  });
+
+  it('recusa empresa revisada que também está na lista de controlados', () => {
+    const reviewedStudio = {
+      igdbId: firstStudio!.igdbId,
+      name: 'x',
+      decision: 'rejected',
+      decidedAt: '2026-10-23',
+    };
+
+    expect(() =>
+      indieCriteriaSchema.parse({ ...raw, reviewedCompanies: [reviewedStudio] }),
+    ).toThrow('lista de grandes ou de controlados');
+  });
+
+  it('versiona o critério pelo conteúdo do arquivo', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'criteria-'));
+    const copy = join(dir, 'indie-criteria.json');
+    writeFileSync(copy, JSON.stringify(raw));
+    const first = readVersionedIndieCriteria(copy).version;
+    writeFileSync(copy, JSON.stringify({ ...raw, principle: 'outro princípio' }));
+
+    expect(first).toMatch(/^[0-9a-f]{64}$/);
+    expect(readVersionedIndieCriteria(copy).version).not.toBe(first);
   });
 
   it('exige fonte pública em cada estúdio controlado', () => {
