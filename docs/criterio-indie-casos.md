@@ -311,14 +311,14 @@ foram avaliadas pelo teste de entrada.
 
 #### Limítrofes avaliadas e recusadas
 
-As 10 empresas fora da lista com argumento para entrar. O efeito atual é o que
+As empresas fora da lista com argumento para entrar: 10 avaliadas no B-60 e as que os alertas da ingestão trouxeram depois. O efeito atual é o que
 mudaria se a empresa entrasse, com a data de compra de cada estúdio.
 
 O alerta da ingestão (B-13) só cobre jogo novo no catálogo. Por isso, **esta tabela é
 o único registro dos jogos hoje aceitos que mudariam de lado se uma recusa fosse
 revertida**: *Graft*, *Windjammers 2*, *Absolum*, *Rogue Lords*, *Dragons and Titans*,
-*Where the Seeds Fall* e, se o controle se confirmar, *The Midnight Walkers* e
-*Quiet*.
+*Where the Seeds Fall*, *Biosphere Simulator* e, se o controle se confirmar, *The
+Midnight Walkers* e *Quiet*.
 
 | Empresa | Estúdios no catálogo | Efeito atual | Motivo da recusa |
 | --- | --- | --- | --- |
@@ -332,6 +332,7 @@ revertida**: *Graft*, *Windjammers 2*, *Absolum*, *Rogue Lords*, *Dragons and Ti
 | CyberAgent | Cygames (criada pela CyberAgent em 2011, controle majoritário) | *Where the Seeds Fall* (2026-11-05) sairia | **Argumento a favor:** a Cygames é uma desenvolvedora grande (*Granblue Fantasy: Relink*). **Recusa, decidida em 23/10/2026:** a CyberAgent não controla canal pelo qual jogos chegam ao jogador. O jogo já está no catálogo e sai em 05/11/2026; esta linha é a decisão para quando ele aparecer em revisão |
 | Wemade | Oneway Ticket Studio (via Madngine) | *The Midnight Walkers* (2026-09-30), se o controle se confirmar | Não controla canal pelo qual jogos chegam ao jogador |
 | LINE Corporation | LINE Games | *Quiet* (2026-12-31), se o controle se confirmar | Não controla canal de distribuição de jogos |
+| indie.io (B-13, 24/10/2026) | IoStudios | *Biosphere Simulator* sairia, se o controle se confirmar | Publisher indie (139 jogos publicados na IGDB): não controla canal de distribuição de jogos e não é conglomerado. Veio do primeiro alerta `PARENT_OUTSIDE_MAJORS` da ingestão |
 
 Fontes das datas: Red Hook
 (https://www.gematsu.com/2024/09/behaviour-interactive-acquires-red-hook-studios), The
