@@ -1784,6 +1784,13 @@
       "decidedAt": "2026-10-23"
     },
     {
+      "igdbId": 55057,
+      "name": "indie.io",
+      "decision": "rejected",
+      "decidedAt": "2026-10-24",
+      "note": "Limítrofe recusada no B-13, pelo alerta da IoStudios (Biosphere Simulator): publisher indie, não controla canal de distribuição de jogos e não é conglomerado."
+    },
+    {
       "igdbId": 56503,
       "name": "padSoft",
       "decision": "rejected",
