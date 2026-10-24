@@ -1,0 +1,8 @@
+{
+  "candidateFilter": "game_type = 0 & version_parent = null & genres = (32)",
+  "candidateFilterRationale": "Recorte R4 aprovado no M0: jogos principais (não DLC, expansão nem edição) com o gênero Indie. O critério indie decide o resto.",
+  "maxInvalidRatio": 0.01,
+  "maxInvalidRatioRationale": "Valor inicial: nos censos do B-59 e do B-60, nenhum dos cerca de 130 mil jogos falhou no schema. Acima de 1%, a mudança é da IGDB, não de um jogo, e a execução falha sem gravar.",
+  "minFetchedRatioToDeactivate": 0.95,
+  "minFetchedRatioRationale": "Valor inicial: o conjunto candidato só cresce entre execuções. Se a busca trouxer menos de 95% do que a última execução bem-sucedida trouxe, a resposta da IGDB é tratada como parcial e nenhum jogo é desativado."
+}

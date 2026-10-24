@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { z } from 'zod';
@@ -29,6 +30,25 @@ const controlledStudio = igdbEntity.extend({
   note: z.string().min(1),
 });
 
+const reviewedCompany = igdbEntity
+  .extend({
+    decision: z.enum([
+      'no_current_effect',
+      'wrong_igdb_parent',
+      'wrong_credit',
+      'rejected',
+      'not_ownership',
+      'pending_source',
+    ]),
+    decidedAt: z.iso.date(),
+    group: z.string().min(1).optional(),
+    acquiredYear: z.number().int().optional(),
+    note: z.string().min(1).optional(),
+  })
+  .refine((c) => c.decision !== 'no_current_effect' || (c.group && c.acquiredYear), {
+    message: 'Estúdio sem efeito atual precisa do grupo e do ano da compra.',
+  });
+
 export const indieCriteriaSchema = z
   .object({
     principle: z.string().min(1),
@@ -48,7 +68,15 @@ export const indieCriteriaSchema = z
       message: 'Estúdio repetido na lista de controlados.',
     }),
     completeEntry: z.object({ minSummaryLength: z.number().int().nonnegative() }),
-    interestSignals: z.object({ ratingsOnlyBefore: z.coerce.date() }),
+    interestSignals: z.object({
+      ratingsOnlyBefore: z.coerce.date(),
+      postLaunchGraceDays: z.number().int().nonnegative(),
+      postLaunchGraceRationale: z.string().min(1),
+    }),
+    reviewedCompaniesPolicy: z.string().min(1),
+    reviewedCompanies: z.array(reviewedCompany).refine(hasUniqueIds, {
+      message: 'Empresa repetida na lista de empresas revisadas.',
+    }),
     overridesPolicy: z.object({
       purpose: z.string().min(1),
       alwaysInclude: z.string().min(1),
@@ -79,14 +107,40 @@ export const indieCriteriaSchema = z
     ({ controlledStudios }) =>
       controlledStudios.every((s) => !s.divestedAt || s.divestedAt > s.acquiredAt),
     { message: 'A saída do grupo precisa ser posterior à aquisição.', path: ['controlledStudios'] },
+  )
+  .refine(
+    ({ reviewedCompanies, majorCompanies, controlledStudios }) =>
+      reviewedCompanies.every(
+        (c) =>
+          !majorCompanies.some((m) => m.igdbId === c.igdbId) &&
+          !controlledStudios.some((s) => s.igdbId === c.igdbId),
+      ),
+    {
+      message: 'Empresa revisada não pode estar também na lista de grandes ou de controlados.',
+      path: ['reviewedCompanies'],
+    },
   );
 
 export type IndieCriteria = z.infer<typeof indieCriteriaSchema>;
 
 export const INDIE_CRITERIA_FILE = resolve(process.cwd(), 'config/indie-criteria.json');
 
+export interface VersionedIndieCriteria {
+  criteria: IndieCriteria;
+  version: string;
+}
+
 export function readIndieCriteria(file = INDIE_CRITERIA_FILE): IndieCriteria {
-  return indieCriteriaSchema.parse(JSON.parse(readFileSync(file, 'utf8')));
+  return readVersionedIndieCriteria(file).criteria;
+}
+
+// A versão é o hash do arquivo: separa "o jogo mudou" de "a regra mudou" entre execuções.
+export function readVersionedIndieCriteria(file = INDIE_CRITERIA_FILE): VersionedIndieCriteria {
+  const content = readFileSync(file, 'utf8');
+  return {
+    criteria: indieCriteriaSchema.parse(JSON.parse(content)),
+    version: createHash('sha256').update(content).digest('hex'),
+  };
 }
 
 export type RejectionReason =
@@ -111,12 +165,19 @@ export type CriteriaVerdict =
   | { accepted: false; reason: Exclude<RejectionReason, 'CONTROLLED_DEVELOPER'> }
   | ({ accepted: false; reason: 'CONTROLLED_DEVELOPER' } & ControlCause);
 
+// O que a ingestão sabe do jogo antes desta avaliação: se ele estava no catálogo na última
+// execução bem-sucedida.
+export interface EvaluationContext {
+  wasInCatalog: boolean;
+}
+
 // As listas de exceção corrigem só a classificação indie (gênero e desenvolvedora); nunca
 // sobrepõem o filtro de conteúdo, a qualidade da ficha ou o sinal de interesse.
 export function evaluateIndieCriteria(
   game: MappedGame,
   criteria: IndieCriteria,
   now: Date,
+  context: EvaluationContext = { wasInCatalog: false },
 ): CriteriaVerdict {
   const has = (list: { igdbId: number }[], igdbId: number) =>
     list.some((entry) => entry.igdbId === igdbId);
@@ -134,7 +195,7 @@ export function evaluateIndieCriteria(
   }
   if (game.isCancelled) return reject('CANCELLED');
   if (!isCompleteEntry(game, criteria)) return reject('INCOMPLETE_ENTRY');
-  if (!hasInterestSignal(game, criteria.interestSignals.ratingsOnlyBefore)) {
+  if (!hasInterestSignal(game, criteria, now, context)) {
     return reject('NO_INTEREST_SIGNAL');
   }
   return { accepted: true };
@@ -190,13 +251,37 @@ function isCompleteEntry(game: MappedGame, criteria: IndieCriteria) {
   );
 }
 
+const DAY_MS = 86_400_000;
+
+export function isWithinPostLaunchGrace(game: MappedGame, criteria: IndieCriteria, now: Date) {
+  return (
+    game.releaseStatus === ReleaseStatus.RELEASED &&
+    game.firstReleaseDate !== null &&
+    now.getTime() - game.firstReleaseDate.getTime() <
+      criteria.interestSignals.postLaunchGraceDays * DAY_MS
+  );
+}
+
 // Lançados antes do corte só contam com avaliações; a partir dele, avaliações ou hypes.
-// Jogos por lançar entram com data marcada ou, sem data, com hypes.
-function hasInterestSignal(game: MappedGame, ratingsOnlyBefore: Date) {
-  if (game.releaseStatus === ReleaseStatus.UPCOMING) {
+// Jogos por lançar entram com data marcada ou, sem data, com hypes. A carência pós-lançamento
+// protege só a passagem de "por lançar" a lançado de quem já estava no catálogo: as avaliações
+// levam tempo para aparecer, mas a carência não admite jogo que nunca entrou.
+function hasInterestSignal(
+  game: MappedGame,
+  criteria: IndieCriteria,
+  now: Date,
+  { wasInCatalog }: EvaluationContext,
+) {
+  if (
+    game.releaseStatus === ReleaseStatus.UPCOMING ||
+    (wasInCatalog && isWithinPostLaunchGrace(game, criteria, now))
+  ) {
     return game.firstReleaseDate !== null || game.hypes > 0;
   }
-  if (game.firstReleaseDate !== null && game.firstReleaseDate < ratingsOnlyBefore) {
+  if (
+    game.firstReleaseDate !== null &&
+    game.firstReleaseDate < criteria.interestSignals.ratingsOnlyBefore
+  ) {
     return game.ratingCount > 0;
   }
   return game.ratingCount > 0 || game.hypes > 0;

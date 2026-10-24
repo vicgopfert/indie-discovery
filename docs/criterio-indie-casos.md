@@ -23,7 +23,11 @@ Um jogo entra no catálogo quando:
    Indie ou algum tema;
 6. tem algum sinal de interesse: lançado antes de 2015 com avaliações; lançado desde
    2015 com avaliações ou `hypes`; por lançar com data marcada; ou anunciado sem data
-   com `hypes`.
+   com `hypes`. O jogo que estava no catálogo na execução anterior e foi lançado há
+   menos de 180 dias (`postLaunchGraceDays`) segue a regra de "por lançar": a carência
+   protege a passagem de "por lançar" a lançado, porque as avaliações levam tempo para
+   aparecer, mas não admite jogo que nunca entrou. O prazo é um valor inicial sem
+   evidência e não decide se o jogo é indie, só adia a exigência de sinal (B-13).
 
 Para jogo anunciado sem data, a data de referência do item 2 é a da ingestão. Na
 coautoria, basta uma desenvolvedora controlada para excluir, e a data vale para cada
@@ -494,8 +498,10 @@ empresa-mãe na IGDB) e ficam fora da conta dos 249.
 Estúdios sugeridos que não estão na lista porque todo o catálogo deles na IGDB é
 anterior à compra, com folga de pelo menos dois anos. A data do jogo mais recente vem
 da IGDB; o ano da compra é o conhecido no levantamento, sem fonte citada porque não
-muda nenhum resultado. Se um desses estúdios lançar um jogo novo, a ingestão (B-13)
-sinaliza o caso para verificação.
+muda nenhum resultado. A lista legível por máquina está em `reviewedCompanies` no
+`indie-criteria.json` (decisão `no_current_effect`, com grupo e ano da compra): a
+ingestão (B-13) gera o alerta `NO_EFFECT_STUDIO` quando um jogo do catálogo desses
+estúdios é do ano da compra em diante (ou, sem data, quando a execução é).
 
 | Estúdio | Jogo mais recente no catálogo | Grupo e ano da compra |
 | --- | --- | --- |
@@ -594,8 +600,8 @@ candidato: a IGDB o classifica como Racing e Simulator, sem Indie.
 - **O jogo sem data é avaliado pela data da ingestão.** Quando ele ganha data de
   lançamento, a regra da data passa a ter o que comparar. Essa transição é frequente,
   porque o catálogo inclui pré-lançamentos de propósito (quatro dos seis jogos das
-  entrevistas da BGS estavam sem lançamento). O alerta de jogo novo não a cobre; a
-  reavaliação nessa transição é critério do B-13.
+  entrevistas da BGS estavam sem lançamento). A ingestão (B-13) reavalia todo jogo
+  gravado a cada execução e gera o alerta `RELEASE_DATE_ASSIGNED` nessa transição.
 - **Jogos sem desenvolvedora creditada são aceitos.** São 1,54% das avaliações do
   catálogo e 23,15% dos jogos aceitos (achado 2 do B-60). Não há regra de reserva; a
   limitação foi escalada ao M0.
