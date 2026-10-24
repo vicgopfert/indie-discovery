@@ -30,6 +30,15 @@ enum IngestionStatus {
   FAILED
 }
 
+enum ReviewFlagKind {
+  NO_EFFECT_STUDIO
+  PARENT_OUTSIDE_MAJORS
+  PARENT_MAJOR_NOT_CONTROLLED
+  RELEASE_DATE_ASSIGNED
+  VERDICT_CHANGED
+  LEFT_CANDIDATE_SET
+}
+
 model Country {
   code      Int       @id
   alpha2    String    @unique @db.Char(2)
@@ -78,9 +87,11 @@ model Game {
   coverImageId        String
   firstReleaseDate    DateTime?            @db.Date
   releaseStatus       ReleaseStatus
-  popularityRaw       Int                  @default(0)
+  popularityRaw       Float                @default(0)
   popularityNorm      Float                @default(0)
-  isIndie             Boolean
+  inCatalog           Boolean
+  criteriaVerdict     Json
+  criteriaVersion     String
   storeUrl            String?
   studioCountryCode   Int?
   studioCountry       Country?             @relation(fields: [studioCountryCode], references: [code])
@@ -90,7 +101,7 @@ model Game {
   features            GameFeature[]
   languages           GameLanguage[]
 
-  @@index([isIndie, releaseStatus])
+  @@index([inCatalog, releaseStatus])
   @@index([studioCountryCode])
 }
 
@@ -129,12 +140,35 @@ model GameLanguage {
 }
 
 model IngestionRun {
-  id            String          @id @default(uuid()) @db.Uuid
-  startedAt     DateTime        @default(now())
-  finishedAt    DateTime?
-  status        IngestionStatus @default(RUNNING)
-  gamesFetched  Int             @default(0)
-  gamesUpserted Int             @default(0)
-  gamesRejected Int             @default(0)
-  errorSummary  String?
+  id               String                @id @default(uuid()) @db.Uuid
+  startedAt        DateTime              @default(now())
+  evaluatedAt      DateTime
+  finishedAt       DateTime?
+  status           IngestionStatus       @default(RUNNING)
+  gamesFetched     Int                   @default(0)
+  gamesUpserted    Int                   @default(0)
+  gamesRejected    Int                   @default(0)
+  gamesInvalid     Int                   @default(0)
+  gamesDeactivated Int                   @default(0)
+  flagsRaised      Int                   @default(0)
+  criteriaVersion  String?
+  popularityUnit   Float?
+  popularityMax    Int?
+  popularityMedian Float?
+  errorSummary     String?
+  reviewFlags      IngestionReviewFlag[]
+}
+
+model IngestionReviewFlag {
+  id        String         @id @default(uuid()) @db.Uuid
+  runId     String         @db.Uuid
+  run       IngestionRun   @relation(fields: [runId], references: [id], onDelete: Cascade)
+  kind      ReviewFlagKind
+  igdbId    Int
+  gameName  String
+  detail    Json
+  createdAt DateTime       @default(now())
+
+  @@index([runId])
+  @@index([kind])
 }
