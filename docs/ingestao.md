@@ -103,7 +103,8 @@ decisão lá. Os de transição comparam o jogo com o que estava gravado.
 O "Want to Play" da IGDB é a fração da base de usuários que marcou o jogo, não uma
 contagem. A execução usa como unidade `u` a menor fração positiva do catálogo aceito,
 confere que todo valor é múltiplo inteiro dela e calcula
-`pop_j = log(1 + p_j/u) / log(1 + p_max/u)`, com `p_max` do catálogo aceito. A unidade, o
+`pop_j = log(1 + p_j/u) / log(1 + p_max/u)`, com `p_max` do catálogo aceito. O jogo guarda a
+contagem (`popularityCount`), e a execução guarda a unidade. A unidade, o
 máximo e a mediana da contagem ficam no `IngestionRun`. A premissa de que a menor fração
 corresponde a uma pessoa vale porque milhares de jogos têm contagem 1; se a quantização
 mudar, a execução falha em vez de normalizar errado.
@@ -128,11 +129,17 @@ Games, Inspector Studios e Cathedral Studios) não geram mais alerta: só tinham
 aquela carência admitia.
 
 **O crescimento entre dias não foi medido.** A IGDB recalcula o "Want to Play" todo dia, e a
-unidade muda com a base de usuários (1/881.744 em 23/10, 1/882.912 em 24/10). Numa execução
-em outro dia, o `popularityRaw` de todo jogo muda e a linha é regravada. Do mesmo modo, um
-jogo a mais ou a menos no catálogo muda todos os IDF e os pesos de `GameFeature`. Esse caso
-deixa até cerca de 40 MB de linhas mortas por execução, que o autovacuum reaproveita; no
-limite de 1 GB do Neon há folga, e a medição real vem com a ingestão agendada (B-54).
+unidade muda com a base de usuários (1/881.744 em 23/10, 1/882.912 em 24/10). Por isso o
+jogo guarda a **contagem reconstruída** (`popularityCount`), que não muda quando a base
+cresce: um jogo com 5 pessoas continua com 5. A fração da IGDB se recupera multiplicando a
+contagem pela unidade da execução (`IngestionRun.popularityUnit`). O `popularityNorm` só
+muda quando muda a contagem do jogo ou o máximo do catálogo.
+
+Os pesos de `GameFeature` continuam sendo regravados quando o catálogo muda: um jogo a mais
+ou a menos muda o N, todos os IDF e todos os pesos (a tabela tem 189 mil linhas e 26 MB). A
+medição entre dias vem com a ingestão agendada (B-54). Pergunta para o B-31: se o índice de
+recomendação é montado em memória na API, é preciso persistir `tfidfWeight`? O IDF em
+`Feature` (cerca de 4 mil linhas) basta para reconstruir os pesos na inicialização.
 
 ## Medições para decisões pendentes (B-61)
 

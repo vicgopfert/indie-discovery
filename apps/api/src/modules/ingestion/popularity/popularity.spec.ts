@@ -1,4 +1,9 @@
-import { normalizedPopularity, PopularityQuantizationError, popularityScale } from './popularity';
+import {
+  normalizedPopularity,
+  PopularityQuantizationError,
+  popularityScale,
+  reconstructedCount,
+} from './popularity';
 
 const UNIT = 0.000001134116025;
 
@@ -21,13 +26,30 @@ describe('popularityScale', () => {
   });
 });
 
+describe('reconstructedCount', () => {
+  const scale = popularityScale([UNIT, 5 * UNIT, 763 * UNIT])!;
+
+  it('converte a fração da IGDB em número de pessoas', () => {
+    expect(reconstructedCount(5 * UNIT, scale)).toBe(5);
+    expect(reconstructedCount(0, scale)).toBe(0);
+    expect(reconstructedCount(5 * UNIT, null)).toBe(0);
+  });
+
+  it('dá a mesma contagem quando a base de usuários da IGDB cresce', () => {
+    const grownUnit = 0.000001132616991;
+    const grown = popularityScale([grownUnit, 5 * grownUnit, 764 * grownUnit])!;
+
+    expect(reconstructedCount(5 * grownUnit, grown)).toBe(reconstructedCount(5 * UNIT, scale));
+  });
+});
+
 describe('normalizedPopularity', () => {
   const scale = popularityScale([UNIT, 5 * UNIT, 763 * UNIT])!;
 
   it('aplica a escala logarítmica sobre a contagem, não sobre a fração', () => {
-    expect(normalizedPopularity(763 * UNIT, scale)).toBe(1);
-    expect(normalizedPopularity(5 * UNIT, scale)).toBeCloseTo(Math.log(6) / Math.log(764), 12);
-    expect(normalizedPopularity(5 * UNIT, scale)).toBeGreaterThan(0.25);
+    expect(normalizedPopularity(763, scale)).toBe(1);
+    expect(normalizedPopularity(5, scale)).toBeCloseTo(Math.log(6) / Math.log(764), 12);
+    expect(normalizedPopularity(5, scale)).toBeGreaterThan(0.25);
   });
 
   it('dá zero ao jogo sem valor', () => {

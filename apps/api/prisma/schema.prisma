@@ -87,7 +87,7 @@ model Game {
   coverImageId        String
   firstReleaseDate    DateTime?            @db.Date
   releaseStatus       ReleaseStatus
-  popularityRaw       Float                @default(0)
+  popularityCount     Int                  @default(0)
   popularityNorm      Float                @default(0)
   inCatalog           Boolean
   criteriaVerdict     Json

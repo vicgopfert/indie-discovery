@@ -7,7 +7,7 @@ import type { FeatureKey } from '../../recommendation/tfidf';
 export interface CatalogGame {
   game: MappedGame;
   verdict: unknown;
-  popularityRaw: number;
+  popularityCount: number;
   popularityNorm: number;
   weights: ReadonlyMap<FeatureKey, number>;
 }
@@ -188,7 +188,7 @@ export class IngestionRepository {
       (rows) => this.prisma.$executeRaw`
       INSERT INTO "Game" AS g (
         "id", "igdbId", "slug", "name", "summary", "coverImageId", "firstReleaseDate",
-        "releaseStatus", "popularityRaw", "popularityNorm", "inCatalog", "storeUrl",
+        "releaseStatus", "popularityCount", "popularityNorm", "inCatalog", "storeUrl",
         "studioCountryCode", "studioCountrySource", "syncedAt", "criteriaVerdict", "criteriaVersion"
       )
       SELECT gen_random_uuid(), t.igdb_id, t.slug, t.name, t.summary, t.cover, t.released::date,
@@ -203,7 +203,7 @@ export class IngestionRepository {
         ${rows.map((r) => r.game.coverImageId)}::text[],
         ${rows.map((r) => day(r.game.firstReleaseDate))}::text[],
         ${rows.map((r) => r.game.releaseStatus)}::text[],
-        ${rows.map((r) => r.popularityRaw)}::float8[],
+        ${rows.map((r) => r.popularityCount)}::int[],
         ${rows.map((r) => r.popularityNorm)}::float8[],
         ${rows.map((r) => r.game.storeUrl)}::text[],
         ${rows.map((r) => r.game.studioCountryCode)}::int[],
@@ -213,18 +213,18 @@ export class IngestionRepository {
       ON CONFLICT ("igdbId") DO UPDATE SET
         "slug" = EXCLUDED."slug", "name" = EXCLUDED."name", "summary" = EXCLUDED."summary",
         "coverImageId" = EXCLUDED."coverImageId", "firstReleaseDate" = EXCLUDED."firstReleaseDate",
-        "releaseStatus" = EXCLUDED."releaseStatus", "popularityRaw" = EXCLUDED."popularityRaw",
+        "releaseStatus" = EXCLUDED."releaseStatus", "popularityCount" = EXCLUDED."popularityCount",
         "popularityNorm" = EXCLUDED."popularityNorm", "inCatalog" = true,
         "storeUrl" = EXCLUDED."storeUrl", "studioCountryCode" = EXCLUDED."studioCountryCode",
         "studioCountrySource" = EXCLUDED."studioCountrySource", "syncedAt" = EXCLUDED."syncedAt",
         "criteriaVerdict" = EXCLUDED."criteriaVerdict", "criteriaVersion" = EXCLUDED."criteriaVersion"
       WHERE (
         g."slug", g."name", g."summary", g."coverImageId", g."firstReleaseDate", g."releaseStatus",
-        g."popularityRaw", g."popularityNorm", g."inCatalog", g."storeUrl", g."studioCountryCode",
+        g."popularityCount", g."popularityNorm", g."inCatalog", g."storeUrl", g."studioCountryCode",
         g."studioCountrySource", g."criteriaVerdict", g."criteriaVersion"
       ) IS DISTINCT FROM (
         EXCLUDED."slug", EXCLUDED."name", EXCLUDED."summary", EXCLUDED."coverImageId",
-        EXCLUDED."firstReleaseDate", EXCLUDED."releaseStatus", EXCLUDED."popularityRaw",
+        EXCLUDED."firstReleaseDate", EXCLUDED."releaseStatus", EXCLUDED."popularityCount",
         EXCLUDED."popularityNorm", true, EXCLUDED."storeUrl", EXCLUDED."studioCountryCode",
         EXCLUDED."studioCountrySource", EXCLUDED."criteriaVerdict", EXCLUDED."criteriaVersion"
       )`,
