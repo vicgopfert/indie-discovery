@@ -1,6 +1,6 @@
 # Vetorização TF-IDF — configuração e medições (B-12)
 
-Funções em `apps/api/src/modules/ingestion/tfidf.ts`; valores em
+Funções em `apps/api/src/modules/recommendation/tfidf.ts`; valores em
 `apps/api/config/recommendation.json`. Medições feitas em 22 e 23/10/2026 sobre o
 catálogo aceito pelo critério indie (19.998 jogos).
 
