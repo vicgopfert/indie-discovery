@@ -2,7 +2,7 @@ import { ConfigModule } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { validateIngestionEnv } from '../../config/ingestion-env';
 import { PrismaModule } from '../../prisma/prisma.module';
-import { IgdbClient } from './igdb.client';
+import { IgdbClient } from './igdb/igdb.client';
 import { IngestionModule } from './ingestion.module';
 import { RunIngestionUseCase } from './run-ingestion.use-case';
 

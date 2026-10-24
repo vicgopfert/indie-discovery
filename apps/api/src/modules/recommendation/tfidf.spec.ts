@@ -1,5 +1,5 @@
 import { FeatureType } from '../../generated/prisma/client';
-import type { MappedFeature } from './igdb.mapper';
+import type { MappedFeature } from '../ingestion/igdb/igdb.mapper';
 import {
   computeIdf,
   excludedKeywordMatcher,

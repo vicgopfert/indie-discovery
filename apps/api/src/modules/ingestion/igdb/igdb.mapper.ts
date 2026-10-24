@@ -1,4 +1,4 @@
-import { FeatureType, ReleaseStatus } from '../../generated/prisma/client';
+import { FeatureType, ReleaseStatus } from '../../../generated/prisma/client';
 import type { IgdbGame } from './igdb-game.schema';
 
 // Códigos conferidos na API da IGDB (game_statuses, website_types, language_support_types).

@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { IngestionEnv } from '../../config/ingestion-env';
 import { PrismaService } from '../../prisma/prisma.service';
-import { IgdbCatalogSource } from './igdb-catalog.source';
-import { IgdbClient } from './igdb.client';
-import { readVersionedIndieCriteria } from './indie-criteria';
+import { IgdbCatalogSource } from './igdb/igdb-catalog.source';
+import { IgdbClient } from './igdb/igdb.client';
+import { readVersionedIndieCriteria } from './criteria/indie-criteria';
 import { readIngestionConfig } from './ingestion-config';
-import { IngestionRepository } from './ingestion.repository';
+import { IngestionRepository } from './persistence/ingestion.repository';
 import { RunIngestionUseCase } from './run-ingestion.use-case';
-import { readTfidfConfig } from './tfidf';
+import { readTfidfConfig } from '../recommendation/tfidf';
 
 @Module({
   providers: [

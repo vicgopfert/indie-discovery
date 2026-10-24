@@ -1,25 +1,25 @@
 import { Logger } from '@nestjs/common';
 import { IngestionStatus, ReviewFlagKind } from '../../generated/prisma/client';
-import { canDeactivateMissing, missingCause } from './candidate-set';
-import type { IgdbCatalogSource } from './igdb-catalog.source';
-import { igdbGameSchema } from './igdb-game.schema';
-import { type MappedGame, mapIgdbGame } from './igdb.mapper';
-import { evaluateIndieCriteria, type VersionedIndieCriteria } from './indie-criteria';
+import { canDeactivateMissing, missingCause } from './review-flags/candidate-set';
+import type { IgdbCatalogSource } from './igdb/igdb-catalog.source';
+import { igdbGameSchema } from './igdb/igdb-game.schema';
+import { type MappedGame, mapIgdbGame } from './igdb/igdb.mapper';
+import { evaluateIndieCriteria, type VersionedIndieCriteria } from './criteria/indie-criteria';
 import type { IngestionConfig } from './ingestion-config';
 import type {
   CatalogGame,
   IngestionRepository,
   OutOfCatalogGame,
   RunOutcome,
-} from './ingestion.repository';
-import { normalizedPopularity, popularityScale } from './popularity';
+} from './persistence/ingestion.repository';
+import { normalizedPopularity, popularityScale } from './popularity/popularity';
 import {
   detectReviewFlags,
   type EvaluatedGame,
   type ReviewFlag,
   type StoredGame,
-} from './review-flags';
-import { computeIdf, type TfidfConfig, tfidfVector } from './tfidf';
+} from './review-flags/review-flags';
+import { computeIdf, type TfidfConfig, tfidfVector } from '../recommendation/tfidf';
 
 export interface IngestionSettings {
   criteria: VersionedIndieCriteria;

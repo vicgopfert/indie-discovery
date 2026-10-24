@@ -1,8 +1,8 @@
 import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { igdbGameSchema } from './igdb-game.schema';
-import { type MappedCompany, type MappedGame, mapIgdbGame } from './igdb.mapper';
+import { igdbGameSchema } from '../igdb/igdb-game.schema';
+import { type MappedCompany, type MappedGame, mapIgdbGame } from '../igdb/igdb.mapper';
 import {
   type CriteriaVerdict,
   evaluateIndieCriteria,
@@ -12,7 +12,7 @@ import {
   readVersionedIndieCriteria,
 } from './indie-criteria';
 
-const FIXTURES_DIR = join(__dirname, '../../../test/fixtures/igdb');
+const FIXTURES_DIR = join(__dirname, '../../../../test/fixtures/igdb');
 const NOW = new Date('2026-10-22T00:00:00Z');
 const criteria = readIndieCriteria();
 

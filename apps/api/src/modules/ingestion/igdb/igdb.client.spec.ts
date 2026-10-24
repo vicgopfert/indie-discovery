@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { FakeIgdbServer } from '../../../test/support/fake-igdb-server';
+import { FakeIgdbServer } from '../../../../test/support/fake-igdb-server';
 import { IgdbClient, type IgdbClientOptions, IgdbRequestError } from './igdb.client';
 
 const credentials = { clientId: 'client-id', clientSecret: 'client-secret' };

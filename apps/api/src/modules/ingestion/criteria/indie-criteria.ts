@@ -2,8 +2,8 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { z } from 'zod';
-import { FeatureType, ReleaseStatus } from '../../generated/prisma/client';
-import type { MappedCompany, MappedGame } from './igdb.mapper';
+import { FeatureType, ReleaseStatus } from '../../../generated/prisma/client';
+import type { MappedCompany, MappedGame } from '../igdb/igdb.mapper';
 
 const igdbEntity = z.object({ igdbId: z.number().int(), name: z.string().min(1) });
 const majorCompany = igdbEntity.extend({

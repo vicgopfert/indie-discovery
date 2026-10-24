@@ -1,6 +1,6 @@
-import { ReviewFlagKind } from '../../generated/prisma/client';
-import type { MappedCompany, MappedGame } from './igdb.mapper';
-import { type CriteriaVerdict, readIndieCriteria } from './indie-criteria';
+import { ReviewFlagKind } from '../../../generated/prisma/client';
+import type { MappedCompany, MappedGame } from '../igdb/igdb.mapper';
+import { type CriteriaVerdict, readIndieCriteria } from '../criteria/indie-criteria';
 import {
   ancestorsOf,
   detectReviewFlags,

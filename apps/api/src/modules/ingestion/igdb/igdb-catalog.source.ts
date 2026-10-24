@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import type { IgdbScopeRecord } from './candidate-set';
+import type { IgdbScopeRecord } from '../review-flags/candidate-set';
 import { IGDB_GAME_FIELDS } from './igdb-game.schema';
 import { IGDB_MAX_PAGE_SIZE, type IgdbClient, type IgdbRecord } from './igdb.client';
-import type { IngestionConfig } from './ingestion-config';
-import type { IgdbCompanyNode } from './review-flags';
+import type { IngestionConfig } from '../ingestion-config';
+import type { IgdbCompanyNode } from '../review-flags/review-flags';
 
 // Código conferido na API da IGDB (popularity_types): "Want to Play".
 const WANT_TO_PLAY = 2;
