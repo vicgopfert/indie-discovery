@@ -13,7 +13,7 @@ import type {
   OutOfCatalogGame,
   RunOutcome,
 } from './persistence/ingestion.repository';
-import { normalizedPopularity, popularityScale } from './popularity/popularity';
+import { normalizedPopularity, popularityScale, reconstructedCount } from './popularity/popularity';
 import {
   detectReviewFlags,
   type EvaluatedGame,
@@ -104,12 +104,12 @@ export class RunIngestionUseCase {
       this.settings.tfidf,
     );
     const catalog: CatalogGame[] = catalogEntries.map(({ game, verdict }) => {
-      const raw = wantToPlay.get(game.igdbId) ?? 0;
+      const count = reconstructedCount(wantToPlay.get(game.igdbId) ?? 0, scale);
       return {
         game,
         verdict,
-        popularityRaw: raw,
-        popularityNorm: normalizedPopularity(raw, scale),
+        popularityCount: count,
+        popularityNorm: normalizedPopularity(count, scale),
         weights: tfidfVector(game.features, idf, this.settings.tfidf).weights,
       };
     });

@@ -35,10 +35,16 @@ export function popularityScale(acceptedCatalogValues: Iterable<number>): Popula
   return { unit, maxCount: sorted.at(-1)!, medianCount: median(sorted) };
 }
 
-// pop_j = log(1 + p/u) / log(1 + p_max/u), entre 0 e 1.
-export function normalizedPopularity(value: number, scale: PopularityScale | null) {
+// A contagem é o valor gravado no jogo: a unidade muda todo dia, a contagem de um jogo não.
+export function reconstructedCount(value: number, scale: PopularityScale | null) {
   if (scale === null || value <= 0) return 0;
-  return Math.log1p(Math.round(value / scale.unit)) / Math.log1p(scale.maxCount);
+  return Math.round(value / scale.unit);
+}
+
+// pop_j = log(1 + p/u) / log(1 + p_max/u), entre 0 e 1.
+export function normalizedPopularity(count: number, scale: PopularityScale | null) {
+  if (scale === null || count <= 0) return 0;
+  return Math.log1p(count) / Math.log1p(scale.maxCount);
 }
 
 function median(sorted: number[]) {
