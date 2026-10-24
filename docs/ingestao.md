@@ -148,6 +148,33 @@ medição entre dias vem com a ingestão agendada (B-54). Pergunta para o B-31: 
 recomendação é montado em memória na API, é preciso persistir `tfidfWeight`? O IDF em
 `Feature` (cerca de 4 mil linhas) basta para reconstruir os pesos na inicialização.
 
+## Carga em produção (Neon, 24/10/2026, B-14)
+
+Duas execuções do workflow "Ingestão" no mesmo dia:
+
+| | Primeira (carga inicial) | Segunda |
+| --- | --- | --- |
+| Duração do workflow | 4 min 4 s | — |
+| Duração da execução (`IngestionRun`) | — | 2 min 51 s |
+| Gravação | 8 s | — |
+| Conjunto candidato | 130.520 jogos, nenhum fora do schema | 130.520 |
+| Catálogo | 20.051 jogos | 20.051 jogos: 14.057 lançados, 3.152 por lançar com data e 2.842 sem data |
+| Popularidade | — | máximo 764 pessoas, mediana 5 |
+| Alertas | 0 | 0 |
+| Banco | — | 69 MB; `GameFeature` 26 MB (188.779 linhas), `GameLanguage` 15 MB, `Game` 14 MB |
+
+Painel de uso do Neon no mesmo dia (período desde 30/09/2026, plano gratuito): 2,94 CU-h de
+computação, de 100 por mês; 32,44 MB de armazenamento e 1,4 MB de histórico (retenção de
+6 horas); 648 kB de tráfego de saída. O armazenamento é calculado pelo Neon e o painel não é
+atualizado em tempo real, por isso difere dos 69 MB de `pg_database_size`; os dois ficam
+registrados, cada um com a sua origem.
+
+Na segunda execução, só 3 linhas de `Game` foram regravadas, as dos jogos que mudaram na
+IGDB entre as duas, e nenhuma tabela de ligação ganhou linha morta. As 28 linhas mortas de
+`Language` vêm do seed do job de migrations, que regrava os idiomas a cada merge na `main`.
+No primeiro resumo, o `psql` falhou ao validar o certificado do Neon (`sslmode=verify-full`),
+o que foi corrigido no #29; a ingestão não foi afetada.
+
 ## Medições para decisões pendentes (B-61)
 
 **Quanto da carência se resolve sozinha.** O destino dos 3.151 jogos "por lançar" com data
