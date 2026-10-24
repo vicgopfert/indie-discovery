@@ -50,8 +50,14 @@ jobs:
       - name: Resumo da execução
         if: always()
         run: |
-          # O psql não aceita o parâmetro schema que o Prisma usa na URL.
-          export PSQL_URL="$(node -e "const u = new URL(process.env.DATABASE_URL); u.searchParams.delete('schema'); console.log(u.toString())")"
+          # O psql não aceita o parâmetro schema que o Prisma usa na URL e, com sslmode=verify-*,
+          # procura um certificado raiz próprio que o executor não tem: usa os do sistema.
+          export PSQL_URL="$(node -e "
+            const u = new URL(process.env.DATABASE_URL);
+            u.searchParams.delete('schema');
+            if (u.searchParams.get('sslmode')?.startsWith('verify')) u.searchParams.set('sslrootcert', 'system');
+            console.log(u.toString());
+          ")"
           {
             echo '## Última execução'
             echo '```'
