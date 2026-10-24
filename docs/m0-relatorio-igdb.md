@@ -322,7 +322,9 @@ Decisões aprovadas pelo autor:
 1. **País do estúdio volta ao P0 (B-21)**, com a IGDB complementada pelo Wikidata
    na ingestão (novo B-56) e a origem do dado registrada. A regra de portão passa
    a ser por país: **cada país só aparece como opção do filtro se tiver pelo menos
-   20 jogos**. Jogos sem o dado aparecem como "não informado".
+   20 jogos**. Jogos sem o dado aparecem como "não informado". **Medido no B-56
+   (24/10/2026):** 47,8% do catálogo com país (39,2% pela IGDB e 8,6% pelo
+   Wikidata), 250 jogos brasileiros e 48 países acima do mínimo de 20 jogos.
 2. **Coleções culturais curadas entram no P0 (F-24, novos B-57 e B-58)**, sem
    substituir nenhuma funcionalidade. O sistema sugere candidatos pelas
    palavras-chave, pelo resumo e pelo Wikidata; o autor revisa e aprova; a lista

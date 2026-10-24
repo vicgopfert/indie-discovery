@@ -27,6 +27,7 @@ composição do catálogo, os alertas e o tamanho do banco.
    reavaliado**, não só os novos.
 3. Sobe as cadeias de empresa-mãe das desenvolvedoras dos jogos aceitos.
 4. Busca o "Want to Play" dos aceitos e reconstrói a contagem (seção "Popularidade").
+   Busca no Wikidata o país dos jogos sem país na IGDB (seção "País do estúdio").
 5. Calcula IDF e vetores TF-IDF sobre o catálogo aceito.
 6. Detecta os alertas de revisão.
 7. Grava tudo numa única transação e fecha a execução com contagens, escala da
@@ -89,6 +90,38 @@ Fora a carência, o critério do B-13 decide igual ao do B-60: a lista `reviewed
 só controla alertas. A diferença para os 20.014 jogos do B-60 (23/10) vem da IGDB, que
 ganhou jogos em um dia. Os 965 recentes já tinham sinal de interesse e já estavam no
 catálogo antes da carência.
+
+## País do estúdio (B-56)
+
+O país vem da desenvolvedora na IGDB. Quando falta, vem do Wikidata, cruzando pelo
+identificador da IGDB (P5794, que é o slug do jogo), e a origem fica em
+`Game.studioCountrySource` (`IGDB` ou `WIKIDATA`). No Wikidata, vale o país da
+desenvolvedora (P178 → P17) e, só quando ele não existe, o país de origem do jogo (P495).
+Mais de um país distinto é ambíguo e fica sem país. Uma consulta SPARQL traz o catálogo
+inteiro em cerca de 6 segundos.
+
+**A IGDB vem primeiro.** Nos 3.224 jogos em que as duas fontes informam, o Wikidata diverge
+em 148 (4,6%), e os erros aparecem dos dois lados: *Cuphead* e *Rogue Legacy* são de
+estúdios canadenses, e a IGDB diz Estados Unidos e Holanda; *Ridiculous Fishing* é da
+Vlambeer, holandesa, e o Wikidata diz Estados Unidos.
+
+**Se o Wikidata falhar**, a ingestão segue, mantém os países que já tinham vindo dele e
+registra o motivo no resumo da execução: é um enriquecimento, não pode derrubar a ingestão
+nem apagar dados.
+
+Cobertura na carga local de 24/10/2026, sobre 20.054 jogos:
+
+| Origem | Jogos | Cobertura |
+| --- | --- | --- |
+| IGDB | 7.862 | 39,2% |
+| Wikidata | 1.731 | 8,6% |
+| **Com país** | **9.593** | **47,8%** |
+| Não informado | 10.461 | 52,2% |
+
+Outros 14 jogos ficaram sem país por ambiguidade. Os estúdios brasileiros passam de 205 para
+250 jogos (45 pelo Wikidata), e 48 países chegam ao mínimo de 20 jogos que a regra de portão
+do filtro exige (B-21). O M0 estimava cerca de 50% de cobertura, a partir de uma amostra de
+2.000 jogos.
 
 ## Alertas de revisão (`IngestionReviewFlag`)
 

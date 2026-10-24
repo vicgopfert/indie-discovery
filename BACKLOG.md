@@ -29,7 +29,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [x] **B-60** (P) Medir a regra de controle do critério indie: amostras de ~10 excluídos e ~10 aceitos, classificadas à mão — 10 de 10 exclusões corretas; achados: lacuna na lista de grandes (teste de entrada escrito, 5 empresas acrescentadas, 106 avaliadas e recusadas) e aceitos sem desenvolvedora (1,54% das avaliações; 23,15% dos jogos), escalado ao M0
 - [x] **B-59** (M, estimado P) Medir falsos negativos do critério indie: sortear 8 a 10 jogos excluídos pela regra e classificar à mão — taxa de 8 em 10 levou à troca da regra de publisher pela de controle do estúdio
 - [ ] **B-61** (P) Decidir o "Want to Play" como sinal de interesse, com a carência pós-lançamento corrigida medida lado a lado (tabela em `docs/ingestao.md`): contagem mínima de 5 acrescentaria 2.564 jogos (cerca de 13%) e é candidata a substituir a carência para os recém-lançados
-- [ ] **B-56** (P) Enriquecimento do país do estúdio pelo Wikidata na ingestão
+- [x] **B-56** (P) Enriquecimento do país do estúdio pelo Wikidata na ingestão — 47,8% do catálogo com país (39,2% IGDB + 8,6% Wikidata), 250 jogos brasileiros, 48 países com 20 jogos ou mais
 
 ## E2 — Contas e autenticação (S5)
 
