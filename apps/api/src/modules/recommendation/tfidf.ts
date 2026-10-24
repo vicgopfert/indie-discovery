@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { z } from 'zod';
 import { FeatureType } from '../../generated/prisma/client';
-import type { MappedFeature } from './igdb.mapper';
+import type { MappedFeature } from '../ingestion/igdb/igdb.mapper';
 
 const FEATURE_TYPES = [FeatureType.GENRE, FeatureType.THEME, FeatureType.KEYWORD] as const;
 

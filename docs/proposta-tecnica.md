@@ -320,13 +320,15 @@ apps/api/
 │     ├─ recommendation/
 │     │  ├─ content-index.ts
 │     │  ├─ scoring.ts         funções puras
+│     │  ├─ tfidf.ts           funções puras, usadas pela ingestão e pelo índice
 │     │  └─ generate-recommendations.use-case.ts
 │     ├─ ingestion/
-│     │  ├─ igdb.client.ts
-│     │  ├─ igdb.mapper.ts
-│     │  ├─ indie-criteria.ts  função pura
-│     │  ├─ tfidf.ts           funções puras
-│     │  └─ run-ingestion.use-case.ts
+│     │  ├─ run-ingestion.use-case.ts   orquestração
+│     │  ├─ igdb/              cliente, limitador, token, schema, mapeador e fonte do catálogo
+│     │  ├─ criteria/          critério indie: leitura do arquivo e avaliação (função pura)
+│     │  ├─ popularity/        contagem reconstruída e normalização (funções puras)
+│     │  ├─ review-flags/      alertas e diferença entre execuções (funções puras)
+│     │  └─ persistence/       gravação do catálogo em lote
 │     └─ health/
 └─ test/                       e2e, fixtures da IGDB e builders de dados
 

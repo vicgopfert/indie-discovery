@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { type IgdbGame, igdbGameSchema } from './igdb-game.schema';
 import { mapIgdbGame, slugify } from './igdb.mapper';
 
-const FIXTURES_DIR = join(__dirname, '../../../test/fixtures/igdb');
+const FIXTURES_DIR = join(__dirname, '../../../../test/fixtures/igdb');
 const NOW = new Date('2026-10-20T00:00:00Z');
 
 function loadFixture(file: string): IgdbGame[] {

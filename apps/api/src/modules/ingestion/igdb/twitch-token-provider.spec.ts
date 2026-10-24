@@ -1,4 +1,4 @@
-import { FakeIgdbServer } from '../../../test/support/fake-igdb-server';
+import { FakeIgdbServer } from '../../../../test/support/fake-igdb-server';
 import { TwitchTokenProvider } from './twitch-token-provider';
 
 const credentials = { clientId: 'client-id', clientSecret: 'client-secret' };

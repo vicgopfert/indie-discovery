@@ -5,18 +5,16 @@ import { join } from 'node:path';
 import { seedReferenceData } from '../prisma/seed/reference-data';
 import { AppModule } from '../src/app.module';
 import { IngestionStatus, ReviewFlagKind } from '../src/generated/prisma/client';
-import { IgdbCatalogSource } from '../src/modules/ingestion/igdb-catalog.source';
-import { igdbGameSchema } from '../src/modules/ingestion/igdb-game.schema';
-import { mapIgdbGame } from '../src/modules/ingestion/igdb.mapper';
-import { IgdbClient } from '../src/modules/ingestion/igdb.client';
-import {
-  evaluateIndieCriteria,
-  readVersionedIndieCriteria,
-} from '../src/modules/ingestion/indie-criteria';
+import { IgdbCatalogSource } from '../src/modules/ingestion/igdb/igdb-catalog.source';
+import { igdbGameSchema } from '../src/modules/ingestion/igdb/igdb-game.schema';
+import { mapIgdbGame } from '../src/modules/ingestion/igdb/igdb.mapper';
+import { IgdbClient } from '../src/modules/ingestion/igdb/igdb.client';
+import { evaluateIndieCriteria } from '../src/modules/ingestion/criteria/indie-criteria';
+import { readVersionedIndieCriteria } from '../src/modules/ingestion/criteria/indie-criteria.config';
 import { readIngestionConfig } from '../src/modules/ingestion/ingestion-config';
-import { IngestionRepository } from '../src/modules/ingestion/ingestion.repository';
+import { IngestionRepository } from '../src/modules/ingestion/persistence/ingestion.repository';
 import { RunIngestionUseCase } from '../src/modules/ingestion/run-ingestion.use-case';
-import { readTfidfConfig } from '../src/modules/ingestion/tfidf';
+import { readTfidfConfig } from '../src/modules/recommendation/tfidf';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { FakeIgdbServer, type ReceivedRequest } from './support/fake-igdb-server';
 

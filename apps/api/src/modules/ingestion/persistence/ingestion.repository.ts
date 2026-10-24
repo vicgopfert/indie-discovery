@@ -1,8 +1,8 @@
-import { IngestionStatus, type Prisma } from '../../generated/prisma/client';
-import type { PrismaService } from '../../prisma/prisma.service';
-import type { MappedGame } from './igdb.mapper';
-import type { ReviewFlag, StoredGame } from './review-flags';
-import type { FeatureKey } from './tfidf';
+import { IngestionStatus, type Prisma } from '../../../generated/prisma/client';
+import type { PrismaService } from '../../../prisma/prisma.service';
+import type { MappedGame } from '../igdb/igdb.mapper';
+import type { ReviewFlag, StoredGame } from '../review-flags/review-flags';
+import type { FeatureKey } from '../../recommendation/tfidf';
 
 export interface CatalogGame {
   game: MappedGame;

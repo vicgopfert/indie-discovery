@@ -1,7 +1,7 @@
 # Critério indie — regra, casos reais e levantamento (B-11, B-59 e B-60)
 
 O critério fica versionado em `apps/api/config/indie-criteria.json` e é aplicado na
-ingestão por `evaluateIndieCriteria` (`apps/api/src/modules/ingestion/indie-criteria.ts`).
+ingestão por `evaluateIndieCriteria` (`apps/api/src/modules/ingestion/criteria/indie-criteria.ts`; a leitura e a validação do arquivo ficam em `indie-criteria.config.ts`).
 Os casos conferidos à mão rodam como teste de regressão, a partir das respostas reais
 da IGDB salvas em `apps/api/test/fixtures/igdb/criteria-*.json`. As amostras e a
 varredura do B-60 ficam registradas só neste documento.
