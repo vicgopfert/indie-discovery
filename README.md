@@ -51,7 +51,7 @@ pnpm dev
 ```bash
 pnpm test        # unitários, sem banco
 pnpm db:start    # os e2e precisam do banco local
-pnpm test:e2e    # sobem a API inteira num banco próprio: o da DATABASE_URL + "_e2e"
+pnpm test:e2e    # sobem a API inteira num banco próprio e local: o da DATABASE_URL + "_e2e"
 ```
 
 O CI (`.github/workflows/ci.yml`) roda em todo PR para a `main`: instalação,
