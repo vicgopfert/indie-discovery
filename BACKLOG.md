@@ -61,6 +61,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 ## E5 — Recomendação (S7–S10)
 
 - [ ] **B-31** (M) `ContentIndex`: carga dos vetores na inicialização + recarga protegida por segredo
+  - Resolver as dependências entre pastas deixadas pela reorganização da ingestão: `recommendation/tfidf.ts` importa `MappedFeature` do mapeador da IGDB; `igdb/igdb-catalog.source.ts` importa tipos de `review-flags/`; `persistence/` importa `StoredGame` e `ReviewFlag` de `review-flags/`; `criteria/`, `review-flags/` e `persistence/` dependem de `MappedGame`, definido no mapeador da IGDB; `igdb/` importa `ingestion-config.ts` da raiz do módulo
 - [ ] **B-32** (G) Núcleo de pontuação em funções puras (perfil ponderado, cosseno, popularidade, seleção, desempate, explicação)
 - [ ] **B-33** (M) `GenerateRecommendationsUseCase` + `GET /recommendations` — **marco M2**
 - [ ] **B-34** (M) Partida a frio (gêneros/temas + avaliação opcional de até 4 jogos)
