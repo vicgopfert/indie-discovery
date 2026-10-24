@@ -11,6 +11,13 @@ pnpm --filter @indie/api ingest:dev   # direto do código, com tsx
 Variáveis: `DATABASE_URL`, `IGDB_CLIENT_ID` e `IGDB_CLIENT_SECRET`. A saída é 0 quando a
 execução termina como `SUCCEEDED` e 1 quando termina como `FAILED`.
 
+**Em produção**, a ingestão roda pelo workflow manual "Ingestão" do GitHub Actions
+(`.github/workflows/ingest.yml`), só a partir da `main`, com os secrets
+`PRODUCTION_DATABASE_URL` (conexão direta do Neon), `IGDB_CLIENT_ID` e
+`IGDB_CLIENT_SECRET`. Ele divide o grupo de concorrência com o job de migrations, para que
+os dois nunca rodem juntos, e escreve no resumo da execução o registro do `IngestionRun`, a
+composição do catálogo, os alertas e o tamanho do banco.
+
 ## Uma execução
 
 1. Abre um `IngestionRun` como `RUNNING`, com a versão do critério (hash de
