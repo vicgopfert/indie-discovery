@@ -283,7 +283,7 @@ Todas as variáveis (`DATABASE_URL`, `PORT`, `SESSION_TTL_DAYS`, `WEB_ORIGIN`, `
 | --- | --- | --- | --- |
 | Frontend | Vercel, plano gratuito | Uso pessoal e não comercial | Adequado a um TCC |
 | API | Render, *web service* gratuito | 512 MB de memória; hiberna após 15 minutos sem tráfego e leva cerca de um minuto para acordar; sistema de arquivos efêmero; 750 horas de instância por mês na conta | Acordar a API antes de demonstrar; o índice em memória precisa caber em 512 MB (dimensionado no M0); um único serviço no ar o mês todo usa no máximo 744 horas |
-| Banco | Neon, plano gratuito | 1 GB por projeto; o computador do banco suspende após 5 minutos ociosos e volta na primeira consulta; 100 CU-horas de computação e 5 GB de tráfego de saída por projeto por mês, e ao estourar o banco fica suspenso até o mês seguinte, sem perder dados (conferido no B-38, 20/10/2026) | O catálogo recortado, de cerca de 20 mil jogos, cabe com folga; o banco não expira; a computação fica no tamanho mínimo, e o consumo é conferido no painel do Neon antes de cada marco e da demonstração |
+| Banco | Neon, plano gratuito | 1 GB por projeto (eram 0,5 GB até 02/10/2026: https://neon.com/docs/changelog/2026-10-02); o computador do banco suspende após 5 minutos ociosos e volta na primeira consulta; 100 CU-horas de computação e 5 GB de tráfego de saída por projeto por mês, e ao estourar o banco fica suspenso até o mês seguinte, sem perder dados (conferido no B-38, 20/10/2026) | O catálogo recortado, de cerca de 20 mil jogos, cabe com folga; o banco não expira; a computação fica no tamanho mínimo, e o consumo é conferido no painel do Neon antes de cada marco e da demonstração |
 | Banco (descartado) | Render Postgres gratuito | Expira 30 dias após a criação | Não serve para um projeto de 24 semanas |
 
 Os limites dos planos gratuitos mudam com frequência. Eles devem ser conferidos de novo na semana 3 (B-38) e na semana 21. Se qualquer serviço deixar de atender, a contingência é o ambiente local, com o PostgreSQL embutido e um dump do banco (B-41), ensaiado antes da defesa.
@@ -482,7 +482,8 @@ O diagrama entidade-relacionamento completo está na seção 11 (diagrama 3).
 | `Rating` | Nota de 1 a 5 de um usuário para um jogo | Usuário | F-08 |
 | `ListEntry` | Jogo em uma lista do usuário (favoritos, concluídos, quero jogar) | Usuário | F-08 |
 | `UserPreference` | Gêneros e temas escolhidos na partida a frio | Usuário | F-10 |
-| `IngestionRun` | Registro de cada execução da ingestão: início, fim, status, contagens, resumo de erros | Ingestão | F-02 |
+| `IngestionRun` | Registro de cada execução da ingestão: início, fim, status, contagens, versão do critério, escala da popularidade e resumo de erros | Ingestão | F-02 |
+| `IngestionReviewFlag` | Alerta de revisão gerado por uma execução (estúdio sem efeito atual, empresa-mãe não revisada, data nova, mudança de lado, saída do conjunto candidato) | Ingestão | F-02 |
 | `Collection` e `CollectionGame` | Coleção cultural curada (nome, descrição, ordem) e os jogos aprovados nela | Arquivo de curadoria versionado, sincronizado pela ingestão | F-24 |
 
 ### Decisões de modelagem
@@ -492,13 +493,13 @@ O diagrama entidade-relacionamento completo está na seção 11 (diagrama 3).
 | Chaves compostas em `Rating` (usuário, jogo), `ListEntry` (usuário, jogo, lista), `UserPreference` e tabelas associativas | O banco garante que não há duas avaliações do mesmo jogo pela mesma pessoa; o `PUT` vira um *upsert* simples |
 | `igdbId` único em `Game`, `Company`, `Language`; único composto `(type, igdbId)` em `Feature` | Ingestão idempotente: rodar duas vezes atualiza em vez de duplicar. Gêneros, temas e palavras-chave têm numerações independentes na IGDB |
 | `slug` único em `Game` | URLs legíveis e estáveis para a ficha do jogo e para buscadores |
-| Jogos não indie são rejeitados na ingestão, mas `isIndie` fica no modelo | Permite revisar o critério e reprocessar sem mudar o esquema; as consultas da interface sempre filtram `isIndie = true` |
-| Índices em `Game(isIndie, releaseStatus)`, `Game(studioCountryCode)`, `GameFeature(featureId)`, `Company(countryCode)` e `Session(expiresAt)` | Correspondem aos filtros do catálogo, à busca por atributo e à limpeza de sessões |
+| Jogo rejeitado na primeira avaliação não é gravado; jogo gravado que passa a ser rejeitado fica com `inCatalog = false`, com o veredito (`criteriaVerdict`) e a versão do critério (`criteriaVersion`, hash do arquivo) | Avaliações e listas apontam para o jogo, então ele não é apagado. O campo se chama `inCatalog`, não `isIndie`, porque o jogo sai também por motivos que não dizem nada sobre ser indie (cancelado, ficha incompleta, sem sinal de interesse); as consultas da interface sempre filtram `inCatalog = true` (renomeado no B-13) |
+| Índices em `Game(inCatalog, releaseStatus)`, `Game(studioCountryCode)`, `GameFeature(featureId)`, `Company(countryCode)` e `Session(expiresAt)` | Correspondem aos filtros do catálogo, à busca por atributo e à limpeza de sessões |
 | Busca textual por nome com `ILIKE` no P0 | Suficiente para cerca de 20 mil jogos; busca *full-text* do PostgreSQL fica como P2 |
 | Recomendações não são persistidas | São calculadas na hora a partir do índice em memória; persistir criaria problema de invalidação sem benefício no MVP |
 | Imagens de capa não são armazenadas | Guarda-se só o identificador da imagem; a URL é montada para a CDN de imagens da IGDB, com atribuição visível |
 | Critério indie em arquivo JSON versionado (`config/indie-criteria.json`) | Fica rastreável no Git, revisável na banca e alterável sem migration |
-| `popularityRaw` e `popularityNorm` gravados na ingestão | A normalização logarítmica depende do máximo do catálogo e só muda quando o catálogo muda |
+| `popularityRaw` (a fração da IGDB, `Float`) e `popularityNorm` gravados na ingestão | A normalização depende da unidade e do máximo da execução; os dois ficam registrados em `IngestionRun` com a mediana, para comparar execuções sem refazer a busca (B-13) |
 | País do estúdio resolvido na ingestão e gravado em `Game.studioCountryCode`, com `studioCountrySource` (IGDB ou WIKIDATA) | A IGDB tem o país em 39% do catálogo e o Wikidata completa até cerca de 50% (M0); resolver uma vez na ingestão mantém a consulta do filtro simples e deixa a origem do dado rastreável |
 | Coleções em arquivo versionado (`config/collections.json`), sincronizadas pela ingestão | A curadoria fica revisável no Git e na banca, como o critério indie; o banco guarda só o resultado para as consultas |
 | Datas em UTC; IDs internos UUID | Padrão sem ambiguidade; os IDs internos não expõem a contagem de usuários |
@@ -630,9 +631,11 @@ erDiagram
         string coverImageId
         date firstReleaseDate
         enum releaseStatus "RELEASED ou UPCOMING"
-        int popularityRaw
+        float popularityRaw
         float popularityNorm
-        boolean isIndie
+        boolean inCatalog
+        json criteriaVerdict
+        string criteriaVersion
         string storeUrl
         int studioCountryCode FK
         enum studioCountrySource "IGDB ou WIKIDATA"
@@ -873,11 +876,11 @@ Notas 1 e 2 entram com peso negativo e afastam o perfil daqueles atributos; nota
 ```
 score(j) = cos(u, v_j) − λ_modo · pop_j
 
-pop_j = log(1 + p_j) / log(1 + p_max)          popularidade normalizada entre 0 e 1
+pop_j = log(1 + p_j/u) / log(1 + p_max/u)      popularidade normalizada entre 0 e 1
 λ_modo (valores iniciais):  Populares −0,2 · Equilibrado 0 · Descobertas +0,3
 ```
 
-`p_j` é o número de pessoas que marcaram o jogo como "quero jogar" na IGDB (primitivo "Want to Play" do PopScore), o mesmo indicador para jogos lançados e não lançados; zero quando não houver valor. **Decidido no M0** (relatório do M0, `docs/m0-relatorio-igdb.md`, seção 8): substitui a proposta original (contagem de avaliações e, para não lançados, `hypes`), porque existe para 91% dos jogos lançados e 43% dos não lançados, enquanto as avaliações existem em 47% do catálogo (praticamente só lançados) e os `hypes` em 27% dos não lançados. A escala logarítmica evita que poucos sucessos dominem a normalização.
+`p_j` é a fração da base de usuários da IGDB que marcou o jogo como "quero jogar" (primitivo "Want to Play" do PopScore), o mesmo indicador para jogos lançados e não lançados; zero quando não houver valor. **Revisto no B-13:** o valor não é uma contagem. Todos os 16.730 valores do catálogo aceito são múltiplos inteiros de 1/881.744, então o sistema reconstrói a contagem dividindo pela unidade `u`, a menor fração positiva da execução; se algum valor sair da grade, a execução falha em vez de normalizar errado. `p_max` é o máximo do **catálogo aceito** (763 pessoas em 23/10/2026), não o da IGDB inteira (1.708). Com o valor bruto na fórmula, `log(1 + p) ≈ p` e a normalização vira linear: a mediana de `pop_j` sairia 0,0066; com a contagem, sai 0,27, e o p90, 0,57. Limitação: a IGDB recalcula o valor todo dia, mas o sistema só o atualiza a cada ingestão. **Decidido no M0** (relatório do M0, `docs/m0-relatorio-igdb.md`, seção 8): substitui a proposta original (contagem de avaliações e, para não lançados, `hypes`), porque existe para 91% dos jogos lançados e 43% dos não lançados, enquanto as avaliações existem em 47% do catálogo (praticamente só lançados) e os `hypes` em 27% dos não lançados. A escala logarítmica evita que poucos sucessos dominem a normalização.
 
 **4. Seleção.** Candidatos são todos os jogos indie que o usuário não avaliou e que não estão em nenhuma de suas listas. Ordenação por pontuação; empate resolvido pelo identificador, para que o mesmo estado produza sempre a mesma lista. A popularidade não entra no desempate (decisão do B-12): ela já está no termo λ do modo e, no desempate, contaria duas vezes, uma delas invisível. Os empates são frequentes (ver `docs/vetorizacao-tfidf.md`) e o tratamento deles é do B-32. Filtros opcionais da requisição (por exemplo, só "em breve") são aplicados antes do corte.
 
@@ -960,10 +963,11 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | B-10 | Mapeador IGDB → modelo interno | P0 | B-07 | Testes com as fixtures, incluindo campos ausentes, passam | M |
 | B-11 | Critério indie configurável em JSON (F-03), incluindo o recorte do catálogo aprovado no M0 e a exclusão do tema Erotic (relatório do M0, `docs/m0-relatorio-igdb.md`, seção 8) | P0 | B-10 | Conjunto de casos reais documentado com acertos e erros; jogo com publisher pequena não é excluído | M |
 | B-12 | Cálculo de IDF e vetores TF-IDF normalizados (F-04) | P0 | B-08, B-10 | Testes com catálogo sintético verificam pesos, norma 1 e descarte por limites | M |
-| B-13 | `RunIngestionUseCase` em aplicação standalone: busca, mapeia, filtra, grava em lote, busca a popularidade "Want to Play" do PopScore, calcula vetores, registra `IngestionRun` (F-02) | P0 | B-09, B-11, B-12 | Duas execuções seguidas não duplicam registros; falha parcial fica registrada com resumo de erros; é sinalizado para verificação o jogo novo de estúdio da tabela "sem efeito atual" de `docs/criterio-indie-casos.md`, ou cuja desenvolvedora tem empresa-mãe na IGDB fora da lista de grandes, ou na lista mas fora dos estúdios controlados; o critério dos jogos já no catálogo é reavaliado a cada execução, e o jogo sem data que ganha data de lançamento é sinalizado para verificação | G |
+| B-13 | `RunIngestionUseCase` em aplicação standalone: busca, mapeia, filtra, grava em lote, busca a popularidade "Want to Play" do PopScore, calcula vetores, registra `IngestionRun` (F-02) | P0 | B-09, B-11, B-12 | Duas execuções seguidas não duplicam registros; falha parcial fica registrada com resumo de erros; é sinalizado para verificação o jogo novo de estúdio da tabela "sem efeito atual" de `docs/criterio-indie-casos.md`, ou cuja desenvolvedora tem empresa-mãe na IGDB fora da lista de grandes, ou na lista mas fora dos estúdios controlados; o critério dos jogos já no catálogo é reavaliado a cada execução, e o jogo sem data que ganha data de lançamento é sinalizado para verificação. **Concluído em 24/10/2026:** carga real no banco local com 20.050 jogos em cerca de 7 min e até 559 MB de pico, com gravação de 16 s numa transação; a segunda execução seguida não regravou nenhuma linha. A popularidade passou a usar a contagem reconstruída (seção 12), o sinal de interesse ganhou a carência pós-lançamento de 180 dias para jogo que já estava no catálogo e `isIndie` virou `inCatalog` (`docs/ingestao.md`) | G |
 | B-14 | Carga inicial do catálogo real no banco de produção | P0 | B-13, B-38, B-60 | Catálogo carregado; tamanho do banco e contagens registrados | P |
 | B-60 | Medição da regra de controle do critério indie: duas amostras de cerca de 10 jogos, uma dos excluídos pela regra e outra dos aceitos, classificadas à mão | P0 | B-59 | Amostras classificadas e registradas em `docs/criterio-indie-casos.md`, com a taxa de erro em cada sentido; a amostra dos aceitos mede o erro mais provável da regra nova (aceitar jogo de estúdio controlado fora da lista). **Concluído em 23/10/2026:** 10 de 10 exclusões corretas e 6 de 10 aceitos corretos, com os outros 4 sem desenvolvedora creditada. Achados: lacuna na lista de grandes, corrigida por um teste de entrada escrito e aplicado às 134 empresas no topo das cadeias de empresa-mãe (5 acrescentadas, 106 avaliadas e recusadas); e aceitos sem desenvolvedora (1,54% das avaliações; 23,15% dos jogos), escalado ao M0 sem regra de reserva | P |
 | B-59 | Medição dos falsos negativos do critério indie: sortear de 8 a 10 jogos excluídos pela regra e classificá-los à mão | P0 | B-11 | Amostra classificada e registrada em `docs/criterio-indie-casos.md`, com a taxa de indies legítimos excluídos; se a taxa for alta, a regra de publisher é revista antes do B-14. **Concluído em 22/10/2026:** taxa de 8 em 10; regra trocada pela de controle do estúdio na data de lançamento, com 56 estúdios verificados em fonte. Estimado como P, concluído como M: a revisão exigiu verificar a aquisição de cerca de 60 estúdios | M |
+| B-61 | Decisão sobre o "Want to Play" como sinal de interesse do critério indie | P0 | B-13 | Decisão registrada em `docs/criterio-indie-casos.md` com duas medições lado a lado: quantos jogos a carência pós-lançamento corrigida mantém e quantos saem ao fim dela, e quantos o "Want to Play" admitiria por contagem mínima (hoje, entre os 89.793 rejeitados por falta de sinal: 20.386 com valor positivo, 9.211 com contagem de pelo menos 2 e 2.564 com pelo menos 5) | P |
 | B-56 | Enriquecimento do país do estúdio pelo Wikidata na ingestão (F-06) | P0 | B-13 | Jogos sem país na IGDB recebem o do Wikidata quando existir, cruzando pelo identificador da IGDB; origem do dado gravada; cobertura final medida e registrada | P |
 
 ### E2. Contas e autenticação
@@ -1057,7 +1061,7 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | Capacidade de desenvolvimento nas semanas 1 a 22 (12 h × 22) | — | 264 h |
 | Semanas 23 e 24 (15 h × 2), sem item novo | — | 30 h, divididas entre ensaios, slides e absorção de atraso |
 
-Com os itens acrescentados no M0 (B-56 a B-58), o ponto médio do P0 passou de 257 h para 275 h, e com o B-59 (aberto no B-11 como P e concluído como M), para 283 h, e com o B-60 para 286 h, 22 h acima da capacidade das semanas 1 a 22. O autor decidiu não trocar nenhuma funcionalidade: a diferença é coberta pelas semanas 23 e 24 e pelo ritmo observado na semana 1, em que todo o E0 planejado para a sprint foi feito em um dia. O ritmo real é conferido a cada marco. Se a execução se aproximar do máximo, o plano de corte da seção 16 é aplicado nos marcos M1 e M2, e não na véspera da defesa. Os itens P1 só entram com horas que sobrarem depois do M2.
+Com os itens acrescentados no M0 (B-56 a B-58), o ponto médio do P0 passou de 257 h para 275 h, e com o B-59 (aberto no B-11 como P e concluído como M), para 283 h, com o B-60 para 286 h e com o B-61 para 289 h, 25 h acima da capacidade das semanas 1 a 22. O autor decidiu não trocar nenhuma funcionalidade: a diferença é coberta pelas semanas 23 e 24 e pelo ritmo observado na semana 1, em que todo o E0 planejado para a sprint foi feito em um dia. O ritmo real é conferido a cada marco. Se a execução se aproximar do máximo, o plano de corte da seção 16 é aplicado nos marcos M1 e M2, e não na véspera da defesa. Os itens P1 só entram com horas que sobrarem depois do M2.
 
 ## 14. Cronograma até a defesa (Fase A)
 
@@ -1083,7 +1087,7 @@ A sprint S6 (semanas 11–12, entregando o M1) atravessa o recesso de fim de ano
 | S1 | 1–2 | Fundação e viabilidade dos dados | B-01, B-02, B-03, B-04, B-07 | Monorrepositório rodando local com hooks; **M0** | R-04, R-05, R-06 |
 | S2 | 3–4 | Implantação e CI desde o início | B-05, B-08, B-38, B-39, B-40 | API e frontend vazios implantados, banco remoto com migrations, CI verde | R-09, R-13 |
 | S3 | 5–6 | Integração com a IGDB | B-06, B-09, B-10, B-11 | Cliente e mapeador testados com fixtures; critério indie validado contra casos reais | R-04 |
-| S4 | 7–8 | Catálogo real no banco | B-12, B-13, B-14, B-56, B-59, B-60 | Ingestão completa executada em produção e registrada | R-11, R-12 |
+| S4 | 7–8 | Catálogo real no banco | B-12, B-13, B-14, B-56, B-59, B-60, B-61 | Ingestão completa executada em produção e registrada | R-11, R-12 |
 | S5 | 9–10 | Contas e segurança | B-15, B-16, B-17, B-18, B-22 | Cadastro, login e logout funcionando no ambiente implantado | R-03 |
 | S6 | 11–12 | Interface pública de descoberta | B-20, B-21, B-23, B-24 | **M1** | R-01 |
 | S7 | 13–14 | Biblioteca, índice de conteúdo e coleções | B-19, B-26, B-27, B-31, B-57 | Avaliações e listas pela API; índice carregado com memória medida; e2e de autenticação no CI | R-07, R-09 |
@@ -1117,7 +1121,7 @@ Reuniões com o orientador a cada sprint, levando o que foi implantado e o trech
 ### Margem explícita
 
 1. **Semanas 23 e 24 sem nenhum item de desenvolvimento.** Os ensaios e slides ocupam parte das 30 horas; o restante absorve atrasos.
-2. **Folga das estimativas.** O ponto médio do P0 (286 h, depois do M0, do B-59 e do B-60) passa 22 h da capacidade das semanas 1 a 22 (264 h); a diferença sai das semanas 23 e 24 se o ritmo da semana 1 não se mantiver.
+2. **Folga das estimativas.** O ponto médio do P0 (289 h, depois do M0, do B-59, do B-60 e do B-61) passa 25 h da capacidade das semanas 1 a 22 (264 h); a diferença sai das semanas 23 e 24 se o ritmo da semana 1 não se mantiver.
 3. **Plano de corte (seção 16)**, aplicado em M1 ou M2 se o atraso acumulado passar de uma sprint.
 4. **Itens P1 fora do caminho crítico.** Nenhum P0 depende deles; só entram depois do M2 com horas que sobrarem.
 

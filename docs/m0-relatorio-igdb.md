@@ -223,8 +223,13 @@ Populares e Descobertas tratarem lançamentos aguardados como conhecidos.
 
 - Custo: a ingestão (B-13) consulta também `popularity_primitives` (cerca de 200
   requisições extras para ~20 mil jogos).
-- A verificar no B-13: distribuição dos valores e frequência de atualização
-  (`calculated_at`).
+- **Verificado no B-13 (23/10/2026): o valor é uma fração, não uma contagem.** Os
+  16.730 valores do catálogo aceito são todos múltiplos inteiros de 1/881.744 (a
+  fração de uma pessoa), e o `calculated_at` de todos é o dia da consulta: a IGDB
+  recalcula diariamente. Em contagem reconstruída, a mediana é 5 pessoas, o p90 é 42,
+  o p99 é 160 e o máximo do catálogo aceito é 763 (o da IGDB inteira é 1.708); 3.553
+  jogos têm exatamente 1, e 3.284 aceitos não têm valor. A normalização passou a usar a
+  contagem (proposta técnica, seção 12): com a fração bruta, ela ficaria linear.
 - Limitações para o TCC: reflete o público da IGDB, não vendas; só é atualizado
   quando o catálogo é reimportado.
 
