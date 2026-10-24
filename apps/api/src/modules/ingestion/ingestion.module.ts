@@ -8,6 +8,7 @@ import { readVersionedIndieCriteria } from './criteria/indie-criteria.config';
 import { readIngestionConfig } from './ingestion-config';
 import { IngestionRepository } from './persistence/ingestion.repository';
 import { RunIngestionUseCase } from './run-ingestion.use-case';
+import { WikidataCountrySource } from './wikidata/wikidata-country.source';
 import { readTfidfConfig } from '../recommendation/tfidf';
 
 @Module({
@@ -30,6 +31,7 @@ import { readTfidfConfig } from '../recommendation/tfidf';
         const ingestion = readIngestionConfig();
         return new RunIngestionUseCase(
           new IgdbCatalogSource(igdb, ingestion),
+          new WikidataCountrySource(),
           new IngestionRepository(prisma),
           { criteria: readVersionedIndieCriteria(), tfidf: readTfidfConfig(), ingestion },
         );

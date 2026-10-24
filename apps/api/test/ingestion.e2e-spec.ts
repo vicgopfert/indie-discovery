@@ -14,6 +14,7 @@ import { readVersionedIndieCriteria } from '../src/modules/ingestion/criteria/in
 import { readIngestionConfig } from '../src/modules/ingestion/ingestion-config';
 import { IngestionRepository } from '../src/modules/ingestion/persistence/ingestion.repository';
 import { RunIngestionUseCase } from '../src/modules/ingestion/run-ingestion.use-case';
+import { WikidataCountrySource } from '../src/modules/ingestion/wikidata/wikidata-country.source';
 import { readTfidfConfig } from '../src/modules/recommendation/tfidf';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { FakeIgdbServer, type ReceivedRequest } from './support/fake-igdb-server';
@@ -59,9 +60,19 @@ class FakeCatalog {
     [BEHAVIOUR, { name: 'Behaviour Interactive' }],
   ]);
   wantToPlay = new Map(accepted.map((g, i) => [g.id, wantToPlayCounts[i]! * UNIT]));
+  wikidata: { igdb: string; developerCountry?: string; originCountry?: string }[] = [];
+  wikidataDown = false;
 
   reply(request: ReceivedRequest) {
     const { endpoint, body } = request;
+    if (endpoint.startsWith('sparql')) {
+      const bindings = this.wikidata.map((row) =>
+        Object.fromEntries(
+          Object.entries(row).map(([k, value]) => [k, { type: 'literal', value }]),
+        ),
+      );
+      return { results: { bindings } };
+    }
     if (endpoint === 'games' && body.includes('id > ')) {
       const after = Number(/id > (\d+)/.exec(body)![1]);
       const limit = Number(/limit (\d+)/.exec(body)![1]);
@@ -103,7 +114,10 @@ describe('Ingestão', () => {
 
     server = new FakeIgdbServer();
     const urls = await server.start();
-    server.respond = (request) => ({ status: 200, body: catalog.reply(request) });
+    server.respond = (request) =>
+      catalog.wikidataDown && request.endpoint.startsWith('sparql')
+        ? { status: 503 }
+        : { status: 200, body: catalog.reply(request) };
     const igdb = new IgdbClient({
       credentials: { clientId: 'id', clientSecret: 'secret' },
       ...urls,
@@ -113,6 +127,7 @@ describe('Ingestão', () => {
     const ingestion = readIngestionConfig();
     ingest = new RunIngestionUseCase(
       new IgdbCatalogSource(igdb, ingestion),
+      new WikidataCountrySource({ endpoint: `${urls.apiUrl}/sparql`, maxAttempts: 1 }),
       new IngestionRepository(prisma),
       { criteria: versioned, tfidf: readTfidfConfig(), ingestion },
     );
@@ -131,6 +146,47 @@ describe('Ingestão', () => {
   const flagsOf = (runId: string) =>
     prisma.ingestionReviewFlag.findMany({ where: { runId }, orderBy: { igdbId: 'asc' } });
   const gameRow = (igdbId: number) => prisma.game.findUniqueOrThrow({ where: { igdbId } });
+
+  describe('país do estúdio', () => {
+    const country = (raw: RawGame) => mapIgdbGame(igdbGameSchema.parse(raw), NOW).studioCountryCode;
+    const withoutIgdbCountry = accepted.find((g) => country(g) === null)!;
+    const withIgdbCountry = accepted.find((g) => country(g) !== null)!;
+    const BRAZIL = 76;
+
+    beforeEach(() => {
+      catalog.wikidata = [
+        { igdb: withoutIgdbCountry.slug as string, originCountry: String(BRAZIL) },
+        { igdb: withIgdbCountry.slug as string, developerCountry: String(BRAZIL) },
+      ];
+    });
+
+    it('completa pelo Wikidata o país que falta na IGDB, sem trocar o que a IGDB informa', async () => {
+      await ingest.execute(NOW);
+
+      expect(await gameRow(withoutIgdbCountry.id)).toMatchObject({
+        studioCountryCode: BRAZIL,
+        studioCountrySource: 'WIKIDATA',
+      });
+      expect(await gameRow(withIgdbCountry.id)).toMatchObject({
+        studioCountryCode: country(withIgdbCountry),
+        studioCountrySource: 'IGDB',
+      });
+    });
+
+    it('com o Wikidata fora do ar, segue e mantém os países que vieram dele', async () => {
+      await ingest.execute(NOW);
+      catalog.wikidataDown = true;
+
+      const result = await ingest.execute(NOW);
+
+      expect(result.status).toBe(IngestionStatus.SUCCEEDED);
+      expect(result.errorSummary).toContain('países do Wikidata mantidos');
+      expect(await gameRow(withoutIgdbCountry.id)).toMatchObject({
+        studioCountryCode: BRAZIL,
+        studioCountrySource: 'WIKIDATA',
+      });
+    });
+  });
 
   it('a primeira execução grava o catálogo e sai sem alertas de empresa já revisada', async () => {
     const result = await ingest.execute(NOW);

@@ -20,6 +20,8 @@ import {
   type ReviewFlag,
   type StoredGame,
 } from './review-flags/review-flags';
+import { resolveStudioCountry, type WikidataCountries } from './studio-country/studio-country';
+import type { WikidataCountrySource } from './wikidata/wikidata-country.source';
 import { computeIdf, type TfidfConfig, tfidfVector } from '../recommendation/tfidf';
 
 export interface IngestionSettings {
@@ -34,6 +36,11 @@ export interface IngestionResult extends RunOutcome {
 
 type Counts = Pick<RunOutcome, 'gamesFetched' | 'gamesInvalid'>;
 
+interface WikidataLookup {
+  countriesOf: (game: MappedGame) => WikidataCountries | undefined;
+  unavailableReason?: string;
+}
+
 interface Deactivation {
   games: OutOfCatalogGame[];
   flags: ReviewFlag[];
@@ -47,6 +54,7 @@ export class RunIngestionUseCase {
 
   constructor(
     private readonly source: IgdbCatalogSource,
+    private readonly wikidata: WikidataCountrySource,
     private readonly repository: IngestionRepository,
     private readonly settings: IngestionSettings,
   ) {}
@@ -91,6 +99,7 @@ export class RunIngestionUseCase {
     );
     const wantToPlay = await this.source.wantToPlay(catalogEntries.map(({ game }) => game.igdbId));
     const scale = popularityScale(wantToPlay.values());
+    const countries = await this.wikidataCountries();
 
     const missing = [...stored.values()].filter((g) => g.inCatalog && !fetchedIds.has(g.igdbId));
     const deactivation = await this.planDeactivation(
@@ -110,6 +119,7 @@ export class RunIngestionUseCase {
         verdict,
         popularityCount: count,
         popularityNorm: normalizedPopularity(count, scale),
+        studioCountry: resolveStudioCountry(game.studioCountryCode, countries.countriesOf(game)),
         weights: tfidfVector(game.features, idf, this.settings.tfidf).weights,
       };
     });
@@ -156,8 +166,30 @@ export class RunIngestionUseCase {
       popularityUnit: scale?.unit ?? null,
       popularityMax: scale?.maxCount ?? null,
       popularityMedian: scale?.medianCount ?? null,
-      errorSummary: deactivation.skippedReason ?? null,
+      errorSummary:
+        [deactivation.skippedReason, countries.unavailableReason].filter(Boolean).join('; ') ||
+        null,
     };
+  }
+
+  // País do estúdio pelo Wikidata, para os jogos sem país na IGDB. Se o Wikidata falhar, a
+  // ingestão segue e mantém os países que já tinham vindo dele, com o motivo no resumo.
+  private async wikidataCountries(): Promise<WikidataLookup> {
+    try {
+      const bySlug = await this.wikidata.countriesBySlug();
+      return { countriesOf: (game) => bySlug.get(game.slug) };
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : String(error);
+      this.logger.warn(`País pelo Wikidata indisponível: ${reason}`);
+      const previous = await this.repository.wikidataCountries();
+      return {
+        countriesOf: (game) => {
+          const code = previous.get(game.igdbId);
+          return code === undefined ? undefined : { developer: new Set([code]), origin: new Set() };
+        },
+        unavailableReason: `${reason}; países do Wikidata mantidos da execução anterior`,
+      };
+    }
   }
 
   // Guarda o jogo completo só quando ele vai para o catálogo ou já estava gravado: o conjunto
