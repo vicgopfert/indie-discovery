@@ -93,6 +93,10 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # Mesmo grupo da ingestão: migration e ingestão nunca rodam juntas no banco de produção.
+    concurrency:
+      group: production-database
+      cancel-in-progress: false
 
     env:
       DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}

@@ -1,0 +1,92 @@
+name: Ingestão
+
+# Execução manual da ingestão no banco de produção (B-14). O agendamento é o B-54.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Mesmo grupo do job de migrations: os dois nunca mexem no banco de produção ao mesmo tempo, e
+# nenhuma execução é cancelada no meio.
+concurrency:
+  group: production-database
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    name: Ingestão do catálogo no banco de produção
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    # Conexão direta do Neon, não a do pooler: a gravação é uma transação longa.
+    env:
+      DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+      IGDB_CLIENT_ID: ${{ secrets.IGDB_CLIENT_ID }}
+      IGDB_CLIENT_SECRET: ${{ secrets.IGDB_CLIENT_SECRET }}
+      NODE_ENV: production
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+        with:
+          cache: true
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - name: Instalação
+        run: pnpm install --frozen-lockfile
+
+      - name: Build da API
+        run: pnpm --filter @indie/api run build
+
+      - name: Ingestão
+        run: pnpm --filter @indie/api run ingest
+
+      - name: Resumo da execução
+        if: always()
+        run: |
+          # O psql não aceita o parâmetro schema que o Prisma usa na URL.
+          export PSQL_URL="$(node -e "const u = new URL(process.env.DATABASE_URL); u.searchParams.delete('schema'); console.log(u.toString())")"
+          {
+            echo '## Última execução'
+            echo '```'
+            psql "$PSQL_URL" -X -q -c "
+              SELECT status, \"startedAt\", \"finishedAt\" - \"startedAt\" AS duracao,
+                \"gamesFetched\" AS buscados, \"gamesUpserted\" AS catalogo,
+                \"gamesInvalid\" AS fora_do_schema, \"gamesDeactivated\" AS desativados,
+                \"flagsRaised\" AS alertas, \"popularityMax\" AS pop_max,
+                \"popularityMedian\" AS pop_mediana, left(\"errorSummary\", 300) AS erro
+              FROM \"IngestionRun\" ORDER BY \"startedAt\" DESC LIMIT 1"
+            echo '```'
+            echo '## Catálogo'
+            echo '```'
+            psql "$PSQL_URL" -X -q -c "
+              SELECT CASE
+                WHEN \"releaseStatus\" = 'UPCOMING' AND \"firstReleaseDate\" IS NOT NULL THEN 'por lançar, com data'
+                WHEN \"releaseStatus\" = 'UPCOMING' THEN 'por lançar, sem data'
+                ELSE 'lançado' END AS grupo, count(*) AS jogos
+              FROM \"Game\" WHERE \"inCatalog\" GROUP BY 1 ORDER BY 1"
+            echo '```'
+            echo '## Alertas da execução'
+            echo '```'
+            psql "$PSQL_URL" -X -q -c "
+              SELECT f.kind, f.\"gameName\", f.detail
+              FROM \"IngestionReviewFlag\" f
+              WHERE f.\"runId\" = (SELECT id FROM \"IngestionRun\" ORDER BY \"startedAt\" DESC LIMIT 1)
+              ORDER BY f.kind, f.\"gameName\" LIMIT 100"
+            echo '```'
+            echo '## Tamanho do banco'
+            echo '```'
+            psql "$PSQL_URL" -X -q -c "
+              SELECT pg_size_pretty(pg_database_size(current_database())) AS banco"
+            psql "$PSQL_URL" -X -q -c "
+              SELECT relname AS tabela, pg_size_pretty(pg_total_relation_size(relid)) AS tamanho,
+                n_live_tup AS vivas, n_dead_tup AS mortas
+              FROM pg_stat_user_tables ORDER BY pg_total_relation_size(relid) DESC LIMIT 8"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
