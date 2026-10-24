@@ -4,7 +4,8 @@ import { canDeactivateMissing, missingCause } from './review-flags/candidate-set
 import type { IgdbCatalogSource } from './igdb/igdb-catalog.source';
 import { igdbGameSchema } from './igdb/igdb-game.schema';
 import { type MappedGame, mapIgdbGame } from './igdb/igdb.mapper';
-import { evaluateIndieCriteria, type VersionedIndieCriteria } from './criteria/indie-criteria';
+import { evaluateIndieCriteria } from './criteria/indie-criteria';
+import type { VersionedIndieCriteria } from './criteria/indie-criteria.config';
 import type { IngestionConfig } from './ingestion-config';
 import type {
   CatalogGame,

@@ -9,10 +9,8 @@ import { IgdbCatalogSource } from '../src/modules/ingestion/igdb/igdb-catalog.so
 import { igdbGameSchema } from '../src/modules/ingestion/igdb/igdb-game.schema';
 import { mapIgdbGame } from '../src/modules/ingestion/igdb/igdb.mapper';
 import { IgdbClient } from '../src/modules/ingestion/igdb/igdb.client';
-import {
-  evaluateIndieCriteria,
-  readVersionedIndieCriteria,
-} from '../src/modules/ingestion/criteria/indie-criteria';
+import { evaluateIndieCriteria } from '../src/modules/ingestion/criteria/indie-criteria';
+import { readVersionedIndieCriteria } from '../src/modules/ingestion/criteria/indie-criteria.config';
 import { readIngestionConfig } from '../src/modules/ingestion/ingestion-config';
 import { IngestionRepository } from '../src/modules/ingestion/persistence/ingestion.repository';
 import { RunIngestionUseCase } from '../src/modules/ingestion/run-ingestion.use-case';

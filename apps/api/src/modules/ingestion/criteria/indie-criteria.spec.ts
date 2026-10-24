@@ -1,16 +1,9 @@
-import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { igdbGameSchema } from '../igdb/igdb-game.schema';
 import { type MappedCompany, type MappedGame, mapIgdbGame } from '../igdb/igdb.mapper';
-import {
-  type CriteriaVerdict,
-  evaluateIndieCriteria,
-  type IndieCriteria,
-  indieCriteriaSchema,
-  readIndieCriteria,
-  readVersionedIndieCriteria,
-} from './indie-criteria';
+import { type CriteriaVerdict, evaluateIndieCriteria } from './indie-criteria';
+import { type IndieCriteria, readIndieCriteria } from './indie-criteria.config';
 
 const FIXTURES_DIR = join(__dirname, '../../../../test/fixtures/igdb');
 const NOW = new Date('2026-10-22T00:00:00Z');
@@ -315,127 +308,6 @@ describe('evaluateIndieCriteria', () => {
     });
   });
 });
-
-describe('validação do arquivo de critério', () => {
-  const raw = JSON.parse(readFileSync('config/indie-criteria.json', 'utf8')) as Record<
-    string,
-    unknown
-  > & {
-    overrides: { alwaysInclude: Record<string, unknown>[]; alwaysExclude: unknown[] };
-    overridesPolicy: { maxEntries: number };
-    majorCompanies: Record<string, unknown>[];
-    controlledStudios: Record<string, unknown>[];
-    reviewedCompanies: Record<string, unknown>[];
-  };
-  const [firstOverride] = raw.overrides.alwaysInclude;
-  const [firstStudio] = raw.controlledStudios;
-
-  it('exige fonte pública e data em cada exceção', () => {
-    const withoutSource = { ...firstOverride, source: undefined };
-
-    expect(() =>
-      indieCriteriaSchema.parse({
-        ...raw,
-        overrides: { ...raw.overrides, alwaysInclude: [withoutSource] },
-      }),
-    ).toThrow('source');
-  });
-
-  it('recusa listas de exceção que passam do teto de entradas', () => {
-    const tooMany = Array.from({ length: raw.overridesPolicy.maxEntries + 1 }, (_, i) => ({
-      ...firstOverride,
-      igdbId: i + 1,
-    }));
-
-    expect(() =>
-      indieCriteriaSchema.parse({
-        ...raw,
-        overrides: { ...raw.overrides, alwaysInclude: tooMany },
-      }),
-    ).toThrow('o problema é a regra');
-  });
-
-  it('exige que a dona do estúdio controlado esteja na lista de grandes', () => {
-    const orphan = { ...firstStudio, ownerIgdbId: 999999999 };
-
-    expect(() => indieCriteriaSchema.parse({ ...raw, controlledStudios: [orphan] })).toThrow(
-      'lista de grandes',
-    );
-  });
-
-  it('exige que a saída do grupo seja posterior à aquisição', () => {
-    const inverted = { ...firstStudio, acquiredAt: '2020-01-01', divestedAt: '2019-01-01' };
-
-    expect(() => indieCriteriaSchema.parse({ ...raw, controlledStudios: [inverted] })).toThrow(
-      'posterior à aquisição',
-    );
-  });
-
-  it('exige o ramo do teste de entrada em cada grande empresa', () => {
-    const [firstMajor] = raw.majorCompanies;
-    const withoutVia = { ...firstMajor, via: undefined };
-
-    expect(() => indieCriteriaSchema.parse({ ...raw, majorCompanies: [withoutVia] })).toThrow(
-      'via',
-    );
-  });
-
-  it('recusa empresa ou estúdio repetido pelo id da IGDB', () => {
-    const [firstMajor] = raw.majorCompanies;
-
-    expect(() =>
-      indieCriteriaSchema.parse({ ...raw, majorCompanies: [...raw.majorCompanies, firstMajor] }),
-    ).toThrow('repetida');
-    expect(() =>
-      indieCriteriaSchema.parse({
-        ...raw,
-        controlledStudios: [...raw.controlledStudios, firstStudio],
-      }),
-    ).toThrow('repetido');
-  });
-
-  it('exige grupo e ano da compra no estúdio sem efeito atual', () => {
-    const noEffect = raw.reviewedCompanies.find((c) => c.decision === 'no_current_effect')!;
-    const withoutYear = { ...noEffect, acquiredYear: undefined };
-
-    expect(() => indieCriteriaSchema.parse({ ...raw, reviewedCompanies: [withoutYear] })).toThrow(
-      'ano da compra',
-    );
-  });
-
-  it('recusa empresa revisada que também está na lista de controlados', () => {
-    const reviewedStudio = {
-      igdbId: firstStudio!.igdbId,
-      name: 'x',
-      decision: 'rejected',
-      decidedAt: '2026-10-23',
-    };
-
-    expect(() =>
-      indieCriteriaSchema.parse({ ...raw, reviewedCompanies: [reviewedStudio] }),
-    ).toThrow('lista de grandes ou de controlados');
-  });
-
-  it('versiona o critério pelo conteúdo do arquivo', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'criteria-'));
-    const copy = join(dir, 'indie-criteria.json');
-    writeFileSync(copy, JSON.stringify(raw));
-    const first = readVersionedIndieCriteria(copy).version;
-    writeFileSync(copy, JSON.stringify({ ...raw, principle: 'outro princípio' }));
-
-    expect(first).toMatch(/^[0-9a-f]{64}$/);
-    expect(readVersionedIndieCriteria(copy).version).not.toBe(first);
-  });
-
-  it('exige fonte pública em cada estúdio controlado', () => {
-    const withoutSource = { ...firstStudio, source: 'não é url' };
-
-    expect(() => indieCriteriaSchema.parse({ ...raw, controlledStudios: [withoutSource] })).toThrow(
-      'source',
-    );
-  });
-});
-
 // Casos reais conferidos à mão (docs/criterio-indie-casos.md).
 describe('regressão dos casos reais conferidos à mão', () => {
   function expectVerdicts(file: string, expected: [string, CriteriaVerdict][]) {

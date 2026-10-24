@@ -1,10 +1,7 @@
 import { ReviewFlagKind } from '../../../generated/prisma/client';
 import type { MappedGame } from '../igdb/igdb.mapper';
-import {
-  type CriteriaVerdict,
-  type IndieCriteria,
-  isWithinPostLaunchGrace,
-} from '../criteria/indie-criteria';
+import { type CriteriaVerdict, isWithinPostLaunchGrace } from '../criteria/indie-criteria';
+import type { IndieCriteria } from '../criteria/indie-criteria.config';
 
 export interface StoredGame {
   igdbId: number;
