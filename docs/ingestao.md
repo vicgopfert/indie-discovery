@@ -177,7 +177,7 @@ muda quando muda a contagem do jogo ou o máximo do catálogo.
 
 Os pesos de `GameFeature` continuam sendo regravados quando o catálogo muda: um jogo a mais
 ou a menos muda o N, todos os IDF e todos os pesos (a tabela tem 189 mil linhas e 26 MB). A
-medição entre dias vem com a ingestão agendada (B-54). Pergunta para o B-31: se o índice de
+medição entre dias está na seção "Execução em outro dia". Pergunta para o B-31: se o índice de
 recomendação é montado em memória na API, é preciso persistir `tfidfWeight`? O IDF em
 `Feature` (cerca de 4 mil linhas) basta para reconstruir os pesos na inicialização.
 
@@ -207,6 +207,34 @@ IGDB entre as duas, e nenhuma tabela de ligação ganhou linha morta. As 28 linh
 `Language` vêm do seed do job de migrations, que regrava os idiomas a cada merge na `main`.
 No primeiro resumo, o `psql` falhou ao validar o certificado do Neon (`sslmode=verify-full`),
 o que foi corrigido no #29; a ingestão não foi afetada.
+
+## Execução em outro dia (Neon, 25/10/2026)
+
+Primeira execução em dia diferente da anterior (24 → 25/10), já com o país pelo Wikidata:
+
+| | |
+| --- | --- |
+| Duração da execução | 7 min 18 s |
+| Catálogo | 20.056 jogos (+5): 14.058 lançados, 3.154 por lançar com data e 2.844 sem data |
+| País do estúdio | 39,2% pela IGDB, 8,6% pelo Wikidata, 52,2% não informado, igual à carga local |
+| Alertas | 0 |
+| Banco | 84 MB (eram 69 MB) |
+
+Linhas regravadas:
+
+- **`Game`: 2.130.** Cerca de 1.731 são os jogos que ganharam país pelo Wikidata, efeito de
+  uma vez só; o resto são jogos que mudaram de fato. A unidade da popularidade mudou entre
+  os dias, e a contagem gravada no jogo evitou regravar as 20 mil linhas.
+- **`GameFeature`: 135.364 de 188.807 (72%).** O catálogo ganhou 5 jogos, o N mudou, e com
+  ele todos os IDF e os pesos. Só ficaram iguais os pesos que não dependem do IDF: os de
+  blocos com um único atributo, que valem a fatia inteira do bloco.
+- **`Feature`: 2.593**, os IDF recalculados.
+
+Quase toda execução muda o catálogo em alguns jogos, então cada uma regrava cerca de 135 mil
+linhas de `GameFeature`. O autovacuum reaproveita o espaço, e o tamanho deve estabilizar perto
+do dobro da tabela viva, longe do limite de 1 GB do Neon. O dado responde à pergunta do B-31:
+os pesos persistidos são regravados quase inteiros a cada execução, enquanto o IDF de
+`Feature` (cerca de 4 mil linhas) basta para reconstruí-los na inicialização da API.
 
 ## Medições para decisões pendentes (B-61)
 
