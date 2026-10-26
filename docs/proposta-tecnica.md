@@ -1010,12 +1010,14 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | ID | Item | Prior. | Depende de | Critério de conclusão | Esf. |
 | --- | --- | --- | --- | --- | --- |
 | B-31 | `ContentIndex`: carga dos vetores na inicialização e recarga protegida por segredo | P0 | B-12, B-14 | Memória ocupada medida com o catálogo real e registrada; recarga sem reiniciar a API; decidido se `GameFeature.tfidfWeight` continua persistido ou se os pesos são reconstruídos na inicialização a partir do IDF de `Feature` (qualquer mudança no catálogo regrava os pesos: a execução de 25/10/2026, com 5 jogos a mais, regravou 135 mil das 189 mil linhas de `GameFeature`; `docs/ingestao.md`) | M |
+| B-62 | Modo de jogo e perspectiva como quarto bloco do vetor de conteúdo (decisão do M0, seção 8.9) | P0 | B-12, B-13 | Ingestão grava os dois campos; bloco com fatia própria em `config/recommendation.json`, fora da explicação ao jogador (F-11); a fatia só fica acima de zero se melhorar o acerto@10 no protocolo do B-37 (a queda de vetores idênticos de 21% para 13,4% mede distinção, não qualidade) | M |
+| B-63 | Palavras do resumo como bloco do vetor de conteúdo, em TF-IDF e sem embeddings (decisão do M0, seção 8.9) | P0 | B-31, B-62 | Pesos das palavras calculados em memória pela API a partir do resumo, com a lista de palavras irrelevantes e os limites de frequência em `config/recommendation.json`; fora da explicação ao jogador por enquanto (entrar ou não decide-se no B-37, com exemplos reais); a fatia só fica acima de zero se melhorar o acerto@10 no B-37. Pontos a observar no B-37, sem tratar antes: resumos só em inglês, sem radicalização, nomes próprios e linguagem de divulgação. Primeiro item do plano de corte depois dos P1 | M |
 | B-32 | Núcleo de pontuação em funções puras: perfil ponderado, cosseno, termo de popularidade, seleção, desempate e explicação (F-11) | P0 | B-31 | Testes unitários com catálogo sintético comprovam ordem esperada, exclusão de já avaliados, efeito de nota negativa e atributos da explicação | G |
 | B-33 | `GenerateRecommendationsUseCase` e `GET /recommendations` com os três modos e casos-limite (F-11, F-12) | P0 | B-32, B-27, B-17 | Resposta inclui motivo; sem perfil indica onboarding; tempo de resposta medido com o catálogo real (**marco M2**) | M |
 | B-34 | Fluxo de partida a frio: escolha de gêneros e temas e avaliação opcional de até 4 jogos (F-10) | P0 | B-33, B-28 | Novo usuário sai do onboarding com recomendações, mesmo pulando as avaliações | M |
 | B-35 | Página de recomendações com cartões, motivo e seletor de modo (F-11, F-12) | P0 | B-33, B-40 | Trocar o modo atualiza a lista e persiste a escolha | M |
 | B-36 | E2e de recomendação e teste de determinismo | P0 | B-33 | Avaliar um jogo muda a lista seguinte; mesmo estado gera mesma lista; modos produzem listas diferentes | P |
-| B-37 | Script de avaliação offline e calibração dos pesos (F-14) | P0 | B-33 | Tabela reproduzível com as métricas da seção 12 por modo e contra os *baselines*; configuração final versionada | M |
+| B-37 | Script de avaliação offline e calibração dos pesos (F-14) | P0 | B-33, B-62, B-63 | Tabela reproduzível com as métricas da seção 12 por modo e contra os *baselines*; configuração final versionada | M |
 
 ### E6. Implantação
 
@@ -1063,7 +1065,7 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | Capacidade de desenvolvimento nas semanas 1 a 22 (12 h × 22) | — | 264 h |
 | Semanas 23 e 24 (15 h × 2), sem item novo | — | 30 h, divididas entre ensaios, slides e absorção de atraso |
 
-Com os itens acrescentados no M0 (B-56 a B-58), o ponto médio do P0 passou de 257 h para 275 h, e com o B-59 (aberto no B-11 como P e concluído como M), para 283 h, com o B-60 para 286 h e com o B-61 para 289 h, 25 h acima da capacidade das semanas 1 a 22. O autor decidiu não trocar nenhuma funcionalidade: a diferença é coberta pelas semanas 23 e 24 e pelo ritmo observado na semana 1, em que todo o E0 planejado para a sprint foi feito em um dia. O ritmo real é conferido a cada marco. Se a execução se aproximar do máximo, o plano de corte da seção 16 é aplicado nos marcos M1 e M2, e não na véspera da defesa. Os itens P1 só entram com horas que sobrarem depois do M2.
+Com os itens acrescentados no M0 (B-56 a B-58), o ponto médio do P0 passou de 257 h para 275 h, e com o B-59 (aberto no B-11 como P e concluído como M), para 283 h, com o B-60 para 286 h e com o B-61 para 289 h, com o B-62 para cerca de 297 h e com o B-63 para cerca de 306 h, 42 h acima da capacidade das semanas 1 a 22. O autor decidiu não trocar nenhuma funcionalidade: a diferença é coberta pelas semanas 23 e 24 e pelo ritmo observado na semana 1, em que todo o E0 planejado para a sprint foi feito em um dia. O ritmo real é conferido a cada marco. Se a execução se aproximar do máximo, o plano de corte da seção 16 é aplicado nos marcos M1 e M2, e não na véspera da defesa. Os itens P1 só entram com horas que sobrarem depois do M2.
 
 ## 14. Cronograma até a defesa (Fase A)
 
@@ -1092,7 +1094,7 @@ A sprint S6 (semanas 11–12, entregando o M1) atravessa o recesso de fim de ano
 | S4 | 7–8 | Catálogo real no banco | B-12, B-13, B-14, B-56, B-59, B-60, B-61 | Ingestão completa executada em produção e registrada | R-11, R-12 |
 | S5 | 9–10 | Contas e segurança | B-15, B-16, B-17, B-18, B-22 | Cadastro, login e logout funcionando no ambiente implantado | R-03 |
 | S6 | 11–12 | Interface pública de descoberta | B-20, B-21, B-23, B-24 | **M1** | R-01 |
-| S7 | 13–14 | Biblioteca, índice de conteúdo e coleções | B-19, B-26, B-27, B-31, B-57 | Avaliações e listas pela API; índice carregado com memória medida; e2e de autenticação no CI | R-07, R-09 |
+| S7 | 13–14 | Biblioteca, índice de conteúdo e coleções | B-19, B-26, B-27, B-31, B-57, B-62, B-63 | Avaliações e listas pela API; índice carregado com memória medida; e2e de autenticação no CI | R-07, R-09 |
 | S8 | 15–16 | Núcleo da recomendação | B-32, B-33 | **M2** | R-12, R-08 |
 | S9 | 17–18 | Recomendação e coleções na interface | B-28, B-35, B-36, B-30, B-58 | Jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de posse no CI | R-01 |
 | S10 | 19–20 | Partida a frio, perfil e avaliação offline | B-34, B-29, B-37, B-25 | Todos os P0 prontos; pesos calibrados; **congelamento** | R-01, R-10 |
@@ -1123,7 +1125,7 @@ Reuniões com o orientador a cada sprint, levando o que foi implantado e o trech
 ### Margem explícita
 
 1. **Semanas 23 e 24 sem nenhum item de desenvolvimento.** Os ensaios e slides ocupam parte das 30 horas; o restante absorve atrasos.
-2. **Folga das estimativas.** O ponto médio do P0 (289 h, depois do M0, do B-59, do B-60 e do B-61) passa 25 h da capacidade das semanas 1 a 22 (264 h); a diferença sai das semanas 23 e 24 se o ritmo da semana 1 não se mantiver.
+2. **Folga das estimativas.** O ponto médio do P0 (cerca de 306 h, depois do M0 e dos B-59 a B-63) passa 42 h da capacidade das semanas 1 a 22 (264 h); a diferença sai das semanas 23 e 24 se o ritmo da semana 1 não se mantiver.
 3. **Plano de corte (seção 16)**, aplicado em M1 ou M2 se o atraso acumulado passar de uma sprint.
 4. **Itens P1 fora do caminho crítico.** Nenhum P0 depende deles; só entram depois do M2 com horas que sobrarem.
 
@@ -1188,11 +1190,12 @@ Aplicado de cima para baixo, só até recuperar o atraso. Cada corte é registra
 | Ordem | Corte | O que se perde |
 | --- | --- | --- |
 | 1 | Todos os itens P1 e os testes opcionais de componentes do frontend | Nada do MVP |
-| 2 | Swagger só com esquemas de entrada e saída, sem exemplos | Parte da documentação |
-| 3 | Filtros de idioma e país (B-21) passam a P1 | Recorte secundário de navegação |
-| 4 | Partida a frio só com escolha de gêneros e temas, sem a etapa de avaliação (a avaliação continua disponível na ficha) | Um passo de conveniência |
-| 5 | Página de perfil só de leitura (remoção feita pela ficha do jogo) | Conveniência |
-| 6 | Catálogo reduzido por data de lançamento | Amplitude do catálogo |
+| 2 | Palavras do resumo no vetor de conteúdo (B-63) passam a P1 | Distinção entre os cerca de 13% de jogos que continuam com vetor idêntico depois de modo e perspectiva (decisão do M0, seção 8.9) |
+| 3 | Swagger só com esquemas de entrada e saída, sem exemplos | Parte da documentação |
+| 4 | Filtros de idioma e país (B-21) passam a P1 | Recorte secundário de navegação |
+| 5 | Partida a frio só com escolha de gêneros e temas, sem a etapa de avaliação (a avaliação continua disponível na ficha) | Um passo de conveniência |
+| 6 | Página de perfil só de leitura (remoção feita pela ficha do jogo) | Conveniência |
+| 7 | Catálogo reduzido por data de lançamento | Amplitude do catálogo |
 
 **Nunca são cortados:** contas e sessão (F-01), ingestão com critério indie e vetores (F-02 a F-04), catálogo e ficha (F-05, F-07), avaliações (F-08), partida a frio mínima (F-10), recomendações com motivo e modos (F-11, F-12), avaliação offline (F-14), testes críticos, implantação e contingência local.
 
