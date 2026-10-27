@@ -44,8 +44,31 @@ export interface ReviewFlagInput {
 export function detectReviewFlags(input: ReviewFlagInput): ReviewFlag[] {
   return input.evaluated.flatMap((evaluated) => [
     ...transitionFlags(evaluated, input),
-    ...(evaluated.verdict.accepted ? companyFlags(evaluated.game, input) : []),
+    ...(evaluated.verdict.accepted
+      ? [...companyFlags(evaluated.game, input), ...noDeveloperFlags(evaluated.game, input)]
+      : []),
   ]);
+}
+
+// Jogo sem desenvolvedora nunca é excluído pela regra de controle (limitação aceita no M0).
+// Quando ele é visível ou tem publisher grande, a revisão manual feita no B-60 precisa valer
+// também para os que entram nesse grupo depois.
+function noDeveloperFlags(game: MappedGame, { criteria }: ReviewFlagInput): ReviewFlag[] {
+  const { minRatings, reviewedGames } = criteria.noDeveloperReview;
+  if (game.companies.some((c) => c.isDeveloper)) return [];
+  if (reviewedGames.some((g) => g.igdbId === game.igdbId)) return [];
+  const majorPublishers = game.companies
+    .filter((c) => c.isPublisher && criteria.majorCompanies.some((m) => m.igdbId === c.igdbId))
+    .map((c) => c.name);
+  if (game.ratingCount < minRatings && majorPublishers.length === 0) return [];
+  return [
+    {
+      kind: ReviewFlagKind.NO_DEVELOPER_VISIBLE,
+      igdbId: game.igdbId,
+      gameName: game.name,
+      detail: { ratingCount: game.ratingCount, majorPublishers },
+    },
+  ];
 }
 
 function transitionFlags({ game, verdict }: EvaluatedGame, input: ReviewFlagInput): ReviewFlag[] {

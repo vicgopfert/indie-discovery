@@ -47,6 +47,11 @@ const reviewedCompany = igdbEntity
     message: 'Estúdio sem efeito atual precisa do grupo e do ano da compra.',
   });
 
+const reviewedGame = igdbEntity.extend({
+  decidedAt: z.iso.date(),
+  note: z.string().min(1),
+});
+
 export const indieCriteriaSchema = z
   .object({
     principle: z.string().min(1),
@@ -74,6 +79,13 @@ export const indieCriteriaSchema = z
     reviewedCompaniesPolicy: z.string().min(1),
     reviewedCompanies: z.array(reviewedCompany).refine(hasUniqueIds, {
       message: 'Empresa repetida na lista de empresas revisadas.',
+    }),
+    noDeveloperReview: z.object({
+      minRatings: z.number().int().positive(),
+      rationale: z.string().min(1),
+      reviewedGames: z.array(reviewedGame).refine(hasUniqueIds, {
+        message: 'Jogo repetido na lista de jogos sem desenvolvedora revisados.',
+      }),
     }),
     overridesPolicy: z.object({
       purpose: z.string().min(1),

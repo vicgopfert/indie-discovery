@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "ReviewFlagKind" ADD VALUE 'NO_DEVELOPER_VISIBLE';

@@ -158,6 +158,42 @@ describe('detectReviewFlags', () => {
     });
   });
 
+  describe('jogo sem desenvolvedora visível', () => {
+    const publisher = (igdbId: number, name: string): MappedCompany => ({
+      igdbId,
+      name,
+      countryCode: null,
+      isDeveloper: false,
+      isPublisher: true,
+    });
+    const BATTLE_FOR_WESNOTH = 2365;
+    const noDeveloper = (changes: Partial<MappedGame>) =>
+      detect({ evaluated: [{ game: game({ companies: [], ...changes }), verdict: ACCEPTED }] });
+
+    it('alerta o jogo sem desenvolvedora com 20 ou mais avaliações', () => {
+      expect(noDeveloper({ ratingCount: 20 })).toMatchObject([
+        {
+          kind: ReviewFlagKind.NO_DEVELOPER_VISIBLE,
+          detail: { ratingCount: 20, majorPublishers: [] },
+        },
+      ]);
+    });
+
+    it('alerta o jogo sem desenvolvedora publicado por uma grande, mesmo sem avaliações', () => {
+      expect(
+        noDeveloper({ ratingCount: 0, companies: [publisher(TENCENT, 'Tencent Holdings')] }),
+      ).toMatchObject([{ detail: { majorPublishers: ['Tencent Holdings'] } }]);
+    });
+
+    it('não alerta o jogo pouco visível, o já revisado nem o que tem desenvolvedora', () => {
+      expect(
+        noDeveloper({ ratingCount: 19, companies: [publisher(999001, 'Publisher pequena')] }),
+      ).toEqual([]);
+      expect(noDeveloper({ igdbId: BATTLE_FOR_WESNOTH, ratingCount: 40 })).toEqual([]);
+      expect(noDeveloper({ ratingCount: 100, companies: [developer(900005)] })).toEqual([]);
+    });
+  });
+
   describe('alertas de transição', () => {
     it('não compara nada na primeira avaliação do jogo', () => {
       expect(detect({ evaluated: [{ game: game(), verdict: ACCEPTED }] })).toEqual([]);
