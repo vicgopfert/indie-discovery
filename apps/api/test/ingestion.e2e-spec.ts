@@ -111,6 +111,7 @@ describe('Ingestão', () => {
   let server: FakeIgdbServer;
   let catalog: FakeCatalog;
   let ingest: RunIngestionUseCase;
+  let ingestWith: (reviewSettings: typeof review) => RunIngestionUseCase;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
@@ -132,12 +133,14 @@ describe('Ingestão', () => {
       maxAttempts: 1,
     });
     const ingestion = readIngestionConfig();
-    ingest = new RunIngestionUseCase(
-      new IgdbCatalogSource(igdb, ingestion),
-      new WikidataCountrySource({ endpoint: `${urls.apiUrl}/sparql`, maxAttempts: 1 }),
-      new IngestionRepository(prisma),
-      { criteria: versioned, review, tfidf: readTfidfConfig(), ingestion },
-    );
+    ingestWith = (reviewSettings) =>
+      new RunIngestionUseCase(
+        new IgdbCatalogSource(igdb, ingestion),
+        new WikidataCountrySource({ endpoint: `${urls.apiUrl}/sparql`, maxAttempts: 1 }),
+        new IngestionRepository(prisma),
+        { criteria: versioned, review: reviewSettings, tfidf: readTfidfConfig(), ingestion },
+      );
+    ingest = ingestWith(review);
   });
 
   beforeEach(async () => {
@@ -232,6 +235,28 @@ describe('Ingestão', () => {
       [111, ReviewFlagKind.NO_DEVELOPER_VISIBLE],
     ]);
     expect(flags[0]?.detail).toMatchObject({ ratingCount: 25 });
+  });
+
+  it('revisar uma empresa não muda a versão do critério nem regrava jogos', async () => {
+    await ingest.execute(NOW);
+    const later = new Date(NOW.getTime() + 60_000);
+    const newlyReviewed = {
+      igdbId: 990002,
+      name: 'Empresa revisada depois',
+      decision: 'rejected' as const,
+      decidedAt: '2026-10-27',
+    };
+
+    const result = await ingestWith({
+      ...review,
+      reviewedCompanies: [...review.reviewedCompanies, newlyReviewed],
+    }).execute(later);
+
+    expect(result.status).toBe(IngestionStatus.SUCCEEDED);
+    expect(await prisma.game.count({ where: { syncedAt: { gt: NOW } } })).toBe(0);
+    expect(
+      await prisma.game.count({ where: { criteriaVersion: { not: versioned.version } } }),
+    ).toBe(0);
   });
 
   it('duas execuções seguidas não duplicam registros nem repetem alertas de transição', async () => {
