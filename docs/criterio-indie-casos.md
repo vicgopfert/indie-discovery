@@ -325,7 +325,7 @@ mudaria se a empresa entrasse, com a data de compra de cada estúdio.
 O alerta da ingestão (B-13) só cobre jogo novo no catálogo. Por isso, **esta tabela é
 o único registro dos jogos hoje aceitos que mudariam de lado se uma recusa fosse
 revertida**: *Graft*, *Windjammers 2*, *Absolum*, *Rogue Lords*, *Dragons and Titans*,
-*Where the Seeds Fall*, *Biosphere Simulator* e, se o controle se confirmar, *The
+*Where the Seeds Fall*, *Biosphere Simulator*, *Ladder Lad* e, se o controle se confirmar, *The
 Midnight Walkers* e *Quiet*.
 
 | Empresa | Estúdios no catálogo | Efeito atual | Motivo da recusa |
@@ -341,6 +341,7 @@ Midnight Walkers* e *Quiet*.
 | Wemade | Oneway Ticket Studio (via Madngine) | *The Midnight Walkers* (2026-09-30), se o controle se confirmar | Não controla canal pelo qual jogos chegam ao jogador |
 | LINE Corporation | LINE Games | *Quiet* (2026-12-31), se o controle se confirmar | Não controla canal de distribuição de jogos |
 | indie.io (B-13, 24/10/2026) | IoStudios | *Biosphere Simulator* sairia, se o controle se confirmar | Publisher indie (139 jogos publicados na IGDB): não controla canal de distribuição de jogos e não é conglomerado. Veio do primeiro alerta `PARENT_OUTSIDE_MAJORS` da ingestão |
+| Buck (M0, 26/10/2026) | Buck Games | *Ladder Lad* sairia, se o controle se confirmar | Estúdio de design e animação (2 jogos desenvolvidos e 1 publicado na IGDB): não controla canal de distribuição de jogos e não é conglomerado. Veio de um alerta `PARENT_OUTSIDE_MAJORS` da ingestão |
 
 Fontes das datas: Red Hook
 (https://www.gematsu.com/2024/09/behaviour-interactive-acquires-red-hook-studios), The
