@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { ConfigService } from '@nestjs/config';
+import { ConsoleLogger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -7,7 +8,10 @@ import type { ApiEnv } from './config/env';
 import { configureApp } from './configure-app';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // Em produção, uma linha JSON por evento, para o log do Render ser filtrável.
+  const app = await NestFactory.create(AppModule, {
+    logger: new ConsoleLogger({ json: process.env.NODE_ENV === 'production' }),
+  });
   configureApp(app);
 
   const config = new DocumentBuilder()
