@@ -1,6 +1,7 @@
 import { type INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { AppModule } from '../src/app.module';
+import { SessionsRepository } from '../src/modules/auth/sessions.repository';
 import { PrismaService } from '../src/prisma/prisma.service';
 
 describe('Usuários e sessões no banco', () => {
@@ -40,5 +41,24 @@ describe('Usuários e sessões no banco', () => {
     await prisma.user.delete({ where: { id } });
 
     expect(await prisma.session.count()).toBe(0);
+  });
+
+  it('a limpeza da ingestão apaga só as sessões vencidas', async () => {
+    const { id } = await user();
+    const now = new Date();
+    const at = (offsetMs: number) => new Date(now.getTime() + offsetMs);
+    await prisma.session.createMany({
+      data: [
+        { userId: id, tokenHash: 'vencida-ontem', expiresAt: at(-86_400_000) },
+        { userId: id, tokenHash: 'vence-agora', expiresAt: now },
+        { userId: id, tokenHash: 'valida', expiresAt: at(60_000) },
+      ],
+    });
+
+    const removed = await app.get(SessionsRepository).deleteExpired(now);
+
+    expect(removed).toBe(2);
+    const remaining = await prisma.session.findMany({ select: { tokenHash: true } });
+    expect(remaining).toEqual([{ tokenHash: 'valida' }]);
   });
 });
