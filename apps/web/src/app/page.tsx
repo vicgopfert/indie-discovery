@@ -1,10 +1,10 @@
-import { ApiStatus } from './api-status';
+import { siteConfig } from '@/config/site';
 
 export default function HomePage() {
   return (
-    <main>
-      <h1>Indie Discovery</h1>
-      <ApiStatus />
+    <main className="mx-auto max-w-5xl px-4 py-10">
+      <h1 className="text-2xl font-semibold">{siteConfig.name}</h1>
+      <p>{siteConfig.description}</p>
     </main>
   );
 }

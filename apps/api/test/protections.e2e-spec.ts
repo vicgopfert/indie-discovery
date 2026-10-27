@@ -1,3 +1,4 @@
+import { ApiErrorSchema } from '@indie/contracts';
 import { type INestApplication, type LoggerService } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
@@ -201,6 +202,7 @@ describe('Proteções HTTP', () => {
     it('todo erro sai com statusCode, error, message e o requestId do cabeçalho', async () => {
       const response = await server().get('/api/auth/me');
 
+      expect(ApiErrorSchema.safeParse(response.body).success).toBe(true);
       expect(response.status).toBe(401);
       expect(response.body).toEqual({
         statusCode: 401,
@@ -229,6 +231,7 @@ describe('Proteções HTTP', () => {
 
       expect(response.status).toBe(400);
       expect(response.body).toMatchObject({ message: [expect.stringMatching(/^email: /)] });
+      expect(ApiErrorSchema.safeParse(response.body).success).toBe(true);
     });
 
     it('reaproveita o x-request-id de quem chamou', async () => {
