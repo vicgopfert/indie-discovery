@@ -444,7 +444,7 @@ Com um único frontend na mesma origem e sem clientes móveis, a vantagem do JWT
 
 ### Dados de teste
 
-- O banco de teste é recriado por `prisma migrate reset` antes da suíte e limpo entre arquivos de teste.
+- Os e2e usam um banco próprio, com o nome do banco de desenvolvimento seguido de `_e2e`: antes da suíte, ele é criado se faltar e recebe as migrations com `prisma migrate deploy`; cada arquivo de teste limpa as tabelas que usa. A suíte se recusa a rodar num banco sem o sufixo ou fora de `localhost`, para nunca truncar o banco de desenvolvimento nem o de produção.
 - Um catálogo sintético pequeno (dezenas de jogos com atributos escolhidos a dedo) permite afirmar resultados exatos: "um perfil que gosta de *roguelike* e *pixel art* recebe primeiro o jogo X".
 - Nenhum teste automatizado chama a IGDB real. O cliente IGDB é testado contra fixtures.
 
