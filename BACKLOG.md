@@ -36,7 +36,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [x] **B-15** (P) Modelos `User` e `Session` + migration
 - [x] **B-16** (P) Cadastro com Argon2id e e-mail único
 - [x] **B-17** (M) Login, logout, `GET /auth/me`, `SessionAuthGuard` global, `@Public()`
-- [ ] **B-18** (M) Proteções: throttler no login, helmet, `OriginGuard`, filtro global de exceções, request-id e logs
+- [x] **B-18** (M) Proteções: throttler no login, helmet, `OriginGuard`, filtro global de exceções, request-id e logs
 - [ ] **B-19** (M) Suíte e2e de autenticação
 - [ ] **B-64** (P) Páginas de entrar e cadastrar e estado de sessão no cabeçalho, com foco funcional (o visual vem depois, com apoio de design gráfico)
 
