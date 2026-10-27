@@ -30,6 +30,17 @@ enum IngestionStatus {
   FAILED
 }
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum DiscoveryMode {
+  POPULAR
+  BALANCED
+  DISCOVERY
+}
+
 enum ReviewFlagKind {
   NO_EFFECT_STUDIO
   PARENT_OUTSIDE_MAJORS
@@ -38,6 +49,32 @@ enum ReviewFlagKind {
   VERDICT_CHANGED
   LEFT_CANDIDATE_SET
   NO_DEVELOPER_VISIBLE
+}
+
+// E-mail guardado já normalizado (minúsculas, sem espaços): o índice único garante a unicidade.
+model User {
+  id                    String        @id @default(uuid()) @db.Uuid
+  email                 String        @unique
+  passwordHash          String
+  displayName           String
+  role                  UserRole      @default(USER)
+  discoveryMode         DiscoveryMode @default(BALANCED)
+  onboardingCompletedAt DateTime?
+  createdAt             DateTime      @default(now())
+  sessions              Session[]
+}
+
+// Guarda só o hash SHA-256 do token; o token em si existe apenas no cookie do navegador.
+model Session {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
 }
 
 model Country {

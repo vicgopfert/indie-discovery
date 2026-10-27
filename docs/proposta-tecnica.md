@@ -981,6 +981,7 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | B-17 | Login, logout, `GET /auth/me`, `SessionAuthGuard` global e `@Public()` (F-01) | P0 | B-16 | Rota sem `@Public()` responde 401 sem cookie; logout invalida a sessão no servidor | M |
 | B-18 | Proteções: throttler no login, helmet, `OriginGuard`, filtro global de exceções, request-id e logs em JSON | P0 | B-17 | Excesso de tentativas devolve 429; requisição com `Origin` estranho é rejeitada; erro 500 não expõe detalhes | M |
 | B-19 | Suíte e2e de autenticação | P0 | B-18, B-05 | Cobre cadastro, login, credencial errada, rota protegida, logout e sessão expirada, no CI | M |
+| B-64 | Páginas de entrar e cadastrar e estado de sessão no cabeçalho (F-01) | P0 | B-17, B-40 | Cadastro, login e logout pela interface no ambiente implantado; foco funcional, sem trabalho de design: o visual vem depois, com apoio de design gráfico e um documento de telas | P |
 
 ### E3. Descoberta e interface pública
 
@@ -1065,7 +1066,7 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | Capacidade de desenvolvimento nas semanas 1 a 22 (12 h × 22) | — | 264 h |
 | Semanas 23 e 24 (15 h × 2), sem item novo | — | 30 h, divididas entre ensaios, slides e absorção de atraso |
 
-Com os itens acrescentados no M0 (B-56 a B-58), o ponto médio do P0 passou de 257 h para 275 h, e com o B-59 (aberto no B-11 como P e concluído como M), para 283 h, com o B-60 para 286 h e com o B-61 para 289 h, com o B-62 para cerca de 297 h e com o B-63 para cerca de 306 h, 42 h acima da capacidade das semanas 1 a 22. O autor decidiu não trocar nenhuma funcionalidade: a diferença é coberta pelas semanas 23 e 24 e pelo ritmo observado na semana 1, em que todo o E0 planejado para a sprint foi feito em um dia. O ritmo real é conferido a cada marco. Se a execução se aproximar do máximo, o plano de corte da seção 16 é aplicado nos marcos M1 e M2, e não na véspera da defesa. Os itens P1 só entram com horas que sobrarem depois do M2.
+Com os itens acrescentados no M0 (B-56 a B-58), o ponto médio do P0 passou de 257 h para 275 h, e com o B-59 (aberto no B-11 como P e concluído como M), para 283 h, com o B-60 para 286 h e com o B-61 para 289 h, com o B-62 para cerca de 297 h e com o B-63 para cerca de 306 h e com o B-64 para cerca de 309 h, 45 h acima da capacidade das semanas 1 a 22. O autor decidiu não trocar nenhuma funcionalidade: a diferença é coberta pelas semanas 23 e 24 e pelo ritmo observado na semana 1, em que todo o E0 planejado para a sprint foi feito em um dia. O ritmo real é conferido a cada marco. Se a execução se aproximar do máximo, o plano de corte da seção 16 é aplicado nos marcos M1 e M2, e não na véspera da defesa. Os itens P1 só entram com horas que sobrarem depois do M2.
 
 ## 14. Cronograma até a defesa (Fase A)
 
@@ -1092,7 +1093,7 @@ A sprint S6 (semanas 11–12, entregando o M1) atravessa o recesso de fim de ano
 | S2 | 3–4 | Implantação e CI desde o início | B-05, B-08, B-38, B-39, B-40 | API e frontend vazios implantados, banco remoto com migrations, CI verde | R-09, R-13 |
 | S3 | 5–6 | Integração com a IGDB | B-06, B-09, B-10, B-11 | Cliente e mapeador testados com fixtures; critério indie validado contra casos reais | R-04 |
 | S4 | 7–8 | Catálogo real no banco | B-12, B-13, B-14, B-56, B-59, B-60, B-61 | Ingestão completa executada em produção e registrada | R-11, R-12 |
-| S5 | 9–10 | Contas e segurança | B-15, B-16, B-17, B-18, B-22 | Cadastro, login e logout funcionando no ambiente implantado | R-03 |
+| S5 | 9–10 | Contas e segurança | B-15, B-16, B-17, B-18, B-64, B-22 | Cadastro, login e logout funcionando no ambiente implantado | R-03 |
 | S6 | 11–12 | Interface pública de descoberta | B-20, B-21, B-23, B-24 | **M1** | R-01 |
 | S7 | 13–14 | Biblioteca, índice de conteúdo e coleções | B-19, B-26, B-27, B-31, B-57, B-62, B-63 | Avaliações e listas pela API; índice carregado com memória medida; e2e de autenticação no CI | R-07, R-09 |
 | S8 | 15–16 | Núcleo da recomendação | B-32, B-33 | **M2** | R-12, R-08 |
@@ -1125,7 +1126,7 @@ Reuniões com o orientador a cada sprint, levando o que foi implantado e o trech
 ### Margem explícita
 
 1. **Semanas 23 e 24 sem nenhum item de desenvolvimento.** Os ensaios e slides ocupam parte das 30 horas; o restante absorve atrasos.
-2. **Folga das estimativas.** O ponto médio do P0 (cerca de 306 h, depois do M0 e dos B-59 a B-63) passa 42 h da capacidade das semanas 1 a 22 (264 h); a diferença sai das semanas 23 e 24 se o ritmo da semana 1 não se mantiver.
+2. **Folga das estimativas.** O ponto médio do P0 (cerca de 309 h, depois do M0 e dos B-59 a B-64) passa 45 h da capacidade das semanas 1 a 22 (264 h); a diferença sai das semanas 23 e 24 se o ritmo da semana 1 não se mantiver.
 3. **Plano de corte (seção 16)**, aplicado em M1 ou M2 se o atraso acumulado passar de uma sprint.
 4. **Itens P1 fora do caminho crítico.** Nenhum P0 depende deles; só entram depois do M2 com horas que sobrarem.
 
