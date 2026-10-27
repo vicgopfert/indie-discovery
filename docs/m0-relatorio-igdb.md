@@ -439,7 +439,7 @@ descrito (jogo de estúdio controlado que entra sem crédito de desenvolvedora) 
 catálogo sem desenvolvedora que tem 20 ou mais avaliações ou publisher da lista de grandes.
 Assim, a revisão manual dos 14 jogos mais visíveis, feita no B-60, passa a valer também para
 os que entrarem nesse grupo depois. Os 14 ficam registrados como revisados, e o limite de 20
-fica em configuração (`noDeveloperReview` em `indie-criteria.json`).
+fica em configuração (`noDeveloperReview` em `ingestion-review.json`).
 
 ## Fixtures
 
