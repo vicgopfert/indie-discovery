@@ -1,4 +1,5 @@
 import { type INestApplication } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import type { App } from 'supertest/types';
@@ -9,6 +10,7 @@ import { PrismaService } from '../src/prisma/prisma.service';
 describe('Autenticação', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
+  let origin: string;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
@@ -16,6 +18,7 @@ describe('Autenticação', () => {
     configureApp(app);
     await app.init();
     prisma = app.get(PrismaService);
+    origin = app.get(ConfigService).getOrThrow<string>('WEB_ORIGIN');
   });
 
   beforeEach(() => prisma.$executeRaw`TRUNCATE "User" CASCADE`);
@@ -23,7 +26,7 @@ describe('Autenticação', () => {
   afterAll(() => app.close());
 
   const register = (body: Record<string, unknown>) =>
-    request(app.getHttpServer()).post('/api/auth/register').send(body);
+    request(app.getHttpServer()).post('/api/auth/register').set('Origin', origin).send(body);
 
   const valid = {
     email: 'Jogadora@Example.com ',
@@ -84,7 +87,7 @@ describe('Autenticação', () => {
       .concat(response.headers['set-cookie'] ?? [])
       .find((cookie) => cookie.startsWith('sid='));
   const login = (email: string, password: string) =>
-    server().post('/api/auth/login').send({ email, password });
+    server().post('/api/auth/login').set('Origin', origin).send({ email, password });
   const me = (cookie?: string) =>
     cookie ? server().get('/api/auth/me').set('Cookie', cookie) : server().get('/api/auth/me');
 
@@ -140,7 +143,10 @@ describe('Autenticação', () => {
     it('logout encerra a sessão no servidor e apaga o cookie', async () => {
       const cookie = sessionCookie(await register(valid))!;
 
-      const response = await server().post('/api/auth/logout').set('Cookie', cookie);
+      const response = await server()
+        .post('/api/auth/logout')
+        .set('Origin', origin)
+        .set('Cookie', cookie);
 
       expect(response.status).toBe(204);
       expect(sessionCookie(response)).toMatch(/sid=;.*Expires=Thu, 01 Jan 1970/);
