@@ -8,6 +8,7 @@ import {
   Post,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -18,15 +19,18 @@ import {
   ApiNoContentResponse,
   ApiOkResponse,
   ApiTags,
+  ApiTooManyRequestsResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { type LoginInput, LoginSchema, type RegisterInput, RegisterSchema } from '@indie/contracts';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Public } from '../../common/decorators/public.decorator';
 import type { User } from '../../generated/prisma/client';
 import { toPublicUser } from '../users/user.presenter';
 import { AUTH_SETTINGS, type AuthSettings, sessionCookieOptions } from './auth-settings';
+import { AUTH_THROTTLER, LOGIN_LIMIT, REGISTER_LIMIT } from './auth-throttle';
 import { AuthService } from './auth.service';
 import { SESSION_COOKIE } from './session-token';
 
@@ -50,6 +54,8 @@ export class AuthController {
 
   @Public()
   @Post('register')
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ [AUTH_THROTTLER]: REGISTER_LIMIT })
   @HttpCode(HttpStatus.CREATED)
   @ApiBody({
     schema: {
@@ -62,6 +68,7 @@ export class AuthController {
   })
   @ApiBadRequestResponse({ description: 'E-mail inválido, nome vazio ou senha fora de 8 a 128' })
   @ApiConflictResponse({ description: 'E-mail já cadastrado' })
+  @ApiTooManyRequestsResponse({ description: 'Mais de 5 cadastros por hora vindos do mesmo IP' })
   async register(
     @Body({ schema: RegisterSchema }) body: RegisterInput,
     @Res({ passthrough: true }) response: Response,
@@ -73,6 +80,8 @@ export class AuthController {
 
   @Public()
   @Post('login')
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ [AUTH_THROTTLER]: LOGIN_LIMIT })
   @HttpCode(HttpStatus.OK)
   @ApiBody({ schema: { example: { email: 'jogadora@example.com', password: 'senha-forte' } } })
   @ApiOkResponse({
@@ -80,6 +89,7 @@ export class AuthController {
     schema: { example: PUBLIC_USER_EXAMPLE },
   })
   @ApiUnauthorizedResponse({ description: 'E-mail ou senha incorretos, sem dizer qual' })
+  @ApiTooManyRequestsResponse({ description: 'Mais de 5 tentativas por minuto vindas do mesmo IP' })
   async login(
     @Body({ schema: LoginSchema }) body: LoginInput,
     @Res({ passthrough: true }) response: Response,

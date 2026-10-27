@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule } from '@nestjs/throttler';
 import type { ApiEnv } from '../../config/env';
 import { UsersModule } from '../users/users.module';
 import { AUTH_SETTINGS, type AuthSettings } from './auth-settings';
+import { AUTH_THROTTLER, LOGIN_LIMIT, TOO_MANY_ATTEMPTS_MESSAGE } from './auth-throttle';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { PasswordHasher } from './password-hasher';
@@ -11,7 +13,15 @@ import { SessionAuthGuard } from './session-auth.guard';
 import { SessionsModule } from './sessions.module';
 
 @Module({
-  imports: [UsersModule, SessionsModule],
+  imports: [
+    UsersModule,
+    SessionsModule,
+    // Memória do processo: basta para a única instância do Render.
+    ThrottlerModule.forRoot({
+      errorMessage: TOO_MANY_ATTEMPTS_MESSAGE,
+      throttlers: [{ name: AUTH_THROTTLER, ...LOGIN_LIMIT }],
+    }),
+  ],
   controllers: [AuthController],
   providers: [
     AuthService,

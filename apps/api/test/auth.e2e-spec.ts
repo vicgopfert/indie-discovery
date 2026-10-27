@@ -1,6 +1,7 @@
 import { type INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import request from 'supertest';
 import type { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
@@ -13,7 +14,11 @@ describe('Autenticação', () => {
   let origin: string;
 
   beforeAll(async () => {
-    const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
+    // O limite por IP tem e2e próprio; aqui ele atrapalharia os vários cadastros seguidos.
+    const moduleRef = await Test.createTestingModule({ imports: [AppModule] })
+      .overrideGuard(ThrottlerGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
     app = moduleRef.createNestApplication();
     configureApp(app);
     await app.init();

@@ -13,14 +13,21 @@ describe('validateApiEnv', () => {
       NODE_ENV: 'development',
       PORT: 3001,
       SESSION_TTL_DAYS: 7,
+      TRUST_PROXY: false,
     });
   });
 
-  it('converte os números lidos como texto', () => {
-    const env = validateApiEnv({ ...validEnv, PORT: '8080', SESSION_TTL_DAYS: '14' });
+  it('converte os números e booleanos lidos como texto', () => {
+    const env = validateApiEnv({
+      ...validEnv,
+      PORT: '8080',
+      SESSION_TTL_DAYS: '14',
+      TRUST_PROXY: 'true',
+    });
 
     expect(env.PORT).toBe(8080);
     expect(env.SESSION_TTL_DAYS).toBe(14);
+    expect(env.TRUST_PROXY).toBe(true);
   });
 
   it.each(['DATABASE_URL', 'WEB_ORIGIN', 'INTERNAL_RELOAD_SECRET'])(
@@ -38,6 +45,7 @@ describe('validateApiEnv', () => {
     ['WEB_ORIGIN', 'localhost:3000'],
     ['INTERNAL_RELOAD_SECRET', 'curto'],
     ['PORT', 'abc'],
+    ['TRUST_PROXY', 'talvez'],
     ['NODE_ENV', 'staging'],
   ])('rejeita %s inválida', (name, value) => {
     expect(() => validateApiEnv({ ...validEnv, [name]: value })).toThrow(name);
