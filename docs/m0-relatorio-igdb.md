@@ -408,7 +408,7 @@ acima são pontos a observar no B-37, sem tratamento antes. O P0 passa para cerc
 plano segue sem trocar funcionalidade, e o B-63 é o primeiro item do plano de corte depois
 dos P1.
 
-### 8.10 Cobertura de desenvolvedora para o critério indie — aberto em 23/10/2026, registrada como limitação
+### 8.10 Cobertura de desenvolvedora para o critério indie — decidido em 26/10/2026
 
 Medido no B-60 sobre o catálogo aceito (20.014 jogos; detalhes em
 `docs/criterio-indie-casos.md`). Jogo sem desenvolvedora creditada nunca é excluído
@@ -428,6 +428,18 @@ pela regra de controle, porque não há o que avaliar.
 Decisão: limitação registrada, **sem regra de reserva** (excluir pela publisher quando
 falta a desenvolvedora traria de volta a regra derrubada no B-59). Fica para o M0
 confirmar se a limitação é aceita como está.
+
+**Medido em 26/10/2026:** dos 4.634 jogos sem desenvolvedora, **nenhum tem publisher da
+lista de grandes**, e 4.049 também não têm publisher. A regra de reserva não excluiria
+nenhum jogo hoje.
+
+**Decidido (26/10/2026): limitação aceita, sem regra de reserva.** A defesa contra o risco
+descrito (jogo de estúdio controlado que entra sem crédito de desenvolvedora) é o alerta
+`NO_DEVELOPER_VISIBLE` da ingestão. Ele sinaliza para revisão, sem excluir nada, o jogo do
+catálogo sem desenvolvedora que tem 20 ou mais avaliações ou publisher da lista de grandes.
+Assim, a revisão manual dos 14 jogos mais visíveis, feita no B-60, passa a valer também para
+os que entrarem nesse grupo depois. Os 14 ficam registrados como revisados, e o limite de 20
+fica em configuração (`noDeveloperReview` em `indie-criteria.json`).
 
 ## Fixtures
 

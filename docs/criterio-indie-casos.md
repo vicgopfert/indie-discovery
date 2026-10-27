@@ -240,7 +240,15 @@ nenhuma.
 
 Decisão: a falta de desenvolvedora é registrada como limitação e escalada ao M0 (seção
 8.10 do relatório), **sem regra de reserva**. Excluir pela publisher quando falta a
-desenvolvedora traria de volta a regra derrubada no B-59.
+desenvolvedora traria de volta a regra derrubada no B-59. Dos 4.634 jogos sem
+desenvolvedora, nenhum tem publisher da lista de grandes (4.049 não têm publisher
+nenhuma): a regra de reserva não excluiria nenhum jogo hoje.
+
+**Confirmado no M0 (26/10/2026), com uma defesa:** o alerta `NO_DEVELOPER_VISIBLE` da
+ingestão sinaliza para revisão, sem excluir nada, o jogo do catálogo sem desenvolvedora que
+tem 20 ou mais avaliações ou publisher da lista de grandes. Os 14 jogos revisados acima ficam
+registrados como conhecidos (`noDeveloperReview` em `indie-criteria.json`), e a revisão
+manual do subconjunto visível passa a valer para os jogos que entrarem nele depois.
 
 ### O par Lab42
 
@@ -317,7 +325,7 @@ mudaria se a empresa entrasse, com a data de compra de cada estúdio.
 O alerta da ingestão (B-13) só cobre jogo novo no catálogo. Por isso, **esta tabela é
 o único registro dos jogos hoje aceitos que mudariam de lado se uma recusa fosse
 revertida**: *Graft*, *Windjammers 2*, *Absolum*, *Rogue Lords*, *Dragons and Titans*,
-*Where the Seeds Fall*, *Biosphere Simulator* e, se o controle se confirmar, *The
+*Where the Seeds Fall*, *Biosphere Simulator*, *Ladder Lad* e, se o controle se confirmar, *The
 Midnight Walkers* e *Quiet*.
 
 | Empresa | Estúdios no catálogo | Efeito atual | Motivo da recusa |
@@ -333,6 +341,7 @@ Midnight Walkers* e *Quiet*.
 | Wemade | Oneway Ticket Studio (via Madngine) | *The Midnight Walkers* (2026-09-30), se o controle se confirmar | Não controla canal pelo qual jogos chegam ao jogador |
 | LINE Corporation | LINE Games | *Quiet* (2026-12-31), se o controle se confirmar | Não controla canal de distribuição de jogos |
 | indie.io (B-13, 24/10/2026) | IoStudios | *Biosphere Simulator* sairia, se o controle se confirmar | Publisher indie (139 jogos publicados na IGDB): não controla canal de distribuição de jogos e não é conglomerado. Veio do primeiro alerta `PARENT_OUTSIDE_MAJORS` da ingestão |
+| Buck (M0, 26/10/2026) | Buck Games | *Ladder Lad* sairia, se o controle se confirmar | Estúdio de design e animação (2 jogos desenvolvidos e 1 publicado na IGDB): não controla canal de distribuição de jogos e não é conglomerado. Veio de um alerta `PARENT_OUTSIDE_MAJORS` da ingestão |
 
 Fontes das datas: Red Hook
 (https://www.gematsu.com/2024/09/behaviour-interactive-acquires-red-hook-studios), The
@@ -604,8 +613,10 @@ candidato: a IGDB o classifica como Racing e Simulator, sem Indie.
   entrevistas da BGS estavam sem lançamento). A ingestão (B-13) reavalia todo jogo
   gravado a cada execução e gera o alerta `RELEASE_DATE_ASSIGNED` nessa transição.
 - **Jogos sem desenvolvedora creditada são aceitos.** São 1,54% das avaliações do
-  catálogo e 23,15% dos jogos aceitos (achado 2 do B-60). Não há regra de reserva; a
-  limitação foi escalada ao M0.
+  catálogo e 23,15% dos jogos aceitos (achado 2 do B-60). Não há regra de reserva,
+  decisão confirmada no M0. A defesa é o alerta `NO_DEVELOPER_VISIBLE`, que leva à revisão
+  o jogo sem desenvolvedora que fica visível (20 ou mais avaliações) ou tem publisher da
+  lista de grandes.
 - **Os créditos de desenvolvedora da IGDB incluem porte e publicação.** Os
   erros encontrados estão corrigidos por exceção; outros podem aparecer em jogos novos.
   O crédito errado que exclui um indie só aparece com verificação manual (ver a

@@ -1724,6 +1724,13 @@
       "decidedAt": "2026-10-23"
     },
     {
+      "igdbId": 46260,
+      "name": "Buck",
+      "decision": "rejected",
+      "decidedAt": "2026-10-26",
+      "note": "Limítrofe recusada no M0, pelo alerta da Buck Games (Ladder Lad): estúdio de design e animação, não controla canal de distribuição de jogos e não é conglomerado."
+    },
+    {
       "igdbId": 46931,
       "name": "Waddling Technology",
       "decision": "rejected",
@@ -1845,6 +1852,96 @@
       "decidedAt": "2026-10-23"
     }
   ],
+  "noDeveloperReview": {
+    "minRatings": 20,
+    "rationale": "Jogo sem desenvolvedora creditada nunca é excluído pela regra de controle (limitação aceita no M0, seção 8.10, sem regra de reserva). O alerta NO_DEVELOPER_VISIBLE sinaliza para revisão o jogo do catálogo sem desenvolvedora que tem pelo menos minRatings avaliações ou publisher da lista de grandes. O limite de 20 é o do subconjunto visível revisado no B-60, cujos 14 jogos estão abaixo como revisados.",
+    "reviewedGames": [
+      {
+        "igdbId": 2365,
+        "name": "Battle for Wesnoth",
+        "decidedAt": "2026-10-23",
+        "note": "Revisado no B-60: Projeto de código aberto; nenhum estúdio controlado."
+      },
+      {
+        "igdbId": 18263,
+        "name": "Moon Hunters",
+        "decidedAt": "2026-10-23",
+        "note": "Revisado no B-60: Kitfox Games; nenhum estúdio controlado."
+      },
+      {
+        "igdbId": 8700,
+        "name": "Little Fighter 2",
+        "decidedAt": "2026-10-23",
+        "note": "Revisado no B-60: Marti Wong e Starsky Wong; nenhum estúdio controlado."
+      },
+      {
+        "igdbId": 84922,
+        "name": "Clone Hero",
+        "decidedAt": "2026-10-23",
+        "note": "Revisado no B-60: Projeto comunitário; nenhum estúdio controlado."
+      },
+      {
+        "igdbId": 34366,
+        "name": "The Uncertain: Last Quiet Day",
+        "decidedAt": "2026-10-23",
+        "note": "Revisado no B-60: ComonGames; nenhum estúdio controlado."
+      },
+      {
+        "igdbId": 19914,
+        "name": "Charlie Murder",
+        "decidedAt": "2026-10-23",
+        "note": "Revisado no B-60: Ska Studios; nenhum estúdio controlado."
+      },
+      {
+        "igdbId": 86295,
+        "name": "Tick Tock: A Tale for Two",
+        "decidedAt": "2026-10-23",
+        "note": "Revisado no B-60: Other Tales Interactive; nenhum estúdio controlado."
+      },
+      {
+        "igdbId": 8599,
+        "name": "Gunman Clive",
+        "decidedAt": "2026-10-23",
+        "note": "Revisado no B-60: Bertil Hörberg; nenhum estúdio controlado."
+      },
+      {
+        "igdbId": 18730,
+        "name": "Cataclysm: Dark Days Ahead",
+        "decidedAt": "2026-10-23",
+        "note": "Revisado no B-60: Projeto de código aberto; nenhum estúdio controlado."
+      },
+      {
+        "igdbId": 118645,
+        "name": "She Sees Red",
+        "decidedAt": "2026-10-23",
+        "note": "Revisado no B-60: Rhinotales; nenhum estúdio controlado."
+      },
+      {
+        "igdbId": 3151,
+        "name": "Electronic Super Joy",
+        "decidedAt": "2026-10-23",
+        "note": "Revisado no B-60: Michael Todd Games; nenhum estúdio controlado."
+      },
+      {
+        "igdbId": 51945,
+        "name": "Ratty Catty",
+        "decidedAt": "2026-10-23",
+        "note": "Revisado no B-60: Estúdio pequeno; nenhum estúdio controlado."
+      },
+      {
+        "igdbId": 328145,
+        "name": "Idate: Online Interactive Dating",
+        "decidedAt": "2026-10-23",
+        "note": "Revisado no B-60: Desenvolvedora não identificada; publisher GameClub; nenhum estúdio controlado."
+      },
+      {
+        "igdbId": 7596,
+        "name": "Eufloria",
+        "decidedAt": "2026-10-23",
+        "note": "Revisado no B-60: Estúdio pequeno; nenhum estúdio controlado."
+      }
+    ]
+  },
   "overridesPolicy": {
     "purpose": "As listas corrigem erros de classificação indie. Não sobrepõem o filtro de conteúdo (temas excluídos).",
     "alwaysInclude": "Jogo desenvolvido por estúdios independentes na data de lançamento, excluído por um crédito da IGDB que não corresponde a esse desenvolvimento: publisher, estúdio de porte ou estúdio que assumiu o jogo depois do lançamento, creditados como desenvolvedores.",
