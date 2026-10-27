@@ -14,3 +14,7 @@ export function safeRedirect(target: string | string[] | undefined, fallback = '
 export function withRedirect(path: string, target: string) {
   return target === '/' ? path : `${path}?next=${encodeURIComponent(target)}`;
 }
+
+export type AuthPageProps = {
+  searchParams: Promise<{ next?: string | string[] }>;
+};

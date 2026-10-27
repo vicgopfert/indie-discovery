@@ -3,11 +3,11 @@ import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { GuestOnly } from '@/features/auth/guest-only';
 import { RegisterForm } from '@/features/auth/register-form';
-import { safeRedirect, withRedirect } from '@/lib/safe-redirect';
+import { type AuthPageProps, safeRedirect, withRedirect } from '@/lib/safe-redirect';
 
 export const metadata: Metadata = { title: 'Criar conta' };
 
-export default async function RegisterPage({ searchParams }: PageProps<'/cadastrar'>) {
+export default async function RegisterPage({ searchParams }: AuthPageProps) {
   const redirectTo = safeRedirect((await searchParams).next);
 
   return (
