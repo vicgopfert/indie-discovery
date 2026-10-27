@@ -31,9 +31,14 @@ const UNIT = 0.000001134116025;
 const BEHAVIOUR = 1260;
 const FRICTIONAL = 36;
 const SCOTTGAMES = 8653;
-const fixtureGames = JSON.parse(
-  readFileSync(join(__dirname, 'fixtures/igdb/games.complete.json'), 'utf8'),
-) as RawGame[];
+// Os 14 jogos sem desenvolvedora e com 20 ou mais avaliações revisados no B-60 entram no catálogo:
+// a primeira execução passa por eles e precisa sair sem alerta.
+const readFixture = (file: string) =>
+  JSON.parse(readFileSync(join(__dirname, 'fixtures/igdb', file), 'utf8')) as RawGame[];
+const fixtureGames = [
+  ...readFixture('games.complete.json'),
+  ...readFixture('criteria-no-developer.json'),
+].sort((a, b) => a.id - b.id);
 const versioned = readVersionedIndieCriteria();
 const accepted = fixtureGames.filter(
   (raw) =>
@@ -208,6 +213,23 @@ describe('Ingestão', () => {
     expect(await prisma.gameFeature.count({ where: { tfidfWeight: { gt: 0 } } })).toBeGreaterThan(
       0,
     );
+  });
+
+  it('alerta o jogo do catálogo que fica sem desenvolvedora e visível', async () => {
+    await ingest.execute(NOW);
+    const amnesia = catalog.games.find((g) => g.id === 111)!;
+    amnesia.involved_companies = (
+      amnesia.involved_companies as { developer: boolean; publisher: boolean }[]
+    ).map((c) => ({ ...c, developer: false }));
+    amnesia.total_rating_count = 25;
+
+    const result = await ingest.execute(NOW);
+
+    const flags = await flagsOf(result.runId);
+    expect(flags.map((f) => [f.igdbId, f.kind])).toEqual([
+      [111, ReviewFlagKind.NO_DEVELOPER_VISIBLE],
+    ]);
+    expect(flags[0]?.detail).toMatchObject({ ratingCount: 25 });
   });
 
   it('duas execuções seguidas não duplicam registros nem repetem alertas de transição', async () => {
