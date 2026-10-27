@@ -95,6 +95,10 @@ describe('Autenticação', () => {
     server().post('/api/auth/login').set('Origin', origin).send({ email, password });
   const me = (cookie?: string) =>
     cookie ? server().get('/api/auth/me').set('Cookie', cookie) : server().get('/api/auth/me');
+  const logout = (cookie?: string) => {
+    const call = server().post('/api/auth/logout').set('Origin', origin);
+    return cookie ? call.set('Cookie', cookie) : call;
+  };
 
   describe('sessão', () => {
     it('o cadastro já abre a sessão, com cookie HttpOnly, SameSite=Lax e 7 dias', async () => {
@@ -148,10 +152,7 @@ describe('Autenticação', () => {
     it('logout encerra a sessão no servidor e apaga o cookie', async () => {
       const cookie = sessionCookie(await register(valid))!;
 
-      const response = await server()
-        .post('/api/auth/logout')
-        .set('Origin', origin)
-        .set('Cookie', cookie);
+      const response = await logout(cookie);
 
       expect(response.status).toBe(204);
       expect(sessionCookie(response)).toMatch(/sid=;.*Expires=Thu, 01 Jan 1970/);
@@ -166,8 +167,39 @@ describe('Autenticação', () => {
       expect((await me(cookie)).status).toBe(401);
     });
 
-    it('o health check continua público', async () => {
-      expect((await server().get('/api/health')).status).toBe(200);
+    it('logout encerra só a própria sessão; a de outro aparelho continua valendo', async () => {
+      const first = sessionCookie(await register(valid))!;
+      const second = sessionCookie(await login(valid.email, valid.password))!;
+
+      expect((await logout(first)).status).toBe(204);
+
+      expect((await me(first)).status).toBe(401);
+      expect((await me(second)).status).toBe(200);
+      expect(await prisma.session.count()).toBe(1);
     });
+
+    it('logout sem sessão responde 401 e não apaga nada', async () => {
+      await register(valid);
+
+      expect((await logout()).status).toBe(401);
+      expect((await logout('sid=token-inventado')).status).toBe(401);
+      expect(await prisma.session.count()).toBe(1);
+    });
+  });
+
+  it('jornada completa: cadastro, sair, entrar de novo e sair', async () => {
+    const signedUp = sessionCookie(await register(valid))!;
+    expect((await me(signedUp)).body).toMatchObject({ displayName: 'Jogadora' });
+
+    expect((await logout(signedUp)).status).toBe(204);
+    expect((await me(signedUp)).status).toBe(401);
+
+    const signedIn = sessionCookie(await login(valid.email, valid.password))!;
+    expect(signedIn).not.toBe(signedUp);
+    expect((await me(signedIn)).body).toMatchObject({ email: 'jogadora@example.com' });
+
+    expect((await logout(signedIn)).status).toBe(204);
+    expect((await me(signedIn)).status).toBe(401);
+    expect(await prisma.session.count()).toBe(0);
   });
 });
