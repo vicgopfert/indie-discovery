@@ -12,7 +12,7 @@ export function configureApp(app: INestApplication) {
   // Sem isso, atrás da Vercel e do Render o throttler veria só o IP do último proxy, e todos os
   // usuários dividiriam o mesmo limite.
   const express = app.getHttpAdapter().getInstance() as Application;
-  express.set('trust proxy', env.get('TRUST_PROXY', { infer: true }));
+  express.set('trust proxy', env.get('TRUST_PROXY_HOPS', { infer: true }));
 
   app.setGlobalPrefix('api');
   app.use(assignRequestId);

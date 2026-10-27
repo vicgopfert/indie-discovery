@@ -1,6 +1,7 @@
 import { type INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
+import type { Application } from 'express';
 import request from 'supertest';
 import type { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
@@ -66,6 +67,26 @@ describe('Proteções HTTP', () => {
       for (let attempt = 0; attempt < 5; attempt++) await login();
 
       expect((await register(0)).status).toBe(201);
+    });
+
+    it('sem proxies confiáveis, ignora o X-Forwarded-For enviado pelo cliente', async () => {
+      for (let attempt = 1; attempt <= 5; attempt++) {
+        await login().set('X-Forwarded-For', `203.0.113.${attempt}`);
+      }
+
+      expect((await login().set('X-Forwarded-For', '203.0.113.6')).status).toBe(429);
+    });
+
+    it('atrás de proxies, conta pelo IP a TRUST_PROXY_HOPS saltos da direita', async () => {
+      // Simula TRUST_PROXY_HOPS=1: o último proxy anexa o IP real à direita do que o cliente mandou.
+      (app.getHttpAdapter().getInstance() as Application).set('trust proxy', 1);
+      const fromClient = (forged: string) =>
+        login().set('X-Forwarded-For', `${forged}, 198.51.100.9`);
+
+      for (let attempt = 1; attempt <= 5; attempt++) await fromClient(`203.0.113.${attempt}`);
+
+      expect((await fromClient('203.0.113.6')).status).toBe(429);
+      expect((await login().set('X-Forwarded-For', '198.51.100.10')).status).toBe(401);
     });
   });
 

@@ -7,9 +7,9 @@ export const apiEnvSchema = z.object({
   DATABASE_URL: z.url({ protocol: /^postgres(ql)?$/ }),
   WEB_ORIGIN: z.url({ protocol: /^https?$/ }),
   SESSION_TTL_DAYS: z.coerce.number().int().positive().default(7),
-  // O frontend chega pelo repasse da Vercel, que sobrescreve o X-Forwarded-For com o IP do
-  // cliente; ligado, o IP mais à esquerda da lista vira o IP da requisição.
-  TRUST_PROXY: z.stringbool().default(false),
+  // Proxies à frente da API (Vercel e Render em produção), contados da direita do X-Forwarded-For:
+  // a ponta esquerda vem do cliente e pode ser forjada, porque a Vercel nem sempre a sobrescreve.
+  TRUST_PROXY_HOPS: z.coerce.number().int().min(0).default(0),
   INTERNAL_RELOAD_SECRET: z.string().min(32),
 });
 
