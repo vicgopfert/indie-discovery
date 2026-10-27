@@ -111,6 +111,9 @@ Complexidade: **B** baixa (até um dia de trabalho), **M** média (alguns dias),
 | F-19 | **Exclusão da própria conta** e dos dados associados | Minimização de dados (LGPD) | Remove usuário, sessões, avaliações, listas e preferências após confirmação | F-01 | B |
 | F-20 | **Edição de perfil**: nome de exibição e troca de senha | Manutenção básica da conta | Troca de senha exige a senha atual e encerra as outras sessões | F-01 | B |
 | F-21 | **Ingestão agendada** | Mantém o catálogo atualizado sem ação manual | Execução periódica no CI com segredos protegidos; falha gera alerta no próprio CI | F-02 | B |
+| F-31 | **Vínculo da conta Steam** à conta da plataforma | Abre a importação de dados da Steam sem criar outra conta | O usuário logado vincula pelo login da própria Steam (OpenID 2.0), sem que a plataforma veja a senha; só o Steam ID é guardado; um Steam ID vincula a uma única conta; o vínculo pode ser desfeito | F-01 | M |
+| F-30 | **Importação da wishlist da Steam** para alimentar a recomendação | Reduz a partida a frio: o jogador chega com os interesses que já declarou na Steam | Com a conta vinculada (F-31), importa a wishlist para a lista "quero jogar"; mostra quantos jogos foram importados e quantos ficaram de fora por não serem indie ou não estarem no catálogo; quando a Steam devolve a lista vazia, avisa que a wishlist pode estar privada e explica como deixar os detalhes de jogos públicos, porque a Steam não distingue lista privada de lista vazia; repetir a importação não duplica | F-31, F-08 | M |
+| F-32 | **Login com Google** | Cadastro sem criar outra senha | Entrar e cadastrar pelo Google (OpenID Connect, com `state` e PKCE); e-mail verificado pelo Google igual ao de uma conta existente vincula as duas; conta criada pelo Google não tem senha, e os limites de tentativas de login não se aplicam a ela; a sessão depois do login é a mesma do login com senha | F-01 | M |
 
 ### P2: pós-defesa
 
@@ -123,7 +126,6 @@ Complexidade: **B** baixa (até um dia de trabalho), **M** média (alguns dias),
 | F-27 | Recomendação híbrida com embeddings semânticos | Evolução opcional, condicionada à avaliação da seção 12 |
 | F-28 | Filtragem colaborativa | Exige volume de interações que o MVP não terá |
 | F-29 | Avisos de lançamento de jogos acompanhados | Depende de e-mail ou notificação |
-| F-30 | Importação da biblioteca da Steam para iniciar o perfil | Integração externa adicional |
 
 ### Requisitos não funcionais
 
@@ -395,6 +397,7 @@ Com um único frontend na mesma origem e sem clientes móveis, a vantagem do JWT
 3. **Rota protegida**: o `SessionAuthGuard` lê o cookie, calcula o hash, busca a sessão não expirada e anexa o usuário à requisição. Sem sessão válida, responde 401.
 4. **Logout**: apaga a sessão no banco e limpa o cookie.
 5. **Expiração**: prazo fixo de 7 dias, sem renovação deslizante no P0. Sessões expiradas são removidas ao final de cada execução de ingestão.
+6. **Contas externas (P1)**: o login com Google (F-32) e o vínculo da Steam (F-31) terminam na mesma sessão no banco; muda só como a identidade é conferida. O Google usa OpenID Connect, com `state` e PKCE contra CSRF e interceptação do código. A Steam usa OpenID 2.0, que não entrega e-mail, por isso ela serve só para vincular a uma conta existente, e o retorno é confirmado com a própria Steam antes de gravar o Steam ID.
 
 ### Autorização
 
@@ -1057,6 +1060,10 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | B-53 | Edição de nome e troca de senha (F-20) | P1 | B-17 | Troca exige a senha atual e encerra as outras sessões | M |
 | B-54 | Ingestão agendada no GitHub Actions (F-21) | P1 | B-13 | Execução periódica registrada em `IngestionRun`; falha visível no CI | P |
 | B-55 | E2e no navegador do roteiro de demonstração com Playwright | P1 | B-35 | Roteiro completo roda no CI | M |
+| B-65 | ID dos jogos na Steam gravado pela ingestão, a partir do `external_games` da IGDB | P1 | B-13 | `Game.steamAppId` opcional e único, preenchido na próxima execução; cobertura medida e registrada em `docs/ingestao.md` | P |
+| B-66 | Vínculo da conta Steam (F-31) | P1 | B-17, B-64 | `User.steamId` opcional e único; retorno da Steam validado com `check_authentication` antes de gravar; desvincular apaga o Steam ID; botão na página de perfil | M |
+| B-67 | Importação da wishlist da Steam (F-30) | P1 | B-27, B-65, B-66 | Chamada da Web API da Steam testada com servidor simulado, inclusive a resposta vazia de perfil privado; resumo com importados e ignorados; aviso de wishlist possivelmente privada; reimportar não duplica; antes de começar, conferir os termos de uso da Web API e o endpoint vigente da wishlist | M |
+| B-68 | Login com Google (F-32) | P1 | B-17, B-64 | Fluxo OpenID Connect com `state` e PKCE; `passwordHash` opcional para contas sem senha; vínculo pelo e-mail verificado; botão nas páginas de entrar e cadastrar; e2e com provedor simulado | M |
 
 ### Capacidade
 
@@ -1143,6 +1150,8 @@ Reuniões com o orientador a cada sprint, levando o que foi implantado e o trech
 | 3 | B-49 cliques de saída | Primeiro indicador do benefício para os estúdios, necessário para qualquer conversa futura com desenvolvedores |
 | 4 | B-50 jogos parecidos, B-51 sitemap | Melhoram a descoberta sem login e a chegada por buscadores |
 | 5 | B-55 e2e no navegador | Protege o fluxo principal antes de mudanças maiores |
+| 6 | B-65 ID da Steam na ingestão, B-66 vínculo da Steam, B-67 importação da wishlist | Primeira integração com uma plataforma externa de jogadores; reduz a partida a frio de quem já usa a Steam |
+| 7 | B-68 login com Google | Cadastro mais rápido; vem depois porque não muda a recomendação |
 
 ### Bloco 2: P2, cada item com condição de entrada
 
@@ -1152,7 +1161,6 @@ Reuniões com o orientador a cada sprint, levando o que foi implantado e o trech
 | F-22 | Sugestão de jogo ausente pela URL da loja, com moderação | Os cliques de saída mostrarem uso real e houver tempo para moderar; exige o papel `ADMIN` e um `RolesGuard` |
 | F-27 | Recomendação híbrida com embeddings | A cobertura de resumos medida no B-07 for suficiente e o protocolo da seção 12 for aplicado antes da adoção |
 | F-29 | Avisos de lançamento | F-26 existir (canal de e-mail) |
-| F-30 | Importação da biblioteca da Steam | A API pública da Steam permitir o uso pretendido, verificado na documentação e nos termos vigentes |
 | F-23 | Área do estúdio | Houver um método de verificação de identidade do estúdio e interesse demonstrado por desenvolvedores |
 | F-25 | Recursos de comunidade | Houver base de usuários ativa que justifique moderação |
 | F-28 | Filtragem colaborativa | Houver volume de interações suficiente para superar a recomendação por conteúdo no protocolo offline |
