@@ -40,3 +40,15 @@ export const UserSchema = z.object({
 });
 
 export type User = z.infer<typeof UserSchema>;
+
+// No login, a senha só precisa existir: a política de tamanho é do cadastro, e repeti-la aqui
+// diria a quem tenta adivinhar quais senhas nem vale testar.
+export const LoginSchema = z.object({
+  email: EmailSchema,
+  password: z
+    .string({ error: 'Informe a senha.' })
+    .min(1, { error: 'Informe a senha.' })
+    .max(PASSWORD_MAX_LENGTH, { error: 'E-mail ou senha incorretos.' }),
+});
+
+export type LoginInput = z.infer<typeof LoginSchema>;
