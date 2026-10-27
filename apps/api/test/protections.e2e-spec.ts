@@ -1,4 +1,4 @@
-import { type INestApplication } from '@nestjs/common';
+import { type INestApplication, type LoggerService } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import type { Application } from 'express';
@@ -6,6 +6,7 @@ import request from 'supertest';
 import type { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/configure-app';
+import { AuthService } from '../src/modules/auth/auth.service';
 import { PrismaService } from '../src/prisma/prisma.service';
 
 describe('Proteções HTTP', () => {
@@ -144,7 +145,59 @@ describe('Proteções HTTP', () => {
     });
   });
 
+  // Guarda tudo o que a aplicação registraria no log, como texto.
+  function captureLogs() {
+    const lines: string[] = [];
+    const record = (...parts: unknown[]) => void lines.push(JSON.stringify(parts));
+    const logger: LoggerService = { log: record, error: record, warn: record, debug: record };
+    app.useLogger(logger);
+    return lines;
+  }
+
+  describe('log', () => {
+    it('não registra a senha nem o token da sessão', async () => {
+      const lines = captureLogs();
+      const password = 'senha-que-nao-pode-vazar';
+
+      const registered = await server()
+        .post('/api/auth/register')
+        .set('Origin', origin)
+        .send({ email: 'jogadora@example.com', displayName: 'Jogadora', password });
+      const loggedIn = await server()
+        .post('/api/auth/login')
+        .set('Origin', origin)
+        .send({ email: 'jogadora@example.com', password });
+      const tokens = [registered, loggedIn].map((response) =>
+        String(response.headers['set-cookie']).split(';')[0]!.slice('sid='.length),
+      );
+
+      expect(lines.some((line) => line.includes('/api/auth/login'))).toBe(true);
+      const log = lines.join('\n');
+      expect(log).not.toContain(password);
+      for (const token of tokens) expect(log).not.toContain(token);
+    });
+  });
+
   describe('respostas', () => {
+    it('erro inesperado responde só a mensagem genérica e deixa o detalhe no log', async () => {
+      const lines = captureLogs();
+      jest
+        .spyOn(app.get(AuthService), 'login')
+        .mockRejectedValue(new Error('conexão recusada em 10.0.0.5:5432'));
+
+      const response = await login();
+
+      expect(response.status).toBe(500);
+      expect(response.body).toEqual({
+        statusCode: 500,
+        error: 'Internal Server Error',
+        message: 'Erro interno; tente novamente mais tarde',
+        requestId: response.headers['x-request-id'],
+      });
+      const detail = lines.find((line) => line.includes('conexão recusada'));
+      expect(detail).toContain(String(response.headers['x-request-id']));
+    });
+
     it('todo erro sai com statusCode, error, message e o requestId do cabeçalho', async () => {
       const response = await server().get('/api/auth/me');
 
