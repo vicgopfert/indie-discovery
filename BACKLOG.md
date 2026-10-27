@@ -46,7 +46,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [ ] **B-21** (P) Filtros de idioma português e país do estúdio (país só lista opções com 20+ jogos)
 - [ ] **B-22** (P) `GET /games/:slug`
 - [ ] **B-23** (M) Página de catálogo com filtros na URL
-- [ ] **B-24** (M) Página do jogo (selo "Em breve", atribuição IGDB, metadados no servidor)
+- [ ] **B-24** (M) Página do jogo (selo "Em breve", atribuição IGDB, metadados no servidor, capa direto da CDN da IGDB sem o otimizador da Vercel)
 - [ ] **B-25** (P) Página "Como funciona" (lista grandes empresas, estúdios controlados e exceções manuais com motivo e fonte)
 - [ ] **B-57** (M) Coleções culturais curadas: modelo, arquivo de curadoria, sugestão de candidatos, endpoints
 - [ ] **B-58** (M) Interface das coleções: vitrine "Explore por cultura", página da coleção, indicação na ficha
@@ -56,7 +56,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [ ] **B-26** (P) Modelos `Rating`, `ListEntry`, `UserPreference` + migration
 - [ ] **B-27** (M) Endpoints `/me/*`: avaliação, listas, biblioteca, preferências, modo
 - [ ] **B-28** (M) Componentes de avaliação e listas na ficha do jogo
-- [ ] **B-29** (P) Página de perfil (avaliações e listas)
+- [ ] **B-29** (P) Página de perfil (avaliações e listas) e avatar com as iniciais do nome no perfil e no cabeçalho
 - [ ] **B-30** (P) E2e de biblioteca e posse dos dados (um usuário não altera dados de outro)
 
 ## E5 — Recomendação (S7–S10)
@@ -104,13 +104,13 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [ ] **B-54** (P) Ingestão agendada (GitHub Actions)
 - [ ] **B-55** (M) E2e no navegador (Playwright) do roteiro de demonstração
 - [ ] **B-65** (P) ID dos jogos na Steam gravado pela ingestão
-- [ ] **B-66** (M) Vínculo da conta Steam à conta do usuário
+- [ ] **B-66** (M) Vínculo da conta Steam à conta do usuário, com o avatar público da Steam no lugar das iniciais
 - [ ] **B-67** (M) Importação da wishlist da Steam para a lista "quero jogar", com resumo de importados e aviso de wishlist privada
-- [ ] **B-68** (M) Login com Google
+- [ ] **B-68** (M) Login com Google, com a foto da conta Google como avatar
 
 ## P2 — pós-defesa
 
-Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de entrada de cada item (F-22, F-23 e F-25 a F-29: sugestão de jogo, área do estúdio, recursos de comunidade, recuperação de senha, recomendação híbrida com embeddings, filtragem colaborativa, avisos de lançamento).
+Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de entrada de cada item (F-22, F-23, F-25 a F-29 e F-33: sugestão de jogo, área do estúdio, recursos de comunidade, recuperação de senha, recomendação híbrida com embeddings, filtragem colaborativa, avisos de lançamento, foto de perfil enviada pelo usuário).
 
 ---
 

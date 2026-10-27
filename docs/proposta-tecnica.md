@@ -92,7 +92,7 @@ Complexidade: **B** baixa (até um dia de trabalho), **M** média (alguns dias),
 | F-06 | **Filtros de idioma (português) e país do estúdio** | Idioma pesou cinco vezes mais que país na pesquisa; país fica como recorte secundário | Combináveis com os de F-05; jogos sem o dado não aparecem como "não tem", e sim como "não informado". **Regra de portão (revisada no M0):** idioma segue P0 com 95,5% de cobertura. O país do estúdio vem da IGDB e, na falta dela, do Wikidata (cerca de 50% de cobertura somada); no filtro, cada país só aparece como opção se tiver pelo menos 20 jogos no catálogo | F-05, M0 | M |
 | F-07 | **Ficha do jogo** com capa, resumo, gêneros, temas, estúdio, país, situação e link para a página oficial | É onde a recomendação se converte em interesse pelo jogo | Selo "Em breve" para não lançados; link externo abre a página oficial; atribuição à IGDB visível; metadados de página gerados no servidor | F-02 | M |
 | F-08 | **Avaliação de 1 a 5 e listas** (favorito, concluído, quero jogar) | Fonte do perfil de preferências | Criar, alterar e remover; só o próprio usuário altera seus dados; alteração reflete na próxima recomendação | F-01, F-07 | M |
-| F-09 | **Página de perfil** com avaliações e listas | O usuário precisa ver e corrigir o que alimenta as recomendações | Lista avaliações e listas com acesso à ficha de cada jogo; estados vazios orientam o próximo passo | F-08 | B |
+| F-09 | **Página de perfil** com avaliações e listas | O usuário precisa ver e corrigir o que alimenta as recomendações | Lista avaliações e listas com acesso à ficha de cada jogo; estados vazios orientam o próximo passo; avatar com as iniciais do nome, sem foto enviada pelo usuário | F-08 | B |
 | F-10 | **Partida a frio**: escolha de pelo menos 3 gêneros ou temas e avaliação opcional de até 4 jogos | Sem perfil não há recomendação; 16,7% dos jogadores não avaliariam nenhum jogo | Pode pular a etapa de avaliação; preferências geram recomendações mesmo sem avaliações; aparece no primeiro acesso e pode ser refeita | F-08, F-11 | M |
 | F-11 | **Recomendações personalizadas com motivo** | Núcleo da proposta | Retorna os N mais bem pontuados, sem jogos já avaliados; cada item traz de 1 a 3 atributos que mais contribuíram; mesmo estado gera mesma lista; usuário sem perfil é levado à partida a frio | F-04, F-08 | A |
 | F-12 | **Modo de descoberta**: Populares, Equilibrado e Descobertas | 75% dos jogadores querem equilíbrio ou escolha; nenhum dos lados quer penalização fixa | Padrão Equilibrado; escolha persistida no usuário; trocar o modo muda a lista de forma observável | F-11 | B |
@@ -111,9 +111,9 @@ Complexidade: **B** baixa (até um dia de trabalho), **M** média (alguns dias),
 | F-19 | **Exclusão da própria conta** e dos dados associados | Minimização de dados (LGPD) | Remove usuário, sessões, avaliações, listas e preferências após confirmação | F-01 | B |
 | F-20 | **Edição de perfil**: nome de exibição e troca de senha | Manutenção básica da conta | Troca de senha exige a senha atual e encerra as outras sessões | F-01 | B |
 | F-21 | **Ingestão agendada** | Mantém o catálogo atualizado sem ação manual | Execução periódica no CI com segredos protegidos; falha gera alerta no próprio CI | F-02 | B |
-| F-31 | **Vínculo da conta Steam** à conta da plataforma | Abre a importação de dados da Steam sem criar outra conta | O usuário logado vincula pelo login da própria Steam (OpenID 2.0), sem que a plataforma veja a senha; só o Steam ID é guardado; um Steam ID vincula a uma única conta; o vínculo pode ser desfeito | F-01 | M |
+| F-31 | **Vínculo da conta Steam** à conta da plataforma | Abre a importação de dados da Steam sem criar outra conta | O usuário logado vincula pelo login da própria Steam (OpenID 2.0), sem que a plataforma veja a senha; só o Steam ID e a URL do avatar público são guardados; um Steam ID vincula a uma única conta; o vínculo pode ser desfeito, e desfazê-lo apaga os dois | F-01 | M |
 | F-30 | **Importação da wishlist da Steam** para alimentar a recomendação | Reduz a partida a frio: o jogador chega com os interesses que já declarou na Steam | Com a conta vinculada (F-31), importa a wishlist para a lista "quero jogar"; mostra quantos jogos foram importados e quantos ficaram de fora por não serem indie ou não estarem no catálogo; quando a Steam devolve a lista vazia, avisa que a wishlist pode estar privada e explica como deixar os detalhes de jogos públicos, porque a Steam não distingue lista privada de lista vazia; repetir a importação não duplica | F-31, F-08 | M |
-| F-32 | **Login com Google** | Cadastro sem criar outra senha | Entrar e cadastrar pelo Google (OpenID Connect, com `state` e PKCE); e-mail verificado pelo Google igual ao de uma conta existente vincula as duas; conta criada pelo Google não tem senha, e os limites de tentativas de login não se aplicam a ela; a sessão depois do login é a mesma do login com senha | F-01 | M |
+| F-32 | **Login com Google** | Cadastro sem criar outra senha | Entrar e cadastrar pelo Google (OpenID Connect, com `state` e PKCE); e-mail verificado pelo Google igual ao de uma conta existente vincula as duas; conta criada pelo Google não tem senha, e os limites de tentativas de login não se aplicam a ela; a sessão depois do login é a mesma do login com senha; a URL da foto da conta Google é guardada como avatar | F-01 | M |
 
 ### P2: pós-defesa
 
@@ -126,6 +126,7 @@ Complexidade: **B** baixa (até um dia de trabalho), **M** média (alguns dias),
 | F-27 | Recomendação híbrida com embeddings semânticos | Evolução opcional, condicionada à avaliação da seção 12 |
 | F-28 | Filtragem colaborativa | Exige volume de interações que o MVP não terá |
 | F-29 | Avisos de lançamento de jogos acompanhados | Depende de e-mail ou notificação |
+| F-33 | Foto de perfil enviada pelo usuário | Personalização; exige armazenamento de objetos e não contribui para a descoberta |
 
 ### Requisitos não funcionais
 
@@ -433,7 +434,7 @@ Com um único frontend na mesma origem e sem clientes móveis, a vantagem do JWT
 
 - Segredos (`DATABASE_URL`, credenciais da IGDB, segredo de recarga) só em variáveis de ambiente do provedor e do CI; nunca no repositório, no frontend ou nos logs.
 - Logs registram método, rota, status, duração e `requestId`; nunca senha, cookie, token ou corpo de login.
-- Coleta mínima, de acordo com o princípio da necessidade da LGPD: e-mail, nome de exibição, avaliações, listas e preferências. A página "Como funciona" informa que dados são guardados e para quê. A exclusão de conta pelo próprio usuário é P1 (F-19); até lá, exclusão mediante pedido por e-mail.
+- Coleta mínima, de acordo com o princípio da necessidade da LGPD: e-mail, nome de exibição, avaliações, listas e preferências; no P1, o Steam ID e a URL do avatar público de uma conta Steam ou Google vinculada. A página "Como funciona" informa que dados são guardados e para quê. A exclusão de conta pelo próprio usuário é P1 (F-19); até lá, exclusão mediante pedido por e-mail.
 - Dependências: `pnpm audit` no CI como aviso, sem bloquear o build por vulnerabilidades sem correção disponível.
 
 ## 9. Testes e qualidade
@@ -513,7 +514,8 @@ O diagrama entidade-relacionamento completo está na seção 11 (diagrama 3).
 | Índices em `Game(inCatalog, releaseStatus)`, `Game(studioCountryCode)`, `GameFeature(featureId)`, `Company(countryCode)` e `Session(expiresAt)` | Correspondem aos filtros do catálogo, à busca por atributo e à limpeza de sessões |
 | Busca textual por nome com `ILIKE` no P0 | Suficiente para cerca de 20 mil jogos; busca *full-text* do PostgreSQL fica como P2 |
 | Recomendações não são persistidas | São calculadas na hora a partir do índice em memória; persistir criaria problema de invalidação sem benefício no MVP |
-| Imagens de capa não são armazenadas | Guarda-se só o identificador da imagem; a URL é montada para a CDN de imagens da IGDB, com atribuição visível |
+| Imagens de capa não são armazenadas | Guarda-se só o identificador da imagem; a URL é montada para a CDN de imagens da IGDB, com atribuição visível. Cada tela pede o tamanho que a própria CDN já serve (`t_cover_small`, `t_cover_big`…), carregado sob demanda, sem passar pelo otimizador de imagens da Vercel: a cota mensal do plano gratuito pode não comportar um catálogo de cerca de 20 mil jogos. Jogo sem capa mostra uma imagem substituta. Se a CDN da IGDB cair, somem só as capas |
+| Fotos de perfil não são enviadas pelo usuário | O avatar é feito com as iniciais do nome, no frontend. No P1, uma conta com Steam (F-31) ou Google (F-32) vinculado usa o avatar de lá, guardando só a URL em `User.avatarUrl`, com a origem em `User.avatarSource`. Upload próprio é P2 (F-33): o disco do Render é apagado a cada deploy e o banco não é lugar de arquivo, então ele exige um serviço de armazenamento de objetos, além de validação, redimensionamento e exclusão junto com a conta |
 | Critério indie em arquivo JSON versionado (`config/indie-criteria.json`) | Fica rastreável no Git, revisável na banca e alterável sem migration |
 | `popularityCount` (a contagem reconstruída, inteira) e `popularityNorm` gravados no jogo; a unidade da IGDB, o máximo e a mediana gravados em `IngestionRun` | A unidade muda todo dia com a base de usuários da IGDB, mas a contagem de um jogo não: guardar a contagem evita regravar todo o catálogo a cada execução, e a fração da IGDB se recupera multiplicando a contagem pela unidade da execução (B-13) |
 | País do estúdio resolvido na ingestão e gravado em `Game.studioCountryCode`, com `studioCountrySource` (IGDB ou WIKIDATA) | A IGDB tem o país em 39% do catálogo e o Wikidata completa até cerca de 50% (M0); resolver uma vez na ingestão mantém a consulta do filtro simples e deixa a origem do dado rastreável |
@@ -1004,8 +1006,8 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | B-20 | `GET /games` com busca por nome, filtros de gênero, tema e situação, paginação e ordenação; `GET /features` (F-05) | P0 | B-08, B-14 | Filtros combinados retornam o esperado em testes com dados conhecidos; limite máximo de página respeitado | M |
 | B-21 | Filtros de idioma português e país do estúdio, com "não informado" (F-06) | P0 | B-20, B-56 | Filtros funcionam combinados; o filtro de país só lista países com pelo menos 20 jogos | P |
 | B-22 | `GET /games/:slug` com empresas, país, atributos e link oficial | P0 | B-08 | 404 padronizado para slug inexistente | P |
-| B-23 | Página de catálogo com filtros na URL (F-05, F-06) | P0 | B-20, B-40 | Link copiado reabre a mesma busca; funciona sem login; estados vazio e de erro tratados | M |
-| B-24 | Página do jogo com selo "Em breve", atribuição à IGDB e metadados gerados no servidor (F-07) | P0 | B-22, B-40 | Título e descrição aparecem no HTML inicial; link externo abre a página oficial | M |
+| B-23 | Página de catálogo com filtros na URL (F-05, F-06) | P0 | B-20, B-40 | Link copiado reabre a mesma busca; funciona sem login; estados vazio e de erro tratados; capas no tamanho pequeno da CDN da IGDB, carregadas sob demanda | M |
+| B-24 | Página do jogo com selo "Em breve", atribuição à IGDB e metadados gerados no servidor (F-07) | P0 | B-22, B-40 | Título e descrição aparecem no HTML inicial; link externo abre a página oficial; capa da CDN da IGDB sem o otimizador da Vercel, com imagem substituta quando não há capa | M |
 | B-25 | Página "Como funciona" (F-13) | P0 | B-11, B-40 | Explica critério, recomendação, modos, curadoria das coleções e origem dos dados; lista as grandes empresas, os estúdios controlados e as exceções manuais, com motivo e fonte, a partir do arquivo de critério | P |
 | B-57 | Coleções culturais: modelo e migration, arquivo `config/collections.json`, script que sugere candidatos (palavras-chave, resumo e Wikidata), sincronização na ingestão, `GET /collections` e `GET /collections/:slug` (F-24) | P0 | B-13, B-20 | De 8 a 10 coleções iniciais revisadas pelo autor, com destaque para a cultura brasileira e pelo menos 10 jogos cada; endpoints no Swagger | M |
 | B-58 | Interface das coleções: vitrine "Explore por cultura", página da coleção e indicação na ficha do jogo (F-24) | P0 | B-57, B-24 | Vitrine e página funcionam sem login; a ficha mostra as coleções do jogo | M |
@@ -1017,7 +1019,7 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | B-26 | Modelos Rating, ListEntry e UserPreference com migration | P0 | B-15 | Restrições de unicidade e nota entre 1 e 5 garantidas pelo banco e pelo schema | P |
 | B-27 | Endpoints de avaliação, listas, biblioteca, preferências e modo (`/me/*`) (F-08, F-12) | P0 | B-26, B-17 | `userId` vem só da sessão; `PUT` repetido não duplica | M |
 | B-28 | Componentes de avaliação e listas na página do jogo (F-08) | P0 | B-27, B-24 | Usuário deslogado é levado ao login; logado vê o próprio estado e altera com retorno visual | M |
-| B-29 | Página de perfil com avaliações e listas (F-09) | P0 | B-28 | Estados vazios orientam o próximo passo; remover avaliação pela página funciona | P |
+| B-29 | Página de perfil com avaliações e listas (F-09) | P0 | B-28 | Estados vazios orientam o próximo passo; remover avaliação pela página funciona; avatar com as iniciais do nome no perfil e no cabeçalho | P |
 | B-30 | E2e de biblioteca e posse dos dados | P0 | B-27, B-05 | Prova que uma pessoa não altera nem lê a biblioteca de outra | P |
 
 ### E5. Recomendação
@@ -1072,9 +1074,9 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | B-54 | Ingestão agendada no GitHub Actions (F-21) | P1 | B-13 | Execução periódica registrada em `IngestionRun`; falha visível no CI | P |
 | B-55 | E2e no navegador do roteiro de demonstração com Playwright | P1 | B-35 | Roteiro completo roda no CI | M |
 | B-65 | ID dos jogos na Steam gravado pela ingestão, a partir do `external_games` da IGDB | P1 | B-13 | `Game.steamAppId` opcional e único, preenchido na próxima execução; cobertura medida e registrada em `docs/ingestao.md` | P |
-| B-66 | Vínculo da conta Steam (F-31) | P1 | B-17, B-64 | `User.steamId` opcional e único; retorno da Steam validado com `check_authentication` antes de gravar; desvincular apaga o Steam ID; botão na página de perfil | M |
+| B-66 | Vínculo da conta Steam (F-31) | P1 | B-17, B-64 | `User.steamId` opcional e único; retorno da Steam validado com `check_authentication` antes de gravar; URL do avatar público gravada em `User.avatarUrl` e exibida no lugar das iniciais; desvincular apaga o Steam ID e o avatar vindo da Steam; botão na página de perfil | M |
 | B-67 | Importação da wishlist da Steam (F-30) | P1 | B-27, B-65, B-66 | Chamada da Web API da Steam testada com servidor simulado, inclusive a resposta vazia de perfil privado; resumo com importados e ignorados; aviso de wishlist possivelmente privada; reimportar não duplica; antes de começar, conferir os termos de uso da Web API e o endpoint vigente da wishlist | M |
-| B-68 | Login com Google (F-32) | P1 | B-17, B-64 | Fluxo OpenID Connect com `state` e PKCE; `passwordHash` opcional para contas sem senha; vínculo pelo e-mail verificado; botão nas páginas de entrar e cadastrar; e2e com provedor simulado | M |
+| B-68 | Login com Google (F-32) | P1 | B-17, B-64 | Fluxo OpenID Connect com `state` e PKCE; `passwordHash` opcional para contas sem senha; vínculo pelo e-mail verificado; URL da foto da conta Google gravada em `User.avatarUrl`; botão nas páginas de entrar e cadastrar; e2e com provedor simulado | M |
 
 ### Capacidade
 
@@ -1175,6 +1177,7 @@ Reuniões com o orientador a cada sprint, levando o que foi implantado e o trech
 | F-23 | Área do estúdio | Houver um método de verificação de identidade do estúdio e interesse demonstrado por desenvolvedores |
 | F-25 | Recursos de comunidade | Houver base de usuários ativa que justifique moderação |
 | F-28 | Filtragem colaborativa | Houver volume de interações suficiente para superar a recomendação por conteúdo no protocolo offline |
+| F-33 | Foto de perfil enviada pelo usuário | Houver armazenamento de objetos sem custo (Cloudflare R2 é o candidato: tem plano gratuito e não cobra a saída de dados) e tempo para validar tipo e tamanho, redimensionar, limitar o envio e apagar a foto junto com a conta (F-19) |
 
 ### O que muda na arquitetura na Fase B
 
