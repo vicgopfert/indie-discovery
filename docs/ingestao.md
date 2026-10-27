@@ -133,6 +133,7 @@ do filtro exige (B-21). O M0 estimava cerca de 50% de cobertura, a partir de uma
 | `RELEASE_DATE_ASSIGNED` | Jogo gravado sem data ganhou data de lançamento |
 | `VERDICT_CHANGED` | A reavaliação mudou o jogo de lado; o detalhe diz se a versão do critério mudou e se a saída foi pelo fim da carência pós-lançamento |
 | `LEFT_CANDIDATE_SET` | Jogo do catálogo não voltou na busca; o detalhe separa `LOST_INDIE_GENRE`, `OUT_OF_SCOPE` e `NOT_FOUND` |
+| `NO_DEVELOPER_VISIBLE` | Jogo do catálogo sem desenvolvedora creditada, com pelo menos `noDeveloperReview.minRatings` avaliações (20) ou publisher da lista de grandes, fora dos jogos já revisados (decisão do M0, seção 8.10) |
 
 Os alertas de empresa não dependem de histórico: disparam enquanto a empresa não estiver
 em `reviewedCompanies` (`config/indie-criteria.json`). Revisar o caso é registrar a

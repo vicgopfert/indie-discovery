@@ -240,7 +240,15 @@ nenhuma.
 
 Decisão: a falta de desenvolvedora é registrada como limitação e escalada ao M0 (seção
 8.10 do relatório), **sem regra de reserva**. Excluir pela publisher quando falta a
-desenvolvedora traria de volta a regra derrubada no B-59.
+desenvolvedora traria de volta a regra derrubada no B-59. Dos 4.634 jogos sem
+desenvolvedora, nenhum tem publisher da lista de grandes (4.049 não têm publisher
+nenhuma): a regra de reserva não excluiria nenhum jogo hoje.
+
+**Confirmado no M0 (26/10/2026), com uma defesa:** o alerta `NO_DEVELOPER_VISIBLE` da
+ingestão sinaliza para revisão, sem excluir nada, o jogo do catálogo sem desenvolvedora que
+tem 20 ou mais avaliações ou publisher da lista de grandes. Os 14 jogos revisados acima ficam
+registrados como conhecidos (`noDeveloperReview` em `indie-criteria.json`), e a revisão
+manual do subconjunto visível passa a valer para os jogos que entrarem nele depois.
 
 ### O par Lab42
 
@@ -604,8 +612,10 @@ candidato: a IGDB o classifica como Racing e Simulator, sem Indie.
   entrevistas da BGS estavam sem lançamento). A ingestão (B-13) reavalia todo jogo
   gravado a cada execução e gera o alerta `RELEASE_DATE_ASSIGNED` nessa transição.
 - **Jogos sem desenvolvedora creditada são aceitos.** São 1,54% das avaliações do
-  catálogo e 23,15% dos jogos aceitos (achado 2 do B-60). Não há regra de reserva; a
-  limitação foi escalada ao M0.
+  catálogo e 23,15% dos jogos aceitos (achado 2 do B-60). Não há regra de reserva,
+  decisão confirmada no M0. A defesa é o alerta `NO_DEVELOPER_VISIBLE`, que leva à revisão
+  o jogo sem desenvolvedora que fica visível (20 ou mais avaliações) ou tem publisher da
+  lista de grandes.
 - **Os créditos de desenvolvedora da IGDB incluem porte e publicação.** Os
   erros encontrados estão corrigidos por exceção; outros podem aparecer em jogos novos.
   O crédito errado que exclui um indie só aparece com verificação manual (ver a
