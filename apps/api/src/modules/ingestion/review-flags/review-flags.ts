@@ -2,6 +2,7 @@ import { ReviewFlagKind } from '../../../generated/prisma/client';
 import type { MappedGame } from '../igdb/igdb.mapper';
 import { type CriteriaVerdict, isWithinPostLaunchGrace } from '../criteria/indie-criteria';
 import type { IndieCriteria } from '../criteria/indie-criteria.config';
+import type { IngestionReview } from './ingestion-review.config';
 
 export interface StoredGame {
   igdbId: number;
@@ -34,6 +35,7 @@ export interface ReviewFlagInput {
   stored: ReadonlyMap<number, StoredGame>;
   companies: ReadonlyMap<number, IgdbCompanyNode>;
   criteria: IndieCriteria;
+  review: IngestionReview;
   criteriaVersion: string;
   now: Date;
 }
@@ -53,8 +55,8 @@ export function detectReviewFlags(input: ReviewFlagInput): ReviewFlag[] {
 // Jogo sem desenvolvedora nunca é excluído pela regra de controle (limitação aceita no M0).
 // Quando ele é visível ou tem publisher grande, a revisão manual feita no B-60 precisa valer
 // também para os que entram nesse grupo depois.
-function noDeveloperFlags(game: MappedGame, { criteria }: ReviewFlagInput): ReviewFlag[] {
-  const { minRatings, reviewedGames } = criteria.noDeveloperReview;
+function noDeveloperFlags(game: MappedGame, { criteria, review }: ReviewFlagInput): ReviewFlag[] {
+  const { minRatings, reviewedGames } = review.noDeveloperReview;
   if (game.companies.some((c) => c.isDeveloper)) return [];
   if (reviewedGames.some((g) => g.igdbId === game.igdbId)) return [];
   const majorPublishers = game.companies
@@ -100,10 +102,10 @@ function transitionFlags({ game, verdict }: EvaluatedGame, input: ReviewFlagInpu
 }
 
 function companyFlags(game: MappedGame, input: ReviewFlagInput): ReviewFlag[] {
-  const { criteria } = input;
+  const { criteria, review } = input;
   const isListed = (list: { igdbId: number }[], igdbId: number) =>
     list.some((entry) => entry.igdbId === igdbId);
-  const reviewed = (igdbId: number) => criteria.reviewedCompanies.find((c) => c.igdbId === igdbId);
+  const reviewed = (igdbId: number) => review.reviewedCompanies.find((c) => c.igdbId === igdbId);
   const flags: ReviewFlag[] = [];
   const flag = (kind: ReviewFlagKind, detail: Record<string, unknown>) =>
     flags.push({ kind, igdbId: game.igdbId, gameName: game.name, detail });

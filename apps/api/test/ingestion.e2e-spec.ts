@@ -12,6 +12,7 @@ import { IgdbClient } from '../src/modules/ingestion/igdb/igdb.client';
 import { evaluateIndieCriteria } from '../src/modules/ingestion/criteria/indie-criteria';
 import { readVersionedIndieCriteria } from '../src/modules/ingestion/criteria/indie-criteria.config';
 import { readIngestionConfig } from '../src/modules/ingestion/ingestion-config';
+import { readIngestionReview } from '../src/modules/ingestion/review-flags/ingestion-review.config';
 import { IngestionRepository } from '../src/modules/ingestion/persistence/ingestion.repository';
 import { RunIngestionUseCase } from '../src/modules/ingestion/run-ingestion.use-case';
 import { WikidataCountrySource } from '../src/modules/ingestion/wikidata/wikidata-country.source';
@@ -40,6 +41,7 @@ const fixtureGames = [
   ...readFixture('criteria-no-developer.json'),
 ].sort((a, b) => a.id - b.id);
 const versioned = readVersionedIndieCriteria();
+const review = readIngestionReview(versioned.criteria);
 const accepted = fixtureGames.filter(
   (raw) =>
     evaluateIndieCriteria(mapIgdbGame(igdbGameSchema.parse(raw), NOW), versioned.criteria, NOW)
@@ -109,6 +111,7 @@ describe('Ingestão', () => {
   let server: FakeIgdbServer;
   let catalog: FakeCatalog;
   let ingest: RunIngestionUseCase;
+  let ingestWith: (reviewSettings: typeof review) => RunIngestionUseCase;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
@@ -130,12 +133,14 @@ describe('Ingestão', () => {
       maxAttempts: 1,
     });
     const ingestion = readIngestionConfig();
-    ingest = new RunIngestionUseCase(
-      new IgdbCatalogSource(igdb, ingestion),
-      new WikidataCountrySource({ endpoint: `${urls.apiUrl}/sparql`, maxAttempts: 1 }),
-      new IngestionRepository(prisma),
-      { criteria: versioned, tfidf: readTfidfConfig(), ingestion },
-    );
+    ingestWith = (reviewSettings) =>
+      new RunIngestionUseCase(
+        new IgdbCatalogSource(igdb, ingestion),
+        new WikidataCountrySource({ endpoint: `${urls.apiUrl}/sparql`, maxAttempts: 1 }),
+        new IngestionRepository(prisma),
+        { criteria: versioned, review: reviewSettings, tfidf: readTfidfConfig(), ingestion },
+      );
+    ingest = ingestWith(review);
   });
 
   beforeEach(async () => {
@@ -230,6 +235,28 @@ describe('Ingestão', () => {
       [111, ReviewFlagKind.NO_DEVELOPER_VISIBLE],
     ]);
     expect(flags[0]?.detail).toMatchObject({ ratingCount: 25 });
+  });
+
+  it('revisar uma empresa não muda a versão do critério nem regrava jogos', async () => {
+    await ingest.execute(NOW);
+    const later = new Date(NOW.getTime() + 60_000);
+    const newlyReviewed = {
+      igdbId: 990002,
+      name: 'Empresa revisada depois',
+      decision: 'rejected' as const,
+      decidedAt: '2026-10-27',
+    };
+
+    const result = await ingestWith({
+      ...review,
+      reviewedCompanies: [...review.reviewedCompanies, newlyReviewed],
+    }).execute(later);
+
+    expect(result.status).toBe(IngestionStatus.SUCCEEDED);
+    expect(await prisma.game.count({ where: { syncedAt: { gt: NOW } } })).toBe(0);
+    expect(
+      await prisma.game.count({ where: { criteriaVersion: { not: versioned.version } } }),
+    ).toBe(0);
   });
 
   it('duas execuções seguidas não duplicam registros nem repetem alertas de transição', async () => {

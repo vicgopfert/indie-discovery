@@ -5,6 +5,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { IgdbCatalogSource } from './igdb/igdb-catalog.source';
 import { IgdbClient } from './igdb/igdb.client';
 import { readVersionedIndieCriteria } from './criteria/indie-criteria.config';
+import { readIngestionReview } from './review-flags/ingestion-review.config';
 import { readIngestionConfig } from './ingestion-config';
 import { IngestionRepository } from './persistence/ingestion.repository';
 import { RunIngestionUseCase } from './run-ingestion.use-case';
@@ -29,11 +30,17 @@ import { readTfidfConfig } from '../recommendation/tfidf';
       inject: [IgdbClient, PrismaService],
       useFactory: (igdb: IgdbClient, prisma: PrismaService) => {
         const ingestion = readIngestionConfig();
+        const criteria = readVersionedIndieCriteria();
         return new RunIngestionUseCase(
           new IgdbCatalogSource(igdb, ingestion),
           new WikidataCountrySource(),
           new IngestionRepository(prisma),
-          { criteria: readVersionedIndieCriteria(), tfidf: readTfidfConfig(), ingestion },
+          {
+            criteria,
+            review: readIngestionReview(criteria.criteria),
+            tfidf: readTfidfConfig(),
+            ingestion,
+          },
         );
       },
     },

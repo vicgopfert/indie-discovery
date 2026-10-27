@@ -6,6 +6,7 @@ import { igdbGameSchema } from './igdb/igdb-game.schema';
 import { type MappedGame, mapIgdbGame } from './igdb/igdb.mapper';
 import { evaluateIndieCriteria } from './criteria/indie-criteria';
 import type { VersionedIndieCriteria } from './criteria/indie-criteria.config';
+import type { IngestionReview } from './review-flags/ingestion-review.config';
 import type { IngestionConfig } from './ingestion-config';
 import type {
   CatalogGame,
@@ -26,6 +27,7 @@ import { computeIdf, type TfidfConfig, tfidfVector } from '../recommendation/tfi
 
 export interface IngestionSettings {
   criteria: VersionedIndieCriteria;
+  review: IngestionReview;
   tfidf: TfidfConfig;
   ingestion: IngestionConfig;
 }
@@ -140,6 +142,7 @@ export class RunIngestionUseCase {
         stored,
         companies,
         criteria,
+        review: this.settings.review,
         criteriaVersion: version,
         now,
       }),

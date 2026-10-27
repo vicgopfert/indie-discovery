@@ -136,8 +136,18 @@ do filtro exige (B-21). O M0 estimava cerca de 50% de cobertura, a partir de uma
 | `NO_DEVELOPER_VISIBLE` | Jogo do catálogo sem desenvolvedora creditada, com pelo menos `noDeveloperReview.minRatings` avaliações (20) ou publisher da lista de grandes, fora dos jogos já revisados (decisão do M0, seção 8.10) |
 
 Os alertas de empresa não dependem de histórico: disparam enquanto a empresa não estiver
-em `reviewedCompanies` (`config/indie-criteria.json`). Revisar o caso é registrar a
+em `reviewedCompanies` (`config/ingestion-review.json`). Revisar o caso é registrar a
 decisão lá. Os de transição comparam o jogo com o que estava gravado.
+
+**Versão do critério.** O `criteriaVersion` é o hash de `config/indie-criteria.json`, que
+só tem o que decide o veredito (`evaluateIndieCriteria`). As listas que só alimentam os
+alertas (`reviewedCompaniesPolicy`, `reviewedCompanies` e `noDeveloperReview`) ficam em
+`config/ingestion-review.json`, lido junto com o critério e validado com ele (empresa
+revisada não pode ser grande nem controlada). Até essa separação, a versão era o hash de um
+arquivo único: revisar uma empresa mudava a versão, marcava `criteriaChanged` sem a regra
+ter mudado e, como a versão entra na comparação da gravação, fazia a ingestão regravar o
+catálogo inteiro. **O `criteriaChanged` é confiável a partir da versão `84dead01…`**, a
+primeira depois da separação; os alertas anteriores ficam como estão.
 
 ## Popularidade
 

@@ -247,7 +247,7 @@ nenhuma): a regra de reserva não excluiria nenhum jogo hoje.
 **Confirmado no M0 (26/10/2026), com uma defesa:** o alerta `NO_DEVELOPER_VISIBLE` da
 ingestão sinaliza para revisão, sem excluir nada, o jogo do catálogo sem desenvolvedora que
 tem 20 ou mais avaliações ou publisher da lista de grandes. Os 14 jogos revisados acima ficam
-registrados como conhecidos (`noDeveloperReview` em `indie-criteria.json`), e a revisão
+registrados como conhecidos (`noDeveloperReview` em `ingestion-review.json`), e a revisão
 manual do subconjunto visível passa a valer para os jogos que entrarem nele depois.
 
 ### O par Lab42
@@ -509,7 +509,7 @@ Estúdios sugeridos que não estão na lista porque todo o catálogo deles na IG
 anterior à compra, com folga de pelo menos dois anos. A data do jogo mais recente vem
 da IGDB; o ano da compra é o conhecido no levantamento, sem fonte citada porque não
 muda nenhum resultado. A lista legível por máquina está em `reviewedCompanies` no
-`indie-criteria.json` (decisão `no_current_effect`, com grupo e ano da compra): a
+`ingestion-review.json` (decisão `no_current_effect`, com grupo e ano da compra): a
 ingestão (B-13) gera o alerta `NO_EFFECT_STUDIO` quando um jogo do catálogo desses
 estúdios é do ano da compra em diante (ou, sem data, quando a execução é).
 

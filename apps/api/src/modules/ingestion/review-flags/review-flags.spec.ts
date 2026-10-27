@@ -2,6 +2,7 @@ import { ReviewFlagKind } from '../../../generated/prisma/client';
 import type { MappedCompany, MappedGame } from '../igdb/igdb.mapper';
 import type { CriteriaVerdict } from '../criteria/indie-criteria';
 import { readIndieCriteria } from '../criteria/indie-criteria.config';
+import { readIngestionReview } from './ingestion-review.config';
 import {
   ancestorsOf,
   detectReviewFlags,
@@ -12,6 +13,7 @@ import {
 
 const NOW = new Date('2026-10-23T00:00:00Z');
 const criteria = readIndieCriteria();
+const review = readIngestionReview(criteria);
 const ACCEPTED: CriteriaVerdict = { accepted: true };
 
 // Ids reais da configuração: Behaviour (limítrofe recusada), Tencent Holdings (grande),
@@ -75,6 +77,7 @@ function detect(changes: Partial<ReviewFlagInput>) {
     stored: new Map(),
     companies,
     criteria,
+    review,
     criteriaVersion: 'v1',
     now: NOW,
     ...changes,

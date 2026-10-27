@@ -12,7 +12,6 @@ describe('validação do arquivo de critério', () => {
     overridesPolicy: { maxEntries: number };
     majorCompanies: Record<string, unknown>[];
     controlledStudios: Record<string, unknown>[];
-    reviewedCompanies: Record<string, unknown>[];
   };
   const [firstOverride] = raw.overrides.alwaysInclude;
   const [firstStudio] = raw.controlledStudios;
@@ -79,28 +78,6 @@ describe('validação do arquivo de critério', () => {
         controlledStudios: [...raw.controlledStudios, firstStudio],
       }),
     ).toThrow('repetido');
-  });
-
-  it('exige grupo e ano da compra no estúdio sem efeito atual', () => {
-    const noEffect = raw.reviewedCompanies.find((c) => c.decision === 'no_current_effect')!;
-    const withoutYear = { ...noEffect, acquiredYear: undefined };
-
-    expect(() => indieCriteriaSchema.parse({ ...raw, reviewedCompanies: [withoutYear] })).toThrow(
-      'ano da compra',
-    );
-  });
-
-  it('recusa empresa revisada que também está na lista de controlados', () => {
-    const reviewedStudio = {
-      igdbId: firstStudio!.igdbId,
-      name: 'x',
-      decision: 'rejected',
-      decidedAt: '2026-10-23',
-    };
-
-    expect(() =>
-      indieCriteriaSchema.parse({ ...raw, reviewedCompanies: [reviewedStudio] }),
-    ).toThrow('lista de grandes ou de controlados');
   });
 
   it('versiona o critério pelo conteúdo do arquivo', () => {
