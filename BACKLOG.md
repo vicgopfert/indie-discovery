@@ -62,6 +62,8 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 
 - [ ] **B-31** (M) `ContentIndex`: carga dos vetores na inicialização + recarga protegida por segredo; decidir se `tfidfWeight` continua persistido ou se os pesos são reconstruídos do IDF na inicialização (medido em 25/10/2026: uma execução em outro dia regravou 135 mil das 189 mil linhas de `GameFeature`)
   - Resolver as dependências entre pastas deixadas pela reorganização da ingestão: `recommendation/tfidf.ts` importa `MappedFeature` do mapeador da IGDB; `igdb/igdb-catalog.source.ts` importa tipos de `review-flags/`; `persistence/` importa `StoredGame` e `ReviewFlag` de `review-flags/`; `criteria/`, `review-flags/` e `persistence/` dependem de `MappedGame`, definido no mapeador da IGDB; `igdb/` importa `ingestion-config.ts` da raiz do módulo
+- [ ] **B-62** (M) Modo de jogo e perspectiva como quarto bloco do vetor (fatia em config, fora da explicação ao jogador); a fatia só fica acima de zero se melhorar o acerto@10 no B-37
+- [ ] **B-63** (M) Palavras do resumo como bloco do vetor, em TF-IDF com pesos em memória na API (fora da explicação por enquanto); a fatia só fica acima de zero se melhorar o acerto@10 no B-37; primeiro corte depois dos P1
 - [ ] **B-32** (G) Núcleo de pontuação em funções puras (perfil ponderado, cosseno, popularidade, seleção, desempate, explicação)
 - [ ] **B-33** (M) `GenerateRecommendationsUseCase` + `GET /recommendations` — **marco M2**
 - [ ] **B-34** (M) Partida a frio (gêneros/temas + avaliação opcional de até 4 jogos)
@@ -110,7 +112,7 @@ Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de en
 ## Marcos — checklist rápido
 
 - [x] **M0** (semana 2): relatório da IGDB concluído, termos confirmados, portão do B-21 decidido
-  - [ ] Reaberto no B-12: decidir a cobertura de etiquetas para a recomendação (relatório do M0, seção 8.9)
+  - [x] Reaberto no B-12: decidir a cobertura de etiquetas para a recomendação (relatório do M0, seção 8.9) — modo de jogo e perspectiva (B-62) e palavras do resumo (B-63) aprovados, os dois condicionados ao acerto@10 no B-37
   - [ ] Reaberto no B-60: confirmar a falta de desenvolvedora creditada como limitação, sem regra de reserva (relatório do M0, seção 8.10)
 - [ ] **M1** (semana 12): catálogo real navegável + contas implantadas
 - [ ] **M2** (semana 16): recomendação ponta a ponta pela API, testada e implantada

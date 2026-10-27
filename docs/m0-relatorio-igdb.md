@@ -335,7 +335,7 @@ Decisões aprovadas pelo autor:
    O ponto médio do P0 passa de 257 h para 275 h, e o autor decidiu absorver a
    diferença sem cortar escopo.
 
-### 8.9 Cobertura de etiquetas para a recomendação — aberto em 23/10/2026, decisão pendente
+### 8.9 Cobertura de etiquetas para a recomendação — decidido em 26/10/2026
 
 Medido no B-12 sobre o catálogo aceito (19.998 jogos), depois do descarte do TF-IDF
 (detalhes em `docs/vetorizacao-tfidf.md`):
@@ -354,6 +354,59 @@ Medido no B-12 sobre o catálogo aceito (19.998 jogos), depois do descarte do TF
 Decisão do M0 a tomar: ampliar os campos usados na recomendação (por exemplo, resumo,
 modos de jogo ou perspectiva) ou aceitar recomendação degradada nessa fatia e registrá-la
 como limitação. O escopo do B-12 não foi ampliado.
+
+**Medido em 26/10/2026** sobre o catálogo aceito (20.057 jogos):
+
+| | Hoje (gênero, tema, palavra-chave) | Com modo de jogo e perspectiva |
+| --- | --- | --- |
+| Vetor idêntico ao de 10 ou mais jogos | 21,0% | 13,4% |
+| Até 2 etiquetas no vetor | 17,8% | 4,4% |
+
+Cobertura: modo de jogo em 99,3% dos jogos, perspectiva em 73,7%.
+
+**Decidido (26/10/2026): modo de jogo e perspectiva entram no P0, antes do B-37 (B-62).**
+Formam um quarto bloco do vetor, com fatia própria em configuração, e ficam fora da
+explicação mostrada ao jogador (F-11): "Recomendado por: um jogador" não explica nada. **A
+fatia só fica acima de zero se melhorar o acerto@10 no protocolo do B-37.** A queda de 21%
+para 13,4% de vetores idênticos mede distinção, não qualidade, e não serve de prova de
+melhora. O P0 passa para cerca de 297 h.
+
+**Palavras do resumo**, medidas antes de decidir:
+
+| | Catálogo inteiro | Os 2.681 jogos (13,4%) ainda idênticos depois de modo e perspectiva |
+| --- | --- | --- |
+| Com resumo | 100% (a ficha completa exige resumo) | 100% |
+| Mediana do resumo | 254 caracteres | 232 caracteres |
+| Resumo com 200 caracteres ou mais | 73,1% | 65,0% |
+| Palavras distintas por resumo, depois do descarte (média / mediana) | 24,5 / 21 | 19,5 / 19 |
+| Jogos com até 5 palavras | 1,5% | 2,0% |
+
+O descarte usa uma lista de palavras irrelevantes em inglês (a língua dos resumos da IGDB,
+mais termos genéricos como *game* e *player*), sem radicalização, e os mesmos limites do
+TF-IDF atual (presente em pelo menos 3 jogos e em no máximo 80%). Sobra um vocabulário de
+13.465 palavras e 491.712 ligações jogo–palavra, 2,6 vezes as 188.807 de `GameFeature`. Com
+as palavras, nenhum jogo continua idêntico a 10 ou mais, o que de novo mede só distinção.
+
+A proposta em avaliação é um bloco de palavras do resumo na mesma estrutura de TF-IDF, sem
+embeddings, avaliado no B-37 com o mesmo critério do B-62. Não é o F-27, que usa um modelo de
+embeddings. Estimativa de custo:
+
+- **M (8 a 10 h)**, se os pesos das palavras forem calculados em memória pela API a partir do
+  resumo, junto com a decisão do B-31 de não persistir os pesos;
+- **G (12 a 16 h)**, se as palavras forem gravadas pela ingestão como atributos: mais cerca de
+  70 MB no banco e regravação de quase todas as ligações a cada execução, como hoje acontece
+  com `GameFeature`.
+
+Riscos de qualidade: resumos só em inglês, sem radicalização (*zombie* e *zombies* contam
+separado), nomes próprios e linguagem de divulgação.
+
+**Decidido (26/10/2026): palavras do resumo entram no P0 na versão M (B-63)**, com os pesos
+calculados em memória pela API, junto do B-62 e com o mesmo critério de aceitação: a fatia
+só fica acima de zero se melhorar o acerto@10 no B-37. Ficam fora da explicação ao jogador
+por enquanto; entrar ou não decide-se no B-37, com exemplos reais. Os riscos de qualidade
+acima são pontos a observar no B-37, sem tratamento antes. O P0 passa para cerca de 306 h, o
+plano segue sem trocar funcionalidade, e o B-63 é o primeiro item do plano de corte depois
+dos P1.
 
 ### 8.10 Cobertura de desenvolvedora para o critério indie — aberto em 23/10/2026, registrada como limitação
 
