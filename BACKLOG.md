@@ -103,10 +103,14 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [ ] **B-53** (M) Edição de nome e troca de senha
 - [ ] **B-54** (P) Ingestão agendada (GitHub Actions)
 - [ ] **B-55** (M) E2e no navegador (Playwright) do roteiro de demonstração
+- [ ] **B-65** (P) ID dos jogos na Steam gravado pela ingestão
+- [ ] **B-66** (M) Vínculo da conta Steam à conta do usuário
+- [ ] **B-67** (M) Importação da wishlist da Steam para a lista "quero jogar", com resumo de importados e aviso de wishlist privada
+- [ ] **B-68** (M) Login com Google
 
 ## P2 — pós-defesa
 
-Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de entrada de cada item (F-22 a F-30: sugestão de jogo, área do estúdio, navegação por cultura, recursos de comunidade, recuperação de senha, recomendação híbrida com embeddings, filtragem colaborativa, avisos de lançamento, importação da Steam).
+Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de entrada de cada item (F-22, F-23 e F-25 a F-29: sugestão de jogo, área do estúdio, recursos de comunidade, recuperação de senha, recomendação híbrida com embeddings, filtragem colaborativa, avisos de lançamento).
 
 ---
 
