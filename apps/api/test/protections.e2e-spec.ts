@@ -27,11 +27,8 @@ describe('Proteções HTTP', () => {
   afterEach(() => app.close());
 
   const server = () => request(app.getHttpServer());
-  const login = () =>
-    server()
-      .post('/api/auth/login')
-      .set('Origin', origin)
-      .send({ email: 'ninguem@example.com', password: 'qualquer' });
+  const login = (email = 'ninguem@example.com') =>
+    server().post('/api/auth/login').set('Origin', origin).send({ email, password: 'qualquer' });
   const register = (index: number) =>
     server()
       .post('/api/auth/register')
@@ -53,7 +50,7 @@ describe('Proteções HTTP', () => {
         statusCode: 429,
         message: 'Muitas tentativas; aguarde um pouco e tente de novo',
       });
-      expect(response.headers['retry-after-auth']).toBeDefined();
+      expect(response.headers['retry-after-ip']).toBeDefined();
     });
 
     it('o 6º cadastro na mesma hora recebe 429, sem criar a conta', async () => {
@@ -87,6 +84,36 @@ describe('Proteções HTTP', () => {
 
       expect((await fromClient('203.0.113.6')).status).toBe(429);
       expect((await login().set('X-Forwarded-For', '198.51.100.10')).status).toBe(401);
+    });
+  });
+
+  describe('limite por conta', () => {
+    // Cada tentativa de um IP diferente: só o limite por conta pode barrar.
+    beforeEach(() => (app.getHttpAdapter().getInstance() as Application).set('trust proxy', 1));
+    const fromIp = (attempt: number, email = 'jogadora@example.com') =>
+      login(email).set('X-Forwarded-For', `203.0.113.${attempt}`);
+
+    it('a 11ª tentativa na mesma conta em 15 minutos recebe 429, mesmo de IPs diferentes', async () => {
+      for (let attempt = 1; attempt <= 10; attempt++) {
+        expect((await fromIp(attempt)).status).toBe(401);
+      }
+
+      const response = await fromIp(11);
+
+      expect(response.status).toBe(429);
+      expect(response.headers['retry-after-account']).toBeDefined();
+    });
+
+    it('conta o e-mail normalizado, com outra grafia', async () => {
+      for (let attempt = 1; attempt <= 10; attempt++) await fromIp(attempt);
+
+      expect((await fromIp(11, ' JOGADORA@Example.com ')).status).toBe(429);
+    });
+
+    it('não afeta outra conta', async () => {
+      for (let attempt = 1; attempt <= 10; attempt++) await fromIp(attempt);
+
+      expect((await fromIp(11, 'outra@example.com')).status).toBe(401);
     });
   });
 
