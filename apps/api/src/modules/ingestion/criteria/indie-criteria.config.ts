@@ -3,13 +3,13 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { z } from 'zod';
 
-const igdbEntity = z.object({ igdbId: z.number().int(), name: z.string().min(1) });
+export const igdbEntity = z.object({ igdbId: z.number().int(), name: z.string().min(1) });
 const majorCompany = igdbEntity.extend({
   via: z.enum(['platform', 'aaa_budget', 'conglomerate']),
   note: z.string().min(1).optional(),
 });
 
-const hasUniqueIds = (entries: { igdbId: number }[]) =>
+export const hasUniqueIds = (entries: { igdbId: number }[]) =>
   new Set(entries.map((e) => e.igdbId)).size === entries.length;
 const publicSource = z.url({ protocol: /^https?$/ });
 
@@ -25,30 +25,6 @@ const controlledStudio = igdbEntity.extend({
   acquiredAt: z.iso.date(),
   divestedAt: z.iso.date().optional(),
   source: publicSource,
-  note: z.string().min(1),
-});
-
-const reviewedCompany = igdbEntity
-  .extend({
-    decision: z.enum([
-      'no_current_effect',
-      'wrong_igdb_parent',
-      'wrong_credit',
-      'rejected',
-      'not_ownership',
-      'pending_source',
-    ]),
-    decidedAt: z.iso.date(),
-    group: z.string().min(1).optional(),
-    acquiredYear: z.number().int().optional(),
-    note: z.string().min(1).optional(),
-  })
-  .refine((c) => c.decision !== 'no_current_effect' || (c.group && c.acquiredYear), {
-    message: 'Estúdio sem efeito atual precisa do grupo e do ano da compra.',
-  });
-
-const reviewedGame = igdbEntity.extend({
-  decidedAt: z.iso.date(),
   note: z.string().min(1),
 });
 
@@ -75,17 +51,6 @@ export const indieCriteriaSchema = z
       ratingsOnlyBefore: z.coerce.date(),
       postLaunchGraceDays: z.number().int().nonnegative(),
       postLaunchGraceRationale: z.string().min(1),
-    }),
-    reviewedCompaniesPolicy: z.string().min(1),
-    reviewedCompanies: z.array(reviewedCompany).refine(hasUniqueIds, {
-      message: 'Empresa repetida na lista de empresas revisadas.',
-    }),
-    noDeveloperReview: z.object({
-      minRatings: z.number().int().positive(),
-      rationale: z.string().min(1),
-      reviewedGames: z.array(reviewedGame).refine(hasUniqueIds, {
-        message: 'Jogo repetido na lista de jogos sem desenvolvedora revisados.',
-      }),
     }),
     overridesPolicy: z.object({
       purpose: z.string().min(1),
@@ -117,18 +82,6 @@ export const indieCriteriaSchema = z
     ({ controlledStudios }) =>
       controlledStudios.every((s) => !s.divestedAt || s.divestedAt > s.acquiredAt),
     { message: 'A saída do grupo precisa ser posterior à aquisição.', path: ['controlledStudios'] },
-  )
-  .refine(
-    ({ reviewedCompanies, majorCompanies, controlledStudios }) =>
-      reviewedCompanies.every(
-        (c) =>
-          !majorCompanies.some((m) => m.igdbId === c.igdbId) &&
-          !controlledStudios.some((s) => s.igdbId === c.igdbId),
-      ),
-    {
-      message: 'Empresa revisada não pode estar também na lista de grandes ou de controlados.',
-      path: ['reviewedCompanies'],
-    },
   );
 
 export type IndieCriteria = z.infer<typeof indieCriteriaSchema>;
@@ -144,7 +97,8 @@ export function readIndieCriteria(file = INDIE_CRITERIA_FILE): IndieCriteria {
   return readVersionedIndieCriteria(file).criteria;
 }
 
-// A versão é o hash do arquivo: separa "o jogo mudou" de "a regra mudou" entre execuções.
+// A versão é o hash do arquivo, que só tem o que decide o veredito: separa "o jogo mudou" de "a
+// regra mudou" entre execuções. O que só alimenta os alertas fica em config/ingestion-review.json.
 export function readVersionedIndieCriteria(file = INDIE_CRITERIA_FILE): VersionedIndieCriteria {
   const content = readFileSync(file, 'utf8');
   return {

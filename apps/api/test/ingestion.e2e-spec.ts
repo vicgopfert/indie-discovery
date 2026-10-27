@@ -12,6 +12,7 @@ import { IgdbClient } from '../src/modules/ingestion/igdb/igdb.client';
 import { evaluateIndieCriteria } from '../src/modules/ingestion/criteria/indie-criteria';
 import { readVersionedIndieCriteria } from '../src/modules/ingestion/criteria/indie-criteria.config';
 import { readIngestionConfig } from '../src/modules/ingestion/ingestion-config';
+import { readIngestionReview } from '../src/modules/ingestion/review-flags/ingestion-review.config';
 import { IngestionRepository } from '../src/modules/ingestion/persistence/ingestion.repository';
 import { RunIngestionUseCase } from '../src/modules/ingestion/run-ingestion.use-case';
 import { WikidataCountrySource } from '../src/modules/ingestion/wikidata/wikidata-country.source';
@@ -40,6 +41,7 @@ const fixtureGames = [
   ...readFixture('criteria-no-developer.json'),
 ].sort((a, b) => a.id - b.id);
 const versioned = readVersionedIndieCriteria();
+const review = readIngestionReview(versioned.criteria);
 const accepted = fixtureGames.filter(
   (raw) =>
     evaluateIndieCriteria(mapIgdbGame(igdbGameSchema.parse(raw), NOW), versioned.criteria, NOW)
@@ -134,7 +136,7 @@ describe('Ingestão', () => {
       new IgdbCatalogSource(igdb, ingestion),
       new WikidataCountrySource({ endpoint: `${urls.apiUrl}/sparql`, maxAttempts: 1 }),
       new IngestionRepository(prisma),
-      { criteria: versioned, tfidf: readTfidfConfig(), ingestion },
+      { criteria: versioned, review, tfidf: readTfidfConfig(), ingestion },
     );
   });
 
