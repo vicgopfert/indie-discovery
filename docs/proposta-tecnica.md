@@ -194,6 +194,8 @@ A API sobe com `NestFactory.create` e carrega todos os módulos, menos o de inge
 
 O Next.js usa o App Router. Páginas públicas (catálogo, ficha, "Como funciona") são Server Components, que buscam dados no servidor e geram metadados para buscadores. Interações (avaliar, listas, modo, formulários) são Client Components. O navegador chama sempre `/api/*` no próprio domínio do frontend, e um *rewrite* do Next.js repassa a chamada para a API. Isso mantém o cookie de sessão como cookie primeiro (*first-party*), sem depender de cookies entre domínios, que navegadores restringem cada vez mais.
 
+O estado da sessão vem de `GET /api/auth/me` e fica no cache do TanStack Query, compartilhado por todos os componentes que precisam dele (cabeçalho, páginas de conta). Não há um contexto de autenticação à parte: ele seria uma segunda cópia do mesmo estado. Entrar e cadastrar gravam o usuário devolvido pela API direto no cache; sair limpa o cache. Os formulários usam react-hook-form com os schemas de `packages/contracts`, e os erros da API voltam ao campo a que se referem. Depois de entrar, o visitante segue para o `?next=` da URL, aceito só se for um caminho deste site.
+
 ### Contratos da API
 
 Prefixo global `/api`. Respostas em JSON; erros sempre no mesmo formato.
@@ -264,8 +266,9 @@ Todas as variáveis (`DATABASE_URL`, `PORT`, `SESSION_TTL_DAYS`, `WEB_ORIGIN`, `
 | --- | --- | --- | --- |
 | Next.js (App Router) | Obrigatória | Interface web | Server Components para páginas públicas indexáveis e metadados por página; Client Components para interações; *rewrites* para a mesma origem |
 | Tailwind CSS | Recomendada | Estilização | Produtividade sem criar biblioteca de componentes própria |
+| shadcn/ui (Radix) | Recomendada | Componentes de interface (botão, campo, alerta, cartão) | Componentes acessíveis copiados para `src/components/ui`, sem dependência de biblioteca fechada; as cores e raios são variáveis CSS em `globals.css`, e a identidade visual entra trocando essas variáveis. **Acrescentado no B-64 (27/10/2026)** |
 | react-hook-form + resolver Zod | Recomendada | Formulários | Reaproveita os schemas de `packages/contracts` no cliente |
-| TanStack Query | Opcional | Cache de dados no cliente | Os Server Components resolvem a maior parte das leituras; só entra se a atualização otimista das avaliações ficar trabalhosa sem ele |
+| TanStack Query | Recomendada | Cache de dados no cliente | A sessão (`/me`) fica num só lugar do cache, compartilhada entre o cabeçalho e as páginas, e as mutações trazem os estados de envio e erro. Os Server Components continuam resolvendo as leituras públicas. **Alterado no B-64 (27/10/2026):** era Opcional, para entrar só nas avaliações; entrou com a sessão, que já é estado compartilhado do cliente |
 
 ### Qualidade, testes e entrega
 
@@ -274,7 +277,7 @@ Todas as variáveis (`DATABASE_URL`, `PORT`, `SESSION_TTL_DAYS`, `WEB_ORIGIN`, `
 | ESLint + Prettier | Obrigatória | Padrões de código e formatação | Configuração única na raiz do monorrepositório |
 | Husky + lint-staged | Obrigatória | Hook de pre-commit | Lint e formatação só nos arquivos alterados, rápido o bastante para não ser desligado |
 | Jest + Supertest | Obrigatória | Testes unitários e e2e da API | Padrão do ecossistema Nest, com utilitários de teste prontos |
-| Vitest + Testing Library | Opcional | Testes de componentes do frontend | Apenas para componentes com lógica (avaliação, seletor de modo) |
+| Vitest + Testing Library | Recomendada | Testes do frontend | Componentes com lógica (formulários de conta, menu da sessão, avaliação, seletor de modo) e o cliente HTTP; rodam no `pnpm test` do CI. **Alterado no B-64 (27/10/2026):** era Opcional |
 | Playwright | Opcional (P1) | Testes ponta a ponta no navegador | Útil para o fluxo da demonstração, mas não é condição para a defesa |
 | GitHub Actions | Obrigatória | CI | Gratuito para repositório público; aceita PostgreSQL como serviço no job de testes |
 | PostgreSQL embutido (`embedded-postgres`) | Obrigatória | Banco local | Binários oficiais do PostgreSQL 18 instalados pelo `pnpm install`, sem Docker nem permissão de administrador; banco local idêntico entre máquinas e base da contingência da demonstração. **Substitui o Docker Compose**, indisponível na máquina do autor (B-04, 19/10/2026). O pacote é marcado como beta no npm, por isso a versão fica fixada |
@@ -334,10 +337,18 @@ apps/api/
 │     └─ health/
 └─ test/                       e2e, fixtures da IGDB e builders de dados
 
-apps/web/src/app/
-├─ (public)/                   catálogo, jogos/[slug], como-funciona
-├─ (auth)/                     entrar, cadastrar
-└─ (account)/                  recomendacoes, perfil, boas-vindas (onboarding)
+apps/web/src/
+├─ app/                        só roteamento: layout, providers e páginas
+│  ├─ (public)/                catálogo, jogos/[slug], como-funciona
+│  ├─ (auth)/                  entrar, cadastrar
+│  └─ (account)/               recomendacoes, perfil, boas-vindas (onboarding)
+├─ features/                   código de cada funcionalidade: chamadas à API, hooks do TanStack Query e componentes
+│  └─ auth/                    sessão, formulários de entrar e cadastrar, menu da conta
+├─ components/
+│  ├─ ui/                      componentes do shadcn/ui, gerados pela CLI
+│  └─ form/                    campo de texto e alerta ligados ao react-hook-form
+├─ lib/                        cliente HTTP, cliente do TanStack Query, destino seguro, erros de formulário
+└─ config/site.ts              nome e descrição da plataforma, num só lugar (o nome ainda é provisório)
 
 packages/contracts/src/
 ├─ auth.ts  catalog.ts  library.ts  recommendation.ts  errors.ts
@@ -437,7 +448,7 @@ Com um único frontend na mesma origem e sem clientes móveis, a vantagem do JWT
 | Unitário, mapeamento | Jest + fixtures JSON | Conversão de respostas reais da IGDB, salvas como fixtures no B-07, para o modelo interno, incluindo campos ausentes | Obrigatório |
 | Unitário, services | Jest + *fakes* de repositório | Regras de cadastro (e-mail duplicado), avaliação fora de 1 a 5, modo inválido | Obrigatório |
 | Integração e e2e da API | Jest + Supertest + PostgreSQL de teste | Cadastro, login, logout, rota protegida sem sessão; uma pessoa não altera dados de outra; avaliação e listas persistem; recomendações mudam conforme o modo; formato de erro | Obrigatório |
-| Componentes do frontend | Vitest + Testing Library | Componente de avaliação e seletor de modo | Opcional |
+| Frontend | Vitest + Testing Library | Cliente HTTP (validação das respostas e formato dos erros), destino seguro do `?next=`, formulários de entrar e cadastrar (validação e erros da API no campo certo), menu da sessão; depois, componente de avaliação e seletor de modo | Recomendado |
 | Ponta a ponta no navegador | Playwright | O roteiro da demonstração completo | P1 (B-55) |
 | Avaliação offline da recomendação | Script de linha de comando | Métricas da seção 12 sobre perfis sintéticos | Obrigatório |
 | Teste de usabilidade | Sessões moderadas com jogadores | Tarefas do fluxo principal e percepção das recomendações | Obrigatório (parte da avaliação do TCC) |
