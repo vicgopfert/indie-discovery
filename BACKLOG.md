@@ -34,7 +34,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 ## E2 — Contas e autenticação (S5)
 
 - [x] **B-15** (P) Modelos `User` e `Session` + migration
-- [ ] **B-16** (P) Cadastro com Argon2id e e-mail único
+- [x] **B-16** (P) Cadastro com Argon2id e e-mail único
 - [ ] **B-17** (M) Login, logout, `GET /auth/me`, `SessionAuthGuard` global, `@Public()`
 - [ ] **B-18** (M) Proteções: throttler no login, helmet, `OriginGuard`, filtro global de exceções, request-id e logs
 - [ ] **B-19** (M) Suíte e2e de autenticação
