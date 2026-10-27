@@ -12,7 +12,9 @@ export function ApiStatus() {
         const body: unknown = await res.json();
         if (res.ok) return setStatus('API no ar');
         const error = ApiErrorSchema.safeParse(body);
-        setStatus(error.success ? `erro: ${error.data.message}` : `erro ${res.status}`);
+        setStatus(
+          error.success ? `erro: ${[error.data.message].flat().join('; ')}` : `erro ${res.status}`,
+        );
       })
       .catch(() => setStatus('API fora do ar'));
   }, []);
