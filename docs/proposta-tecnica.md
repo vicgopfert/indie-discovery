@@ -406,7 +406,7 @@ Com um único frontend na mesma origem e sem clientes móveis, a vantagem do JWT
 | Ameaça | Medida |
 | --- | --- |
 | CSRF | `SameSite=Lax` impede o envio do cookie em requisições POST, PUT, PATCH e DELETE vindas de outros sites; como defesa adicional, o `OriginGuard` rejeita métodos que alteram dados quando o cabeçalho `Origin` não é a origem do frontend. Nenhuma rota GET altera dados |
-| Força bruta no login | `@nestjs/throttler` com limite por IP nas rotas `/auth/*` |
+| Força bruta no login | `@nestjs/throttler` com dois limites no login: por IP (5 por minuto) e por conta (10 a cada 15 minutos). O IP repassado pela hospedagem pode ser forjado em parte das requisições, então o limite por conta é o que protege cada conta sem depender da infraestrutura. O cadastro tem limite por IP (5 por hora), e contorná-lo forjando o IP fica como risco aceito |
 | XSS e roubo de sessão | Cookie `HttpOnly` (inacessível ao JavaScript); React escapa conteúdo por padrão; `dangerouslySetInnerHTML` proibido por regra de lint; resumos vindos da IGDB tratados como texto puro |
 | Cabeçalhos inseguros | helmet |
 | Entrada malformada | Schemas Zod em corpo, consulta e parâmetros, com limites (paginação máxima, tamanho de texto, valores de enum) |
