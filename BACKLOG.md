@@ -76,7 +76,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 
 - [x] **B-38** (P) Banco no Neon + `migrate deploy`
 - [x] **B-39** (M) Implantação da API no Render + `GET /api/health`
-- [ ] **B-40** (P) Implantação do frontend na Vercel — no ar e com o rewrite verificado; falta o cookie de sessão, testável só depois do B-17
+- [x] **B-40** (P) Implantação do frontend na Vercel
 - [ ] **B-41** (P) Contingência local: dump do banco + restauração no PostgreSQL embutido
 
 ## E7 — Documentação e acabamento (S11)
