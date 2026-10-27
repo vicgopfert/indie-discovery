@@ -77,4 +77,86 @@ describe('Autenticação', () => {
       expect(await prisma.user.count()).toBe(0);
     });
   });
+
+  const server = () => request(app.getHttpServer());
+  const sessionCookie = (response: request.Response) =>
+    ([] as string[])
+      .concat(response.headers['set-cookie'] ?? [])
+      .find((cookie) => cookie.startsWith('sid='));
+  const login = (email: string, password: string) =>
+    server().post('/api/auth/login').send({ email, password });
+  const me = (cookie?: string) =>
+    cookie ? server().get('/api/auth/me').set('Cookie', cookie) : server().get('/api/auth/me');
+
+  describe('sessão', () => {
+    it('o cadastro já abre a sessão, com cookie HttpOnly, SameSite=Lax e 7 dias', async () => {
+      const cookie = sessionCookie(await register(valid));
+
+      expect(cookie).toMatch(/HttpOnly/);
+      expect(cookie).toMatch(/SameSite=Lax/);
+      expect(cookie).toMatch(/Path=\//);
+      expect(cookie).toMatch(/Max-Age=604800/);
+      expect((await me(cookie)).body).toMatchObject({ email: 'jogadora@example.com' });
+    });
+
+    it('o banco guarda só o hash do token do cookie', async () => {
+      const cookie = sessionCookie(await register(valid))!;
+      const token = decodeURIComponent(cookie.split(';')[0]!.slice('sid='.length));
+
+      const session = await prisma.session.findFirstOrThrow();
+      expect(session.tokenHash).not.toBe(token);
+      expect(session.tokenHash).toMatch(/^[0-9a-f]{64}$/);
+    });
+
+    it('login com a senha certa abre outra sessão', async () => {
+      await register(valid);
+
+      const response = await login('JOGADORA@example.com', 'senha-forte');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toMatchObject({ email: 'jogadora@example.com' });
+      expect((await me(sessionCookie(response))).status).toBe(200);
+      expect(await prisma.session.count()).toBe(2);
+    });
+
+    it.each([
+      ['senha errada', 'jogadora@example.com', 'outra-senha'],
+      ['e-mail sem conta', 'ninguem@example.com', 'senha-forte'],
+    ])('login com %s responde 401 com a mesma mensagem, sem cookie', async (_, email, password) => {
+      await register(valid);
+
+      const response = await login(email, password);
+
+      expect(response.status).toBe(401);
+      expect(response.body).toMatchObject({ message: 'E-mail ou senha incorretos' });
+      expect(sessionCookie(response)).toBeUndefined();
+    });
+
+    it('rota protegida responde 401 sem cookie ou com cookie inválido', async () => {
+      expect((await me()).status).toBe(401);
+      expect((await me('sid=token-inventado')).status).toBe(401);
+    });
+
+    it('logout encerra a sessão no servidor e apaga o cookie', async () => {
+      const cookie = sessionCookie(await register(valid))!;
+
+      const response = await server().post('/api/auth/logout').set('Cookie', cookie);
+
+      expect(response.status).toBe(204);
+      expect(sessionCookie(response)).toMatch(/sid=;.*Expires=Thu, 01 Jan 1970/);
+      expect(await prisma.session.count()).toBe(0);
+      expect((await me(cookie)).status).toBe(401);
+    });
+
+    it('sessão expirada responde 401', async () => {
+      const cookie = sessionCookie(await register(valid));
+      await prisma.session.updateMany({ data: { expiresAt: new Date(Date.now() - 1000) } });
+
+      expect((await me(cookie)).status).toBe(401);
+    });
+
+    it('o health check continua público', async () => {
+      expect((await server().get('/api/health')).status).toBe(200);
+    });
+  });
 });
