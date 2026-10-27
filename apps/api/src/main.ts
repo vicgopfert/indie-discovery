@@ -14,6 +14,7 @@ async function bootstrap() {
     .setTitle('Indie Discovery API')
     .setDescription('API da plataforma de descoberta de jogos independentes')
     .setVersion('0.1.0')
+    .addCookieAuth('sid')
     .build();
   SwaggerModule.setup('api/docs', app, () => SwaggerModule.createDocument(app, config));
 
