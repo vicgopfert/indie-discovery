@@ -14,6 +14,8 @@ export function logRequests(request: Request, response: Response, next: NextFunc
       status: response.statusCode,
       durationMs: Math.round(performance.now() - startedAt),
       ip: request.ip,
+      // Tamanho da lista X-Forwarded-For recebida: mostra se TRUST_PROXY_HOPS ainda bate com os proxies.
+      forwardedFor: request.get('x-forwarded-for')?.split(',').length ?? 0,
     });
   });
   next();
