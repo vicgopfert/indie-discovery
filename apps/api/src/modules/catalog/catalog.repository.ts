@@ -30,6 +30,33 @@ const gameSummarySelect = {
 
 export type GameSummaryRow = Prisma.GameGetPayload<{ select: typeof gameSummarySelect }>;
 
+// Palavras-chave e empresas com outro papel (como a do port) ficam fora da ficha.
+const gameDetailSelect = {
+  ...gameSummarySelect,
+  summary: true,
+  storeUrl: true,
+  studioCountrySource: true,
+  studioCountry: { select: { alpha2: true, namePt: true } },
+  features: {
+    where: { feature: { type: { in: [FeatureType.GENRE, FeatureType.THEME] } } },
+    select: { feature: { select: { type: true, slug: true, name: true } } },
+  },
+  companies: {
+    where: { OR: [{ isDeveloper: true }, { isPublisher: true }] },
+    select: { isDeveloper: true, isPublisher: true, company: { select: { name: true } } },
+  },
+  languages: {
+    select: {
+      interface: true,
+      subtitles: true,
+      audio: true,
+      language: { select: { locale: true, namePt: true } },
+    },
+  },
+} satisfies Prisma.GameSelect;
+
+export type GameDetailRow = Prisma.GameGetPayload<{ select: typeof gameDetailSelect }>;
+
 export interface FeatureCountRow {
   slug: string;
   name: string;
@@ -56,6 +83,13 @@ export class CatalogRepository {
       }),
     ]);
     return { total, games };
+  }
+
+  findGameBySlug(slug: string): Promise<GameDetailRow | null> {
+    return this.prisma.game.findUnique({
+      where: { slug, inCatalog: true },
+      select: gameDetailSelect,
+    });
   }
 
   // Conta só jogos do catálogo: um atributo que só aparece em jogos fora dele não vira opção.

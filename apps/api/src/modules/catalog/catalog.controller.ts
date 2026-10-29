@@ -12,8 +12,15 @@ import {
   FEATURE_TYPE_FILTERS,
   RELEASE_STATUS_FILTERS,
 } from '@indie/contracts';
-import { Controller, Get, Query } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Param, Query } from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Public } from '../../common/decorators/public.decorator';
 import { CatalogService } from './catalog.service';
 
@@ -35,6 +42,19 @@ const GAME_PAGE_EXAMPLE = {
   pageSize: 24,
   total: 1,
   totalPages: 1,
+};
+
+const GAME_DETAIL_EXAMPLE = {
+  ...GAME_PAGE_EXAMPLE.items[0],
+  summary: 'Ajude Madeline a sobreviver aos seus demônios interiores na montanha Celeste.',
+  themes: [{ slug: 'action', name: 'Ação' }],
+  developers: ['Maddy Makes Games'],
+  publishers: ['Maddy Makes Games'],
+  studioCountry: { code: 'CA', name: 'Canadá', source: 'IGDB' },
+  languages: [
+    { locale: 'pt-BR', name: 'Português (Brasil)', interface: true, subtitles: true, audio: false },
+  ],
+  officialUrl: 'https://www.celestegame.com',
 };
 
 @ApiTags('catalog')
@@ -82,6 +102,19 @@ export class CatalogController {
   @ApiBadRequestResponse({ description: 'Parâmetro fora dos limites ou com valor desconhecido' })
   searchGames(@Query({ schema: GameSearchQuerySchema }) query: GameSearchQuery) {
     return this.catalog.searchGames(query);
+  }
+
+  @Public()
+  @Get('games/:slug')
+  @ApiParam({ name: 'slug', description: 'Slug do jogo, o mesmo da IGDB' })
+  @ApiOkResponse({
+    description:
+      'Ficha do jogo com empresas, país do estúdio e a origem desse dado, idiomas e link oficial',
+    schema: { example: GAME_DETAIL_EXAMPLE },
+  })
+  @ApiNotFoundResponse({ description: 'Slug inexistente ou jogo fora do catálogo' })
+  findGame(@Param('slug') slug: string) {
+    return this.catalog.findGame(slug);
   }
 
   @Public()
