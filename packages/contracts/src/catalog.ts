@@ -59,6 +59,8 @@ export type GameSearchQuery = z.output<typeof GameSearchQuerySchema>;
 
 export const FeatureLabelSchema = z.object({ slug: z.string(), name: z.string() });
 
+export type FeatureLabel = z.infer<typeof FeatureLabelSchema>;
+
 export const GameSummarySchema = z.object({
   slug: z.string(),
   name: z.string(),
@@ -89,3 +91,33 @@ export type FeatureQuery = z.output<typeof FeatureQuerySchema>;
 export const FeatureOptionSchema = FeatureLabelSchema.extend({ gameCount: z.number().int() });
 
 export type FeatureOption = z.infer<typeof FeatureOptionSchema>;
+
+export const GameLanguageSchema = z.object({
+  locale: z.string(),
+  name: z.string(),
+  interface: z.boolean(),
+  subtitles: z.boolean(),
+  audio: z.boolean(),
+});
+
+export type GameLanguage = z.infer<typeof GameLanguageSchema>;
+
+export const StudioCountrySchema = z.object({
+  code: z.string().length(2),
+  name: z.string(),
+  source: z.enum(['IGDB', 'WIKIDATA']),
+});
+
+export type StudioCountry = z.infer<typeof StudioCountrySchema>;
+
+export const GameDetailSchema = GameSummarySchema.extend({
+  summary: z.string(),
+  themes: z.array(FeatureLabelSchema),
+  developers: z.array(z.string()),
+  publishers: z.array(z.string()),
+  studioCountry: StudioCountrySchema.nullable(),
+  languages: z.array(GameLanguageSchema),
+  officialUrl: z.url({ protocol: /^https?$/ }).nullable(),
+});
+
+export type GameDetail = z.infer<typeof GameDetailSchema>;

@@ -1,4 +1,4 @@
-import { FeatureQuerySchema, GameSearchQuerySchema } from '@indie/contracts';
+import { FeatureQuerySchema, GameDetailSchema, GameSearchQuerySchema } from '@indie/contracts';
 
 const messages = (input: unknown) => {
   const result = GameSearchQuerySchema.safeParse(input);
@@ -58,5 +58,52 @@ describe('FeatureQuerySchema', () => {
 
   it('não expõe palavras-chave', () => {
     expect(FeatureQuerySchema.safeParse({ type: 'keyword' }).success).toBe(false);
+  });
+});
+
+describe('GameDetailSchema', () => {
+  const detail = {
+    slug: 'celeste',
+    name: 'Celeste',
+    coverImageId: 'co3byy',
+    releaseStatus: 'RELEASED',
+    firstReleaseDate: '2018-01-25',
+    genres: [{ slug: 'platform', name: 'Plataforma' }],
+    summary: 'Ajude Madeline a escalar a montanha.',
+    themes: [{ slug: 'action', name: 'Ação' }],
+    developers: ['Maddy Makes Games'],
+    publishers: ['Maddy Makes Games'],
+    studioCountry: { code: 'CA', name: 'Canadá', source: 'IGDB' },
+    languages: [
+      {
+        locale: 'pt-BR',
+        name: 'Português (Brasil)',
+        interface: true,
+        subtitles: true,
+        audio: false,
+      },
+    ],
+    officialUrl: 'https://www.celestegame.com',
+  };
+
+  it('aceita a ficha completa e a ficha sem os dados opcionais', () => {
+    expect(GameDetailSchema.safeParse(detail).success).toBe(true);
+    expect(
+      GameDetailSchema.safeParse({
+        ...detail,
+        firstReleaseDate: null,
+        developers: [],
+        publishers: [],
+        studioCountry: null,
+        languages: [],
+        officialUrl: null,
+      }).success,
+    ).toBe(true);
+  });
+
+  it('só aceita link http ou https', () => {
+    expect(
+      GameDetailSchema.safeParse({ ...detail, officialUrl: 'javascript:alert(1)' }).success,
+    ).toBe(false);
   });
 });
