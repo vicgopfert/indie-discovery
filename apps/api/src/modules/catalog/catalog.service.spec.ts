@@ -1,5 +1,11 @@
 import { GameSearchQuerySchema } from '@indie/contracts';
-import type { CatalogRepository, FeatureCountRow, GameSummaryRow } from './catalog.repository';
+import { NotFoundException } from '@nestjs/common';
+import type {
+  CatalogRepository,
+  FeatureCountRow,
+  GameDetailRow,
+  GameSummaryRow,
+} from './catalog.repository';
 import { CatalogService } from './catalog.service';
 import { FeatureLabels, featureLabelsConfigSchema } from './feature-labels';
 
@@ -26,11 +32,64 @@ const celeste: GameSummaryRow = {
   features: [genre('puzzle', 'Puzzle'), genre('indie', 'Indie'), genre('adventure', 'Adventure')],
 };
 
-class FakeCatalog implements Pick<CatalogRepository, 'searchGames' | 'countGamesByFeature'> {
+const feature = (type: 'GENRE' | 'THEME', slug: string, name: string) => ({
+  feature: { type, slug, name },
+});
+
+const company = (name: string, isDeveloper: boolean, isPublisher: boolean) => ({
+  isDeveloper,
+  isPublisher,
+  company: { name },
+});
+
+const language = (locale: string, namePt: string, support: Partial<Record<string, boolean>>) => ({
+  interface: false,
+  subtitles: false,
+  audio: false,
+  ...support,
+  language: { locale, namePt },
+});
+
+const celesteDetail: GameDetailRow = {
+  slug: 'celeste',
+  name: 'Celeste',
+  coverImageId: 'co3byy',
+  releaseStatus: 'RELEASED',
+  firstReleaseDate: new Date('2018-01-25T00:00:00Z'),
+  summary: 'Ajude Madeline a escalar a montanha.',
+  storeUrl: 'https://www.celestegame.com',
+  studioCountrySource: 'WIKIDATA',
+  studioCountry: { alpha2: 'CA', namePt: 'Canadá' },
+  features: [
+    feature('GENRE', 'puzzle', 'Puzzle'),
+    feature('GENRE', 'indie', 'Indie'),
+    feature('THEME', 'horror', 'Horror'),
+    feature('GENRE', 'adventure', 'Adventure'),
+  ],
+  companies: [
+    company('Maddy Makes Games', true, true),
+    company('Extremely OK Games', true, false),
+    company('Annapurna', false, true),
+  ],
+  languages: [
+    language('pt-BR', 'Português (Brasil)', { interface: true, subtitles: true }),
+    language('en-US', 'Inglês', { interface: true, subtitles: true, audio: true }),
+  ],
+};
+
+class FakeCatalog implements Pick<
+  CatalogRepository,
+  'searchGames' | 'countGamesByFeature' | 'findGameBySlug'
+> {
   constructor(
     private readonly games: { total: number; games: GameSummaryRow[] },
     private readonly features: FeatureCountRow[] = [],
+    private readonly detail: GameDetailRow | null = null,
   ) {}
+
+  findGameBySlug() {
+    return Promise.resolve(this.detail);
+  }
 
   searchGames() {
     return Promise.resolve(this.games);
@@ -93,6 +152,71 @@ describe('CatalogService', () => {
       );
 
       expect(page.items[0]?.firstReleaseDate).toBeNull();
+    });
+  });
+
+  describe('findGame', () => {
+    const findGame = (detail: GameDetailRow | null) =>
+      service(new FakeCatalog({ total: 0, games: [] }, [], detail)).findGame('celeste');
+
+    it('monta a ficha com atributos em português, empresas por papel, país e idiomas', async () => {
+      expect(await findGame(celesteDetail)).toEqual({
+        slug: 'celeste',
+        name: 'Celeste',
+        coverImageId: 'co3byy',
+        releaseStatus: 'RELEASED',
+        firstReleaseDate: '2018-01-25',
+        genres: [
+          { slug: 'adventure', name: 'Aventura' },
+          { slug: 'puzzle', name: 'Quebra-cabeça' },
+        ],
+        summary: 'Ajude Madeline a escalar a montanha.',
+        themes: [{ slug: 'horror', name: 'Terror' }],
+        developers: ['Extremely OK Games', 'Maddy Makes Games'],
+        publishers: ['Annapurna', 'Maddy Makes Games'],
+        studioCountry: { code: 'CA', name: 'Canadá', source: 'WIKIDATA' },
+        languages: [
+          { locale: 'en-US', name: 'Inglês', interface: true, subtitles: true, audio: true },
+          {
+            locale: 'pt-BR',
+            name: 'Português (Brasil)',
+            interface: true,
+            subtitles: true,
+            audio: false,
+          },
+        ],
+        officialUrl: 'https://www.celestegame.com',
+      });
+    });
+
+    it('sem país, empresas, idiomas e link, devolve vazio e nulo', async () => {
+      const detail = await findGame({
+        ...celesteDetail,
+        studioCountry: null,
+        studioCountrySource: null,
+        companies: [],
+        languages: [],
+        storeUrl: null,
+      });
+
+      expect(detail).toMatchObject({
+        developers: [],
+        publishers: [],
+        studioCountry: null,
+        languages: [],
+        officialUrl: null,
+      });
+    });
+
+    it.each(['javascript:alert(1)', 'ftp://celeste.example', 'não é link'])(
+      'descarta link que não é endereço web: %s',
+      async (storeUrl) => {
+        expect((await findGame({ ...celesteDetail, storeUrl })).officialUrl).toBeNull();
+      },
+    );
+
+    it('jogo inexistente ou fora do catálogo responde 404', async () => {
+      await expect(findGame(null)).rejects.toThrow(new NotFoundException('Jogo não encontrado.'));
     });
   });
 

@@ -1,11 +1,12 @@
 import { type INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { GamePageSchema } from '@indie/contracts';
+import { ApiErrorSchema, GameDetailSchema, GamePageSchema } from '@indie/contracts';
 import request from 'supertest';
 import type { App } from 'supertest/types';
+import { seedReferenceData } from '../prisma/seed/reference-data';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/configure-app';
-import { ReleaseStatus } from '../src/generated/prisma/client';
+import { ReleaseStatus, StudioCountrySource } from '../src/generated/prisma/client';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { CatalogBuilder } from './support/catalog-builder';
 
@@ -20,6 +21,7 @@ describe('Catálogo', () => {
 
     const prisma = app.get(PrismaService);
     await prisma.$executeRaw`TRUNCATE "IngestionRun", "Game", "Company", "Feature" CASCADE`;
+    await seedReferenceData(prisma);
     const catalog = new CatalogBuilder(prisma);
     const { UPCOMING } = ReleaseStatus;
     for (const game of [
@@ -29,6 +31,14 @@ describe('Catálogo', () => {
         themes: ['Action'],
         popularity: 0.9,
         releasedOn: '2018-01-25',
+        storeUrl: 'https://www.celestegame.com',
+        studioCountry: { alpha2: 'CA', source: StudioCountrySource.IGDB },
+        developers: ['Maddy Makes Games', 'Extremely OK Games'],
+        publishers: ['Maddy Makes Games'],
+        languages: [
+          { locale: 'pt-BR', interface: true, subtitles: true },
+          { locale: 'en-US', interface: true, subtitles: true, audio: true },
+        ],
       },
       {
         name: 'Hollow Knight',
@@ -190,6 +200,71 @@ describe('Catálogo', () => {
       expect(response.body).toMatchObject({
         statusCode: 400,
         message: ['pageSize: O tamanho da página vai até 48.'],
+      });
+    });
+  });
+
+  describe('GET /api/games/:slug', () => {
+    const game = (slug: string) => request(app.getHttpServer()).get(`/api/games/${slug}`);
+
+    it('é público e traz a ficha com empresas, país, idiomas e link oficial, sem o Indie', async () => {
+      const response = await game('celeste').expect(200);
+
+      expect(GameDetailSchema.parse(response.body)).toEqual({
+        slug: 'celeste',
+        name: 'Celeste',
+        coverImageId: 'cover-celeste',
+        releaseStatus: 'RELEASED',
+        firstReleaseDate: '2018-01-25',
+        genres: [
+          { slug: 'adventure', name: 'Aventura' },
+          { slug: 'platform', name: 'Plataforma' },
+        ],
+        summary: 'Resumo de Celeste',
+        themes: [{ slug: 'action', name: 'Ação' }],
+        developers: ['Extremely OK Games', 'Maddy Makes Games'],
+        publishers: ['Maddy Makes Games'],
+        studioCountry: { code: 'CA', name: 'Canadá', source: 'IGDB' },
+        languages: [
+          { locale: 'en-US', name: 'Inglês', interface: true, subtitles: true, audio: true },
+          {
+            locale: 'pt-BR',
+            name: 'Português (Brasil)',
+            interface: true,
+            subtitles: true,
+            audio: false,
+          },
+        ],
+        officialUrl: 'https://www.celestegame.com',
+      });
+    });
+
+    it('jogo sem os dados opcionais traz listas vazias e nulos', async () => {
+      const response = await game('hollow-knight-silksong').expect(200);
+
+      expect(GameDetailSchema.parse(response.body)).toMatchObject({
+        releaseStatus: 'UPCOMING',
+        firstReleaseDate: null,
+        developers: [],
+        publishers: [],
+        studioCountry: null,
+        languages: [],
+        officialUrl: null,
+      });
+    });
+
+    it.each([
+      ['slug inexistente', 'nao-existe'],
+      ['jogo fora do catálogo', 'jogo-rejeitado'],
+    ])('%s responde 404 no formato de erro padrão', async (_, slug) => {
+      const response = await game(slug);
+
+      expect(response.status).toBe(404);
+      expect(ApiErrorSchema.safeParse(response.body).success).toBe(true);
+      expect(response.body).toMatchObject({
+        statusCode: 404,
+        error: 'Not Found',
+        message: 'Jogo não encontrado.',
       });
     });
   });
