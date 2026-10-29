@@ -42,7 +42,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 
 ## E3 — Descoberta e interface pública (S6)
 
-- [ ] **B-20** (M) `GET /games` com busca, filtros (gênero, tema, situação), paginação; `GET /features`
+- [x] **B-20** (M) `GET /games` com busca, filtros (gênero, tema, situação), paginação; `GET /features`
 - [ ] **B-21** (P) Filtros de idioma português e país do estúdio (país só lista opções com 20+ jogos)
 - [ ] **B-22** (P) `GET /games/:slug`
 - [ ] **B-23** (M) Página de catálogo com filtros na URL

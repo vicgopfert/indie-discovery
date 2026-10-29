@@ -207,11 +207,11 @@ Prefixo global `/api`. Respostas em JSON; erros sempre no mesmo formato.
 | `POST /api/auth/login` | Público | Login; define o cookie de sessão |
 | `POST /api/auth/logout` | Autenticado | Encerra a sessão |
 | `GET /api/auth/me` | Autenticado | Usuário atual |
-| `GET /api/games` | Público | Busca com filtros e paginação |
+| `GET /api/games?q=&genre=&theme=&status=&sort=&page=&pageSize=` | Público | Busca com filtros e paginação: `q` é parte do nome (até 100 caracteres); `genre` e `theme` são slugs, repetíveis até 5 vezes, e o jogo precisa ter todos; `status` é `released` ou `upcoming`; `sort` é `popular` (padrão), `newest` (sem data no fim) ou `name`, sempre com desempate por nome e id; `pageSize` vai de 1 a 48 (padrão 24) e `page` de 1 a 1000. Responde `{ items, page, pageSize, total, totalPages }`, com nome, capa, situação, data e gêneros de cada jogo |
 | `GET /api/games/:slug` | Público | Ficha do jogo |
 | `GET /api/collections` | Público | Coleções culturais curadas |
 | `GET /api/collections/:slug` | Público | Jogos de uma coleção, com paginação |
-| `GET /api/features?type=GENRE\|THEME` | Público | Opções de filtro e de partida a frio |
+| `GET /api/features?type=genre\|theme` | Público | Opções de filtro e de partida a frio: slug, nome em português e quantos jogos do catálogo têm o atributo, em ordem alfabética. **Alterado no B-20 (27/10/2026):** o tipo é em minúsculas, como os demais parâmetros de URL |
 | `PUT /api/me/ratings/:gameId` / `DELETE` | Autenticado | Cria, altera ou remove avaliação |
 | `PUT /api/me/lists/:listType/:gameId` / `DELETE` | Autenticado | Adiciona ou remove de lista |
 | `GET /api/me/library` | Autenticado | Avaliações e listas do usuário |
@@ -512,7 +512,8 @@ O diagrama entidade-relacionamento completo está na seção 11 (diagrama 3).
 | `slug` único em `Game` | URLs legíveis e estáveis para a ficha do jogo e para buscadores |
 | Jogo rejeitado na primeira avaliação não é gravado; jogo gravado que passa a ser rejeitado fica com `inCatalog = false`, com o veredito (`criteriaVerdict`) e a versão do critério (`criteriaVersion`, hash do arquivo) | Avaliações e listas apontam para o jogo, então ele não é apagado. O campo se chama `inCatalog`, não `isIndie`, porque o jogo sai também por motivos que não dizem nada sobre ser indie (cancelado, ficha incompleta, sem sinal de interesse); as consultas da interface sempre filtram `inCatalog = true` (renomeado no B-13) |
 | Índices em `Game(inCatalog, releaseStatus)`, `Game(studioCountryCode)`, `GameFeature(featureId)`, `Company(countryCode)` e `Session(expiresAt)` | Correspondem aos filtros do catálogo, à busca por atributo e à limpeza de sessões |
-| Busca textual por nome com `ILIKE` no P0 | Suficiente para cerca de 20 mil jogos; busca *full-text* do PostgreSQL fica como P2 |
+| Busca textual por nome com `ILIKE` no P0 | Suficiente para cerca de 20 mil jogos; busca *full-text* do PostgreSQL fica como P2. O Prisma repassa o texto sem escapar, então `%`, `_` e `\` digitados são escapados pela API (B-20). A busca diferencia acentos ("pokemon" não acha "Pokémon"); resolver isso exige a extensão `unaccent` ou a busca *full-text* |
+| Nomes de gênero e tema traduzidos na leitura, por um arquivo versionado (`config/feature-labels.json`) indexado pelo slug | A IGDB entrega os nomes em inglês e a interface é em português. O banco continua igual à IGDB; um slug sem tradução aparece com o nome original, e a mesma tradução serve à explicação das recomendações. O gênero Indie, presente em todos os jogos do catálogo, fica fora das opções de filtro e dos cards, porque não distingue um jogo de outro (B-20) |
 | Recomendações não são persistidas | São calculadas na hora a partir do índice em memória; persistir criaria problema de invalidação sem benefício no MVP |
 | Imagens de capa não são armazenadas | Guarda-se só o identificador da imagem; a URL é montada para a CDN de imagens da IGDB, com atribuição visível. Cada tela pede o tamanho que a própria CDN já serve (`t_cover_small`, `t_cover_big`…), carregado sob demanda, sem passar pelo otimizador de imagens da Vercel: a cota mensal do plano gratuito pode não comportar um catálogo de cerca de 20 mil jogos. Jogo sem capa mostra uma imagem substituta. Se a CDN da IGDB cair, somem só as capas |
 | Fotos de perfil não são enviadas pelo usuário | O avatar é feito com as iniciais do nome, no frontend. No P1, uma conta com Steam (F-31) ou Google (F-32) vinculado usa o avatar de lá, guardando só a URL em `User.avatarUrl`, com a origem em `User.avatarSource`. Upload próprio é P2 (F-33): o disco do Render é apagado a cada deploy e o banco não é lugar de arquivo, então ele exige um serviço de armazenamento de objetos, além de validação, redimensionamento e exclusão junto com a conta |
