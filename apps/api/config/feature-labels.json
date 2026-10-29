@@ -1,0 +1,59 @@
+{
+  "labelsRationale": "A IGDB entrega gêneros e temas em inglês, e a interface é em português. O banco guarda o nome original; a tradução é aplicada na leitura, pelo slug. Um slug sem tradução aparece com o nome da IGDB.",
+  "labels": {
+    "GENRE": {
+      "adventure": "Aventura",
+      "arcade": "Arcade",
+      "card-board-game": "Cartas e tabuleiro",
+      "fighting": "Luta",
+      "hack-and-slash-beat-em-up": "Hack and slash/Beat 'em up",
+      "indie": "Indie",
+      "moba": "MOBA",
+      "music": "Música",
+      "pinball": "Pinball",
+      "platform": "Plataforma",
+      "point-and-click": "Point-and-click",
+      "puzzle": "Quebra-cabeça",
+      "quiz-trivia": "Perguntas e respostas",
+      "racing": "Corrida",
+      "real-time-strategy-rts": "Estratégia em tempo real (RTS)",
+      "role-playing-rpg": "RPG",
+      "shooter": "Tiro",
+      "simulator": "Simulação",
+      "sport": "Esporte",
+      "strategy": "Estratégia",
+      "tactical": "Tático",
+      "turn-based-strategy-tbs": "Estratégia por turnos (TBS)",
+      "visual-novel": "Visual novel"
+    },
+    "THEME": {
+      "4x-explore-expand-exploit-and-exterminate": "4X",
+      "action": "Ação",
+      "business": "Negócios",
+      "comedy": "Comédia",
+      "drama": "Drama",
+      "educational": "Educativo",
+      "erotic": "Erótico",
+      "fantasy": "Fantasia",
+      "historical": "Histórico",
+      "horror": "Terror",
+      "kids": "Infantil",
+      "mystery": "Mistério",
+      "non-fiction": "Não ficção",
+      "open-world": "Mundo aberto",
+      "party": "Festa",
+      "romance": "Romance",
+      "sandbox": "Sandbox",
+      "science-fiction": "Ficção científica",
+      "stealth": "Furtivo",
+      "survival": "Sobrevivência",
+      "thriller": "Suspense",
+      "warfare": "Guerra"
+    }
+  },
+  "hiddenFromFilters": {
+    "GENRE": ["indie"],
+    "THEME": []
+  },
+  "hiddenRationale": "O gênero Indie está em todos os jogos do catálogo (20.111 de 20.111 em 27/10/2026): como filtro não filtra nada, e no card só ocupa espaço. Na recomendação ele já cai pelo limite de 80% de frequência do TF-IDF."
+}
