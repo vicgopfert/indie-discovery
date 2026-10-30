@@ -28,7 +28,8 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [x] **B-14** (P) Carga inicial do catálogo real em produção (depois do B-60) — 20.051 jogos no Neon pelo workflow manual "Ingestão", banco de 69 MB, 0 alertas; a segunda execução regravou só 3 linhas (`docs/ingestao.md`)
 - [x] **B-60** (P) Medir a regra de controle do critério indie: amostras de ~10 excluídos e ~10 aceitos, classificadas à mão — 10 de 10 exclusões corretas; achados: lacuna na lista de grandes (teste de entrada escrito, 5 empresas acrescentadas, 106 avaliadas e recusadas) e aceitos sem desenvolvedora (1,54% das avaliações; 23,15% dos jogos), escalado ao M0
 - [x] **B-59** (M, estimado P) Medir falsos negativos do critério indie: sortear 8 a 10 jogos excluídos pela regra e classificar à mão — taxa de 8 em 10 levou à troca da regra de publisher pela de controle do estúdio
-- [ ] **B-61** (P) Decidir o "Want to Play" como sinal de interesse, com a carência pós-lançamento corrigida medida lado a lado (tabela em `docs/ingestao.md`): contagem mínima de 5 acrescentaria 2.564 jogos (cerca de 13%) e é candidata a substituir a carência para os recém-lançados
+- [x] **B-61** (P) Decidir o "Want to Play" como sinal de interesse, com a carência pós-lançamento corrigida medida lado a lado — decidido em 30/10/2026: contagem de 5 pessoas ou mais como sinal a mais (+2.582 jogos, 12,8%), carência mantida; trocar a carência foi descartado, porque o "Want to Play" mantém 0 dos 329 jogos em carência (`docs/criterio-indie-casos.md`)
+- [ ] **B-69** (M) "Want to Play" com contagem de 5 pessoas ou mais como sinal de interesse na ingestão; medir entre duas ingestões quantos jogos ficaram abaixo do limite depois de estarem acima. **Precede o B-37 e as medições do B-62:** o catálogo cresce cerca de 13%, o que muda IDF, vetores, popularidade máxima e a cobertura de etiquetas do 8.9
 - [x] **B-56** (P) Enriquecimento do país do estúdio pelo Wikidata na ingestão — 47,8% do catálogo com país (39,2% IGDB + 8,6% Wikidata), 250 jogos brasileiros, 48 países com 20 jogos ou mais
 
 ## E2 — Contas e autenticação (S5)
@@ -63,14 +64,14 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 
 - [ ] **B-31** (M) `ContentIndex`: carga dos vetores na inicialização + recarga protegida por segredo; decidir se `tfidfWeight` continua persistido ou se os pesos são reconstruídos do IDF na inicialização (medido em 25/10/2026: uma execução em outro dia regravou 135 mil das 189 mil linhas de `GameFeature`)
   - Resolver as dependências entre pastas deixadas pela reorganização da ingestão: `recommendation/tfidf.ts` importa `MappedFeature` do mapeador da IGDB; `igdb/igdb-catalog.source.ts` importa tipos de `review-flags/`; `persistence/` importa `StoredGame` e `ReviewFlag` de `review-flags/`; `criteria/`, `review-flags/` e `persistence/` dependem de `MappedGame`, definido no mapeador da IGDB; `igdb/` importa `ingestion-config.ts` da raiz do módulo
-- [ ] **B-62** (M) Modo de jogo e perspectiva como quarto bloco do vetor (fatia em config, fora da explicação ao jogador); a fatia só fica acima de zero se melhorar o acerto@10 no B-37
+- [ ] **B-62** (M) Modo de jogo e perspectiva como quarto bloco do vetor (fatia em config, fora da explicação ao jogador); a fatia só fica acima de zero se melhorar o acerto@10 no B-37; medir depois do B-69
 - [ ] **B-63** (M) Palavras do resumo como bloco do vetor, em TF-IDF com pesos em memória na API (fora da explicação por enquanto); a fatia só fica acima de zero se melhorar o acerto@10 no B-37; primeiro corte depois dos P1
 - [ ] **B-32** (G) Núcleo de pontuação em funções puras (perfil ponderado, cosseno, popularidade, seleção, desempate, explicação)
 - [ ] **B-33** (M) `GenerateRecommendationsUseCase` + `GET /recommendations` — **marco M2**
 - [ ] **B-34** (M) Partida a frio (gêneros/temas + avaliação opcional de até 4 jogos)
 - [ ] **B-35** (M) Página de recomendações com motivo e seletor de modo
 - [ ] **B-36** (P) E2e de recomendação + teste de determinismo
-- [ ] **B-37** (M) Script de avaliação offline + calibração dos pesos
+- [ ] **B-37** (M) Script de avaliação offline + calibração dos pesos (depois do B-69)
 
 ## E6 — Implantação (S2, contínuo)
 
