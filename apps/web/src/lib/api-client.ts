@@ -1,5 +1,6 @@
 import { ApiErrorSchema } from '@indie/contracts';
 import type { z } from 'zod';
+import { apiUrl } from '@/config/api';
 
 export const UNEXPECTED_ERROR_MESSAGE =
   'Não foi possível falar com o servidor; tente de novo em instantes.';
@@ -52,10 +53,15 @@ async function send(path: string, { method = 'GET', body }: RequestOptions) {
     init.body = JSON.stringify(body);
   }
   try {
-    return await fetch(`/api${path}`, init);
+    return await fetch(`${apiBase()}${path}`, init);
   } catch {
     throw new ApiRequestError(0, [UNEXPECTED_ERROR_MESSAGE]);
   }
+}
+
+// No navegador, a mesma origem (o rewrite repassa); no servidor, a API direto.
+function apiBase() {
+  return typeof window === 'undefined' ? `${apiUrl}/api` : '/api';
 }
 
 async function toError(response: Response) {

@@ -1,6 +1,5 @@
 import type { NextConfig } from 'next';
-
-const apiUrl = process.env.API_URL ?? 'http://localhost:3001';
+import { apiUrl } from './src/config/api';
 
 const nextConfig: NextConfig = {
   // Mesma origem para o navegador: o cookie de sessão fica first-party.

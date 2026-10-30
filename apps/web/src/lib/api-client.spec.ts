@@ -1,5 +1,5 @@
 import { UserSchema } from '@indie/contracts';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { apiError, sampleUser, stubFetch } from '@/test/fetch';
 import { ApiRequestError, apiFetch, UNEXPECTED_ERROR_MESSAGE } from './api-client';
 
@@ -25,6 +25,15 @@ describe('apiFetch', () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: 'a@b.c' }),
     });
+  });
+
+  it('no servidor, chama a API direto, sem o rewrite', async () => {
+    vi.stubGlobal('window', undefined);
+    const fetchMock = stubFetch(() => Response.json(sampleUser));
+
+    await apiFetch('/auth/me', { schema: UserSchema });
+
+    expect(fetchMock).toHaveBeenCalledWith('http://localhost:3001/api/auth/me', expect.anything());
   });
 
   it('devolve o corpo validado pelo schema', async () => {
