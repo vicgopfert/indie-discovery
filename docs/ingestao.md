@@ -25,9 +25,12 @@ composição do catálogo, os alertas e o tamanho do banco.
 2. Busca o conjunto candidato inteiro (`config/ingestion.json`, recorte R4 do M0), mapeia
    e avalia cada jogo pelo critério indie com a data da execução. **Todo jogo já gravado é
    reavaliado**, não só os novos.
-3. Sobe as cadeias de empresa-mãe das desenvolvedoras dos jogos aceitos.
-4. Busca o "Want to Play" dos aceitos e reconstrói a contagem (seção "Popularidade").
-   Busca no Wikidata o país dos jogos sem país na IGDB (seção "País do estúdio").
+3. Busca o "Want to Play" dos aceitos e dos rejeitados só por falta de sinal e reconstrói
+   a contagem (seção "Popularidade"). Quem chega à contagem mínima do critério é reavaliado
+   com ela: em memória, se já estava gravado, ou depois de buscado de novo pelo id (seção
+   "'Want to Play' como sinal de interesse").
+4. Sobe as cadeias de empresa-mãe das desenvolvedoras dos jogos aceitos. Busca no
+   Wikidata o país dos jogos sem país na IGDB (seção "País do estúdio").
 5. Calcula IDF e vetores TF-IDF sobre o catálogo aceito.
 6. Detecta os alertas de revisão.
 7. Grava tudo numa única transação e fecha a execução com contagens, escala da
@@ -59,7 +62,7 @@ data da avaliação fica em `IngestionRun.evaluatedAt`.
 ## Restrições de execução
 
 - **Nunca rodar a ingestão dentro do processo da API.** O pico de memória medido fica entre
-  540 e 610 MB, acima dos 512 MB do Render. A ingestão roda pela linha de comando ou, no
+  540 e 615 MB, acima dos 512 MB do Render. A ingestão roda pela linha de comando ou, no
   B-54, no GitHub Actions.
 - **A transação cobre só a gravação.** A busca e o cálculo terminam antes de ela abrir. A
   gravação do catálogo inteiro levou de 8 a 16 s no banco local, e o limite é de 5 min.
@@ -131,7 +134,7 @@ do filtro exige (B-21). O M0 estimava cerca de 50% de cobertura, a partir de uma
 | `PARENT_OUTSIDE_MAJORS` | Desenvolvedora com empresa-mãe na IGDB fora da lista de grandes e não revisada |
 | `PARENT_MAJOR_NOT_CONTROLLED` | Desenvolvedora sob uma grande, fora dos estúdios controlados e não revisada |
 | `RELEASE_DATE_ASSIGNED` | Jogo gravado sem data ganhou data de lançamento |
-| `VERDICT_CHANGED` | A reavaliação mudou o jogo de lado; o detalhe diz se a versão do critério mudou e se a saída foi pelo fim da carência pós-lançamento |
+| `VERDICT_CHANGED` | A reavaliação mudou o jogo de lado; o detalhe diz se a versão do critério mudou, se a saída foi pelo fim da carência pós-lançamento (`postLaunchGraceEnded`) e se foi pela queda do "Want to Play" abaixo do mínimo, com a contagem gravada no mínimo ou acima (`wantToPlayDropped`) |
 | `LEFT_CANDIDATE_SET` | Jogo do catálogo não voltou na busca; o detalhe separa `LOST_INDIE_GENRE`, `OUT_OF_SCOPE` e `NOT_FOUND` |
 | `NO_DEVELOPER_VISIBLE` | Jogo do catálogo sem desenvolvedora creditada, com pelo menos `noDeveloperReview.minRatings` avaliações (20) ou publisher da lista de grandes, fora dos jogos já revisados (decisão do M0, seção 8.10) |
 
@@ -152,13 +155,45 @@ primeira depois da separação; os alertas anteriores ficam como estão.
 ## Popularidade
 
 O "Want to Play" da IGDB é a fração da base de usuários que marcou o jogo, não uma
-contagem. A execução usa como unidade `u` a menor fração positiva do catálogo aceito,
-confere que todo valor é múltiplo inteiro dela e calcula
+contagem. A execução usa como unidade `u` a menor fração positiva entre os aceitos e os
+rejeitados só por falta de sinal (o conjunto em que a contagem decide a entrada), confere
+que todo valor é múltiplo inteiro dela e calcula
 `pop_j = log(1 + p_j/u) / log(1 + p_max/u)`, com `p_max` do catálogo aceito. O jogo guarda a
 contagem (`popularityCount`), e a execução guarda a unidade. A unidade, o
 máximo e a mediana da contagem ficam no `IngestionRun`. A premissa de que a menor fração
 corresponde a uma pessoa vale porque milhares de jogos têm contagem 1; se a quantização
-mudar, a execução falha em vez de normalizar errado.
+mudar, a execução falha em vez de normalizar errado. O catálogo final precisa chegar à
+mesma unidade, ou a contagem gravada não seria a que decidiu a entrada: se divergir, a
+execução também falha.
+
+## "Want to Play" como sinal de interesse (B-69)
+
+A primeira passada guarda o id de cada jogo rejeitado só por falta de sinal (cerca de
+90 mil números), não o jogo mapeado, para não somar centenas de MB ao pico de memória.
+Depois da busca do "Want to Play", quem tem a contagem mínima (`wantToPlayMinCount`, 5) é
+reavaliado pelo mesmo `evaluateIndieCriteria`, com a contagem no contexto: em memória, se o
+jogo já estava gravado, ou depois de buscado de novo pelo id (cerca de 6 consultas).
+
+Duas cargas no banco local em 30/10/2026, sobre o catálogo de 27/10:
+
+| | Primeira | Segunda |
+| --- | --- | --- |
+| Duração | 16 min 34 s (HTTP 504 da IGDB em seis consultas, todas refeitas) | 8 min 42 s |
+| Gravação | 14 s | 9 s |
+| Pico de memória | 609 MB | 614 MB |
+| Catálogo | 22.767 jogos (eram 20.111) | 22.767 jogos |
+| Decididos pelo "Want to Play" | 2.582 | 2.346 (236 já entram pela carência) |
+| Popularidade | unidade 1/885.310, máximo 764 pessoas, mediana 6 | igual |
+| Vetores com até 2 etiquetas | 17,4% | igual |
+| Alertas | 33: 22 `RELEASE_DATE_ASSIGNED`, 2 `VERDICT_CHANGED`, 8 `PARENT_OUTSIDE_MAJORS` e 1 `PARENT_MAJOR_NOT_CONTROLLED` | 9: os mesmos 9 de empresa |
+
+Os dois `VERDICT_CHANGED` são saídas por falta de sinal sem fim de carência nem queda do
+"Want to Play" (*MarsCity3026* e *Starcult Night Twisted Age*). Os nove alertas de empresa
+vêm das desenvolvedoras dos jogos que entraram e foram revisados no mesmo item: a
+*Palindrome Interactive*, subsidiária integral da Embracer desde 2020, entrou nos estúdios
+controlados, e *Shadowveil: Legend of The Five Rings* sai do catálogo na próxima execução;
+as oito empresas-mãe fora da lista de grandes foram recusadas pelo teste de entrada
+(`docs/criterio-indie-casos.md`).
 
 ## Cargas reais (banco local, 24/10/2026)
 

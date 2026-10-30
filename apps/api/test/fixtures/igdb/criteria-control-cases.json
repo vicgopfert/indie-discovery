@@ -5483,5 +5483,230 @@
         "language_support_type": 3
       }
     ]
+  },
+  {
+    "id": 321163,
+    "cover": {
+      "id": 419858,
+      "image_id": "co8zyq"
+    },
+    "first_release_date": 1741046400,
+    "genres": [
+      {
+        "id": 12,
+        "name": "Role-playing (RPG)"
+      },
+      {
+        "id": 15,
+        "name": "Strategy"
+      },
+      {
+        "id": 16,
+        "name": "Turn-based strategy (TBS)"
+      },
+      {
+        "id": 31,
+        "name": "Adventure"
+      },
+      {
+        "id": 32,
+        "name": "Indie"
+      },
+      {
+        "id": 35,
+        "name": "Card & Board Game"
+      }
+    ],
+    "involved_companies": [
+      {
+        "id": 293343,
+        "company": {
+          "id": 17755,
+          "country": 752,
+          "name": "Palindrome Interactive"
+        },
+        "developer": true,
+        "publisher": true
+      }
+    ],
+    "keywords": [
+      {
+        "id": 38722,
+        "name": "hex grid"
+      }
+    ],
+    "name": "Shadowveil: Legend of The Five Rings",
+    "slug": "shadowveil-legend-of-the-five-rings",
+    "summary": "Recruit and command a party of samurai on expeditions into the Shadowlands of the Legend of the Five Rings universe. Gain experience and cards in battle to develop units and create powerful combat combinations in this strategic roguelite.",
+    "themes": [
+      {
+        "id": 17,
+        "name": "Fantasy"
+      }
+    ],
+    "websites": [
+      {
+        "id": 709019,
+        "url": "https://discord.gg/invite/c7ZPGYD3UC",
+        "type": 18
+      },
+      {
+        "id": 687746,
+        "url": "https://www.palindromeinteractive.com/shadowveil",
+        "type": 1
+      },
+      {
+        "id": 687747,
+        "url": "https://www.youtube.com/@palindromeinteractive",
+        "type": 9
+      },
+      {
+        "id": 687748,
+        "url": "https://www.facebook.com/PalindromeInteractive/",
+        "type": 4
+      },
+      {
+        "id": 884553,
+        "url": "https://www.instagram.com/playshadowveil/",
+        "type": 8
+      },
+      {
+        "id": 687749,
+        "url": "https://twitter.com/palindrome_int",
+        "type": 5
+      },
+      {
+        "id": 687745,
+        "url": "https://store.steampowered.com/app/2536960/Shadowveil_Legend_of_The_Five_Rings/",
+        "type": 13
+      },
+      {
+        "id": 709020,
+        "url": "https://www.reddit.com/r/Shadowveil_L5R/",
+        "type": 14
+      },
+      {
+        "id": 709018,
+        "url": "https://twitch.tv/shadowveil-legend-of-the-five-rings",
+        "type": 6
+      },
+      {
+        "id": 709021,
+        "url": "https://bsky.app/profile/shadowveil-l5r.bsky.social",
+        "type": 19
+      },
+      {
+        "id": 1096554,
+        "url": "https://en.wikipedia.org/wiki/Shadowveil:_Legend_of_the_Five_Rings",
+        "type": 3
+      }
+    ],
+    "language_supports": [
+      {
+        "id": 1112104,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1112105,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1112106,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1112107,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1112108,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1158198,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 1
+      },
+      {
+        "id": 1158199,
+        "language": {
+          "id": 7
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1158200,
+        "language": {
+          "id": 12
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1158201,
+        "language": {
+          "id": 15
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1158202,
+        "language": {
+          "id": 27
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1158203,
+        "language": {
+          "id": 9
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1158204,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1158205,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 2
+      },
+      {
+        "id": 1158206,
+        "language": {
+          "id": 21
+        },
+        "language_support_type": 3
+      },
+      {
+        "id": 1158207,
+        "language": {
+          "id": 2
+        },
+        "language_support_type": 3
+      }
+    ]
   }
 ]

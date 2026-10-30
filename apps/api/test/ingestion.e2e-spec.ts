@@ -85,10 +85,13 @@ class FakeCatalog {
       const limit = Number(/limit (\d+)/.exec(body)![1]);
       return this.games.filter((g) => g.id > after).slice(0, limit);
     }
-    if (endpoint === 'games') {
+    if (endpoint === 'games' && body.startsWith('fields id,genres;')) {
       return this.games
         .filter((g) => idsIn(body, 'id').includes(g.id))
         .map((g) => ({ id: g.id, genres: (g.genres as { id: number }[]).map((x) => x.id) }));
+    }
+    if (endpoint === 'games') {
+      return this.games.filter((g) => idsIn(body, 'id').includes(g.id));
     }
     if (endpoint === 'companies') {
       return idsIn(body, 'id').flatMap((id) => {
@@ -345,6 +348,56 @@ describe('Ingestão', () => {
       (f) => f.igdbId === kept!.id && f.kind === ReviewFlagKind.VERDICT_CHANGED,
     );
     expect(flag?.detail).toMatchObject({ postLaunchGraceEnded: true, criteriaChanged: false });
+  });
+
+  describe('"Want to Play" como sinal de interesse', () => {
+    const [target, other] = accepted.filter((g) => g.first_release_date !== undefined);
+    const raw = (id: number) => catalog.games.find((g) => g.id === id)!;
+    // Lançado desde 2015, sem avaliações nem hypes: só o "Want to Play" pode dar sinal.
+    const silence = (id: number) => {
+      const game = raw(id);
+      game.first_release_date = Date.UTC(2019, 4, 1) / 1000;
+      delete game.total_rating_count;
+      delete game.hypes;
+    };
+    const wantToPlay = (id: number, count: number) => catalog.wantToPlay.set(id, count * UNIT);
+
+    it('entra com 5 pessoas, buscado de novo pelo id; com 4, nem é gravado', async () => {
+      silence(target!.id);
+      silence(other!.id);
+      wantToPlay(target!.id, 5);
+      wantToPlay(other!.id, 4);
+
+      await ingest.execute(NOW);
+
+      expect(await gameRow(target!.id)).toMatchObject({ inCatalog: true, popularityCount: 5 });
+      expect(await prisma.game.findUnique({ where: { igdbId: other!.id } })).toBeNull();
+      const refetched = server.requests.filter(
+        ({ endpoint, body }) =>
+          endpoint === 'games' && body.includes('summary') && body.includes(' id = ('),
+      );
+      expect(refetched.flatMap(({ body }) => idsIn(body, 'id'))).toContain(target!.id);
+    });
+
+    it('sai quando a contagem cai abaixo do mínimo, com o alerta, e volta quando sobe', async () => {
+      silence(target!.id);
+      wantToPlay(target!.id, 6);
+      await ingest.execute(NOW);
+
+      wantToPlay(target!.id, 3);
+      const dropped = await ingest.execute(NOW);
+
+      expect(await gameRow(target!.id)).toMatchObject({ inCatalog: false });
+      const flag = (await flagsOf(dropped.runId)).find(
+        (f) => f.igdbId === target!.id && f.kind === ReviewFlagKind.VERDICT_CHANGED,
+      );
+      expect(flag?.detail).toMatchObject({ wantToPlayDropped: true, criteriaChanged: false });
+
+      wantToPlay(target!.id, 7);
+      await ingest.execute(NOW);
+
+      expect(await gameRow(target!.id)).toMatchObject({ inCatalog: true, popularityCount: 7 });
+    });
   });
 
   it('não desativa nada quando a busca vem muito menor que a anterior', async () => {

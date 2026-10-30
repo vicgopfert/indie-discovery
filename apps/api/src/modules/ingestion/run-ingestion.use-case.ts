@@ -14,7 +14,13 @@ import type {
   OutOfCatalogGame,
   RunOutcome,
 } from './persistence/ingestion.repository';
-import { normalizedPopularity, popularityScale, reconstructedCount } from './popularity/popularity';
+import {
+  catalogPopularityScale,
+  normalizedPopularity,
+  type PopularityScale,
+  popularityScale,
+  reconstructedCount,
+} from './popularity/popularity';
 import {
   detectReviewFlags,
   type EvaluatedGame,
@@ -91,7 +97,14 @@ export class RunIngestionUseCase {
     const { criteria, version } = this.settings.criteria;
     const previous = await this.repository.lastSucceededRun();
     const stored = await this.repository.storedGames(previous);
-    const { evaluated, fetchedIds } = await this.evaluateCandidates(now, stored, counts);
+    const firstPass = await this.evaluateCandidates(now, stored, counts);
+    const { evaluated, wantToPlay, signalScale } = await this.admitByWantToPlay(
+      now,
+      stored,
+      firstPass.evaluated,
+      firstPass.withoutSignal,
+    );
+    const { fetchedIds } = firstPass;
 
     const catalogEntries = evaluated.filter((e) => e.verdict.accepted);
     const companies = await this.source.companyGraph(
@@ -99,8 +112,10 @@ export class RunIngestionUseCase {
         game.companies.filter((c) => c.isDeveloper).map((c) => c.igdbId),
       ),
     );
-    const wantToPlay = await this.source.wantToPlay(catalogEntries.map(({ game }) => game.igdbId));
-    const scale = popularityScale(wantToPlay.values());
+    const scale = catalogPopularityScale(
+      catalogEntries.map(({ game }) => wantToPlay.get(game.igdbId) ?? 0),
+      signalScale,
+    );
     const countries = await this.wikidataCountries();
 
     const missing = [...stored.values()].filter((g) => g.inCatalog && !fetchedIds.has(g.igdbId));
@@ -195,8 +210,56 @@ export class RunIngestionUseCase {
     }
   }
 
+  // O "Want to Play" é buscado depois da primeira passada, dos aceitos e dos rejeitados só por
+  // falta de sinal. Quem chega à contagem mínima é reavaliado com ela pelo mesmo critério: em
+  // memória, se já estava gravado, ou depois de buscado de novo pelo id, se não estava.
+  private async admitByWantToPlay(
+    now: Date,
+    stored: ReadonlyMap<number, StoredGame>,
+    firstPass: EvaluatedGame[],
+    withoutSignal: number[],
+  ): Promise<{
+    evaluated: EvaluatedGame[];
+    wantToPlay: ReadonlyMap<number, number>;
+    signalScale: PopularityScale | null;
+  }> {
+    const { criteria } = this.settings.criteria;
+    const accepted = firstPass.filter((e) => e.verdict.accepted).map((e) => e.game.igdbId);
+    const wantToPlay = await this.source.wantToPlay([...accepted, ...withoutSignal]);
+    const signalScale = popularityScale(wantToPlay.values());
+
+    const countOf = (igdbId: number) =>
+      reconstructedCount(wantToPlay.get(igdbId) ?? 0, signalScale);
+    const reached = new Set(
+      withoutSignal.filter(
+        (igdbId) => countOf(igdbId) >= criteria.interestSignals.wantToPlayMinCount,
+      ),
+    );
+    const reevaluate = (game: MappedGame) =>
+      evaluateIndieCriteria(game, criteria, now, {
+        wasInCatalog: stored.get(game.igdbId)?.inCatalog ?? false,
+        wantToPlayCount: countOf(game.igdbId),
+      });
+
+    const evaluated = firstPass.map((entry) =>
+      reached.has(entry.game.igdbId) ? { ...entry, verdict: reevaluate(entry.game) } : entry,
+    );
+    const inMemory = new Set(firstPass.map((e) => e.game.igdbId));
+    const refetch = [...reached].filter((igdbId) => !inMemory.has(igdbId));
+    for (const record of await this.source.games(refetch)) {
+      const parsed = igdbGameSchema.safeParse(record);
+      if (!parsed.success) continue;
+      const game = mapIgdbGame(parsed.data, now);
+      const verdict = reevaluate(game);
+      if (verdict.accepted) evaluated.push({ game, verdict });
+    }
+    this.logger.log(`${reached.size} jogos entram pelo "Want to Play"`);
+    return { evaluated, wantToPlay, signalScale };
+  }
+
   // Guarda o jogo completo só quando ele vai para o catálogo ou já estava gravado: o conjunto
-  // candidato tem cerca de 130 mil jogos, e a maioria é rejeitada sem nunca ter sido gravada.
+  // candidato tem cerca de 130 mil jogos, e a maioria é rejeitada sem nunca ter sido gravada. Dos
+  // rejeitados só por falta de sinal, guarda o id, para buscar o "Want to Play" deles.
   private async evaluateCandidates(
     now: Date,
     stored: ReadonlyMap<number, StoredGame>,
@@ -205,6 +268,7 @@ export class RunIngestionUseCase {
     const { criteria } = this.settings.criteria;
     const evaluated: EvaluatedGame[] = [];
     const fetchedIds = new Set<number>();
+    const withoutSignal: number[] = [];
     for await (const page of this.source.candidates()) {
       for (const record of page) {
         counts.gamesFetched++;
@@ -219,6 +283,9 @@ export class RunIngestionUseCase {
           wasInCatalog: stored.get(game.igdbId)?.inCatalog ?? false,
         });
         if (verdict.accepted || stored.has(game.igdbId)) evaluated.push({ game, verdict });
+        if (!verdict.accepted && verdict.reason === 'NO_INTEREST_SIGNAL') {
+          withoutSignal.push(game.igdbId);
+        }
       }
       this.logger.log(`${counts.gamesFetched} jogos buscados`);
     }
@@ -230,7 +297,7 @@ export class RunIngestionUseCase {
           `acima do teto de ${maxInvalidRatio * 100}%; nada foi gravado`,
       );
     }
-    return { evaluated, fetchedIds };
+    return { evaluated, fetchedIds, withoutSignal };
   }
 
   private async planDeactivation(

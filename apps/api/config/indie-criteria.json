@@ -658,6 +658,15 @@
       "note": "Anúncio no E3 2018"
     },
     {
+      "igdbId": 17755,
+      "name": "Palindrome Interactive",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2020-08-13",
+      "source": "https://embracer.com/release/embracer-group-acquires-palindrome-interactive/",
+      "note": "Via Amplifier Game Invest, que tinha 50% desde 2017 e comprou o restante; Shadowveil: Legend of The Five Rings saiu em 04/03/2025 pela Amplifier Studios e pela THQ Nordic, do mesmo grupo (https://store.steampowered.com/app/2536960/), sem notícia de venda do estúdio (B-69)"
+    },
+    {
       "igdbId": 7212,
       "name": "Pieces Interactive",
       "ownerIgdbId": 42782,
@@ -836,7 +845,9 @@
   "interestSignals": {
     "ratingsOnlyBefore": "2015-01-01",
     "postLaunchGraceDays": 180,
-    "postLaunchGraceRationale": "Valor inicial, sem evidência. Só vale para jogo que estava no catálogo na execução anterior bem-sucedida: protege a passagem de por lançar a lançado, porque avaliações levam tempo para aparecer, e não admite jogo que nunca entrou. Na primeira carga ninguém tem carência. Dado para revisar o prazo: entre os lançados com ficha completa e sem sinal, 86% dos que saíram há 180 a 365 dias e 89% dos que saíram há 1 a 2 anos continuam sem sinal (B-13, 23/10/2026). O prazo não decide se o jogo é indie: só adia a exigência de sinal de interesse."
+    "postLaunchGraceRationale": "Valor inicial, sem evidência. Só vale para jogo que estava no catálogo na execução anterior bem-sucedida: protege a passagem de por lançar a lançado, porque avaliações levam tempo para aparecer, e não admite jogo que nunca entrou. Na primeira carga ninguém tem carência. Dado para revisar o prazo: entre os lançados com ficha completa e sem sinal, 86% dos que saíram há 180 a 365 dias e 89% dos que saíram há 1 a 2 anos continuam sem sinal (B-13, 23/10/2026). O prazo não decide se o jogo é indie: só adia a exigência de sinal de interesse.",
+    "wantToPlayMinCount": 5,
+    "wantToPlayRationale": "Contagem reconstruída do \"Want to Play\" (pessoas que marcaram o jogo), somada aos outros sinais; a carência continua. Medido no B-61 (30/10/2026): com 5 pessoas ou mais entram 2.582 jogos (+12,8%), com 15,4% de vetores de até 2 etiquetas, contra 17,6% do catálogo atual; com 1, 2 e 3 pessoas, os que entram têm 33,0%, 25,6% e 21,0%. 5 é o menor limite que não piora a distinção. O \"Want to Play\" não substitui a carência: mantém 0 dos 329 jogos que estavam nela. Tabela em docs/criterio-indie-casos.md."
   },
   "overridesPolicy": {
     "purpose": "As listas corrigem erros de classificação indie. Não sobrepõem o filtro de conteúdo (temas excluídos).",

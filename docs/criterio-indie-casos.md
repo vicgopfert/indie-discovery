@@ -28,8 +28,9 @@ Um jogo entra no catálogo quando:
    protege a passagem de "por lançar" a lançado, porque as avaliações levam tempo para
    aparecer, mas não admite jogo que nunca entrou. O prazo é um valor inicial sem
    evidência e não decide se o jogo é indie, só adia a exigência de sinal (B-13).
-   Decidido no B-61 e a implementar no B-69: o "Want to Play" com contagem de 5
-   pessoas ou mais também conta como sinal (seção "Sinal de interesse").
+   O "Want to Play" com contagem reconstruída de 5 pessoas ou mais
+   (`wantToPlayMinCount`) também conta como sinal, em qualquer situação e somado aos
+   outros (decidido no B-61, implementado no B-69; seção "Sinal de interesse").
 
 Para jogo anunciado sem data, a data de referência do item 2 é a da ingestão. Na
 coautoria, basta uma desenvolvedora controlada para excluir, e a data vale para cada
@@ -54,7 +55,7 @@ Krafton, NetEase, Kadokawa, NCSOFT, Disney, Warner e outras, com variantes de no
 entram como conglomerados AAA notórios, sem fonte de orçamento anexada. O campo deixa
 essa dependência visível.
 
-**Estúdios controlados.** A lista tem 58 estúdios, cada um com dona, tipo de controle
+**Estúdios controlados.** A lista tem 59 estúdios, cada um com dona, tipo de controle
 (`wholly_owned`, `majority` ou `acquired`, quando o release diz "acquires" sem
 percentual), data de aquisição, data de saída do grupo quando houver e fonte pública
 (release de aquisição ou notícia da época). A empresa-mãe registrada na IGDB só sugere
@@ -394,6 +395,16 @@ Ficam fora sem argumento para entrar, por não terem plataforma nem estúdio AAA
   mesmo nome (Cultic Games, Kodobur, Hero Concept, Desert Beagle, NEARstudios, Nebula
   Nova Games, NimbleGames e Enthariel Games).
 
+**Trazidas pelos alertas do B-69 (30/10/2026)**, com as desenvolvedoras dos jogos que
+entraram pelo "Want to Play". Recusadas pelo teste de entrada, sem plataforma nem estúdio
+AAA: Deppresick Team (equipe de mods de Source), Lejonbringa Egendomsyssla AB (empresa
+sueca de pequeno porte acima de Ace Maddox), Streamline Studios (codesenvolvimento e
+serviços, do fundador; trabalhar para jogos AAA não é controlar estúdio AAA), Puppet Combo
+(selo indie de terror), Polyp's Pond, Cathedral Studios e Re,AER (estúdios e selos
+pequenos). A entrada "NA", empresa-mãe de Game Draft Studio na IGDB, não é empresa, como
+"Independent". O nono alerta, *Palindrome Interactive*, era um estúdio controlado (seção
+seguinte).
+
 ## Sinal de interesse: "Want to Play" e carência (B-61)
 
 **Decidido em 30/10/2026: o "Want to Play" com contagem reconstruída de 5 pessoas ou
@@ -444,6 +455,11 @@ que chega a 5 pessoas durante a carência continua no catálogo depois dela.
 conteúdo aceito, os que seguem sem sinal são 84,2% dos lançados há até 180 dias, 85,9%
 dos lançados há 180 a 365 dias e 89,0% dos lançados há 1 a 2 anos (24/10/2026: 83,6%,
 86,1% e 88,9%).
+
+**Implementado no B-69 (30/10/2026).** Na carga local sobre o catálogo de 27/10, o
+catálogo foi de 20.111 para 22.767 jogos, com 2.582 decididos pelo "Want to Play", e 17,4%
+dos vetores ficaram com até 2 etiquetas, como na medição acima. Detalhes em
+`docs/ingestao.md`, seção "'Want to Play' como sinal de interesse".
 
 **A medir no B-69:** entre duas ingestões, quantos jogos ficaram com a contagem abaixo do
 limite depois de estarem acima. Se o número for relevante, o jogo pode ficar entrando e
@@ -519,6 +535,16 @@ pública, com prioridade para os casos em que o jogo mais recente do estúdio es
 menos de dois anos da compra. Esse guarda-corpo corrigiu três datas que a memória
 dava como certas: HandyGames (2018, não 2017), Tripwire e Tuxedo Labs (2022, não 2020
 e 2021).
+
+**Palindrome Interactive (B-69, 30/10/2026).** O alerta `PARENT_MAJOR_NOT_CONTROLLED`
+apareceu com *Shadowveil: Legend of The Five Rings*, que entrou pelo "Want to Play". A
+Amplifier Game Invest, da Embracer, tinha 50% do estúdio desde 2017 e comprou o restante
+em 13/08/2020, tornando-o subsidiária integral
+([release](https://embracer.com/release/embracer-group-acquires-palindrome-interactive/)).
+O jogo saiu em 04/03/2025 pela Amplifier Studios e pela THQ Nordic, do mesmo grupo
+([Steam](https://store.steampowered.com/app/2536960/)), e não há notícia de venda do
+estúdio nos desinvestimentos da Embracer entre 2023 e 2025. O estúdio entrou na lista
+(`wholly_owned`, desde 13/08/2020), o jogo sai do catálogo e virou caso de regressão.
 
 ### Erros da IGDB encontrados
 
@@ -650,8 +676,9 @@ candidato: a IGDB o classifica como Racing e Simulator, sem Indie.
 ## Limitações
 
 - **Estúdios comprados por conglomerados ficam fora a partir da compra.** DESTINYbit,
-  Frame Break, Green Tile Digital, Silent Games, Invisible Walls e Bitwave Games são
-  estúdios de 4 a 15 pessoas, comprados integralmente pela Embracer. O critério exclui
+  Frame Break, Green Tile Digital, Silent Games, Invisible Walls, Bitwave Games e
+  Palindrome Interactive são estúdios de 4 a 15 pessoas, comprados integralmente pela
+  Embracer. O critério exclui
   os jogos lançados depois da compra (*Dice Legacy*, *Lightyear Frontier*, *Locomoto*,
   *Empyreal*, *Gimmick! 2*) por causa da estrutura societária do dono, mesmo com o
   estúdio operando de forma autônoma. O mesmo vale para jogos conhecidos lançados

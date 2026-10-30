@@ -57,6 +57,7 @@ const stored = (changes: Partial<StoredGame> = {}): StoredGame => ({
   firstReleaseDate: new Date('2025-01-01T00:00:00Z'),
   criteriaVersion: 'v1',
   evaluatedAt: new Date('2026-10-01T00:00:00Z'),
+  popularityCount: 0,
   ...changes,
 });
 
@@ -225,7 +226,12 @@ describe('detectReviewFlags', () => {
       expect(flags).toMatchObject([
         {
           kind: ReviewFlagKind.VERDICT_CHANGED,
-          detail: { inCatalog: false, criteriaChanged: true, postLaunchGraceEnded: false },
+          detail: {
+            inCatalog: false,
+            criteriaChanged: true,
+            postLaunchGraceEnded: false,
+            wantToPlayDropped: false,
+          },
         },
       ]);
     });
@@ -251,6 +257,30 @@ describe('detectReviewFlags', () => {
         postLaunchGraceEnded: true,
         criteriaChanged: false,
       });
+    });
+
+    it.each([
+      [5, true],
+      [4, false],
+    ])(
+      'diz quando a saída foi pela queda do "Want to Play" (contagem gravada %i)',
+      (popularityCount, dropped) => {
+        const flags = detect({
+          evaluated: [{ game: game(), verdict: { accepted: false, reason: 'NO_INTEREST_SIGNAL' } }],
+          stored: new Map([[1, stored({ popularityCount })]]),
+        });
+
+        expect(flags[0]?.detail).toMatchObject({ wantToPlayDropped: dropped });
+      },
+    );
+
+    it('saída por outro motivo não conta como queda do "Want to Play"', () => {
+      const flags = detect({
+        evaluated: [{ game: game(), verdict: { accepted: false, reason: 'INCOMPLETE_ENTRY' } }],
+        stored: new Map([[1, stored({ popularityCount: 40 })]]),
+      });
+
+      expect(flags[0]?.detail).toMatchObject({ wantToPlayDropped: false });
     });
   });
 });
