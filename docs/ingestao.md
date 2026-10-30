@@ -247,7 +247,7 @@ do dobro da tabela viva, longe do limite de 1 GB do Neon. O dado responde à per
 os pesos persistidos são regravados quase inteiros a cada execução, enquanto o IDF de
 `Feature` (cerca de 4 mil linhas) basta para reconstruí-los na inicialização da API.
 
-## Medições para decisões pendentes (B-61)
+## Medições do B-61 (24/10/2026)
 
 **Quanto da carência se resolve sozinha.** O destino dos 3.151 jogos "por lançar" com data
 só aparece nas execuções depois da carga. Aproximação pelos jogos já lançados, com ficha
@@ -267,4 +267,9 @@ rejeitados só por falta de sinal:
 | **Total** | **89.793** | **20.386** | **9.211** | **2.564** |
 
 Aceitar qualquer valor positivo dobraria o catálogo; com contagem mínima de 5, ele
-cresceria cerca de 13%. A decisão é do B-61, ao lado da medição da carência.
+cresceria cerca de 13%.
+
+**Decidido no B-61 (30/10/2026):** o "Want to Play" com contagem de 5 pessoas ou mais
+passa a ser sinal de interesse, e a carência continua. A medição refeita, com a cobertura
+de etiquetas por limite e o motivo de manter a carência, está em
+`docs/criterio-indie-casos.md` (seção "Sinal de interesse"). A implementação é o B-69.

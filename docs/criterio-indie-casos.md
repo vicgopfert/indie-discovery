@@ -1,4 +1,4 @@
-# Critério indie — regra, casos reais e levantamento (B-11, B-59 e B-60)
+# Critério indie — regra, casos reais e levantamento (B-11, B-59, B-60 e B-61)
 
 O critério fica versionado em `apps/api/config/indie-criteria.json` e é aplicado na
 ingestão por `evaluateIndieCriteria` (`apps/api/src/modules/ingestion/criteria/indie-criteria.ts`; a leitura e a validação do arquivo ficam em `indie-criteria.config.ts`).
@@ -28,6 +28,8 @@ Um jogo entra no catálogo quando:
    protege a passagem de "por lançar" a lançado, porque as avaliações levam tempo para
    aparecer, mas não admite jogo que nunca entrou. O prazo é um valor inicial sem
    evidência e não decide se o jogo é indie, só adia a exigência de sinal (B-13).
+   Decidido no B-61 e a implementar no B-69: o "Want to Play" com contagem de 5
+   pessoas ou mais também conta como sinal (seção "Sinal de interesse").
 
 Para jogo anunciado sem data, a data de referência do item 2 é a da ingestão. Na
 coautoria, basta uma desenvolvedora controlada para excluir, e a data vale para cada
@@ -391,6 +393,66 @@ Ficam fora sem argumento para entrar, por não terem plataforma nem estúdio AAA
   empresa-mãe de 10 estúdios, e 8 cadeias em que a empresa é mãe de uma entrada com o
   mesmo nome (Cultic Games, Kodobur, Hero Concept, Desert Beagle, NEARstudios, Nebula
   Nova Games, NimbleGames e Enthariel Games).
+
+## Sinal de interesse: "Want to Play" e carência (B-61)
+
+**Decidido em 30/10/2026: o "Want to Play" com contagem reconstruída de 5 pessoas ou
+mais passa a ser sinal de interesse, somado aos atuais, e a carência de 180 dias
+continua.** A contagem é a mesma da popularidade (fração da IGDB dividida pela unidade da
+execução; ver `docs/ingestao.md`, seção "Popularidade"). A implementação é o B-69, que
+precede a calibração do B-37 e as medições do B-62: o catálogo cresce cerca de 13%, o
+que muda o IDF, os vetores, a popularidade máxima e a cobertura de etiquetas medida no
+relatório do M0 (seção 8.9). Calibrar antes obrigaria a refazer a calibração.
+
+**Medição** (IGDB em 30/10/2026): 131.183 candidatos, 20.183 aceitos e 90.302 rejeitados
+só por falta de sinal; unidade do "Want to Play" de 1/885.310, nenhum valor fora da grade.
+As etiquetas contam os atributos que sobram no vetor do TF-IDF de
+`config/recommendation.json`, com o IDF recalculado sobre o catálogo ampliado:
+
+| Contagem mínima (pessoas) | Entram | Catálogo | Crescimento | Entrantes com até 2 etiquetas | Catálogo com até 2 etiquetas |
+| --- | --- | --- | --- | --- | --- |
+| Hoje, sem "Want to Play" | — | 20.183 | — | — | 17,6% |
+| 1 | 20.585 | 40.768 | +102,0% | 6.800 (33,0%) | 25,4% |
+| 2 | 9.291 | 29.474 | +46,0% | 2.377 (25,6%) | 20,1% |
+| 3 | 5.477 | 25.660 | +27,1% | 1.152 (21,0%) | 18,3% |
+| **5** | **2.582** | **22.765** | **+12,8%** | **397 (15,4%)** | **17,4%** |
+| 10 | 804 | 20.987 | +4,0% | 89 (11,1%) | 17,4% |
+
+**A coluna das etiquetas justifica N = 5.** É o menor limite em que os jogos que entram
+são mais bem descritos que o catálogo atual (15,4% contra 17,6% com vetor de até 2
+etiquetas), e a fatia do catálogo inteiro não piora. Abaixo dele, o catálogo cresce com
+jogos que a recomendação mal distingue; com N = 10, a distinção também não piora, mas o
+catálogo cresce só 4%. Com N = 5, entram 2.413 jogos lançados desde 2015, 94 por lançar
+sem data e 75 lançados antes de 2015.
+
+**Amostra para conferência** (sorteio com semente fixa, todos sem avaliações nem
+`hypes`). Com 5 pessoas ou mais: *Interior Worlds* (8), *Diluvian Ultra* (36), *Faire
+Trade* (9), *Stuck in Time* (7), *The Hive* (14), *Abathor* (16), *Logic Bombs* (7),
+*Please Be Happy* (12), *Jawbreaker* (6) e *Lighthouse Keeper* (17). Os dez têm loja ou
+site e resumo coerente. Com 2 a 4 pessoas: *Spires of Morosith: Gossamer Sundered*, *Dire
+Echo* (sem desenvolvedora creditada), *Rip them Off*, *Super Toy Cars 2* e *Colorless
+Life*.
+
+**A opção C, trocar a carência pelo "Want to Play", foi descartada por medição.** Em
+30/10/2026, 329 jogos estavam no catálogo só pela carência, todos lançados entre 26 e
+30/10 (cerca de 65 por dia). Com N = 5, o "Want to Play" mantém **0** deles (com N = 1,
+50). Sem a carência, eles sairiam do catálogo no dia em que deixam o "Em breve", que é
+quando um jogo indie mais precisa de visibilidade. Com o "Want to Play" no critério, o jogo
+que chega a 5 pessoas durante a carência continua no catálogo depois dela.
+
+**A carência ainda adia a saída da maioria.** Entre os jogos lançados com ficha completa e
+conteúdo aceito, os que seguem sem sinal são 84,2% dos lançados há até 180 dias, 85,9%
+dos lançados há 180 a 365 dias e 89,0% dos lançados há 1 a 2 anos (24/10/2026: 83,6%,
+86,1% e 88,9%).
+
+**A medir no B-69:** entre duas ingestões, quantos jogos ficaram com a contagem abaixo do
+limite depois de estarem acima. Se o número for relevante, o jogo pode ficar entrando e
+saindo do catálogo; a decisão sobre isso vem com o número.
+
+**Pergunta em aberto, sem medição:** o jogo por lançar com data marcada entra só por ter
+data, sem nenhum sinal de interesse (3.152 jogos na carga de produção do B-14). Pelo padrão
+acima, a maioria sai 180 dias depois do lançamento. Exigir dele algum sinal (`hypes` ou
+"Want to Play") seria uma mudança de critério à parte.
 
 ## Coautoria
 
