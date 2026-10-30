@@ -658,6 +658,15 @@
       "note": "Anúncio no E3 2018"
     },
     {
+      "igdbId": 17755,
+      "name": "Palindrome Interactive",
+      "ownerIgdbId": 42782,
+      "control": "wholly_owned",
+      "acquiredAt": "2020-08-13",
+      "source": "https://embracer.com/release/embracer-group-acquires-palindrome-interactive/",
+      "note": "Via Amplifier Game Invest, que tinha 50% desde 2017 e comprou o restante; Shadowveil: Legend of The Five Rings saiu em 04/03/2025 pela Amplifier Studios e pela THQ Nordic, do mesmo grupo (https://store.steampowered.com/app/2536960/), sem notícia de venda do estúdio (B-69)"
+    },
+    {
       "igdbId": 7212,
       "name": "Pieces Interactive",
       "ownerIgdbId": 42782,

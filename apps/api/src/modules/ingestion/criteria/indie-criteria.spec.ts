@@ -451,6 +451,10 @@ describe('regressão dos casos reais conferidos à mão', () => {
       ['Growtopia', { accepted: true }],
       ['Ilomilo', { accepted: true }],
       ['Chained Together', { accepted: true }],
+      [
+        'Shadowveil: Legend of The Five Rings',
+        controlled('Palindrome Interactive', 'Embracer Group', '2025-03-04'),
+      ],
     ]);
   });
 
