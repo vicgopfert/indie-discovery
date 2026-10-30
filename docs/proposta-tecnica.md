@@ -197,6 +197,8 @@ O Next.js usa o App Router. Páginas públicas (catálogo, ficha, "Como funciona
 
 O estado da sessão vem de `GET /api/auth/me` e fica no cache do TanStack Query, compartilhado por todos os componentes que precisam dele (cabeçalho, páginas de conta). Não há um contexto de autenticação à parte: ele seria uma segunda cópia do mesmo estado. Entrar e cadastrar gravam o usuário devolvido pela API direto no cache; sair limpa o cache. Os formulários usam react-hook-form com os schemas de `packages/contracts`, e os erros da API voltam ao campo a que se referem. Depois de entrar, o visitante segue para o `?next=` da URL, aceito só se for um caminho deste site.
 
+O catálogo (`/catalogo`, B-23) é um Server Component cuja URL é o único estado. Os parâmetros têm os mesmos nomes da API (`q`, `genre`, `theme`, `status`, `portuguese`, `country`, `sort`, `page`) e são validados com o `GameSearchQuerySchema` antes da chamada; uma URL inválida mostra o problema em vez de erro. No servidor, o cliente HTTP chama a API direto pelo `API_URL`, sem passar pelo *rewrite*, e as quatro leituras (jogos, gêneros, temas e países) saem em paralelo. Os filtros são um formulário GET com o `<Form>` do Next: sem JavaScript, é um formulário comum; com JavaScript, navega sem recarregar. Enviar o formulário volta para a página 1. As capas vêm da CDN da IGDB em `t_cover_small_2x`, com `next/image` em modo `unoptimized` (carregamento sob demanda, sem o otimizador da Vercel). O rodapé de todas as páginas traz a atribuição à IGDB (RNF-06).
+
 ### Contratos da API
 
 Prefixo global `/api`. Respostas em JSON; erros sempre no mesmo formato.
@@ -345,11 +347,12 @@ apps/web/src/
 │  ├─ (auth)/                  entrar, cadastrar
 │  └─ (account)/               recomendacoes, perfil, boas-vindas (onboarding)
 ├─ features/                   código de cada funcionalidade: chamadas à API, hooks do TanStack Query e componentes
-│  └─ auth/                    sessão, formulários de entrar e cadastrar, menu da conta
+│  ├─ auth/                    sessão, formulários de entrar e cadastrar, menu da conta
+│  └─ catalog/                 filtros na URL, card do jogo, paginação e estados da página de catálogo
 ├─ components/
 │  ├─ ui/                      componentes do shadcn/ui, gerados pela CLI
 │  └─ form/                    campo de texto e alerta ligados ao react-hook-form
-├─ lib/                        cliente HTTP, cliente do TanStack Query, destino seguro, erros de formulário
+├─ lib/                        cliente HTTP, cliente do TanStack Query, destino seguro, erros de formulário, URLs da CDN da IGDB
 └─ config/site.ts              nome e descrição da plataforma, num só lugar (o nome ainda é provisório)
 
 packages/contracts/src/
