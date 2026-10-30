@@ -1106,7 +1106,7 @@ Com os itens acrescentados no M0 (B-56 a B-58), o ponto médio do P0 passou de 2
 | Marco | Fim da semana | Data | O que precisa ser verdade |
 | --- | --- | --- | --- |
 | **M0** Viabilidade dos dados | 2 | 01/11/2026 | Relatório da IGDB concluído: termos confirmados, cobertura dos campos medida, tamanho do catálogo definido, portão do F-06 decidido |
-| **M1** Catálogo real e contas implantados | 12 | 10/01/2027 | Qualquer pessoa navega o catálogo real de jogos indie no ambiente implantado e consegue se cadastrar e entrar |
+| **M1** Catálogo real e contas implantados | 12 | 10/01/2027 | Qualquer pessoa navega o catálogo real de jogos indie no ambiente implantado e consegue se cadastrar e entrar. **Atingido em 30/10/2026 (semana 2):** conferido em produção com 20.114 jogos, catálogo com filtros, ficha do jogo, cadastro, entrada e saída; tag `v0.1-M1`. A folga de cerca de dez semanas em relação ao cronograma confirma o ritmo observado na semana 1. Fica pendente da sprint S4 o B-61, que não faz parte do critério deste marco |
 | **M2** Recomendação ponta a ponta pela API | 16 | 07/02/2027 | `GET /recommendations` devolve listas com motivo nos três modos, com o catálogo real, testadas e implantadas |
 | **Congelamento** | 20 | 07/03/2027 | Todos os P0 implementados. A partir daqui, nenhuma funcionalidade nova: só correções, testes, documentação e avaliação |
 | **M3** MVP final | 22 | 21/03/2027 | Critérios de prontidão da seção 16 atendidos, teste de usabilidade realizado |
