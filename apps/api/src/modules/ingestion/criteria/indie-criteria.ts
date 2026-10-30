@@ -24,10 +24,11 @@ export type CriteriaVerdict =
   | { accepted: false; reason: Exclude<RejectionReason, 'CONTROLLED_DEVELOPER'> }
   | ({ accepted: false; reason: 'CONTROLLED_DEVELOPER' } & ControlCause);
 
-// O que a ingestão sabe do jogo antes desta avaliação: se ele estava no catálogo na última
-// execução bem-sucedida.
+// O que a ingestão sabe do jogo além da ficha: se ele estava no catálogo na última execução
+// bem-sucedida e quantas pessoas o marcaram como "Want to Play" (0 enquanto não foi buscado).
 export interface EvaluationContext {
   wasInCatalog: boolean;
+  wantToPlayCount?: number;
 }
 
 // As listas de exceção corrigem só a classificação indie (gênero e desenvolvedora); nunca
@@ -124,13 +125,15 @@ export function isWithinPostLaunchGrace(game: MappedGame, criteria: IndieCriteri
 // Lançados antes do corte só contam com avaliações; a partir dele, avaliações ou hypes.
 // Jogos por lançar entram com data marcada ou, sem data, com hypes. A carência pós-lançamento
 // protege só a passagem de "por lançar" a lançado de quem já estava no catálogo: as avaliações
-// levam tempo para aparecer, mas a carência não admite jogo que nunca entrou.
+// levam tempo para aparecer, mas a carência não admite jogo que nunca entrou. O "Want to Play"
+// com a contagem mínima vale em qualquer situação, somado aos outros sinais (B-61).
 function hasInterestSignal(
   game: MappedGame,
   criteria: IndieCriteria,
   now: Date,
-  { wasInCatalog }: EvaluationContext,
+  { wasInCatalog, wantToPlayCount = 0 }: EvaluationContext,
 ) {
+  if (wantToPlayCount >= criteria.interestSignals.wantToPlayMinCount) return true;
   if (
     game.releaseStatus === ReleaseStatus.UPCOMING ||
     (wasInCatalog && isWithinPostLaunchGrace(game, criteria, now))

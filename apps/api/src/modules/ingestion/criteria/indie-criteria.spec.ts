@@ -138,6 +138,65 @@ describe('evaluateIndieCriteria', () => {
       expect(evaluate(variant(changes)).accepted).toBe(accepted);
     });
 
+    describe('"Want to Play"', () => {
+      const silentSince2015 = variant({
+        firstReleaseDate: since2015,
+        ratingCount: 0,
+        hypes: 0,
+      });
+      const withCount = (game: MappedGame, wantToPlayCount: number, wasInCatalog = false) =>
+        evaluateIndieCriteria(game, criteria, NOW, { wasInCatalog, wantToPlayCount });
+
+      it('com a contagem mínima, conta como sinal; abaixo dela, não', () => {
+        expect(criteria.interestSignals.wantToPlayMinCount).toBe(5);
+        expect(withCount(silentSince2015, 5)).toEqual({ accepted: true });
+        expect(withCount(silentSince2015, 4)).toEqual({
+          accepted: false,
+          reason: 'NO_INTEREST_SIGNAL',
+        });
+      });
+
+      it('vale também para o jogo anunciado sem data e sem hypes', () => {
+        const unannounced = variant({ ...upcoming, firstReleaseDate: null });
+
+        expect(withCount(unannounced, 5)).toEqual({ accepted: true });
+      });
+
+      it('sem a contagem no contexto, vale zero', () => {
+        expect(evaluate(silentSince2015)).toEqual({
+          accepted: false,
+          reason: 'NO_INTEREST_SIGNAL',
+        });
+      });
+
+      it('soma à carência em vez de substituí-la', () => {
+        const justReleased = variant({
+          firstReleaseDate: daysBeforeNow(10),
+          ratingCount: 0,
+          hypes: 0,
+        });
+        const graceOver = variant({
+          firstReleaseDate: daysBeforeNow(200),
+          ratingCount: 0,
+          hypes: 0,
+        });
+
+        expect(withCount(justReleased, 0, true)).toEqual({ accepted: true });
+        expect(withCount(graceOver, 5, true)).toEqual({ accepted: true });
+        expect(withCount(graceOver, 4, true)).toEqual({
+          accepted: false,
+          reason: 'NO_INTEREST_SIGNAL',
+        });
+      });
+
+      it('não passa por cima das outras regras', () => {
+        expect(withCount({ ...silentSince2015, isCancelled: true }, 50)).toEqual({
+          accepted: false,
+          reason: 'CANCELLED',
+        });
+      });
+    });
+
     describe('carência pós-lançamento', () => {
       const silent = (days: number) =>
         variant({ firstReleaseDate: daysBeforeNow(days), ratingCount: 0, hypes: 0 });
