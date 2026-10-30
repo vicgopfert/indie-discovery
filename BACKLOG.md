@@ -119,7 +119,7 @@ Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de en
 - [x] **M0** (semana 2): relatório da IGDB concluído, termos confirmados, portão do B-21 decidido
   - [x] Reaberto no B-12: decidir a cobertura de etiquetas para a recomendação (relatório do M0, seção 8.9) — modo de jogo e perspectiva (B-62) e palavras do resumo (B-63) aprovados, os dois condicionados ao acerto@10 no B-37
   - [x] Reaberto no B-60: confirmar a falta de desenvolvedora creditada como limitação, sem regra de reserva (relatório do M0, seção 8.10) — aceita, sem regra de reserva; defesa pelo alerta `NO_DEVELOPER_VISIBLE` da ingestão
-- [ ] **M1** (semana 12): catálogo real navegável + contas implantadas
+- [x] **M1** (semana 12): catálogo real navegável + contas implantadas — atingido em 30/10/2026, na semana 2; tag `v0.1-M1`
 - [ ] **M2** (semana 16): recomendação ponta a ponta pela API, testada e implantada
 - [ ] **Congelamento** (semana 20): todos os P0 implementados, nenhuma funcionalidade nova depois disso
 - [ ] **M3** (semana 22): critérios de prontidão da seção 16 atendidos, teste de usabilidade feito
