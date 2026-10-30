@@ -1,4 +1,5 @@
 import {
+  COUNTRY_UNKNOWN,
   type FeatureQuery,
   FeatureQuerySchema,
   GAMES_FILTER_MAX_VALUES,
@@ -10,6 +11,7 @@ import {
   type GameSearchQuery,
   GameSearchQuerySchema,
   FEATURE_TYPE_FILTERS,
+  PORTUGUESE_FILTERS,
   RELEASE_STATUS_FILTERS,
 } from '@indie/contracts';
 import { Controller, Get, Param, Query } from '@nestjs/common';
@@ -83,6 +85,19 @@ export class CatalogController {
   })
   @ApiQuery({ name: 'status', required: false, enum: RELEASE_STATUS_FILTERS })
   @ApiQuery({
+    name: 'portuguese',
+    required: false,
+    enum: PORTUGUESE_FILTERS,
+    description:
+      'yes: tem pt-BR ou pt-PT; no: tem idiomas informados, nenhum português; unknown: nenhum idioma informado',
+  })
+  @ApiQuery({
+    name: 'country',
+    required: false,
+    isArray: true,
+    description: `Sigla do país do estúdio ou ${COUNTRY_UNKNOWN}; repetido, basta ter um (até ${GAMES_FILTER_MAX_VALUES})`,
+  })
+  @ApiQuery({
     name: 'sort',
     required: false,
     enum: GAMES_SORTS,
@@ -127,5 +142,15 @@ export class CatalogController {
   @ApiBadRequestResponse({ description: 'Tipo ausente ou diferente de genre e theme' })
   listFeatures(@Query({ schema: FeatureQuerySchema }) query: FeatureQuery) {
     return this.catalog.listFeatures(query);
+  }
+
+  @Public()
+  @Get('countries')
+  @ApiOkResponse({
+    description: 'Países do estúdio com pelo menos 20 jogos no catálogo, em ordem alfabética',
+    schema: { example: [{ code: 'BR', name: 'Brasil', gameCount: 251 }] },
+  })
+  listCountries() {
+    return this.catalog.listCountries();
   }
 }

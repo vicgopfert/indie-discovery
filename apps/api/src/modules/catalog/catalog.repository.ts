@@ -1,4 +1,4 @@
-import type { GameSearchQuery } from '@indie/contracts';
+import { COUNTRY_UNKNOWN, type GameSearchQuery } from '@indie/contracts';
 import { Injectable } from '@nestjs/common';
 import { FeatureType, Prisma, ReleaseStatus } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -7,6 +7,17 @@ import type { LabeledFeatureType } from './feature-labels';
 const STATUS: Record<NonNullable<GameSearchQuery['status']>, ReleaseStatus> = {
   released: ReleaseStatus.RELEASED,
   upcoming: ReleaseStatus.UPCOMING,
+};
+
+// pt-PT conta como português: quem lê pt-BR entende, e a ficha mostra a variante.
+const PORTUGUESE_LOCALES = ['pt-BR', 'pt-PT'];
+const hasPortuguese = { language: { locale: { in: PORTUGUESE_LOCALES } } };
+
+// "no" exige idiomas informados: jogo sem nenhum idioma é "não informado", não "não tem".
+const PORTUGUESE: Record<NonNullable<GameSearchQuery['portuguese']>, Prisma.GameWhereInput> = {
+  yes: { languages: { some: hasPortuguese } },
+  no: { languages: { some: {}, none: hasPortuguese } },
+  unknown: { languages: { none: {} } },
 };
 
 // O desempate por nome e id deixa a ordem estável entre páginas, mesmo com popularidades iguais.
@@ -63,6 +74,12 @@ export interface FeatureCountRow {
   gameCount: number;
 }
 
+export interface CountryCountRow {
+  alpha2: string;
+  namePt: string;
+  gameCount: number;
+}
+
 @Injectable()
 export class CatalogRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -105,6 +122,22 @@ export class CatalogRepository {
     return features.map(({ slug, name, _count }) => ({ slug, name, gameCount: _count.games }));
   }
 
+  async countGamesByCountry(): Promise<CountryCountRow[]> {
+    const countries = await this.prisma.country.findMany({
+      where: { games: { some: { inCatalog: true } } },
+      select: {
+        alpha2: true,
+        namePt: true,
+        _count: { select: { games: { where: { inCatalog: true } } } },
+      },
+    });
+    return countries.map(({ alpha2, namePt, _count }) => ({
+      alpha2,
+      namePt,
+      gameCount: _count.games,
+    }));
+  }
+
   // Filtrar pelo id usa o índice de GameFeature(featureId); pelo slug, o banco cruza a tabela
   // inteira (cerca de 30 ms contra 200 ms no catálogo de 20 mil jogos). Null se algum slug não
   // existe: como os filtros se somam, nenhum jogo atende.
@@ -123,12 +156,30 @@ export class CatalogRepository {
   }
 }
 
-function searchWhere({ q, status }: GameSearchQuery, featureIds: string[]): Prisma.GameWhereInput {
+function searchWhere(
+  { q, status, portuguese, country }: GameSearchQuery,
+  featureIds: string[],
+): Prisma.GameWhereInput {
   return {
     inCatalog: true,
     ...(q && { name: { contains: escapeLike(q), mode: 'insensitive' } }),
     ...(status && { releaseStatus: STATUS[status] }),
-    AND: featureIds.map((featureId) => ({ features: { some: { featureId } } })),
+    AND: [
+      ...featureIds.map((featureId) => ({ features: { some: { featureId } } })),
+      ...(portuguese ? [PORTUGUESE[portuguese]] : []),
+      ...(country.length > 0 ? [countryWhere(country)] : []),
+    ],
+  };
+}
+
+// Cada jogo tem um país só, então basta ter um dos pedidos.
+function countryWhere(codes: string[]): Prisma.GameWhereInput {
+  const alpha2 = codes.filter((code) => code !== COUNTRY_UNKNOWN);
+  return {
+    OR: [
+      ...(alpha2.length > 0 ? [{ studioCountry: { alpha2: { in: alpha2 } } }] : []),
+      ...(codes.includes(COUNTRY_UNKNOWN) ? [{ studioCountryCode: null }] : []),
+    ],
   };
 }
 

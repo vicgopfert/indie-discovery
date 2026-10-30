@@ -1,4 +1,5 @@
 import type {
+  CountryOption,
   FeatureLabel,
   FeatureOption,
   FeatureQuery,
@@ -7,7 +8,7 @@ import type {
   GameSearchQuery,
   GameSummary,
 } from '@indie/contracts';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CatalogRepository, type GameDetailRow, type GameSummaryRow } from './catalog.repository';
 import { FeatureLabels, type LabeledFeatureType } from './feature-labels';
 
@@ -15,6 +16,9 @@ const FEATURE_TYPES: Record<FeatureQuery['type'], LabeledFeatureType> = {
   genre: 'GENRE',
   theme: 'THEME',
 };
+
+// Mínimo de jogos para um país virar opção de filtro (F-06); injetado para o e2e testar o limite.
+export const COUNTRY_OPTION_MIN_GAMES = Symbol('COUNTRY_OPTION_MIN_GAMES');
 
 const byName = (a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name, 'pt-BR');
 
@@ -25,6 +29,7 @@ export class CatalogService {
   constructor(
     private readonly catalog: CatalogRepository,
     private readonly labels: FeatureLabels,
+    @Inject(COUNTRY_OPTION_MIN_GAMES) private readonly countryOptionMinGames: number,
   ) {}
 
   async searchGames(query: GameSearchQuery): Promise<GamePage> {
@@ -76,6 +81,14 @@ export class CatalogService {
         ...feature,
         name: this.labels.name(featureType, feature.slug, feature.name),
       }))
+      .sort(byName);
+  }
+
+  async listCountries(): Promise<CountryOption[]> {
+    const countries = await this.catalog.countGamesByCountry();
+    return countries
+      .filter(({ gameCount }) => gameCount >= this.countryOptionMinGames)
+      .map(({ alpha2, namePt, gameCount }) => ({ code: alpha2, name: namePt, gameCount }))
       .sort(byName);
   }
 
