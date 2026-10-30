@@ -199,6 +199,8 @@ O estado da sessão vem de `GET /api/auth/me` e fica no cache do TanStack Query,
 
 O catálogo (`/catalogo`, B-23) é um Server Component cuja URL é o único estado. Os parâmetros têm os mesmos nomes da API (`q`, `genre`, `theme`, `status`, `portuguese`, `country`, `sort`, `page`) e são validados com o `GameSearchQuerySchema` antes da chamada; uma URL inválida mostra o problema em vez de erro. No servidor, o cliente HTTP chama a API direto pelo `API_URL`, sem passar pelo *rewrite*, e as quatro leituras (jogos, gêneros, temas e países) saem em paralelo. Os filtros são um formulário GET com o `<Form>` do Next: sem JavaScript, é um formulário comum; com JavaScript, navega sem recarregar. Enviar o formulário volta para a página 1. As capas vêm da CDN da IGDB em `t_cover_small_2x`, com `next/image` em modo `unoptimized` (carregamento sob demanda, sem o otimizador da Vercel). O rodapé de todas as páginas traz a atribuição à IGDB (RNF-06).
 
+A ficha do jogo (`/jogos/[slug]`, B-24) também é um Server Component. O título, a descrição (o resumo cortado em cerca de 160 caracteres) e as tags Open Graph com a capa grande saem no HTML inicial; a página e os metadados dividem a mesma chamada à API, envolvida em `cache()` do React. Gêneros, temas e país levam ao catálogo já filtrado, o português aparece em destaque com a distinção entre "sem português" e "idiomas não informados" (F-06), e a página oficial e a página do jogo na IGDB abrem em nova aba. Jogo inexistente ou fora do catálogo responde com o status HTTP 404 e `noindex`; por isso o segmento não tem `loading.tsx`, que faria a resposta começar em streaming e o 404 sair com status 200. O resumo vem da IGDB em inglês: traduzi-lo exigiria um serviço externo ou IA generativa, fora do MVP.
+
 ### Contratos da API
 
 Prefixo global `/api`. Respostas em JSON; erros sempre no mesmo formato.
@@ -348,7 +350,8 @@ apps/web/src/
 │  └─ (account)/               recomendacoes, perfil, boas-vindas (onboarding)
 ├─ features/                   código de cada funcionalidade: chamadas à API, hooks do TanStack Query e componentes
 │  ├─ auth/                    sessão, formulários de entrar e cadastrar, menu da conta
-│  └─ catalog/                 filtros na URL, card do jogo, paginação e estados da página de catálogo
+│  ├─ catalog/                 filtros na URL, card do jogo, paginação e estados da página de catálogo
+│  └─ games/                   ficha do jogo e peças comuns ao catálogo: capa, data de lançamento, selo "Em breve"
 ├─ components/
 │  ├─ ui/                      componentes do shadcn/ui, gerados pela CLI
 │  └─ form/                    campo de texto e alerta ligados ao react-hook-form
