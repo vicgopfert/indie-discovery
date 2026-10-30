@@ -7,6 +7,7 @@ import { seedReferenceData } from '../prisma/seed/reference-data';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/configure-app';
 import { ReleaseStatus, StudioCountrySource } from '../src/generated/prisma/client';
+import { COUNTRY_OPTION_MIN_GAMES } from '../src/modules/catalog/catalog.service';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { CatalogBuilder } from './support/catalog-builder';
 
@@ -14,7 +15,10 @@ describe('Catálogo', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
-    const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
+    const moduleRef = await Test.createTestingModule({ imports: [AppModule] })
+      .overrideProvider(COUNTRY_OPTION_MIN_GAMES)
+      .useValue(2)
+      .compile();
     app = moduleRef.createNestApplication();
     configureApp(app);
     await app.init();
@@ -24,6 +28,8 @@ describe('Catálogo', () => {
     await seedReferenceData(prisma);
     const catalog = new CatalogBuilder(prisma);
     const { UPCOMING } = ReleaseStatus;
+    const { IGDB } = StudioCountrySource;
+    const english = { locale: 'en-US', interface: true, subtitles: true, audio: true };
     for (const game of [
       {
         name: 'Celeste',
@@ -46,6 +52,8 @@ describe('Catálogo', () => {
         themes: ['Action', 'Fantasy'],
         popularity: 0.8,
         releasedOn: '2017-02-24',
+        studioCountry: { alpha2: 'AU', source: IGDB },
+        languages: [english],
       },
       {
         name: 'Hollow Knight: Silksong',
@@ -60,23 +68,30 @@ describe('Catálogo', () => {
         themes: ['Science fiction'],
         popularity: 0.5,
         releasedOn: '2019-05-28',
+        studioCountry: { alpha2: 'US', source: IGDB },
+        languages: [english, { locale: 'pt-PT', interface: true }],
       },
       {
         name: 'Baba Is You',
         genres: ['Puzzle', 'Indie'],
         popularity: 0.5,
         releasedOn: '2019-03-13',
+        studioCountry: { alpha2: 'FI', source: StudioCountrySource.WIKIDATA },
+        languages: [english],
       },
       {
         name: '100% Orange Juice',
         genres: ['Card & Board Game', 'Indie'],
         releasedOn: '2014-05-14',
+        studioCountry: { alpha2: 'JP', source: IGDB },
       },
       {
         name: '1000xResist',
         genres: ['Adventure', 'Indie'],
         popularity: 0.2,
         releasedOn: '2024-05-09',
+        studioCountry: { alpha2: 'US', source: IGDB },
+        languages: [english, { locale: 'pt-BR', audio: true }],
       },
       {
         name: 'Jogo Rejeitado',
@@ -84,6 +99,8 @@ describe('Catálogo', () => {
         themes: ['Horror'],
         popularity: 1,
         inCatalog: false,
+        studioCountry: { alpha2: 'CA', source: IGDB },
+        languages: [{ locale: 'pt-BR', interface: true }],
       },
     ]) {
       await catalog.game(game);
@@ -148,6 +165,42 @@ describe('Catálogo', () => {
       expect(await names(query)).toEqual(['Hollow Knight: Silksong', 'Hollow Knight']);
       expect(await names({ ...query, status: 'released' })).toEqual(['Hollow Knight']);
       expect(await names({ ...query, status: 'upcoming' })).toEqual(['Hollow Knight: Silksong']);
+    });
+
+    it('português: pt-BR ou pt-PT em qualquer tipo de suporte, nenhum ou não informado', async () => {
+      expect(await names({ portuguese: 'yes' })).toEqual(['Celeste', 'Outer Wilds', '1000xResist']);
+      expect(await names({ portuguese: 'no' })).toEqual(['Hollow Knight', 'Baba Is You']);
+      expect(await names({ portuguese: 'unknown' })).toEqual([
+        'Hollow Knight: Silksong',
+        '100% Orange Juice',
+      ]);
+    });
+
+    it('com dois países, basta o jogo ser de um deles', async () => {
+      expect(await names({ country: ['us', 'JP'] })).toEqual([
+        'Outer Wilds',
+        '1000xResist',
+        '100% Orange Juice',
+      ]);
+    });
+
+    it('país não informado combina com outro país', async () => {
+      expect(await names({ country: 'unknown' })).toEqual(['Hollow Knight: Silksong']);
+      expect(await names({ country: ['unknown', 'CA'] })).toEqual([
+        'Hollow Knight: Silksong',
+        'Celeste',
+      ]);
+    });
+
+    it('país sem jogos no catálogo devolve lista vazia', async () => {
+      expect(await names({ country: 'BR' })).toEqual([]);
+    });
+
+    it('combina gênero, português e país', async () => {
+      expect(await names({ genre: 'adventure', portuguese: 'yes', country: 'US' })).toEqual([
+        'Outer Wilds',
+        '1000xResist',
+      ]);
     });
 
     it('não acha jogo fora do catálogo nem pelo nome', async () => {
@@ -266,6 +319,14 @@ describe('Catálogo', () => {
         error: 'Not Found',
         message: 'Jogo não encontrado.',
       });
+    });
+  });
+
+  describe('GET /api/countries', () => {
+    it('é público e só lista países com o mínimo de jogos do catálogo', async () => {
+      const response = await request(app.getHttpServer()).get('/api/countries').expect(200);
+
+      expect(response.body).toEqual([{ code: 'US', name: 'Estados Unidos', gameCount: 2 }]);
     });
   });
 
