@@ -58,6 +58,11 @@ export class IgdbCatalogSource {
     return new Map(rows.map(({ game_id, value }) => [game_id, value]));
   }
 
+  // Busca de novo, pelo id, jogos que a passada pelo conjunto candidato não guardou.
+  games(gameIds: Iterable<number>) {
+    return this.byIds('games', IGDB_GAME_FIELDS, 'id', [...gameIds]);
+  }
+
   async scope(gameIds: Iterable<number>) {
     const rows = scopeSchema.parse(await this.byIds('games', 'id,genres', 'id', [...gameIds]));
     return new Map<number, IgdbScopeRecord>(rows.map(({ id, genres }) => [id, { genres }]));
