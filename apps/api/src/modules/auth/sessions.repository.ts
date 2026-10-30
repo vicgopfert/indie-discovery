@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class SessionsRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  // Injeção explícita: a ingestão também roda com tsx (ingest:dev), que não emite os metadados de
+  // tipo dos decorators, e a limpeza de sessões vencidas usa este repositório.
+  constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
   async create(userId: string, tokenHash: string, expiresAt: Date) {
     await this.prisma.session.create({ data: { userId, tokenHash, expiresAt } });
