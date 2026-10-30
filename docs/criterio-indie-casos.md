@@ -28,8 +28,9 @@ Um jogo entra no catálogo quando:
    protege a passagem de "por lançar" a lançado, porque as avaliações levam tempo para
    aparecer, mas não admite jogo que nunca entrou. O prazo é um valor inicial sem
    evidência e não decide se o jogo é indie, só adia a exigência de sinal (B-13).
-   Decidido no B-61 e a implementar no B-69: o "Want to Play" com contagem de 5
-   pessoas ou mais também conta como sinal (seção "Sinal de interesse").
+   O "Want to Play" com contagem reconstruída de 5 pessoas ou mais
+   (`wantToPlayMinCount`) também conta como sinal, em qualquer situação e somado aos
+   outros (decidido no B-61, implementado no B-69; seção "Sinal de interesse").
 
 Para jogo anunciado sem data, a data de referência do item 2 é a da ingestão. Na
 coautoria, basta uma desenvolvedora controlada para excluir, e a data vale para cada
@@ -444,6 +445,11 @@ que chega a 5 pessoas durante a carência continua no catálogo depois dela.
 conteúdo aceito, os que seguem sem sinal são 84,2% dos lançados há até 180 dias, 85,9%
 dos lançados há 180 a 365 dias e 89,0% dos lançados há 1 a 2 anos (24/10/2026: 83,6%,
 86,1% e 88,9%).
+
+**Implementado no B-69 (30/10/2026).** Na carga local sobre o catálogo de 27/10, o
+catálogo foi de 20.111 para 22.767 jogos, com 2.582 decididos pelo "Want to Play", e 17,4%
+dos vetores ficaram com até 2 etiquetas, como na medição acima. Detalhes em
+`docs/ingestao.md`, seção "'Want to Play' como sinal de interesse".
 
 **A medir no B-69:** entre duas ingestões, quantos jogos ficaram com a contagem abaixo do
 limite depois de estarem acima. Se o número for relevante, o jogo pode ficar entrando e
