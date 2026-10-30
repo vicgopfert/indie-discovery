@@ -189,8 +189,11 @@ Duas cargas no banco local em 30/10/2026, sobre o catálogo de 27/10:
 
 Os dois `VERDICT_CHANGED` são saídas por falta de sinal sem fim de carência nem queda do
 "Want to Play" (*MarsCity3026* e *Starcult Night Twisted Age*). Os nove alertas de empresa
-vêm das desenvolvedoras dos jogos que entraram e esperam revisão: *Palindrome Interactive*,
-sob Amplifier Game Invest e Embracer, e oito empresas-mãe fora da lista de grandes.
+vêm das desenvolvedoras dos jogos que entraram e foram revisados no mesmo item: a
+*Palindrome Interactive*, subsidiária integral da Embracer desde 2020, entrou nos estúdios
+controlados, e *Shadowveil: Legend of The Five Rings* sai do catálogo na próxima execução;
+as oito empresas-mãe fora da lista de grandes foram recusadas pelo teste de entrada
+(`docs/criterio-indie-casos.md`).
 
 ## Cargas reais (banco local, 24/10/2026)
 
