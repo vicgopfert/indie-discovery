@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CatalogController } from './catalog.controller';
 import { CatalogRepository } from './catalog.repository';
-import { CatalogService } from './catalog.service';
+import { CatalogService, COUNTRY_OPTION_MIN_GAMES } from './catalog.service';
 import { FeatureLabels } from './feature-labels';
 
 @Module({
@@ -9,6 +9,7 @@ import { FeatureLabels } from './feature-labels';
   providers: [
     CatalogRepository,
     CatalogService,
+    { provide: COUNTRY_OPTION_MIN_GAMES, useValue: 20 },
     { provide: FeatureLabels, useFactory: () => FeatureLabels.fromFile() },
   ],
   exports: [FeatureLabels],

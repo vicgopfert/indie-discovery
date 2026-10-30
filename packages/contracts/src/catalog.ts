@@ -9,21 +9,35 @@ export const GAMES_SEARCH_MAX_LENGTH = 100;
 export const GAMES_SORTS = ['popular', 'newest', 'name'] as const;
 export const RELEASE_STATUS_FILTERS = ['released', 'upcoming'] as const;
 export const FEATURE_TYPE_FILTERS = ['genre', 'theme'] as const;
+export const PORTUGUESE_FILTERS = ['yes', 'no', 'unknown'] as const;
+export const COUNTRY_UNKNOWN = 'unknown';
 
 // A URL traz um valor (genre=a) ou vários (genre=a&genre=b); os dois viram lista, sem repetição.
-const slugList = z
-  .union([z.string(), z.array(z.string())])
-  .transform((value) => [...new Set([value].flat().map((slug) => slug.trim()))])
-  .pipe(
-    z
-      .array(
-        z.string().min(1, { error: 'Filtro vazio.' }).max(100, { error: 'Filtro longo demais.' }),
-      )
-      .max(GAMES_FILTER_MAX_VALUES, {
+const listParam = (normalize: (value: string) => string, item: z.ZodType<string, string>) =>
+  z
+    .union([z.string(), z.array(z.string())])
+    .transform((value) => [...new Set([value].flat().map(normalize))])
+    .pipe(
+      z.array(item).max(GAMES_FILTER_MAX_VALUES, {
         error: `Até ${GAMES_FILTER_MAX_VALUES} valores por filtro.`,
       }),
-  )
-  .default([]);
+    )
+    .default([]);
+
+const slugList = listParam(
+  (slug) => slug.trim(),
+  z.string().min(1, { error: 'Filtro vazio.' }).max(100, { error: 'Filtro longo demais.' }),
+);
+
+const countryList = listParam(
+  (code) => {
+    const trimmed = code.trim();
+    return trimmed.toLowerCase() === COUNTRY_UNKNOWN ? COUNTRY_UNKNOWN : trimmed.toUpperCase();
+  },
+  z.string().refine((code) => code === COUNTRY_UNKNOWN || /^[A-Z]{2}$/.test(code), {
+    error: `País deve ser a sigla de duas letras ou ${COUNTRY_UNKNOWN}.`,
+  }),
+);
 
 const positiveInt = (max: number, label: string) =>
   z.coerce
@@ -46,6 +60,10 @@ export const GameSearchQuerySchema = z.object({
   status: z
     .enum(RELEASE_STATUS_FILTERS, { error: 'Situação deve ser released ou upcoming.' })
     .optional(),
+  portuguese: z
+    .enum(PORTUGUESE_FILTERS, { error: 'Português deve ser yes, no ou unknown.' })
+    .optional(),
+  country: countryList,
   sort: z
     .enum(GAMES_SORTS, { error: 'Ordenação deve ser popular, newest ou name.' })
     .default('popular'),
@@ -91,6 +109,14 @@ export type FeatureQuery = z.output<typeof FeatureQuerySchema>;
 export const FeatureOptionSchema = FeatureLabelSchema.extend({ gameCount: z.number().int() });
 
 export type FeatureOption = z.infer<typeof FeatureOptionSchema>;
+
+export const CountryOptionSchema = z.object({
+  code: z.string().length(2),
+  name: z.string(),
+  gameCount: z.number().int(),
+});
+
+export type CountryOption = z.infer<typeof CountryOptionSchema>;
 
 export const GameLanguageSchema = z.object({
   locale: z.string(),

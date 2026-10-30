@@ -10,6 +10,7 @@ describe('GameSearchQuerySchema', () => {
     expect(GameSearchQuerySchema.parse({})).toEqual({
       genre: [],
       theme: [],
+      country: [],
       sort: 'popular',
       page: 1,
       pageSize: 24,
@@ -20,6 +21,18 @@ describe('GameSearchQuerySchema', () => {
     expect(
       GameSearchQuerySchema.parse({ genre: 'puzzle', theme: ['horror', ' horror '] }),
     ).toMatchObject({ genre: ['puzzle'], theme: ['horror'] });
+  });
+
+  it('aceita a sigla do país em minúsculas e o país não informado', () => {
+    expect(GameSearchQuerySchema.parse({ country: ['br', ' PT ', 'Unknown', 'BR'] })).toMatchObject(
+      { country: ['BR', 'PT', 'unknown'] },
+    );
+  });
+
+  it('aceita os três valores do filtro de português', () => {
+    for (const portuguese of ['yes', 'no', 'unknown']) {
+      expect(GameSearchQuerySchema.parse({ portuguese }).portuguese).toBe(portuguese);
+    }
   });
 
   it('converte página e tamanho vindos da URL como texto', () => {
@@ -45,6 +58,9 @@ describe('GameSearchQuerySchema', () => {
     [{ sort: 'random' }, 'Ordenação deve ser popular, newest ou name.'],
     [{ q: 'x'.repeat(101) }, 'A busca tem no máximo 100 caracteres.'],
     [{ q: ['a', 'b'] }, 'Informe a busca uma vez só.'],
+    [{ country: 'BRA' }, 'País deve ser a sigla de duas letras ou unknown.'],
+    [{ country: ['AR', 'BR', 'CL', 'PT', 'UY', 'PY'] }, 'Até 5 valores por filtro.'],
+    [{ portuguese: 'sim' }, 'Português deve ser yes, no ou unknown.'],
   ])('recusa %j', (input, message) => {
     expect(messages(input)).toEqual([message]);
   });

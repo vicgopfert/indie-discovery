@@ -43,7 +43,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 ## E3 — Descoberta e interface pública (S6)
 
 - [x] **B-20** (M) `GET /games` com busca, filtros (gênero, tema, situação), paginação; `GET /features`
-- [ ] **B-21** (P) Filtros de idioma português e país do estúdio (país só lista opções com 20+ jogos)
+- [x] **B-21** (P) Filtros de idioma português e país do estúdio (país só lista opções com 20+ jogos)
 - [x] **B-22** (P) `GET /games/:slug`
 - [ ] **B-23** (M) Página de catálogo com filtros na URL
 - [ ] **B-24** (M) Página do jogo (selo "Em breve", atribuição IGDB, metadados no servidor, capa direto da CDN da IGDB sem o otimizador da Vercel)

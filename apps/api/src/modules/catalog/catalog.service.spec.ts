@@ -2,6 +2,7 @@ import { GameSearchQuerySchema } from '@indie/contracts';
 import { NotFoundException } from '@nestjs/common';
 import type {
   CatalogRepository,
+  CountryCountRow,
   FeatureCountRow,
   GameDetailRow,
   GameSummaryRow,
@@ -79,13 +80,18 @@ const celesteDetail: GameDetailRow = {
 
 class FakeCatalog implements Pick<
   CatalogRepository,
-  'searchGames' | 'countGamesByFeature' | 'findGameBySlug'
+  'searchGames' | 'countGamesByFeature' | 'findGameBySlug' | 'countGamesByCountry'
 > {
   constructor(
     private readonly games: { total: number; games: GameSummaryRow[] },
     private readonly features: FeatureCountRow[] = [],
     private readonly detail: GameDetailRow | null = null,
+    private readonly countries: CountryCountRow[] = [],
   ) {}
+
+  countGamesByCountry() {
+    return Promise.resolve(this.countries);
+  }
 
   findGameBySlug() {
     return Promise.resolve(this.detail);
@@ -101,7 +107,7 @@ class FakeCatalog implements Pick<
 }
 
 const service = (catalog: FakeCatalog) =>
-  new CatalogService(catalog as unknown as CatalogRepository, labels);
+  new CatalogService(catalog as unknown as CatalogRepository, labels, 20);
 
 describe('CatalogService', () => {
   describe('searchGames', () => {
@@ -217,6 +223,25 @@ describe('CatalogService', () => {
 
     it('jogo inexistente ou fora do catálogo responde 404', async () => {
       await expect(findGame(null)).rejects.toThrow(new NotFoundException('Jogo não encontrado.'));
+    });
+  });
+
+  describe('listCountries', () => {
+    it('só lista países com pelo menos 20 jogos, pelo nome em português', async () => {
+      const catalog = new FakeCatalog({ total: 0, games: [] }, [], null, [
+        { alpha2: 'US', namePt: 'Estados Unidos', gameCount: 2042 },
+        { alpha2: 'MY', namePt: 'Malásia', gameCount: 21 },
+        { alpha2: 'PH', namePt: 'Filipinas', gameCount: 20 },
+        { alpha2: 'UY', namePt: 'Uruguai', gameCount: 19 },
+        { alpha2: 'BR', namePt: 'Brasil', gameCount: 251 },
+      ]);
+
+      expect(await service(catalog).listCountries()).toEqual([
+        { code: 'BR', name: 'Brasil', gameCount: 251 },
+        { code: 'US', name: 'Estados Unidos', gameCount: 2042 },
+        { code: 'PH', name: 'Filipinas', gameCount: 20 },
+        { code: 'MY', name: 'Malásia', gameCount: 21 },
+      ]);
     });
   });
 
