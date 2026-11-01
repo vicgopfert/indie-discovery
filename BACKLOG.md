@@ -4,10 +4,11 @@ Checklist de acompanhamento. Detalhes completos de cada item (critério de concl
 
 **Esforço:** P = 2–4h · M = 5–10h · G = 12–20h, já incluindo testes.
 **Marcos:** M0 (semana 2) · M1 (semana 12) · M2 (semana 16) · Congelamento (semana 20) · M3 (semana 22) · Banca (semana 24).
+**Sprints:** a de cada item vem da tabela de sprints da seção 13 de `docs/proposta-tecnica.md`. No título do épico, a sprint da maioria dos itens vem primeiro, e as exceções em seguida.
 
 Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra principal existir, o Swagger estiver atualizado se houver endpoint novo, e a mudança estiver implantada).
 
-## E0 — Ambiente e fundação (S1–S2)
+## E0 — Ambiente e fundação (S1–S2; B-06 na S3)
 
 - [x] **B-01** (M) Monorrepositório pnpm (`apps/api`, `apps/web`, `packages/contracts`) + `tsconfig.base` estrito
 - [x] **B-02** (P) Projetos NestJS 12 e Next.js; Swagger em `/api/docs`; rewrite `/api/*`; verificar compatibilidade CommonJS × Prisma 7
@@ -16,7 +17,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [x] **B-05** (P) CI: instalação → lint → tipos → testes → migrations (Postgres de serviço) → e2e → build
 - [x] **B-06** (P) Schema Zod das variáveis de ambiente + `.env.example`
 
-## E1 — Catálogo e ingestão (S3–S4)
+## E1 — Catálogo e ingestão (S3–S4; B-07 na S1, B-08 na S2, B-69 na S7)
 
 - [x] **B-07** (M) **Spike da IGDB — marco M0:** credenciais, termos de uso, cobertura de campos (país, idioma, resumo, indicador pré-lançamento), tamanho do catálogo, fixtures reais salvas
 - [x] **B-08** (M) Schema Prisma do catálogo + primeira migration + seed de países/idiomas
@@ -32,7 +33,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [x] **B-69** (M) "Want to Play" com contagem de 5 pessoas ou mais como sinal de interesse na ingestão; medir entre duas ingestões quantos jogos ficaram abaixo do limite depois de estarem acima. **Precede o B-37 e as medições do B-62:** o catálogo cresce cerca de 13%, o que muda IDF, vetores, popularidade máxima e a cobertura de etiquetas do 8.9 — concluído em 01/11/2026: 22.805 jogos em produção; nenhum saiu por cair abaixo do mínimo entre as cargas locais de 30/10 e 01/11 (`docs/ingestao.md`)
 - [x] **B-56** (P) Enriquecimento do país do estúdio pelo Wikidata na ingestão — 47,8% do catálogo com país (39,2% IGDB + 8,6% Wikidata), 250 jogos brasileiros, 48 países com 20 jogos ou mais
 
-## E2 — Contas e autenticação (S5)
+## E2 — Contas e autenticação (S5; B-19 na S7)
 
 - [x] **B-15** (P) Modelos `User` e `Session` + migration
 - [x] **B-16** (P) Cadastro com Argon2id e e-mail único
@@ -41,7 +42,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [x] **B-19** (M) Suíte e2e de autenticação
 - [x] **B-64** (P) Páginas de entrar e cadastrar e estado de sessão no cabeçalho, com foco funcional (o visual vem depois, com apoio de design gráfico)
 
-## E3 — Descoberta e interface pública (S6)
+## E3 — Descoberta e interface pública (S6; B-22 na S5, B-57 na S7, B-58 na S9, B-25 na S10)
 
 - [x] **B-20** (M) `GET /games` com busca, filtros (gênero, tema, situação), paginação; `GET /features`
 - [x] **B-21** (P) Filtros de idioma português e país do estúdio (país só lista opções com 20+ jogos)
@@ -52,7 +53,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [ ] **B-57** (M) Coleções culturais curadas: modelo, arquivo de curadoria, sugestão de candidatos, endpoints
 - [ ] **B-58** (M) Interface das coleções: vitrine "Explore por cultura", página da coleção, indicação na ficha
 
-## E4 — Biblioteca do jogador (S7)
+## E4 — Biblioteca do jogador (S7; B-28 e B-30 na S9, B-29 na S10)
 
 - [ ] **B-26** (P) Modelos `Rating`, `ListEntry`, `UserPreference` + migration
 - [ ] **B-27** (M) Endpoints `/me/*`: avaliação, listas, biblioteca, preferências, modo
@@ -73,7 +74,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [ ] **B-36** (P) E2e de recomendação + teste de determinismo
 - [ ] **B-37** (M) Script de avaliação offline + calibração dos pesos (depois do B-69)
 
-## E6 — Implantação (S2, contínuo)
+## E6 — Implantação (S2; B-41 na S11)
 
 - [x] **B-38** (P) Banco no Neon + `migrate deploy`
 - [x] **B-39** (M) Implantação da API no Render + `GET /api/health`
