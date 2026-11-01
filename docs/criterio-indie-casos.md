@@ -461,9 +461,11 @@ catálogo foi de 20.111 para 22.767 jogos, com 2.582 decididos pelo "Want to Pla
 dos vetores ficaram com até 2 etiquetas, como na medição acima. Detalhes em
 `docs/ingestao.md`, seção "'Want to Play' como sinal de interesse".
 
-**A medir no B-69:** entre duas ingestões, quantos jogos ficaram com a contagem abaixo do
-limite depois de estarem acima. Se o número for relevante, o jogo pode ficar entrando e
-saindo do catálogo; a decisão sobre isso vem com o número.
+**Oscilação medida no B-69:** entre as cargas locais de 30/10 e 01/11/2026, nenhum jogo saiu
+do catálogo por ficar com a contagem abaixo do limite depois de estar acima (alerta
+`VERDICT_CHANGED` com `wantToPlayDropped`). O número não mostra oscilação, e a regra fica
+como está; o alerta segue em cada execução e reabre a decisão se as saídas aparecerem.
+Detalhes em `docs/ingestao.md`, seção "'Want to Play' como sinal de interesse".
 
 **Pergunta em aberto, sem medição:** o jogo por lançar com data marcada entra só por ter
 data, sem nenhum sinal de interesse (3.152 jogos na carga de produção do B-14). Pelo padrão

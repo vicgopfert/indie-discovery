@@ -191,9 +191,28 @@ Os dois `VERDICT_CHANGED` são saídas por falta de sinal sem fim de carência n
 "Want to Play" (*MarsCity3026* e *Starcult Night Twisted Age*). Os nove alertas de empresa
 vêm das desenvolvedoras dos jogos que entraram e foram revisados no mesmo item: a
 *Palindrome Interactive*, subsidiária integral da Embracer desde 2020, entrou nos estúdios
-controlados, e *Shadowveil: Legend of The Five Rings* sai do catálogo na próxima execução;
+controlados, e *Shadowveil: Legend of The Five Rings* saiu do catálogo na carga seguinte;
 as oito empresas-mãe fora da lista de grandes foram recusadas pelo teste de entrada
 (`docs/criterio-indie-casos.md`).
+
+Uma terceira carga, em 01/11/2026, mediu a oscilação entre dias:
+
+| | Terceira carga (01/11/2026) |
+| --- | --- |
+| Duração | 9 min 4 s |
+| Gravação | 13 s |
+| Pico de memória | 612 MB |
+| Catálogo | 22.802 jogos (131.304 candidatos, eram 131.189) |
+| Decididos pelo "Want to Play" | 2.358 |
+| Popularidade | unidade 1/888.436, máximo 766 pessoas, mediana 6 |
+| Vetores com até 2 etiquetas | 17,3% |
+| Alertas | 10: 7 `VERDICT_CHANGED` e 3 `RELEASE_DATE_ASSIGNED`; nenhum de empresa |
+
+Nenhum dos `VERDICT_CHANGED` tem `wantToPlayDropped`: nenhum jogo saiu por ficar abaixo do
+mínimo depois de estar acima. Um é *Shadowveil*, que saiu como `CONTROLLED_DEVELOPER` pela
+mudança do critério. Os outros seis são jogos por lançar que perderam a data na IGDB e não
+têm `hypes` nem a contagem mínima (o maior tem 4 pessoas), então saíram por falta de sinal.
+É a saída prevista na regra dos jogos por lançar, não uma oscilação do "Want to Play".
 
 ## Cargas reais (banco local, 24/10/2026)
 
