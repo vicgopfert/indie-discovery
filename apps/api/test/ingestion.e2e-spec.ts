@@ -5,6 +5,10 @@ import { join } from 'node:path';
 import { seedReferenceData } from '../prisma/seed/reference-data';
 import { AppModule } from '../src/app.module';
 import { IngestionStatus, ReviewFlagKind } from '../src/generated/prisma/client';
+import {
+  type CollectionsConfig,
+  readCollectionsConfig,
+} from '../src/modules/ingestion/collections/collections.config';
 import { IgdbCatalogSource } from '../src/modules/ingestion/igdb/igdb-catalog.source';
 import { igdbGameSchema } from '../src/modules/ingestion/igdb/igdb-game.schema';
 import { mapIgdbGame } from '../src/modules/ingestion/igdb/igdb.mapper';
@@ -14,7 +18,10 @@ import { readVersionedIndieCriteria } from '../src/modules/ingestion/criteria/in
 import { readIngestionConfig } from '../src/modules/ingestion/ingestion-config';
 import { readIngestionReview } from '../src/modules/ingestion/review-flags/ingestion-review.config';
 import { IngestionRepository } from '../src/modules/ingestion/persistence/ingestion.repository';
-import { RunIngestionUseCase } from '../src/modules/ingestion/run-ingestion.use-case';
+import {
+  type IngestionSettings,
+  RunIngestionUseCase,
+} from '../src/modules/ingestion/run-ingestion.use-case';
 import { WikidataCountrySource } from '../src/modules/ingestion/wikidata/wikidata-country.source';
 import { readTfidfConfig } from '../src/modules/recommendation/tfidf';
 import { PrismaService } from '../src/prisma/prisma.service';
@@ -42,6 +49,8 @@ const fixtureGames = [
 ].sort((a, b) => a.id - b.id);
 const versioned = readVersionedIndieCriteria();
 const review = readIngestionReview(versioned.criteria);
+// As coleções do arquivo apontam para jogos reais, fora dos fixtures: cada teste traz as suas.
+const noCollections: CollectionsConfig = { ...readCollectionsConfig(), collections: [] };
 const accepted = fixtureGames.filter(
   (raw) =>
     evaluateIndieCriteria(mapIgdbGame(igdbGameSchema.parse(raw), NOW), versioned.criteria, NOW)
@@ -114,7 +123,9 @@ describe('Ingestão', () => {
   let server: FakeIgdbServer;
   let catalog: FakeCatalog;
   let ingest: RunIngestionUseCase;
-  let ingestWith: (reviewSettings: typeof review) => RunIngestionUseCase;
+  let ingestWith: (
+    overrides: Partial<Pick<IngestionSettings, 'review' | 'collections'>>,
+  ) => RunIngestionUseCase;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
@@ -136,19 +147,27 @@ describe('Ingestão', () => {
       maxAttempts: 1,
     });
     const ingestion = readIngestionConfig();
-    ingestWith = (reviewSettings) =>
+    ingestWith = (overrides) =>
       new RunIngestionUseCase(
         new IgdbCatalogSource(igdb, ingestion),
         new WikidataCountrySource({ endpoint: `${urls.apiUrl}/sparql`, maxAttempts: 1 }),
         new IngestionRepository(prisma),
-        { criteria: versioned, review: reviewSettings, tfidf: readTfidfConfig(), ingestion },
+        {
+          criteria: versioned,
+          review,
+          tfidf: readTfidfConfig(),
+          ingestion,
+          collections: noCollections,
+          ...overrides,
+        },
       );
-    ingest = ingestWith(review);
+    ingest = ingestWith({});
   });
 
   beforeEach(async () => {
     catalog = new FakeCatalog();
-    await prisma.$executeRaw`TRUNCATE "IngestionRun", "Game", "Company", "Feature" CASCADE`;
+    await prisma.$executeRaw`
+      TRUNCATE "IngestionRun", "Game", "Company", "Feature", "Collection" CASCADE`;
   });
 
   afterAll(async () => {
@@ -251,8 +270,7 @@ describe('Ingestão', () => {
     };
 
     const result = await ingestWith({
-      ...review,
-      reviewedCompanies: [...review.reviewedCompanies, newlyReviewed],
+      review: { ...review, reviewedCompanies: [...review.reviewedCompanies, newlyReviewed] },
     }).execute(later);
 
     expect(result.status).toBe(IngestionStatus.SUCCEEDED);
@@ -397,6 +415,90 @@ describe('Ingestão', () => {
       await ingest.execute(NOW);
 
       expect(await gameRow(target!.id)).toMatchObject({ inCatalog: true, popularityCount: 7 });
+    });
+  });
+
+  describe('coleções culturais', () => {
+    const [first, second, third] = accepted;
+    const NEVER_FETCHED = { igdbId: 990100, name: 'Jogo aprovado que a IGDB não trouxe' };
+    const collection = (slug: string, games: { igdbId: number; name: string }[]) => ({
+      slug,
+      name: `Coleção ${slug}`,
+      description: `Descrição de ${slug}`,
+      scope: `Escopo de ${slug}`,
+      published: true,
+      suggest: { keywords: [], summaryTerms: [], wikidataPlaces: [] },
+      games,
+      rejected: [],
+    });
+    const entry = (raw: RawGame) => ({ igdbId: raw.id, name: raw.name! });
+    const withCollections = (collections: CollectionsConfig['collections']) =>
+      ingestWith({ collections: { ...noCollections, minGames: 1, collections } });
+    const linksOf = async (slug: string) =>
+      (
+        await prisma.collectionGame.findMany({
+          where: { collection: { slug } },
+          select: { game: { select: { igdbId: true } } },
+        })
+      )
+        .map(({ game }) => game.igdbId)
+        .sort((a, b) => a - b);
+
+    it('grava as coleções na ordem do arquivo e avisa do jogo aprovado fora do catálogo', async () => {
+      const result = await withCollections([
+        collection('b', [entry(first!), entry(second!), NEVER_FETCHED]),
+        collection('a', [entry(third!)]),
+      ]).execute(NOW);
+
+      expect(result.status).toBe(IngestionStatus.SUCCEEDED);
+      expect(
+        await prisma.collection.findMany({
+          select: { slug: true, sortOrder: true },
+          orderBy: { sortOrder: 'asc' },
+        }),
+      ).toEqual([
+        { slug: 'b', sortOrder: 0 },
+        { slug: 'a', sortOrder: 1 },
+      ]);
+      expect(await linksOf('b')).toEqual([first!.id, second!.id].sort((a, b) => a - b));
+      const flags = (await flagsOf(result.runId)).filter(
+        (f) => f.kind === ReviewFlagKind.COLLECTION_GAME_OUT_OF_CATALOG,
+      );
+      expect(flags).toMatchObject([
+        {
+          igdbId: NEVER_FETCHED.igdbId,
+          gameName: NEVER_FETCHED.name,
+          detail: { collection: 'b', catalogGames: 2, minGames: 1 },
+        },
+      ]);
+    });
+
+    it('refaz os vínculos e apaga a coleção que saiu do arquivo', async () => {
+      await withCollections([
+        collection('b', [entry(first!), entry(second!)]),
+        collection('a', [entry(third!)]),
+      ]).execute(NOW);
+
+      await withCollections([collection('b', [entry(second!), entry(third!)])]).execute(NOW);
+
+      expect(await prisma.collection.findMany({ select: { slug: true } })).toEqual([{ slug: 'b' }]);
+      expect(await linksOf('b')).toEqual([second!.id, third!.id].sort((a, b) => a - b));
+    });
+
+    it('mantém o vínculo do jogo que saiu do catálogo e avisa', async () => {
+      const games = [entry(first!), entry(second!)];
+      await withCollections([collection('b', games)]).execute(NOW);
+      catalog.games = catalog.games.map((g) => (g.id === first!.id ? { ...g, game_status: 6 } : g));
+
+      const result = await withCollections([collection('b', games)]).execute(NOW);
+
+      expect(await gameRow(first!.id)).toMatchObject({ inCatalog: false });
+      expect(await linksOf('b')).toEqual([first!.id, second!.id].sort((a, b) => a - b));
+      expect(
+        (await flagsOf(result.runId)).filter(
+          (f) => f.kind === ReviewFlagKind.COLLECTION_GAME_OUT_OF_CATALOG,
+        ),
+      ).toMatchObject([{ igdbId: first!.id, detail: { collection: 'b', catalogGames: 1 } }]);
     });
   });
 

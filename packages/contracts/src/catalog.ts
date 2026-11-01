@@ -147,3 +147,26 @@ export const GameDetailSchema = GameSummarySchema.extend({
 });
 
 export type GameDetail = z.infer<typeof GameDetailSchema>;
+
+export const COLLECTION_PREVIEW_COVERS = 4;
+
+export const CollectionPageQuerySchema = GameSearchQuerySchema.pick({ page: true, pageSize: true });
+
+export type CollectionPageQuery = z.output<typeof CollectionPageQuerySchema>;
+
+export const CollectionSummarySchema = z.object({
+  slug: z.string(),
+  name: z.string(),
+  description: z.string(),
+  gameCount: z.number().int(),
+  coverImageIds: z.array(z.string()).max(COLLECTION_PREVIEW_COVERS),
+});
+
+export type CollectionSummary = z.infer<typeof CollectionSummarySchema>;
+
+export const CollectionDetailSchema = CollectionSummarySchema.omit({
+  gameCount: true,
+  coverImageIds: true,
+}).extend({ games: GamePageSchema });
+
+export type CollectionDetail = z.infer<typeof CollectionDetailSchema>;

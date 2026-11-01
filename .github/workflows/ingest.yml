@@ -85,6 +85,16 @@ jobs:
                 count(*) AS jogos, round(100.0 * count(*) / sum(count(*)) OVER (), 1) AS percentual
               FROM \"Game\" WHERE \"inCatalog\" GROUP BY 1 ORDER BY 2 DESC"
             echo '```'
+            echo '## Coleções'
+            echo '```'
+            psql "$PSQL_URL" -X -q -c "
+              SELECT c.slug, count(g.id) FILTER (WHERE g.\"inCatalog\") AS no_catalogo,
+                count(g.id) FILTER (WHERE NOT g.\"inCatalog\") AS fora
+              FROM \"Collection\" c
+              LEFT JOIN \"CollectionGame\" cg ON cg.\"collectionId\" = c.id
+              LEFT JOIN \"Game\" g ON g.id = cg.\"gameId\"
+              GROUP BY c.slug, c.\"sortOrder\" ORDER BY c.\"sortOrder\""
+            echo '```'
             echo '## Alertas da execução'
             echo '```'
             psql "$PSQL_URL" -X -q -c "

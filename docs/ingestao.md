@@ -16,7 +16,7 @@ execução termina como `SUCCEEDED` e 1 quando termina como `FAILED`.
 `PRODUCTION_DATABASE_URL` (conexão direta do Neon), `IGDB_CLIENT_ID` e
 `IGDB_CLIENT_SECRET`. Ele divide o grupo de concorrência com o job de migrations, para que
 os dois nunca rodem juntos, e escreve no resumo da execução o registro do `IngestionRun`, a
-composição do catálogo, os alertas e o tamanho do banco.
+composição do catálogo, as coleções, os alertas e o tamanho do banco.
 
 ## Uma execução
 
@@ -32,9 +32,9 @@ composição do catálogo, os alertas e o tamanho do banco.
 4. Sobe as cadeias de empresa-mãe das desenvolvedoras dos jogos aceitos. Busca no
    Wikidata o país dos jogos sem país na IGDB (seção "País do estúdio").
 5. Calcula IDF e vetores TF-IDF sobre o catálogo aceito.
-6. Detecta os alertas de revisão.
-7. Grava tudo numa única transação e fecha a execução com contagens, escala da
-   popularidade e resumo de erros.
+6. Detecta os alertas de revisão, entre eles os das coleções (seção "Coleções").
+7. Grava tudo numa única transação, com as coleções publicadas de `config/collections.json`,
+   e fecha a execução com contagens, escala da popularidade e resumo de erros.
 
 Jogo rejeitado na primeira avaliação não é gravado. Jogo gravado que passa a ser
 rejeitado fica com `inCatalog = false`, com o veredito e a versão do critério, porque
@@ -136,6 +136,7 @@ do filtro exige (B-21). O M0 estimava cerca de 50% de cobertura, a partir de uma
 | `RELEASE_DATE_ASSIGNED` | Jogo gravado sem data ganhou data de lançamento |
 | `VERDICT_CHANGED` | A reavaliação mudou o jogo de lado; o detalhe diz se a versão do critério mudou, se a saída foi pelo fim da carência pós-lançamento (`postLaunchGraceEnded`) e se foi pela queda do "Want to Play" abaixo do mínimo, com a contagem gravada no mínimo ou acima (`wantToPlayDropped`) |
 | `LEFT_CANDIDATE_SET` | Jogo do catálogo não voltou na busca; o detalhe separa `LOST_INDIE_GENRE`, `OUT_OF_SCOPE` e `NOT_FOUND` |
+| `COLLECTION_GAME_OUT_OF_CATALOG` | Jogo aprovado numa coleção publicada não está no catálogo da execução; o detalhe traz a coleção, quantos jogos dela estão no catálogo e o mínimo (seção "Coleções") |
 | `NO_DEVELOPER_VISIBLE` | Jogo do catálogo sem desenvolvedora creditada, com pelo menos `noDeveloperReview.minRatings` avaliações (20) ou publisher da lista de grandes, fora dos jogos já revisados (decisão do M0, seção 8.10) |
 
 Os alertas de empresa não dependem de histórico: disparam enquanto a empresa não estiver
@@ -151,6 +152,20 @@ arquivo único: revisar uma empresa mudava a versão, marcava `criteriaChanged` 
 ter mudado e, como a versão entra na comparação da gravação, fazia a ingestão regravar o
 catálogo inteiro. **O `criteriaChanged` é confiável a partir da versão `84dead01…`**, a
 primeira depois da separação; os alertas anteriores ficam como estão.
+
+## Coleções (B-57)
+
+As coleções culturais ficam em `config/collections.json` (curadoria em `docs/colecoes.md`).
+Cada execução sincroniza as publicadas, na mesma transação do catálogo e depois dos jogos:
+insere ou atualiza cada coleção pelo slug, com a ordem do arquivo, apaga as que saíram e
+refaz os vínculos pelo `igdbId`. Só o que mudou é regravado. O vínculo do jogo que saiu do
+catálogo continua gravado, para ele não perder a coleção se voltar, e a API filtra o
+catálogo. Jogo aprovado que nunca foi gravado fica sem vínculo.
+
+Para cada jogo aprovado fora do catálogo da execução sai um
+`COLLECTION_GAME_OUT_OF_CATALOG`. O alerta se repete a cada execução até o jogo voltar ou
+sair do arquivo, e o detalhe mostra se a coleção ficou abaixo do mínimo na interface. Uma
+mudança no arquivo só chega à produção com uma ingestão, como as do critério indie.
 
 ## Popularidade
 

@@ -4,6 +4,7 @@ import {
   StudioCountrySource,
 } from '../../../generated/prisma/client';
 import type { PrismaService } from '../../../prisma/prisma.service';
+import type { CollectionWrite } from '../collections/collections';
 import type { MappedGame } from '../igdb/igdb.mapper';
 import type { StudioCountry } from '../studio-country/studio-country';
 import type { ReviewFlag, StoredGame } from '../review-flags/review-flags';
@@ -31,6 +32,7 @@ export interface CatalogWrite {
   catalog: CatalogGame[];
   outOfCatalog: OutOfCatalogGame[];
   idf: ReadonlyMap<FeatureKey, number>;
+  collections: CollectionWrite[];
   flags: ReviewFlag[];
 }
 
@@ -133,6 +135,7 @@ export class IngestionRepository {
         ...this.syncGameCompanies(write.catalog),
         ...this.syncGameFeatures(write.catalog),
         ...this.syncGameLanguages(write.catalog),
+        ...this.syncCollections(write.collections),
         ...this.insertFlags(runId, write.flags),
       ],
       { timeout: WRITE_TIMEOUT_MS },
@@ -404,6 +407,53 @@ export class IngestionRepository {
       },
       GAMES_PER_LINK_STATEMENT,
     );
+  }
+
+  // Depois dos jogos, na mesma transação: o vínculo é resolvido pelo igdbId, e o jogo aprovado que
+  // nunca foi gravado fica sem vínculo (o alerta da coleção já aponta).
+  private syncCollections(collections: CollectionWrite[]) {
+    const links = collections.flatMap((c) =>
+      c.gameIgdbIds.map((igdbId) => ({ slug: c.slug, igdbId })),
+    );
+    return [
+      this.prisma.$executeRaw`
+        DELETE FROM "Collection" WHERE "slug" <> ALL(${collections.map((c) => c.slug)}::text[])`,
+      this.prisma.$executeRaw`
+        INSERT INTO "Collection" AS co ("id", "slug", "name", "description", "sortOrder")
+        SELECT gen_random_uuid(), t.slug, t.name, t.description, t.sort_order
+        FROM unnest(
+          ${collections.map((c) => c.slug)}::text[],
+          ${collections.map((c) => c.name)}::text[],
+          ${collections.map((c) => c.description)}::text[],
+          ${collections.map((c) => c.sortOrder)}::int[]
+        ) AS t(slug, name, description, sort_order)
+        ON CONFLICT ("slug") DO UPDATE
+        SET "name" = EXCLUDED."name", "description" = EXCLUDED."description",
+          "sortOrder" = EXCLUDED."sortOrder"
+        WHERE (co."name", co."description", co."sortOrder") IS DISTINCT FROM
+          (EXCLUDED."name", EXCLUDED."description", EXCLUDED."sortOrder")`,
+      this.prisma.$executeRaw`
+        DELETE FROM "CollectionGame" cg
+        WHERE NOT EXISTS (
+          SELECT 1 FROM unnest(
+            ${links.map((l) => l.slug)}::text[],
+            ${links.map((l) => l.igdbId)}::int[]
+          ) AS t(slug, igdb_id)
+          JOIN "Collection" co ON co."slug" = t.slug
+          JOIN "Game" g ON g."igdbId" = t.igdb_id
+          WHERE co."id" = cg."collectionId" AND g."id" = cg."gameId"
+        )`,
+      this.prisma.$executeRaw`
+        INSERT INTO "CollectionGame" ("collectionId", "gameId")
+        SELECT co."id", g."id"
+        FROM unnest(
+          ${links.map((l) => l.slug)}::text[],
+          ${links.map((l) => l.igdbId)}::int[]
+        ) AS t(slug, igdb_id)
+        JOIN "Collection" co ON co."slug" = t.slug
+        JOIN "Game" g ON g."igdbId" = t.igdb_id
+        ON CONFLICT DO NOTHING`,
+    ];
   }
 
   private insertFlags(runId: string, flags: ReviewFlag[]) {

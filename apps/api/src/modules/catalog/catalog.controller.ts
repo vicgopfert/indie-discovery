@@ -1,4 +1,7 @@
 import {
+  COLLECTION_PREVIEW_COVERS,
+  type CollectionPageQuery,
+  CollectionPageQuerySchema,
   COUNTRY_UNKNOWN,
   type FeatureQuery,
   FeatureQuerySchema,
@@ -57,6 +60,12 @@ const GAME_DETAIL_EXAMPLE = {
     { locale: 'pt-BR', name: 'Português (Brasil)', interface: true, subtitles: true, audio: false },
   ],
   officialUrl: 'https://www.celestegame.com',
+};
+
+const COLLECTION_EXAMPLE = {
+  slug: 'brasil',
+  name: 'Brasil',
+  description: 'Folclore, história e lugares do Brasil.',
 };
 
 @ApiTags('catalog')
@@ -142,6 +151,40 @@ export class CatalogController {
   @ApiBadRequestResponse({ description: 'Tipo ausente ou diferente de genre e theme' })
   listFeatures(@Query({ schema: FeatureQuerySchema }) query: FeatureQuery) {
     return this.catalog.listFeatures(query);
+  }
+
+  @Public()
+  @Get('collections')
+  @ApiOkResponse({
+    description: `Coleções culturais curadas com jogos no catálogo, na ordem do arquivo de curadoria, com até ${COLLECTION_PREVIEW_COVERS} capas dos jogos mais populares`,
+    schema: {
+      example: [{ ...COLLECTION_EXAMPLE, gameCount: 12, coverImageIds: ['co3byy'] }],
+    },
+  })
+  listCollections() {
+    return this.catalog.listCollections();
+  }
+
+  @Public()
+  @Get('collections/:slug')
+  @ApiParam({ name: 'slug', description: 'Slug da coleção' })
+  @ApiQuery({ name: 'page', required: false, description: `De 1 a ${GAMES_PAGE_MAX}` })
+  @ApiQuery({
+    name: 'pageSize',
+    required: false,
+    description: `De 1 a ${GAMES_PAGE_SIZE_MAX}; padrão ${GAMES_PAGE_SIZE_DEFAULT}`,
+  })
+  @ApiOkResponse({
+    description: 'A coleção e os jogos dela no catálogo, dos mais populares para os menos',
+    schema: { example: { ...COLLECTION_EXAMPLE, games: GAME_PAGE_EXAMPLE } },
+  })
+  @ApiBadRequestResponse({ description: 'Página fora dos limites' })
+  @ApiNotFoundResponse({ description: 'Slug inexistente ou coleção sem jogos no catálogo' })
+  findCollection(
+    @Param('slug') slug: string,
+    @Query({ schema: CollectionPageQuerySchema }) query: CollectionPageQuery,
+  ) {
+    return this.catalog.findCollection(slug, query);
   }
 
   @Public()

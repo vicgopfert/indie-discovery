@@ -1,6 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { IngestionStatus, ReviewFlagKind } from '../../generated/prisma/client';
 import { canDeactivateMissing, missingCause } from './review-flags/candidate-set';
+import { collectionFlags, collectionWrites } from './collections/collections';
+import type { CollectionsConfig } from './collections/collections.config';
 import type { IgdbCatalogSource } from './igdb/igdb-catalog.source';
 import { igdbGameSchema } from './igdb/igdb-game.schema';
 import { type MappedGame, mapIgdbGame } from './igdb/igdb.mapper';
@@ -36,6 +38,7 @@ export interface IngestionSettings {
   review: IngestionReview;
   tfidf: TfidfConfig;
   ingestion: IngestionConfig;
+  collections: CollectionsConfig;
 }
 
 export interface IngestionResult extends RunOutcome {
@@ -162,6 +165,10 @@ export class RunIngestionUseCase {
         now,
       }),
       ...deactivation.flags,
+      ...collectionFlags(
+        this.settings.collections,
+        new Set(catalog.map(({ game }) => game.igdbId)),
+      ),
     ];
 
     const writeStart = Date.now();
@@ -171,6 +178,7 @@ export class RunIngestionUseCase {
       catalog,
       outOfCatalog,
       idf,
+      collections: collectionWrites(this.settings.collections),
       flags,
     });
     this.logger.log(`Gravação concluída em ${Math.round((Date.now() - writeStart) / 1000)} s`);

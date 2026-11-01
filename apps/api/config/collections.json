@@ -1,0 +1,4393 @@
+{
+  "curationPolicy": "Um jogo entra numa coleção quando a cultura está no centro dele: mitologia, religião, folclore, música, história ou cotidiano. Ambientação num lugar real da coleção, de hoje ou do passado, conta sozinha. Uma versão futurista, distópica ou inventada de um lugar só conta se a cultura em si estiver no centro: o nome do lugar ou a estética não bastam. Também não bastam um nome, um item ou uma referência isolada, a origem do estúdio nem uma guerra vista só de fora, como cenário de tiro ou estratégia. Os candidatos vêm do script de sugestão (palavras-chave da IGDB, termos do resumo e local da narrativa no Wikidata), e cada um é aprovado ou recusado com o motivo pelo autor.",
+  "minGames": 10,
+  "minGamesRationale": "Mínimo do F-24 e do R-14: com menos de 10 jogos a coleção não sustenta a navegação. O arquivo não aceita coleção abaixo do mínimo; o jogo aprovado que sai do catálogo gera o alerta COLLECTION_GAME_OUT_OF_CATALOG.",
+  "collections": [
+    {
+      "slug": "brasil",
+      "name": "Brasil",
+      "description": "Folclore, povos originários, história, cidades e cotidiano do Brasil.",
+      "scope": "Jogos com o folclore, as religiões, os povos indígenas, a história, a música, a comida ou o cotidiano do Brasil no centro, ou ambientados no Brasil, de hoje ou do passado. Segue a regra geral de ambientação da curadoria.",
+      "published": true,
+      "suggest": {
+        "keywords": [
+          "brazil",
+          "brazilian-culture",
+          "brazilian-folklore",
+          "brazilian-politics",
+          "made-in-brazil",
+          "amazon"
+        ],
+        "summaryTerms": [
+          "Brazil",
+          "Brazilian",
+          "Brasil",
+          "Amazon rainforest",
+          "Amazonia",
+          "Amazônia",
+          "Rio de Janeiro",
+          "São Paulo",
+          "Sao Paulo",
+          "favela",
+          "favelas",
+          "Saci",
+          "Curupira",
+          "Cangaço",
+          "cangaceiro",
+          "cangaceiros",
+          "Iara",
+          "Boitatá",
+          "Mapinguari",
+          "Candomblé",
+          "Umbanda",
+          "capoeira",
+          "sertão",
+          "Tupi",
+          "Guarani",
+          "Pantanal",
+          "Bahia",
+          "Recife"
+        ],
+        "wikidataPlaces": ["Q155"]
+      },
+      "games": [
+        {
+          "igdbId": 29855,
+          "name": "Queen of Seas"
+        },
+        {
+          "igdbId": 138612,
+          "name": "Tropicalia"
+        },
+        {
+          "igdbId": 162625,
+          "name": "Huni Kuin: Yube Baitana"
+        },
+        {
+          "igdbId": 192368,
+          "name": "Gaucho and the Grassland"
+        },
+        {
+          "igdbId": 226009,
+          "name": "Huni Kuin: Beya Xinã Bena"
+        },
+        {
+          "igdbId": 237343,
+          "name": "Tekoha: A Tale Among the Stars"
+        },
+        {
+          "igdbId": 255483,
+          "name": "Turi: Kaapora"
+        },
+        {
+          "igdbId": 304515,
+          "name": "Yvy"
+        },
+        {
+          "igdbId": 330329,
+          "name": "Saci: The Cursed Hunt"
+        },
+        {
+          "igdbId": 333319,
+          "name": "Cordels & Spells"
+        },
+        {
+          "igdbId": 383951,
+          "name": "Cururu: Whispers of the Forest"
+        },
+        {
+          "igdbId": 105199,
+          "name": "Banzo: Marks of Slavery"
+        },
+        {
+          "igdbId": 106433,
+          "name": "Arida: Backland's Awakening"
+        },
+        {
+          "igdbId": 127734,
+          "name": "Arida II: Rise of the Brave"
+        },
+        {
+          "igdbId": 152407,
+          "name": "Rio: Raised In Oblivion"
+        },
+        {
+          "igdbId": 197952,
+          "name": "Smoking Snakes"
+        },
+        {
+          "igdbId": 207334,
+          "name": "Jorel's Brother and the Most Important Game of the Galaxy"
+        },
+        {
+          "igdbId": 215482,
+          "name": "Brazilian Street Food Simulator"
+        },
+        {
+          "igdbId": 255719,
+          "name": "The Posthumous Investigation"
+        },
+        {
+          "igdbId": 259454,
+          "name": "Lunr.Rdio.Taxi"
+        },
+        {
+          "igdbId": 292206,
+          "name": "Subversive Memories"
+        },
+        {
+          "igdbId": 312656,
+          "name": "101 Cats in Brazil"
+        },
+        {
+          "igdbId": 315615,
+          "name": "Aprenda Libras"
+        },
+        {
+          "igdbId": 317175,
+          "name": "Brazilian Drug Dealer 3: I Opened a Portal to Hell in the Favela Trying To Revive Mit Aia I Need to Close It"
+        },
+        {
+          "igdbId": 324256,
+          "name": "Hell Clock"
+        },
+        {
+          "igdbId": 345147,
+          "name": "Impunes"
+        },
+        {
+          "igdbId": 371247,
+          "name": "Beach Life Simulator"
+        },
+        {
+          "igdbId": 381172,
+          "name": "Black Sailors"
+        },
+        {
+          "igdbId": 400367,
+          "name": "Caravana 2000"
+        }
+      ],
+      "rejected": [
+        {
+          "igdbId": 3046,
+          "name": "Day One: Garry's Incident",
+          "reason": "Civilização antiga inventada na Amazônia, sem cultura brasileira."
+        },
+        {
+          "igdbId": 19719,
+          "name": "Songs for a Hero",
+          "reason": "Só o estúdio é brasileiro."
+        },
+        {
+          "igdbId": 51899,
+          "name": "Star Vikings Forever",
+          "reason": "Só cita um prêmio brasileiro."
+        },
+        {
+          "igdbId": 101461,
+          "name": "Green Hell",
+          "reason": "Floresta amazônica sem país definido, como natureza; a cultura brasileira não aparece."
+        },
+        {
+          "igdbId": 103391,
+          "name": "Football Story",
+          "reason": "Futebol sem a cultura brasileira no centro."
+        },
+        {
+          "igdbId": 107496,
+          "name": "Bolsomito",
+          "reason": "Propaganda eleitoral de um candidato, retirada da Steam após investigação do Ministério Público; não retrata a cultura brasileira."
+        },
+        {
+          "igdbId": 133059,
+          "name": "Fobia: St. Dinfna Hotel",
+          "reason": "Só o estúdio é brasileiro."
+        },
+        {
+          "igdbId": 140133,
+          "name": "Enigma of Fear",
+          "reason": "Baseado em série brasileira, mas o resumo não traz cultura brasileira no centro."
+        },
+        {
+          "igdbId": 143577,
+          "name": "Bravery and Greed",
+          "reason": "\"Amazon\" é a guerreira, não a floresta."
+        },
+        {
+          "igdbId": 156950,
+          "name": "ADA: Além d' Aventura",
+          "reason": "Só um \"toque brasileiro\" num mundo de fantasia."
+        },
+        {
+          "igdbId": 164105,
+          "name": "The Mysterious Cat Tower",
+          "reason": "Só cita o Brasil numa piada."
+        },
+        {
+          "igdbId": 167512,
+          "name": "Pulling No Punches",
+          "reason": "Sátira de pandemia sem o Brasil no resumo."
+        },
+        {
+          "igdbId": 183988,
+          "name": "Code Bunny",
+          "reason": "Só o estúdio é brasileiro."
+        },
+        {
+          "igdbId": 235957,
+          "name": "Flutter Away",
+          "reason": "Floresta amazônica sem país definido, como natureza; a cultura brasileira não aparece."
+        },
+        {
+          "igdbId": 246028,
+          "name": "Cats Hidden Around the World",
+          "reason": "O Rio é um lugar entre 15."
+        },
+        {
+          "igdbId": 255772,
+          "name": "Aiyra",
+          "reason": "O resumo não mostra a cultura brasileira além do nome."
+        },
+        {
+          "igdbId": 312609,
+          "name": "Capybara Fighters!",
+          "reason": "Passa em Tóquio; o Brasil é só o destino da luta final."
+        },
+        {
+          "igdbId": 327047,
+          "name": "RhythMania",
+          "reason": "O resumo não mostra a cultura brasileira."
+        },
+        {
+          "igdbId": 375497,
+          "name": "Solis",
+          "reason": "Só o estúdio é brasileiro."
+        },
+        {
+          "igdbId": 410135,
+          "name": "Whiskers In The Sand",
+          "reason": "Tema egípcio; só o estúdio é brasileiro."
+        },
+        {
+          "igdbId": 425371,
+          "name": "Escape Your Boss",
+          "reason": "Só cita um jogo França x Brasil."
+        },
+        {
+          "igdbId": 136712,
+          "name": "171",
+          "reason": "Mundo aberto só de \"ambientação inspirada no Brasil\". Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 255830,
+          "name": "Le Fol",
+          "reason": "Narrativa só inspirada em São Paulo. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 7388,
+          "name": "Papo & Yo",
+          "reason": "Favela onírica. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        }
+      ]
+    },
+    {
+      "slug": "japao",
+      "name": "Japão",
+      "description": "Yokais, deuses, história e cidades do Japão.",
+      "scope": "Jogos com o folclore, a mitologia, a religião, a história ou o cotidiano do Japão no centro, ou ambientados no Japão, de hoje ou do passado. Segue a regra geral de ambientação da curadoria.",
+      "published": true,
+      "suggest": {
+        "keywords": [
+          "japan",
+          "youkai",
+          "yokai",
+          "japanese-culture",
+          "feudal-japan",
+          "japanese-mythology",
+          "japanese-folklore",
+          "shinto",
+          "tokyo",
+          "modern-day-japan",
+          "historical-japan",
+          "edo-era",
+          "ancient-japan",
+          "past-japan",
+          "shogun"
+        ],
+        "summaryTerms": [
+          "Japan",
+          "feudal Japan",
+          "Edo",
+          "Sengoku",
+          "yokai",
+          "yōkai",
+          "youkai",
+          "Shinto",
+          "kami",
+          "kitsune",
+          "tengu",
+          "Japanese folklore",
+          "Japanese mythology",
+          "Tokyo",
+          "Kyoto",
+          "Okinawa",
+          "Ainu"
+        ],
+        "wikidataPlaces": ["Q17"]
+      },
+      "games": [
+        {
+          "igdbId": 1900,
+          "name": "Akaneiro: Demon Hunters"
+        },
+        {
+          "igdbId": 9257,
+          "name": "Sword of Asumi"
+        },
+        {
+          "igdbId": 9937,
+          "name": "99 Spirits"
+        },
+        {
+          "igdbId": 10089,
+          "name": "Tengami"
+        },
+        {
+          "igdbId": 16751,
+          "name": "Super Ultra Kogal"
+        },
+        {
+          "igdbId": 16819,
+          "name": "Tsukumogami"
+        },
+        {
+          "igdbId": 17776,
+          "name": "This Starry Midnight We Make"
+        },
+        {
+          "igdbId": 19085,
+          "name": "Shadow Tactics: Blades of the Shogun"
+        },
+        {
+          "igdbId": 19279,
+          "name": "Sound of Drop: Fall into Poison"
+        },
+        {
+          "igdbId": 21861,
+          "name": "Yasai Ninja"
+        },
+        {
+          "igdbId": 21965,
+          "name": "Miyamori"
+        },
+        {
+          "igdbId": 24280,
+          "name": "Tokaido"
+        },
+        {
+          "igdbId": 25308,
+          "name": "Kyurinaga's Revenge"
+        },
+        {
+          "igdbId": 26136,
+          "name": "Japanese School Life"
+        },
+        {
+          "igdbId": 26700,
+          "name": "Raging Loop"
+        },
+        {
+          "igdbId": 26770,
+          "name": "Akihabara: Feel the Rhythm"
+        },
+        {
+          "igdbId": 26869,
+          "name": "World of Horror"
+        },
+        {
+          "igdbId": 27531,
+          "name": "Tokyo Dark"
+        },
+        {
+          "igdbId": 27750,
+          "name": "Tale of Ronin"
+        },
+        {
+          "igdbId": 28015,
+          "name": "Kamiko"
+        },
+        {
+          "igdbId": 32476,
+          "name": "Disgraced"
+        },
+        {
+          "igdbId": 34167,
+          "name": "Drift Streets Japan"
+        },
+        {
+          "igdbId": 36595,
+          "name": "Sakuna: Of Rice and Ruin"
+        },
+        {
+          "igdbId": 49514,
+          "name": "Mineko's Night Market"
+        },
+        {
+          "igdbId": 72492,
+          "name": "Shikhondo: Soul Eater"
+        },
+        {
+          "igdbId": 76920,
+          "name": "Shoujo City"
+        },
+        {
+          "igdbId": 96440,
+          "name": "Kemono Heroes"
+        },
+        {
+          "igdbId": 99131,
+          "name": "Rising Dusk"
+        },
+        {
+          "igdbId": 102089,
+          "name": "Nostalgic Train"
+        },
+        {
+          "igdbId": 102287,
+          "name": "Broken Minds"
+        },
+        {
+          "igdbId": 115074,
+          "name": "Katana Soul"
+        },
+        {
+          "igdbId": 119744,
+          "name": "Tales of the Black Forest"
+        },
+        {
+          "igdbId": 120249,
+          "name": "Bird of Passage"
+        },
+        {
+          "igdbId": 122192,
+          "name": "Onsen Master"
+        },
+        {
+          "igdbId": 123864,
+          "name": "Stigmatized Property"
+        },
+        {
+          "igdbId": 124209,
+          "name": "Shadow of the Road"
+        },
+        {
+          "igdbId": 124392,
+          "name": "Last Day of Spring"
+        },
+        {
+          "igdbId": 126348,
+          "name": "Inunaki Tunnel"
+        },
+        {
+          "igdbId": 127465,
+          "name": "Musashi vs. Cthulhu"
+        },
+        {
+          "igdbId": 128286,
+          "name": "Jimmu"
+        },
+        {
+          "igdbId": 129239,
+          "name": "Kuukiyomi: Consider It!"
+        },
+        {
+          "igdbId": 132270,
+          "name": "Onryo"
+        },
+        {
+          "igdbId": 132309,
+          "name": "Ato"
+        },
+        {
+          "igdbId": 138812,
+          "name": "Blind Fate: Edo no Yami"
+        },
+        {
+          "igdbId": 139474,
+          "name": "Ronin: Two Souls"
+        },
+        {
+          "igdbId": 139668,
+          "name": "Faraway Lands: Rise of Yokai"
+        },
+        {
+          "igdbId": 139832,
+          "name": "Tanuki Justice"
+        },
+        {
+          "igdbId": 141212,
+          "name": "Ensou"
+        },
+        {
+          "igdbId": 142469,
+          "name": "Kitsune Tails"
+        },
+        {
+          "igdbId": 143237,
+          "name": "Path of Kami"
+        },
+        {
+          "igdbId": 143935,
+          "name": "Sclash"
+        },
+        {
+          "igdbId": 146101,
+          "name": "Ninja Brigade feat. Jonah Weingarten"
+        },
+        {
+          "igdbId": 146564,
+          "name": "Needy Streamer Overload"
+        },
+        {
+          "igdbId": 148573,
+          "name": "Initial Drift Online"
+        },
+        {
+          "igdbId": 149693,
+          "name": "Two Strikes"
+        },
+        {
+          "igdbId": 151763,
+          "name": "Rainbow Sea"
+        },
+        {
+          "igdbId": 151903,
+          "name": "Shashingo: Learn Japanese With Photography"
+        },
+        {
+          "igdbId": 152203,
+          "name": "Trek to Yomi"
+        },
+        {
+          "igdbId": 153963,
+          "name": "Touhou Mystia's Izakaya"
+        },
+        {
+          "igdbId": 157133,
+          "name": "Ikai"
+        },
+        {
+          "igdbId": 180207,
+          "name": "Lure"
+        },
+        {
+          "igdbId": 181657,
+          "name": "Hana no Ibara: Yuurei Kitan"
+        },
+        {
+          "igdbId": 183657,
+          "name": "Cop Bastard"
+        },
+        {
+          "igdbId": 184709,
+          "name": "Bloodless"
+        },
+        {
+          "igdbId": 191321,
+          "name": "Ganryu 2"
+        },
+        {
+          "igdbId": 191850,
+          "name": "Chronicles of 2 Heroes: Amaterasu's Wrath"
+        },
+        {
+          "igdbId": 192434,
+          "name": "Samurai Bringer"
+        },
+        {
+          "igdbId": 195077,
+          "name": "Ed-0: Zombie Uprising"
+        },
+        {
+          "igdbId": 196967,
+          "name": "Tatari"
+        },
+        {
+          "igdbId": 199463,
+          "name": "So to Speak"
+        },
+        {
+          "igdbId": 204149,
+          "name": "Last Time I Saw You"
+        },
+        {
+          "igdbId": 206553,
+          "name": "Tales From Toyotoki: Arrival of the Witch"
+        },
+        {
+          "igdbId": 206588,
+          "name": "Ronin Trail"
+        },
+        {
+          "igdbId": 223058,
+          "name": "Touge Shakai"
+        },
+        {
+          "igdbId": 228357,
+          "name": "Mr. Saitou"
+        },
+        {
+          "igdbId": 235083,
+          "name": "Yasha: Legends of the Demon Blade"
+        },
+        {
+          "igdbId": 235913,
+          "name": "Gurei"
+        },
+        {
+          "igdbId": 250972,
+          "name": "Spaceman Memories"
+        },
+        {
+          "igdbId": 251786,
+          "name": "Makoto Wakaido's Case Files: Trilogy Deluxe"
+        },
+        {
+          "igdbId": 254036,
+          "name": "Yokai Art: Survival"
+        },
+        {
+          "igdbId": 255114,
+          "name": "Hollow Cocoon"
+        },
+        {
+          "igdbId": 255596,
+          "name": "Aojuji Hospital: Tokyo Eidolic Anatomy Division"
+        },
+        {
+          "igdbId": 258526,
+          "name": "Momogatari"
+        },
+        {
+          "igdbId": 274297,
+          "name": "100 Tokyo Cats"
+        },
+        {
+          "igdbId": 278984,
+          "name": "Reach to Tsukuyomi"
+        },
+        {
+          "igdbId": 279625,
+          "name": "Kemuri"
+        },
+        {
+          "igdbId": 281770,
+          "name": "Kumitantei: Old-School Slaughter"
+        },
+        {
+          "igdbId": 283132,
+          "name": "Wagotabi"
+        },
+        {
+          "igdbId": 288455,
+          "name": "Wren's Resurgence"
+        },
+        {
+          "igdbId": 288798,
+          "name": "Folie Fatale"
+        },
+        {
+          "igdbId": 289601,
+          "name": "Home of the Yokai"
+        },
+        {
+          "igdbId": 291419,
+          "name": "Cats and Seek: Kyoto"
+        },
+        {
+          "igdbId": 295570,
+          "name": "Platform 8"
+        },
+        {
+          "igdbId": 299593,
+          "name": "Promise Mascot Agency"
+        },
+        {
+          "igdbId": 303003,
+          "name": "Nightmare Operator"
+        },
+        {
+          "igdbId": 304308,
+          "name": "BrokenLore: Low"
+        },
+        {
+          "igdbId": 307212,
+          "name": "Mizuki and the Crimson Moon"
+        },
+        {
+          "igdbId": 309533,
+          "name": "Fragile Reflection"
+        },
+        {
+          "igdbId": 312609,
+          "name": "Capybara Fighters!"
+        },
+        {
+          "igdbId": 314928,
+          "name": "Coffee Talk: Tokyo"
+        },
+        {
+          "igdbId": 315298,
+          "name": "Cats and Seek: Tokyo"
+        },
+        {
+          "igdbId": 319625,
+          "name": "BrokenLore: Don't Watch"
+        },
+        {
+          "igdbId": 321579,
+          "name": "Danchi Days"
+        },
+        {
+          "igdbId": 323887,
+          "name": "Eternal Haunt"
+        },
+        {
+          "igdbId": 326644,
+          "name": "Nippon Marathon 2: Daijoubu"
+        },
+        {
+          "igdbId": 327755,
+          "name": "Re:Ver Project - Tokyo"
+        },
+        {
+          "igdbId": 339805,
+          "name": "Rain98"
+        },
+        {
+          "igdbId": 340840,
+          "name": "Asuka: The Ascent"
+        },
+        {
+          "igdbId": 345507,
+          "name": "Den-Den: Tokyo Horror"
+        },
+        {
+          "igdbId": 346461,
+          "name": "Yokai Hunters"
+        },
+        {
+          "igdbId": 349149,
+          "name": "Game Centre Simulator"
+        },
+        {
+          "igdbId": 357171,
+          "name": "Japan Stigmatized Property"
+        },
+        {
+          "igdbId": 360956,
+          "name": "SOS Recordings"
+        },
+        {
+          "igdbId": 372200,
+          "name": "Umigari"
+        },
+        {
+          "igdbId": 380485,
+          "name": "Road to Jukai"
+        },
+        {
+          "igdbId": 380960,
+          "name": "ReStory: Chill Electronics Repairs"
+        },
+        {
+          "igdbId": 383680,
+          "name": "Soul Hunter"
+        },
+        {
+          "igdbId": 383977,
+          "name": "Tiny Tree Talk"
+        },
+        {
+          "igdbId": 397378,
+          "name": "The Sorting Bureau"
+        },
+        {
+          "igdbId": 407094,
+          "name": "Polymorphite"
+        },
+        {
+          "igdbId": 407163,
+          "name": "Frog Telephone"
+        },
+        {
+          "igdbId": 413865,
+          "name": "Susuki Kaidan"
+        },
+        {
+          "igdbId": 414096,
+          "name": "Tokyo Ramen Drifter"
+        },
+        {
+          "igdbId": 414158,
+          "name": "Touge: JDM Dealership Simulator"
+        },
+        {
+          "igdbId": 416257,
+          "name": "Battle of the Kyoshin"
+        },
+        {
+          "igdbId": 420537,
+          "name": "Dark Alley"
+        },
+        {
+          "igdbId": 425456,
+          "name": "Kuroshio: Neon Blood"
+        },
+        {
+          "igdbId": 425982,
+          "name": "Shimagurashi: Island Life"
+        },
+        {
+          "igdbId": 375209,
+          "name": "Refate: Echoes of Desire"
+        },
+        {
+          "igdbId": 422368,
+          "name": "Tokyo Wanted"
+        },
+        {
+          "igdbId": 266782,
+          "name": "W.A.N.D. Project"
+        }
+      ],
+      "rejected": [
+        {
+          "igdbId": 2129,
+          "name": "Mark of the Ninja",
+          "reason": "Tradição ninja como mecânica, sem a cultura japonesa no centro."
+        },
+        {
+          "igdbId": 7895,
+          "name": "La-Mulana",
+          "reason": "Ruínas inventadas que misturam várias culturas."
+        },
+        {
+          "igdbId": 8758,
+          "name": "Anomaly: Warzone Earth",
+          "reason": "Tóquio é uma de várias cidades."
+        },
+        {
+          "igdbId": 9290,
+          "name": "eXceed Gun Bullet Children",
+          "reason": "Tóquio como palco de invasão de vampiros."
+        },
+        {
+          "igdbId": 9390,
+          "name": "War of the Human Tanks",
+          "reason": "Paródia de um \"Japon\" inventado. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 10341,
+          "name": "Wooden Sen'SeY",
+          "reason": "Universo \"Japan Steam Rock\". Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 10702,
+          "name": "Pixel Puzzles: Japan",
+          "reason": "Quebra-cabeça com estética japonesa."
+        },
+        {
+          "igdbId": 11000,
+          "name": "Corpse Party: Blood Drive",
+          "reason": "O resumo não traz a cultura japonesa."
+        },
+        {
+          "igdbId": 11587,
+          "name": "Absolute Drift",
+          "reason": "O Wikidata aponta o lugar; o resumo não traz a cultura japonesa."
+        },
+        {
+          "igdbId": 12638,
+          "name": "Train Valley",
+          "reason": "O Japão é uma de várias regiões."
+        },
+        {
+          "igdbId": 13102,
+          "name": "Kami",
+          "reason": "Quebra-cabeça de dobrar papel; as palavras-chave são de outro jogo."
+        },
+        {
+          "igdbId": 14677,
+          "name": "Gocco of War",
+          "reason": "Parque futurista no Japão. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 16467,
+          "name": "Incredipede",
+          "reason": "Só a palavra-chave."
+        },
+        {
+          "igdbId": 16550,
+          "name": "Half-Minute Hero: The Second Coming",
+          "reason": "Paródia de JRPG."
+        },
+        {
+          "igdbId": 17037,
+          "name": "Influent Language Learning Game",
+          "reason": "O japonês é uma de várias línguas."
+        },
+        {
+          "igdbId": 18930,
+          "name": "Tokyo 42",
+          "reason": "Tóquio do futuro. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 19132,
+          "name": "NightCry",
+          "reason": "Navio de cruzeiro; o Wikidata aponta o lugar."
+        },
+        {
+          "igdbId": 22041,
+          "name": "VRNinja",
+          "reason": "Treino ninja como mecânica."
+        },
+        {
+          "igdbId": 23499,
+          "name": "Earth's Dawn",
+          "reason": "Só a origem japonesa."
+        },
+        {
+          "igdbId": 24462,
+          "name": "Touhou: Scarlet Curiosity",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 25599,
+          "name": "Monster Boy and the Cursed Kingdom",
+          "reason": "Só a colaboração com um criador japonês."
+        },
+        {
+          "igdbId": 25685,
+          "name": "Memory's Dogma Code: 01",
+          "reason": "Japão de 2030. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 26711,
+          "name": "RefleX",
+          "reason": "Só a origem japonesa."
+        },
+        {
+          "igdbId": 27119,
+          "name": "Ninja Avenger Dragon Blade",
+          "reason": "Universo ninja inventado."
+        },
+        {
+          "igdbId": 27155,
+          "name": "Touhou Koumakyou: The Embodiment of Scarlet Devil",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 27156,
+          "name": "Touhou Kaeizuka: Phantasmagoria of Flower View",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 27157,
+          "name": "Touhou Hisoutensoku: Choudokyuu Ginyoru no Nazo wo Oe",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 27158,
+          "name": "Touhou Shinkirou: Hopeless Masquerade",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 27159,
+          "name": "Touhou Shinpiroku: Urban Legend in Limbo.",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 27160,
+          "name": "Touhou Hisouten: Scarlet Weather Rhapsody",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 27161,
+          "name": "Touhou Suimusou: Immaterial and Missing Power",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 27162,
+          "name": "Touhou Eiyashou: Imperishable Night",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 27165,
+          "name": "Touhou Chireiden: Subterranean Animism",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 27166,
+          "name": "Touhou Youyoumu: Perfect Cherry Blossom",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 27167,
+          "name": "Touhou Fuujinroku: Mountain of Faith",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 27169,
+          "name": "Double Spoiler: Touhou Bunkachou",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 27261,
+          "name": "Touhou Kobuto V: Burst Battle",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 27936,
+          "name": "Tokyo Ghoul: To Eat or Not to Eat",
+          "reason": "Jogo de cartas baseado num anime."
+        },
+        {
+          "igdbId": 28544,
+          "name": "Rakuen",
+          "reason": "O Wikidata aponta o lugar; o resumo não traz a cultura japonesa."
+        },
+        {
+          "igdbId": 28933,
+          "name": "Love, Money, Rock'n'Roll",
+          "reason": "O Wikidata aponta o lugar; o resumo não traz a cultura japonesa."
+        },
+        {
+          "igdbId": 28950,
+          "name": "Mighty Gunvolt",
+          "reason": "Só a origem japonesa da série."
+        },
+        {
+          "igdbId": 35361,
+          "name": "Flying Tigers: Shadows Over China",
+          "reason": "Esquadrões americanos na China."
+        },
+        {
+          "igdbId": 45963,
+          "name": "Touhou Kaikidan: Mystic Square",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 45964,
+          "name": "Touhou Gensoukyou: Lotus Land Story",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 45965,
+          "name": "Touhou Yumejikuu: Phantasmagoria of Dim. Dream",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 45966,
+          "name": "Touhou Fuumaroku: The Story of Eastern Wonderland",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 45967,
+          "name": "Touhou Rei'iden: The Highly Responsive to Prayers",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 46722,
+          "name": "Touhou Puppet Dance Performance",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 46820,
+          "name": "Street Hoop",
+          "reason": "Basquete; só o nome japonês."
+        },
+        {
+          "igdbId": 47026,
+          "name": "Danmaku Amanojaku: Impossible Spell Card",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 69375,
+          "name": "Okinawa Rush",
+          "reason": "O resumo não traz a cultura japonesa."
+        },
+        {
+          "igdbId": 75385,
+          "name": "Touhou Tenkuushou: Hidden Star in Four Seasons",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 76829,
+          "name": "Touhou Hyouibana: Antinomy of Common Flowers",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 79973,
+          "name": "Koumajou Remilia Ⅱ: Stranger's Requiem",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 81958,
+          "name": "The Disappearing of Gensokyo",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 82818,
+          "name": "Kunoichi Botan",
+          "reason": "Ninja como mecânica."
+        },
+        {
+          "igdbId": 96386,
+          "name": "Gensokyo Defenders",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 103484,
+          "name": "Akane",
+          "reason": "Mega-Tóquio de 2121. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 105058,
+          "name": "Dead or School",
+          "reason": "Tóquio pós-apocalíptica. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 105447,
+          "name": "Touhou Luna Nights",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 106400,
+          "name": "Touhou Makuka Sai: Fantastic Danmaku Festival",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 106777,
+          "name": "Touhou Sky Arena: Matsuri Climax",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 107253,
+          "name": "Hifuu Nightmare Diary: Violet Detector.",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 107723,
+          "name": "Touhou Big Big Battle",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 109245,
+          "name": "Last Labyrinth",
+          "reason": "Só a origem japonesa da equipe."
+        },
+        {
+          "igdbId": 110585,
+          "name": "Xenon Racer",
+          "reason": "Tóquio é uma de várias pistas."
+        },
+        {
+          "igdbId": 111204,
+          "name": "MarisaLand Legacy",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 111802,
+          "name": "Blame him",
+          "reason": "Só a origem japonesa da equipe."
+        },
+        {
+          "igdbId": 113330,
+          "name": "Strategic Mind: The Pacific",
+          "reason": "Guerra do Pacífico vista como estratégia militar."
+        },
+        {
+          "igdbId": 113643,
+          "name": "Tempest of the Heavens and Earth",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 116271,
+          "name": "Touhou Kanjuden: Legacy of Lunatic Kingdom",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 118815,
+          "name": "Touhou Kikeijuu: Wily Beast and Weakest Creature",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 119580,
+          "name": "The Expression Amrilato",
+          "reason": "Ensino de esperanto."
+        },
+        {
+          "igdbId": 119591,
+          "name": "Orangeblood",
+          "reason": "Ilha artificial de Okinawa numa linha do tempo alternativa. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 119606,
+          "name": "Touhou Kishinjou: Double Dealing Character",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 119608,
+          "name": "Touhou Shinreibyou: Ten Desires",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 121378,
+          "name": "Touhou Shoujo: Tale of Beautiful Memories",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 125591,
+          "name": "Gensou Skydrift",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 126924,
+          "name": "Touhou Ibunseki: Ayaria Dawn - ReCreation",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 133062,
+          "name": "Ronin 2072",
+          "reason": "Neo-Tóquio cyberpunk de 2072. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 138206,
+          "name": "Aerial_Knight's Never Yield",
+          "reason": "Detroit ao estilo de Tóquio."
+        },
+        {
+          "igdbId": 139179,
+          "name": "Tsugunohi",
+          "reason": "O resumo não traz a cultura japonesa."
+        },
+        {
+          "igdbId": 142405,
+          "name": "Here Comes Niko!",
+          "reason": "Só a palavra-chave da cultura japonesa."
+        },
+        {
+          "igdbId": 144093,
+          "name": "Touhou Kouryuudou: Unconnected Marketeers",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 144465,
+          "name": "Teenage Mutant Ninja Turtles: Shredder's Revenge",
+          "reason": "Nova York."
+        },
+        {
+          "igdbId": 144769,
+          "name": "Metal Dogs",
+          "reason": "Japão pós-apocalíptico. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 153621,
+          "name": "Touhou Endless Dream",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 164943,
+          "name": "City Wars: Tokyo Reign",
+          "reason": "Jogo de cartas sem a cultura japonesa."
+        },
+        {
+          "igdbId": 176026,
+          "name": "Meifumado",
+          "reason": "Mundo pós-apocalíptico inspirado no Japão. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 192471,
+          "name": "Help Me Remember, Satori-sama!",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 194946,
+          "name": "Captain Velvet Meteor: The Jump+ Dimensions",
+          "reason": "Personagens de mangá da Jump+."
+        },
+        {
+          "igdbId": 196312,
+          "name": "The Tale of Onogoro",
+          "reason": "O resumo não traz a cultura japonesa."
+        },
+        {
+          "igdbId": 202936,
+          "name": "Touhou Rock Maiden FC",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 202949,
+          "name": "Shoot Shoot Nitori the Golden",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 202971,
+          "name": "Luna Child no Saishuu Bouei Line 3",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 203848,
+          "name": "Touhou Blooming Soul",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 204245,
+          "name": "Rhythm Banki",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 207662,
+          "name": "Touhou Hero of Ice Fairy",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 210247,
+          "name": "Black Market of Bulletphilia: 100th Black Market",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 213420,
+          "name": "Tokyo Underground Killer",
+          "reason": "Tóquio subterrânea cyberpunk. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 225180,
+          "name": "Touhou: Red Empress Devil",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 228758,
+          "name": "Touhou Artificial Dream in Arcadia",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 242038,
+          "name": "Touhou: New World",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 246028,
+          "name": "Cats Hidden Around the World",
+          "reason": "Tóquio é um de 15 lugares."
+        },
+        {
+          "igdbId": 246194,
+          "name": "Touhou Juuouen: Unfinished Dream of All Living Ghost.",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 266468,
+          "name": "The Scramble Vice",
+          "reason": "Neo-Tóquio de 2048. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 289024,
+          "name": "Touhou Genso Wanderer: Foresight",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 294636,
+          "name": "Touhou Rock Maiden X",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 305017,
+          "name": "Cairn",
+          "reason": "O monte Kami é inventado."
+        },
+        {
+          "igdbId": 307254,
+          "name": "Arashi Gaiden",
+          "reason": "Ronin e ninjas como mecânica."
+        },
+        {
+          "igdbId": 315130,
+          "name": "Kyoryu",
+          "reason": "Japão pós-apocalíptico de dinossauros. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 318506,
+          "name": "Small Spaces",
+          "reason": "Tóquio é um de vários apartamentos."
+        },
+        {
+          "igdbId": 324946,
+          "name": "Steampunk Shinobi",
+          "reason": "Japão medieval steampunk; o ninja é mecânica. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 332394,
+          "name": "Samurai Pizza Cats: Blast from the Past!",
+          "reason": "Adaptação de anime; a cultura japonesa não está no centro."
+        },
+        {
+          "igdbId": 338928,
+          "name": "Tiny Pixels Vol. 2: Stormy Knights",
+          "reason": "O Japão feudal é um de vários cenários."
+        },
+        {
+          "igdbId": 339856,
+          "name": "Touhou Kinjoukyou: Fossilized Wonders",
+          "reason": "Série Touhou: Gensokyo e seus youkais servem de cenário a tiro, luta ou ação; o resumo não põe o folclore japonês no centro."
+        },
+        {
+          "igdbId": 347240,
+          "name": "Mexican Ninja",
+          "reason": "\"Nuevo Tokyo\". Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 357491,
+          "name": "Kioku: Last Summer",
+          "reason": "Mistura influências escandinavas e japonesas."
+        },
+        {
+          "igdbId": 370380,
+          "name": "Messenger",
+          "reason": "Só a palavra-chave."
+        },
+        {
+          "igdbId": 371467,
+          "name": "Brass & Bramble",
+          "reason": "Viagem da Irlanda ao Egito e ao Japão, sem uma cultura no centro."
+        },
+        {
+          "igdbId": 374349,
+          "name": "Ski Jumping World Cup",
+          "reason": "O Japão é um de vários lugares."
+        },
+        {
+          "igdbId": 380976,
+          "name": "Hidden Around the World",
+          "reason": "Tóquio é uma de várias cidades."
+        },
+        {
+          "igdbId": 388341,
+          "name": "Future Knight",
+          "reason": "Tóquio retrofuturista. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 395793,
+          "name": "Wired Tokyo",
+          "reason": "Tóquio de ficção científica. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 402258,
+          "name": "Tokyo Walled City",
+          "reason": "Neo-Tóquio retrocyberpunk. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 403654,
+          "name": "Bassai-Dai",
+          "reason": "Mistura as mitologias grega e japonesa."
+        },
+        {
+          "igdbId": 122449,
+          "name": "Die by the Blade",
+          "reason": "Mundo samuraipunk. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 18853,
+          "name": "Aragami",
+          "reason": "Japão histórico de fantasia, com poderes de sombra. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 404144,
+          "name": "Kosenki",
+          "reason": "Continente inventado; a cultura japonesa só aparece nas palavras-chave. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 152142,
+          "name": "Skautfold: Moonless Knight",
+          "reason": "Japão alternativo de 1900 com horrores lovecraftianos. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 9023,
+          "name": "Skulls of the Shogun",
+          "reason": "Samurais mortos-vivos numa fantasia tática. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 217024,
+          "name": "Kitsune: The Journey of Adashino",
+          "reason": "Ilha inventada de atmosfera japonesa. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 252779,
+          "name": "Kibu",
+          "reason": "Terra inventada; a cultura japonesa só aparece na palavra-chave. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 391273,
+          "name": "Amato",
+          "reason": "Mundo inspirado no Japão tradicional, só na estética. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 387539,
+          "name": "Black Omens: House of Crimson Silk",
+          "reason": "Japão Edo fictício. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 371378,
+          "name": "Cat Isle",
+          "reason": "Ilha inventada, inspirada nas ilhas dos gatos. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 349376,
+          "name": "Kaido Genkai",
+          "reason": "Interior japonês fictício dos anos 1990. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        }
+      ]
+    },
+    {
+      "slug": "mitologia-nordica",
+      "name": "Mitologia nórdica",
+      "description": "Deuses, vikings e sagas da Escandinávia.",
+      "scope": "Jogos com a mitologia nórdica, as sagas ou a vida dos povos escandinavos antigos no centro, ou ambientados na Escandinávia da Era Viking ou antes, de hoje ou do passado. Segue a regra geral de ambientação da curadoria.",
+      "published": true,
+      "suggest": {
+        "keywords": [
+          "norse-mythology",
+          "vikings",
+          "nordic-mythology",
+          "viking-mythology",
+          "norse",
+          "odin",
+          "ragnarok",
+          "thor",
+          "loki"
+        ],
+        "summaryTerms": [
+          "Norse",
+          "Viking",
+          "Vikings",
+          "Valhalla",
+          "Ragnarök",
+          "Ragnarok",
+          "Asgard",
+          "Yggdrasil",
+          "Odin",
+          "Midgard",
+          "Valkyrie",
+          "Valkyries",
+          "Nordic mythology"
+        ],
+        "wikidataPlaces": ["Q20", "Q34", "Q35", "Q189", "Q21195"]
+      },
+      "games": [
+        {
+          "igdbId": 2042,
+          "name": "Magicka"
+        },
+        {
+          "igdbId": 5508,
+          "name": "The Banner Saga"
+        },
+        {
+          "igdbId": 6171,
+          "name": "Year Walk"
+        },
+        {
+          "igdbId": 7603,
+          "name": "Hellblade: Senua's Sacrifice"
+        },
+        {
+          "igdbId": 8288,
+          "name": "The Banner Saga 2"
+        },
+        {
+          "igdbId": 9525,
+          "name": "Through the Woods"
+        },
+        {
+          "igdbId": 10501,
+          "name": "Expeditions: Viking"
+        },
+        {
+          "igdbId": 11181,
+          "name": "Eitr"
+        },
+        {
+          "igdbId": 11451,
+          "name": "Kyn"
+        },
+        {
+          "igdbId": 12080,
+          "name": "Valhalla Hills"
+        },
+        {
+          "igdbId": 12649,
+          "name": "The Banner Saga: Factions"
+        },
+        {
+          "igdbId": 14147,
+          "name": "Jotun: Valhalla Edition"
+        },
+        {
+          "igdbId": 14298,
+          "name": "Zombie Vikings"
+        },
+        {
+          "igdbId": 16252,
+          "name": "Runespell: Overture"
+        },
+        {
+          "igdbId": 17123,
+          "name": "Munin"
+        },
+        {
+          "igdbId": 18185,
+          "name": "Wartile"
+        },
+        {
+          "igdbId": 18918,
+          "name": "Northgard"
+        },
+        {
+          "igdbId": 19788,
+          "name": "The Great Whale Road"
+        },
+        {
+          "igdbId": 20403,
+          "name": "Niffelheim"
+        },
+        {
+          "igdbId": 23892,
+          "name": "Wrath of Loki: VR Adventure"
+        },
+        {
+          "igdbId": 24446,
+          "name": "Lichtspeer"
+        },
+        {
+          "igdbId": 24837,
+          "name": "Viking Squad"
+        },
+        {
+          "igdbId": 26940,
+          "name": "The Banner Saga 3"
+        },
+        {
+          "igdbId": 28295,
+          "name": "Tiny Thor"
+        },
+        {
+          "igdbId": 28357,
+          "name": "Die With Glory"
+        },
+        {
+          "igdbId": 28534,
+          "name": "Viking Rage VR"
+        },
+        {
+          "igdbId": 35780,
+          "name": "Bierzerkers"
+        },
+        {
+          "igdbId": 36441,
+          "name": "Heroine's Quest: The Herald of Ragnarok"
+        },
+        {
+          "igdbId": 40868,
+          "name": "Die for Valhalla!"
+        },
+        {
+          "igdbId": 54820,
+          "name": "Dead In Vinland"
+        },
+        {
+          "igdbId": 61887,
+          "name": "Valnir Rok"
+        },
+        {
+          "igdbId": 71387,
+          "name": "Bifrost Spire"
+        },
+        {
+          "igdbId": 75496,
+          "name": "Unforgiving - A Northern Hymn"
+        },
+        {
+          "igdbId": 83614,
+          "name": "Fimbul"
+        },
+        {
+          "igdbId": 84479,
+          "name": "Atone: Heart of the Elder Tree"
+        },
+        {
+          "igdbId": 96217,
+          "name": "Eternity: The Last Unicorn"
+        },
+        {
+          "igdbId": 104967,
+          "name": "Valheim"
+        },
+        {
+          "igdbId": 105276,
+          "name": "Blood Bond: Into the Shroud"
+        },
+        {
+          "igdbId": 107141,
+          "name": "Spirit of the North"
+        },
+        {
+          "igdbId": 111130,
+          "name": "Apsulov: End of Gods"
+        },
+        {
+          "igdbId": 113414,
+          "name": "Jack Axe"
+        },
+        {
+          "igdbId": 117493,
+          "name": "Neverinth: The Never Ending Labyrinth"
+        },
+        {
+          "igdbId": 118779,
+          "name": "Viking Vengeance"
+        },
+        {
+          "igdbId": 120619,
+          "name": "Tribes of Midgard"
+        },
+        {
+          "igdbId": 123890,
+          "name": "Lost Viking: Kingdom of Women"
+        },
+        {
+          "igdbId": 129208,
+          "name": "Helheim Hassle"
+        },
+        {
+          "igdbId": 131959,
+          "name": "Heim"
+        },
+        {
+          "igdbId": 138984,
+          "name": "Viking City Builder"
+        },
+        {
+          "igdbId": 139399,
+          "name": "Ragnarock"
+        },
+        {
+          "igdbId": 153635,
+          "name": "Viking Trickshot"
+        },
+        {
+          "igdbId": 165179,
+          "name": "Northern Journey"
+        },
+        {
+          "igdbId": 166788,
+          "name": "Sons of Valhalla"
+        },
+        {
+          "igdbId": 180020,
+          "name": "Gimle: The Broken Prophecy"
+        },
+        {
+          "igdbId": 196608,
+          "name": "Project Utgardr"
+        },
+        {
+          "igdbId": 206671,
+          "name": "Nordic Ashes: Survivors of Ragnarok"
+        },
+        {
+          "igdbId": 216593,
+          "name": "Roots of Yggdrasil"
+        },
+        {
+          "igdbId": 217519,
+          "name": "Dolmenjord"
+        },
+        {
+          "igdbId": 217637,
+          "name": "Song of Iron II"
+        },
+        {
+          "igdbId": 230569,
+          "name": "Aska"
+        },
+        {
+          "igdbId": 235968,
+          "name": "Voron: Raven's Story"
+        },
+        {
+          "igdbId": 253827,
+          "name": "Vilde"
+        },
+        {
+          "igdbId": 259170,
+          "name": "Taboo Trial"
+        },
+        {
+          "igdbId": 259911,
+          "name": "Asgard's Fall: Viking Survivors"
+        },
+        {
+          "igdbId": 262815,
+          "name": "Restless Lands"
+        },
+        {
+          "igdbId": 267113,
+          "name": "The Last Kingdom"
+        },
+        {
+          "igdbId": 273868,
+          "name": "Spirit of the North 2"
+        },
+        {
+          "igdbId": 283550,
+          "name": "Nowhere"
+        },
+        {
+          "igdbId": 286113,
+          "name": "Viking Frontiers"
+        },
+        {
+          "igdbId": 296290,
+          "name": "Jötunnslayer: Hordes of Hel"
+        },
+        {
+          "igdbId": 305112,
+          "name": "Ivor"
+        },
+        {
+          "igdbId": 311554,
+          "name": "Nordhold: Origins"
+        },
+        {
+          "igdbId": 330328,
+          "name": "Cloudheim"
+        },
+        {
+          "igdbId": 331389,
+          "name": "Wild Growth"
+        },
+        {
+          "igdbId": 342301,
+          "name": "Shell Bless the Faithless"
+        },
+        {
+          "igdbId": 343265,
+          "name": "Vikings Dynasty"
+        },
+        {
+          "igdbId": 348320,
+          "name": "Ashgard: Infinity Mask"
+        },
+        {
+          "igdbId": 352296,
+          "name": "Ragnar"
+        },
+        {
+          "igdbId": 361860,
+          "name": "Valkyrie Rising: Hordes of Ragnarök"
+        },
+        {
+          "igdbId": 364319,
+          "name": "Solbrand"
+        },
+        {
+          "igdbId": 367983,
+          "name": "Helcast"
+        },
+        {
+          "igdbId": 376850,
+          "name": "After the End"
+        },
+        {
+          "igdbId": 398523,
+          "name": "Northgard Battlegrounds"
+        },
+        {
+          "igdbId": 412083,
+          "name": "Thveit"
+        },
+        {
+          "igdbId": 417025,
+          "name": "Island Raiders"
+        },
+        {
+          "igdbId": 422252,
+          "name": "Aftergods"
+        }
+      ],
+      "rejected": [
+        {
+          "igdbId": 2020,
+          "name": "Krater: Shadows over Solside",
+          "reason": "Suécia pós-apocalíptica do futuro. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 2978,
+          "name": "Wargame: AirLand Battle",
+          "reason": "Guerra moderna."
+        },
+        {
+          "igdbId": 3084,
+          "name": "Cry of Fear",
+          "reason": "Terror; o Wikidata aponta o lugar."
+        },
+        {
+          "igdbId": 7209,
+          "name": "King Arthur's Gold",
+          "reason": "Só cita Lost Vikings."
+        },
+        {
+          "igdbId": 8465,
+          "name": "Volgarr the Viking",
+          "reason": "O viking é só o herói de ação."
+        },
+        {
+          "igdbId": 8623,
+          "name": "A-Men",
+          "reason": "Só cita Lost Vikings."
+        },
+        {
+          "igdbId": 9134,
+          "name": "AirBuccaneers",
+          "reason": "Vikings contra piratas aéreos numa fantasia genérica."
+        },
+        {
+          "igdbId": 9328,
+          "name": "Skyward Collapse",
+          "reason": "Mitologia como recurso genérico."
+        },
+        {
+          "igdbId": 9330,
+          "name": "Seven Kingdoms 2 HD",
+          "reason": "Os vikings são uma de doze civilizações."
+        },
+        {
+          "igdbId": 10057,
+          "name": "Bloodsports.TV",
+          "reason": "O Wikidata aponta o lugar; o resumo não traz a cultura nórdica."
+        },
+        {
+          "igdbId": 10233,
+          "name": "Brawlhalla",
+          "reason": "Os salões do Valhalla são só a moldura de um jogo de luta."
+        },
+        {
+          "igdbId": 10783,
+          "name": "Swords & Soldiers",
+          "reason": "Os vikings são uma de três facções."
+        },
+        {
+          "igdbId": 13555,
+          "name": "Indivisible",
+          "reason": "Mundo inspirado em várias culturas."
+        },
+        {
+          "igdbId": 14566,
+          "name": "The Purring Quest",
+          "reason": "Valhalla é o nome do estúdio."
+        },
+        {
+          "igdbId": 14916,
+          "name": "Pirates, Vikings, and Knights II",
+          "reason": "Os vikings são um de três times."
+        },
+        {
+          "igdbId": 15144,
+          "name": "Fowl Space",
+          "reason": "Vikings como piada."
+        },
+        {
+          "igdbId": 19136,
+          "name": "CastleStorm",
+          "reason": "Os vikings são só o exército inimigo."
+        },
+        {
+          "igdbId": 20124,
+          "name": "Cornerstone: The Song of Tyrim",
+          "reason": "A vila viking é só o ponto de partida."
+        },
+        {
+          "igdbId": 20207,
+          "name": "Gunnheim",
+          "reason": "Vikings como tema cômico de tiro."
+        },
+        {
+          "igdbId": 24834,
+          "name": "Trollskog",
+          "reason": "Só a palavra-chave da mitologia nórdica."
+        },
+        {
+          "igdbId": 26651,
+          "name": "Kingdoms and Castles",
+          "reason": "Os vikings são só invasores."
+        },
+        {
+          "igdbId": 26732,
+          "name": "Milkmaid of the Milky Way",
+          "reason": "A Noruega dos anos 1920, fora do escopo."
+        },
+        {
+          "igdbId": 35497,
+          "name": "Cards and Castles",
+          "reason": "Os vikings são um de vários times."
+        },
+        {
+          "igdbId": 37041,
+          "name": "Block Survival: Legend of the Lost Islands",
+          "reason": "Vikings são um de vários elementos."
+        },
+        {
+          "igdbId": 51899,
+          "name": "Star Vikings Forever",
+          "reason": "Vikings espaciais."
+        },
+        {
+          "igdbId": 58994,
+          "name": "Elsinore",
+          "reason": "Hamlet; o Wikidata aponta a Dinamarca."
+        },
+        {
+          "igdbId": 80002,
+          "name": "Troubleshooter: Abandoned Children",
+          "reason": "Valhalla é o nome do governo."
+        },
+        {
+          "igdbId": 82375,
+          "name": "Air Guitar Warrior for Kinect",
+          "reason": "Vikings são um de vários inimigos."
+        },
+        {
+          "igdbId": 83852,
+          "name": "My Child: Lebensborn",
+          "reason": "A Noruega do pós-guerra, fora do escopo."
+        },
+        {
+          "igdbId": 102178,
+          "name": "Bossgard",
+          "reason": "Vikings como bando genérico."
+        },
+        {
+          "igdbId": 103651,
+          "name": "Swords & Soldiers II: Shawarmageddon",
+          "reason": "Os vikings são uma de três facções."
+        },
+        {
+          "igdbId": 108778,
+          "name": "Little Misfortune",
+          "reason": "O Wikidata aponta o lugar; o resumo não traz a cultura nórdica."
+        },
+        {
+          "igdbId": 119163,
+          "name": "Transient",
+          "reason": "ODIN é o nome do grupo de hackers."
+        },
+        {
+          "igdbId": 129027,
+          "name": "Sunset Kingdom",
+          "reason": "Os vikings são só invasores."
+        },
+        {
+          "igdbId": 133126,
+          "name": "Shield of Shalwend",
+          "reason": "O panteão nórdico é só a recompensa."
+        },
+        {
+          "igdbId": 143702,
+          "name": "Myth: Make Your True Hero",
+          "reason": "MMORPG que mistura várias mitologias."
+        },
+        {
+          "igdbId": 159909,
+          "name": "Rob Riches",
+          "reason": "Templos antigos genéricos."
+        },
+        {
+          "igdbId": 175719,
+          "name": "Ragnarok: The Lost Memories",
+          "reason": "Ragnarok é o nome da série de MMORPG."
+        },
+        {
+          "igdbId": 193338,
+          "name": "Northern Guilds",
+          "reason": "MMORPG de blockchain; só a palavra-chave."
+        },
+        {
+          "igdbId": 203609,
+          "name": "Aces & Adventures",
+          "reason": "Mistura as mitologias nórdica e do Oriente Médio."
+        },
+        {
+          "igdbId": 209426,
+          "name": "Sundermead",
+          "reason": "Deuses anglo-saxões, não nórdicos."
+        },
+        {
+          "igdbId": 219729,
+          "name": "Boxes: Lost Fragments",
+          "reason": "Mistura várias mitologias, sem uma no centro."
+        },
+        {
+          "igdbId": 264603,
+          "name": "Killa",
+          "reason": "Valhalla é o nome da protagonista."
+        },
+        {
+          "igdbId": 265562,
+          "name": "Angry Mother Earth",
+          "reason": "Midgard é uma das formas da Mãe Terra."
+        },
+        {
+          "igdbId": 292295,
+          "name": "Kalpa: Cosmic Symphony",
+          "reason": "Yggdrasil é só um nome."
+        },
+        {
+          "igdbId": 304741,
+          "name": "Volgarr the Viking II",
+          "reason": "O viking é só o herói de ação."
+        },
+        {
+          "igdbId": 307263,
+          "name": "Polyaris",
+          "reason": "Ártico pós-nuclear; só a palavra-chave."
+        },
+        {
+          "igdbId": 310733,
+          "name": "Dawn of Defense",
+          "reason": "Mistura vikings e orcs numa fantasia genérica."
+        },
+        {
+          "igdbId": 326861,
+          "name": "Shore of Jord",
+          "reason": "Cyberpunk numa Europa alternativa; só a palavra-chave."
+        },
+        {
+          "igdbId": 361061,
+          "name": "Valkyrie Iteration: Mecha Pilot Raising Pocket Simulator",
+          "reason": "Valquíria é o nome do robô."
+        },
+        {
+          "igdbId": 373833,
+          "name": "Bearskull 2",
+          "reason": "Vikings como inimigos genéricos."
+        },
+        {
+          "igdbId": 412732,
+          "name": "Skies of Valoria",
+          "reason": "Valquírias num mundo de fantasia genérico."
+        },
+        {
+          "igdbId": 9835,
+          "name": "Draugen",
+          "reason": "A Noruega dos anos 1920, fora do escopo da coleção."
+        }
+      ]
+    },
+    {
+      "slug": "mitologia-grega",
+      "name": "Mitologia grega",
+      "description": "Deuses, heróis e monstros da Grécia antiga.",
+      "scope": "Jogos com a mitologia grega no centro, ou ambientados na Grécia antiga, de hoje ou do passado. Segue a regra geral de ambientação da curadoria.",
+      "published": true,
+      "suggest": {
+        "keywords": ["greek-mythology", "ancient-greece", "minotaurs", "greek"],
+        "summaryTerms": [
+          "Greek mythology",
+          "Greek myth",
+          "Greek myths",
+          "Greek gods",
+          "ancient Greece",
+          "Olympus",
+          "Zeus",
+          "Hades",
+          "Athena",
+          "Sparta",
+          "Spartan",
+          "Minotaur",
+          "Odysseus",
+          "Medusa",
+          "Hercules",
+          "Heracles"
+        ],
+        "wikidataPlaces": ["Q41", "Q11772"]
+      },
+      "games": [
+        {
+          "igdbId": 9016,
+          "name": "Apotheon"
+        },
+        {
+          "igdbId": 10182,
+          "name": "Depths of Fear: Knossos"
+        },
+        {
+          "igdbId": 10262,
+          "name": "NyxQuest: Kindred Spirits"
+        },
+        {
+          "igdbId": 16285,
+          "name": "Hegemony Gold: Wars of Ancient Greece"
+        },
+        {
+          "igdbId": 17311,
+          "name": "Olympia Rising"
+        },
+        {
+          "igdbId": 24644,
+          "name": "God of Word"
+        },
+        {
+          "igdbId": 26601,
+          "name": "12 Labours of Hercules IV: Mother Nature"
+        },
+        {
+          "igdbId": 26952,
+          "name": "Hellenica"
+        },
+        {
+          "igdbId": 27216,
+          "name": "Theseus"
+        },
+        {
+          "igdbId": 29302,
+          "name": "Don't Look Back"
+        },
+        {
+          "igdbId": 30014,
+          "name": "12 Labours of Hercules VI: Race for Olympus"
+        },
+        {
+          "igdbId": 32821,
+          "name": "12 Labours of Hercules V: Kids of Hellas"
+        },
+        {
+          "igdbId": 33661,
+          "name": "Medusa's Labyrinth"
+        },
+        {
+          "igdbId": 34521,
+          "name": "Okhlos: Omega"
+        },
+        {
+          "igdbId": 34854,
+          "name": "Champion of the Gods"
+        },
+        {
+          "igdbId": 50543,
+          "name": "Tauronos"
+        },
+        {
+          "igdbId": 81036,
+          "name": "12 Labours of Hercules VII: Fleecing the Fleece"
+        },
+        {
+          "igdbId": 113112,
+          "name": "Hades"
+        },
+        {
+          "igdbId": 126683,
+          "name": "Imperiums: Greek Wars"
+        },
+        {
+          "igdbId": 129924,
+          "name": "Go Heroes"
+        },
+        {
+          "igdbId": 144127,
+          "name": "For Sparta"
+        },
+        {
+          "igdbId": 160293,
+          "name": "Achilles: Legends Untold"
+        },
+        {
+          "igdbId": 178346,
+          "name": "Horror of Minos"
+        },
+        {
+          "igdbId": 222042,
+          "name": "Perseus: Titan Slayer"
+        },
+        {
+          "igdbId": 223097,
+          "name": "Mythwrecked: Ambrosia Island"
+        },
+        {
+          "igdbId": 224625,
+          "name": "Argonisos"
+        },
+        {
+          "igdbId": 228525,
+          "name": "Hades II"
+        },
+        {
+          "igdbId": 285795,
+          "name": "Simulacro"
+        },
+        {
+          "igdbId": 333057,
+          "name": "Ahapika: Heroic Agency"
+        },
+        {
+          "igdbId": 334949,
+          "name": "Polytropos: A Tactical Odyssey"
+        },
+        {
+          "igdbId": 343070,
+          "name": "Rock and Scroll"
+        },
+        {
+          "igdbId": 365970,
+          "name": "Legacy of Pandora"
+        },
+        {
+          "igdbId": 366716,
+          "name": "Imagine Sisyphus Happy"
+        },
+        {
+          "igdbId": 390863,
+          "name": "Sophia's Path"
+        },
+        {
+          "igdbId": 392185,
+          "name": "Ancient Wars: Sparta HD"
+        },
+        {
+          "igdbId": 402895,
+          "name": "Ariadne's Tale"
+        },
+        {
+          "igdbId": 425077,
+          "name": "Below Lethe"
+        }
+      ],
+      "rejected": [
+        {
+          "igdbId": 2284,
+          "name": "Rock of Ages",
+          "reason": "A Grécia antiga é uma de várias épocas."
+        },
+        {
+          "igdbId": 6328,
+          "name": "Legend of Grimrock",
+          "reason": "Só a palavra-chave da mitologia grega."
+        },
+        {
+          "igdbId": 7895,
+          "name": "La-Mulana",
+          "reason": "Ruínas inventadas que misturam várias culturas."
+        },
+        {
+          "igdbId": 8456,
+          "name": "Legend of Grimrock 2",
+          "reason": "Só a palavra-chave da mitologia grega."
+        },
+        {
+          "igdbId": 9101,
+          "name": "Hand of Fate",
+          "reason": "Só a palavra-chave da mitologia grega."
+        },
+        {
+          "igdbId": 9637,
+          "name": "Orcs Must Die! Unchained",
+          "reason": "Só a palavra-chave da mitologia grega."
+        },
+        {
+          "igdbId": 10725,
+          "name": "Project Temporality",
+          "reason": "Sparta é o nome do motor do jogo."
+        },
+        {
+          "igdbId": 13391,
+          "name": "Bedlam",
+          "reason": "Atena é o apelido da protagonista."
+        },
+        {
+          "igdbId": 15972,
+          "name": "Spectromancer",
+          "reason": "Só a palavra-chave."
+        },
+        {
+          "igdbId": 23941,
+          "name": "Ember",
+          "reason": "Só a palavra-chave da mitologia grega."
+        },
+        {
+          "igdbId": 28876,
+          "name": "Spartan Fist",
+          "reason": "O Punho Espartano é só um objeto."
+        },
+        {
+          "igdbId": 30019,
+          "name": "Hoplite",
+          "reason": "Só a palavra-chave da mitologia grega."
+        },
+        {
+          "igdbId": 35189,
+          "name": "Barony",
+          "reason": "Só a palavra-chave da mitologia grega."
+        },
+        {
+          "igdbId": 70076,
+          "name": "Pax Romana: Romulus",
+          "reason": "Mitologia romana."
+        },
+        {
+          "igdbId": 75354,
+          "name": "Minotaur",
+          "reason": "Mundo de ficção científica; o Minotauro é só o título."
+        },
+        {
+          "igdbId": 114790,
+          "name": "Azusa RP Online",
+          "reason": "MMO de fantasia; os deuses gregos são só referência."
+        },
+        {
+          "igdbId": 116100,
+          "name": "Neon Abyss",
+          "reason": "Hades é só o chefe do esquadrão."
+        },
+        {
+          "igdbId": 119805,
+          "name": "Dry Drowning",
+          "reason": "Cidade futurista em que a mitologia grega só inspira os crimes. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 143702,
+          "name": "Myth: Make Your True Hero",
+          "reason": "MMORPG que mistura várias mitologias."
+        },
+        {
+          "igdbId": 172489,
+          "name": "Blossom Tales 2: The Minotaur Prince",
+          "reason": "Um Rei Minotauro num mundo de fantasia genérico."
+        },
+        {
+          "igdbId": 193048,
+          "name": "Vampire: The Masquerade - Sins of the Sires",
+          "reason": "A Atenas de hoje, fora do escopo."
+        },
+        {
+          "igdbId": 204367,
+          "name": "Time Flies",
+          "reason": "Só a palavra-chave da mitologia grega."
+        },
+        {
+          "igdbId": 207161,
+          "name": "My Little Universe",
+          "reason": "Só a palavra-chave da mitologia grega."
+        },
+        {
+          "igdbId": 255389,
+          "name": "BloodRush: Undying Wish",
+          "reason": "Hades é só uma inspiração de gênero."
+        },
+        {
+          "igdbId": 300220,
+          "name": "Across the Abyss: Voidborn",
+          "reason": "Hades é só uma inspiração de gênero."
+        },
+        {
+          "igdbId": 318973,
+          "name": "Ascension: The Immortal Alchemist",
+          "reason": "Mistura as tradições do Egito e da Grécia helenísticos."
+        },
+        {
+          "igdbId": 361856,
+          "name": "Curse of Pirates",
+          "reason": "Hades é só uma inspiração de gênero."
+        },
+        {
+          "igdbId": 376549,
+          "name": "Elestrals Awakened",
+          "reason": "Deuses e titãs de um mundo inventado."
+        },
+        {
+          "igdbId": 379145,
+          "name": "Alea",
+          "reason": "Só a palavra-chave da mitologia grega."
+        },
+        {
+          "igdbId": 384809,
+          "name": "Mechborn",
+          "reason": "Mistura anime de robôs e mitologia grega, sem a cultura no centro."
+        },
+        {
+          "igdbId": 419506,
+          "name": "Olympus 2249",
+          "reason": "Olimpo só no nome, nos Estados Unidos pós-nucleares."
+        }
+      ]
+    },
+    {
+      "slug": "folclore-eslavo",
+      "name": "Folclore eslavo",
+      "description": "Baba Yaga, espíritos da floresta e mitos dos povos eslavos.",
+      "scope": "Jogos com o folclore, a mitologia ou a vida tradicional dos povos eslavos no centro. Segue a regra geral de ambientação da curadoria.",
+      "published": true,
+      "suggest": {
+        "keywords": ["slavic-folklore", "russian-mythology"],
+        "summaryTerms": [
+          "Slavic",
+          "Baba Yaga",
+          "Leshy",
+          "Perun",
+          "Domovoi",
+          "Kikimora",
+          "Rusalka",
+          "Koschei",
+          "Veles",
+          "Slavic folklore",
+          "Slavic mythology"
+        ],
+        "wikidataPlaces": ["Q159", "Q36", "Q212", "Q213", "Q184"]
+      },
+      "games": [
+        {
+          "igdbId": 57038,
+          "name": "Dungeons of Kremlin: Remastered"
+        },
+        {
+          "igdbId": 74686,
+          "name": "Catmaze"
+        },
+        {
+          "igdbId": 103048,
+          "name": "Yaga"
+        },
+        {
+          "igdbId": 107429,
+          "name": "The End of the Sun"
+        },
+        {
+          "igdbId": 110415,
+          "name": "Thea 2: The Shattering"
+        },
+        {
+          "igdbId": 116285,
+          "name": "Misadventures of Laura Silver"
+        },
+        {
+          "igdbId": 118622,
+          "name": "Selfloss"
+        },
+        {
+          "igdbId": 121894,
+          "name": "Black Book"
+        },
+        {
+          "igdbId": 134574,
+          "name": "Paradise Lost"
+        },
+        {
+          "igdbId": 134821,
+          "name": "Werewolf: The Apocalypse - Heart of the Forest"
+        },
+        {
+          "igdbId": 152129,
+          "name": "Blacktail"
+        },
+        {
+          "igdbId": 158325,
+          "name": "Self-Delusion"
+        },
+        {
+          "igdbId": 200111,
+          "name": "The Tales of Bayun"
+        },
+        {
+          "igdbId": 214508,
+          "name": "Słowica"
+        },
+        {
+          "igdbId": 223167,
+          "name": "Marko: Beyond Brave"
+        },
+        {
+          "igdbId": 249334,
+          "name": "Dread Weight"
+        },
+        {
+          "igdbId": 250955,
+          "name": "One-Eyed Likho"
+        },
+        {
+          "igdbId": 253846,
+          "name": "Spear Song"
+        },
+        {
+          "igdbId": 274802,
+          "name": "Volkolak: The Will of Gods"
+        },
+        {
+          "igdbId": 298720,
+          "name": "Bylina: Lure of the Sorceress"
+        },
+        {
+          "igdbId": 302325,
+          "name": "Deathless: The Hero Quest"
+        },
+        {
+          "igdbId": 311877,
+          "name": "Dark Queen of Samobor"
+        },
+        {
+          "igdbId": 319454,
+          "name": "Bylina"
+        },
+        {
+          "igdbId": 330347,
+          "name": "Baba Yaga"
+        },
+        {
+          "igdbId": 330351,
+          "name": "Witch’s Gaze: The Vanishing Village"
+        },
+        {
+          "igdbId": 330542,
+          "name": "Balkan Horror Tales"
+        },
+        {
+          "igdbId": 348741,
+          "name": "Warag"
+        },
+        {
+          "igdbId": 367362,
+          "name": "Eyes of the ElderWood"
+        },
+        {
+          "igdbId": 369044,
+          "name": "Job Fit For a Devil"
+        },
+        {
+          "igdbId": 383381,
+          "name": "Zory"
+        },
+        {
+          "igdbId": 397674,
+          "name": "Sadko"
+        },
+        {
+          "igdbId": 399899,
+          "name": "Sirin's Feather"
+        },
+        {
+          "igdbId": 401063,
+          "name": "Ghost Buster:Village"
+        },
+        {
+          "igdbId": 412160,
+          "name": "Godreaper"
+        }
+      ],
+      "rejected": [
+        {
+          "igdbId": 7965,
+          "name": "Kholat",
+          "reason": "O incidente do Passo Dyatlov: mistério histórico, sem folclore eslavo."
+        },
+        {
+          "igdbId": 8074,
+          "name": "Pathologic",
+          "reason": "Cidade da estepe e a peste; a cultura retratada não é o folclore eslavo."
+        },
+        {
+          "igdbId": 8968,
+          "name": "Everlasting Summer",
+          "reason": "Acampamento soviético, cenário que a coleção exclui."
+        },
+        {
+          "igdbId": 17479,
+          "name": "The Wild Eight",
+          "reason": "Sobrevivência no Alasca."
+        },
+        {
+          "igdbId": 19545,
+          "name": "Observer",
+          "reason": "Cracóvia cyberpunk, sem folclore eslavo. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 51578,
+          "name": "Desolate",
+          "reason": "O Wikidata aponta o lugar; o resumo não traz folclore eslavo."
+        },
+        {
+          "igdbId": 79141,
+          "name": "Dead Dozen",
+          "reason": "O Wikidata aponta o lugar; o resumo não traz folclore eslavo."
+        },
+        {
+          "igdbId": 102868,
+          "name": "World War 3",
+          "reason": "Tiro multijogador."
+        },
+        {
+          "igdbId": 106112,
+          "name": "Steel Division 2",
+          "reason": "Segunda Guerra na Frente Oriental."
+        },
+        {
+          "igdbId": 132788,
+          "name": "Cooking Companions",
+          "reason": "Mistério nos Montes Tatras, sem folclore eslavo."
+        },
+        {
+          "igdbId": 240744,
+          "name": "Glory to the Heroes",
+          "reason": "Guerra entre a Rússia e a Ucrânia."
+        },
+        {
+          "igdbId": 264773,
+          "name": "Lizards Must Die",
+          "reason": "Paródia de memes com lagartos; a mitologia é só pretexto."
+        },
+        {
+          "igdbId": 311584,
+          "name": "Lizards Must Die 2",
+          "reason": "Paródia de memes com lagartos; a mitologia é só pretexto."
+        },
+        {
+          "igdbId": 386880,
+          "name": "Tornblade",
+          "reason": "Atmosfera eslava e celta misturada, sem uma cultura no centro."
+        },
+        {
+          "igdbId": 396663,
+          "name": "Vaska",
+          "reason": "O resumo não traz o folclore eslavo."
+        }
+      ]
+    },
+    {
+      "slug": "mexico-e-mesoamerica",
+      "name": "México e Mesoamérica",
+      "description": "Astecas, maias e o Dia de Muertos.",
+      "scope": "Jogos com as culturas mesoamericanas ou a cultura mexicana, como o Dia de Muertos e a lucha libre no centro, ou ambientados no México ou na Mesoamérica, de hoje ou do passado. Segue a regra geral de ambientação da curadoria.",
+      "published": true,
+      "suggest": {
+        "keywords": ["mayan", "mexico", "mexican-culture", "aztecs"],
+        "summaryTerms": [
+          "Mexico",
+          "Mexican",
+          "Aztec",
+          "Aztecs",
+          "Maya",
+          "Mayan",
+          "Mesoamerica",
+          "Mesoamerican",
+          "Día de Muertos",
+          "Dia de Muertos",
+          "Day of the Dead",
+          "Día de los Muertos",
+          "Dia de los Muertos",
+          "Quetzalcoatl",
+          "Olmec",
+          "Mictlan",
+          "luchador",
+          "lucha libre"
+        ],
+        "wikidataPlaces": ["Q96", "Q774"]
+      },
+      "games": [
+        {
+          "igdbId": 4838,
+          "name": "Guacamelee!"
+        },
+        {
+          "igdbId": 8651,
+          "name": "Aztez"
+        },
+        {
+          "igdbId": 9402,
+          "name": "The Ball"
+        },
+        {
+          "igdbId": 13185,
+          "name": "Mayan Death Robots"
+        },
+        {
+          "igdbId": 16067,
+          "name": "Aztaka"
+        },
+        {
+          "igdbId": 28692,
+          "name": "Mulaka"
+        },
+        {
+          "igdbId": 75234,
+          "name": "Guacamelee! 2"
+        },
+        {
+          "igdbId": 145783,
+          "name": "Aztech Forgotten Gods"
+        },
+        {
+          "igdbId": 146709,
+          "name": "Lost in Blindness"
+        },
+        {
+          "igdbId": 154807,
+          "name": "Mictlan: An Ancient Mythical Tale"
+        },
+        {
+          "igdbId": 211921,
+          "name": "Mexico 1921: A Deep Slumber"
+        },
+        {
+          "igdbId": 220010,
+          "name": "Death Relives"
+        },
+        {
+          "igdbId": 252852,
+          "name": "Mariachi Legends"
+        },
+        {
+          "igdbId": 276828,
+          "name": "Plus Ultra: Legado"
+        },
+        {
+          "igdbId": 289950,
+          "name": "The War in Chiapas"
+        },
+        {
+          "igdbId": 306020,
+          "name": "100 Aztec Cats"
+        },
+        {
+          "igdbId": 319114,
+          "name": "Tlatoani"
+        },
+        {
+          "igdbId": 327414,
+          "name": "City of Voices"
+        },
+        {
+          "igdbId": 347847,
+          "name": "PancitoMerge"
+        },
+        {
+          "igdbId": 396089,
+          "name": "Lucha Loka"
+        },
+        {
+          "igdbId": 277260,
+          "name": "DDS x Narcos"
+        },
+        {
+          "igdbId": 353399,
+          "name": "Narco Express"
+        }
+      ],
+      "rejected": [
+        {
+          "igdbId": 858,
+          "name": "Serious Sam: The Second Encounter",
+          "reason": "Um dos três mundos do jogo; a cultura não está no centro."
+        },
+        {
+          "igdbId": 7937,
+          "name": "La-Mulana 2",
+          "reason": "Ruínas inventadas que misturam várias culturas."
+        },
+        {
+          "igdbId": 8371,
+          "name": "Outland",
+          "reason": "Só a palavra-chave \"mayan\" na estética."
+        },
+        {
+          "igdbId": 8725,
+          "name": "Continue?9876543210",
+          "reason": "Inspirado numa viagem ao Novo México e ao Peru."
+        },
+        {
+          "igdbId": 8985,
+          "name": "Tetrobot and Co.",
+          "reason": "Maya é o nome da personagem."
+        },
+        {
+          "igdbId": 10783,
+          "name": "Swords & Soldiers",
+          "reason": "Os astecas são uma de três facções."
+        },
+        {
+          "igdbId": 13206,
+          "name": "Fuego!",
+          "reason": "\"Mexican standoff\" é a expressão, não o tema."
+        },
+        {
+          "igdbId": 14916,
+          "name": "Pirates, Vikings, and Knights II",
+          "reason": "Um templo maia como uma de várias arenas."
+        },
+        {
+          "igdbId": 16523,
+          "name": "Expeditions: Conquistador",
+          "reason": "Guerra da conquista vista só de fora, pelos conquistadores, como cenário de estratégia."
+        },
+        {
+          "igdbId": 16627,
+          "name": "Bombernauts",
+          "reason": "Piñatas e máscaras de luchador como itens."
+        },
+        {
+          "igdbId": 17330,
+          "name": "Al Emmo and the Lost Dutchman's Mine",
+          "reason": "Uma maldição asteca como detalhe de enredo num faroeste."
+        },
+        {
+          "igdbId": 26719,
+          "name": "Rolling Sun",
+          "reason": "Mistura incas e maias como cenário genérico."
+        },
+        {
+          "igdbId": 32062,
+          "name": "Francisca",
+          "reason": "Os pais viajaram para o México."
+        },
+        {
+          "igdbId": 35065,
+          "name": "Tiki Man",
+          "reason": "Só a palavra-chave \"mayan\"."
+        },
+        {
+          "igdbId": 35236,
+          "name": "Tompi Jones",
+          "reason": "As pirâmides astecas são um de seis mundos."
+        },
+        {
+          "igdbId": 59297,
+          "name": "Sydney Hunter and the Curse of the Mayan",
+          "reason": "O resumo não descreve o jogo além do título."
+        },
+        {
+          "igdbId": 63699,
+          "name": "Reef Shot",
+          "reason": "Cidade submersa no Pacífico; só a palavra-chave \"mayan\"."
+        },
+        {
+          "igdbId": 102095,
+          "name": "Sagebrush",
+          "reason": "Novo México, nos Estados Unidos."
+        },
+        {
+          "igdbId": 126911,
+          "name": "Neko-Nin ExHeart 3",
+          "reason": "Maya é o nome da personagem."
+        },
+        {
+          "igdbId": 134302,
+          "name": "%s, Computer Love",
+          "reason": "Ficção científica; o resumo não traz a cultura mexicana."
+        },
+        {
+          "igdbId": 139461,
+          "name": "Fire Tonight",
+          "reason": "Maya é o nome da personagem."
+        },
+        {
+          "igdbId": 141235,
+          "name": "At Dead of Night",
+          "reason": "Maya é o nome da protagonista."
+        },
+        {
+          "igdbId": 141735,
+          "name": "TheDawn",
+          "reason": "Maya é o nome da personagem."
+        },
+        {
+          "igdbId": 143708,
+          "name": "Timo's Adventures",
+          "reason": "Um templo asteca como ponto de partida."
+        },
+        {
+          "igdbId": 151039,
+          "name": "Inglorious Aztecs",
+          "reason": "Astecas só no nome."
+        },
+        {
+          "igdbId": 173016,
+          "name": "Witchfall: Secrets of Emotica",
+          "reason": "Maya é o nome da personagem."
+        },
+        {
+          "igdbId": 178238,
+          "name": "Welcome to Goodland",
+          "reason": "Drama de cartel sem a cultura mexicana no centro."
+        },
+        {
+          "igdbId": 214146,
+          "name": "Cursed Broom",
+          "reason": "Maya é o nome da personagem."
+        },
+        {
+          "igdbId": 301109,
+          "name": "Los Pingheros",
+          "reason": "O México é só um trocadilho do nome."
+        },
+        {
+          "igdbId": 333219,
+          "name": "Loop: New Reality",
+          "reason": "Maya é o nome da personagem."
+        },
+        {
+          "igdbId": 347240,
+          "name": "Mexican Ninja",
+          "reason": "\"Nuevo Tokyo\"; o México é só o apelido do herói. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 362239,
+          "name": "The Detective's Apprentice",
+          "reason": "Maya é o nome da personagem."
+        },
+        {
+          "igdbId": 397827,
+          "name": "M.A.Y.A",
+          "reason": "Maya é o nome da personagem."
+        },
+        {
+          "igdbId": 28045,
+          "name": "Brigand: Oaxaca",
+          "reason": "México pós-apocalíptico. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        }
+      ]
+    },
+    {
+      "slug": "povos-indigenas",
+      "name": "Povos indígenas",
+      "description": "Histórias e mitos de povos indígenas.",
+      "scope": "Jogos com a cultura, os mitos ou a história de povos indígenas de qualquer continente no centro. Segue a regra geral de ambientação da curadoria.",
+      "published": false,
+      "suggest": {
+        "keywords": ["indigenous", "native-americans", "native-american"],
+        "summaryTerms": [
+          "Indigenous",
+          "Native American",
+          "Native Americans",
+          "First Nations",
+          "Inuit",
+          "Iñupiat",
+          "Iñupiaq",
+          "Cherokee",
+          "Lakota",
+          "Navajo",
+          "Ojibwe",
+          "Cree",
+          "Haudenosaunee",
+          "Anishinaabe",
+          "Sámi",
+          "Sami",
+          "Māori",
+          "Maori",
+          "Aboriginal"
+        ],
+        "wikidataPlaces": []
+      },
+      "games": [
+        {
+          "igdbId": 7618,
+          "name": "Never Alone: Kisima Ingitchuna"
+        },
+        {
+          "igdbId": 10494,
+          "name": "Last Inua"
+        },
+        {
+          "igdbId": 28692,
+          "name": "Mulaka"
+        },
+        {
+          "igdbId": 112111,
+          "name": "Trail of Ayash"
+        },
+        {
+          "igdbId": 114724,
+          "name": "Skábma: Snowfall"
+        },
+        {
+          "igdbId": 162625,
+          "name": "Huni Kuin: Yube Baitana"
+        },
+        {
+          "igdbId": 226009,
+          "name": "Huni Kuin: Beya Xinã Bena"
+        },
+        {
+          "igdbId": 237343,
+          "name": "Tekoha: A Tale Among the Stars"
+        },
+        {
+          "igdbId": 296835,
+          "name": "Never Alone 2"
+        },
+        {
+          "igdbId": 304515,
+          "name": "Yvy"
+        },
+        {
+          "igdbId": 354930,
+          "name": "As The Leaves Fall"
+        }
+      ],
+      "rejected": [
+        {
+          "igdbId": 14199,
+          "name": "Alpha Polaris",
+          "reason": "Inspiração parcial em lendas inuítes, misturada aos mitos de Cthulhu."
+        },
+        {
+          "igdbId": 14404,
+          "name": "Kona",
+          "reason": "Detetive no Quebec dos anos 1970; o resumo não traz povos indígenas."
+        },
+        {
+          "igdbId": 16523,
+          "name": "Expeditions: Conquistador",
+          "reason": "Visão dos conquistadores espanhóis; os povos nativos aparecem como obstáculo."
+        },
+        {
+          "igdbId": 31569,
+          "name": "Dead End Junction",
+          "reason": "Faroeste que só toca no tratamento dos povos nativos."
+        },
+        {
+          "igdbId": 51472,
+          "name": "Bang! Howdy",
+          "reason": "Elementos de mito nativo americano misturados ao steampunk, sem a cultura no centro."
+        },
+        {
+          "igdbId": 153516,
+          "name": "Ahoy",
+          "reason": "Pirataria no Caribe do século XVIII, sem povos indígenas no centro."
+        },
+        {
+          "igdbId": 158582,
+          "name": "Super Sami Roll",
+          "reason": "Sami é o nome do personagem."
+        },
+        {
+          "igdbId": 205018,
+          "name": "Black Trail",
+          "reason": "Faroeste com um guerreiro nativo entre os protagonistas, sem a cultura no centro."
+        },
+        {
+          "igdbId": 290751,
+          "name": "Super Sami Roll 2",
+          "reason": "Sami é o nome do personagem."
+        }
+      ]
+    },
+    {
+      "slug": "egito-antigo",
+      "name": "Egito antigo",
+      "description": "Faraós, deuses e o Nilo.",
+      "scope": "Jogos com a mitologia, a religião ou a história do Egito antigo no centro, ou ambientados no Egito antigo, de hoje ou do passado. Segue a regra geral de ambientação da curadoria.",
+      "published": true,
+      "suggest": {
+        "keywords": ["egypt", "egyptian-mythology", "ancient-egypt", "egyptians"],
+        "summaryTerms": [
+          "Egypt",
+          "Egyptian",
+          "ancient Egypt",
+          "pharaoh",
+          "pharaohs",
+          "Anubis",
+          "Osiris",
+          "Horus",
+          "Nile",
+          "Cleopatra",
+          "Tutankhamun"
+        ],
+        "wikidataPlaces": ["Q79", "Q11768"]
+      },
+      "games": [
+        {
+          "igdbId": 857,
+          "name": "Serious Sam: The First Encounter"
+        },
+        {
+          "igdbId": 19068,
+          "name": "Pharaonic"
+        },
+        {
+          "igdbId": 20102,
+          "name": "Pharaoh Rebirth+"
+        },
+        {
+          "igdbId": 23188,
+          "name": "Immortal Redneck"
+        },
+        {
+          "igdbId": 26238,
+          "name": "Fresco"
+        },
+        {
+          "igdbId": 30520,
+          "name": "Dark Egypt"
+        },
+        {
+          "igdbId": 33003,
+          "name": "Predynastic Egypt"
+        },
+        {
+          "igdbId": 34742,
+          "name": "Egyptian Senet"
+        },
+        {
+          "igdbId": 35644,
+          "name": "Traps N' Gemstones"
+        },
+        {
+          "igdbId": 75230,
+          "name": "Egypt: Old Kingdom"
+        },
+        {
+          "igdbId": 120901,
+          "name": "Builders of Egypt"
+        },
+        {
+          "igdbId": 128949,
+          "name": "Dynasty of the Sands"
+        },
+        {
+          "igdbId": 157027,
+          "name": "Forewarned"
+        },
+        {
+          "igdbId": 166945,
+          "name": "Warriors of the Nile 2"
+        },
+        {
+          "igdbId": 266293,
+          "name": "Egypt Frontiers"
+        },
+        {
+          "igdbId": 278380,
+          "name": "Seth"
+        },
+        {
+          "igdbId": 304666,
+          "name": "100 Egypt Cats"
+        },
+        {
+          "igdbId": 334333,
+          "name": "DigSite"
+        },
+        {
+          "igdbId": 365306,
+          "name": "Meritaton"
+        },
+        {
+          "igdbId": 378349,
+          "name": "Godscale"
+        },
+        {
+          "igdbId": 400375,
+          "name": "Fields of Aaru"
+        },
+        {
+          "igdbId": 415919,
+          "name": "Duat: Beyond Light & Shadow"
+        }
+      ],
+      "rejected": [
+        {
+          "igdbId": 527,
+          "name": "Serious Sam 3: BFE",
+          "reason": "Egito do futuro, entre ruínas. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 7522,
+          "name": "0 A.D.",
+          "reason": "Várias civilizações antigas."
+        },
+        {
+          "igdbId": 7542,
+          "name": "Luxor Evolved",
+          "reason": "O resumo não traz o Egito."
+        },
+        {
+          "igdbId": 7895,
+          "name": "La-Mulana",
+          "reason": "Ruínas inventadas que misturam várias culturas."
+        },
+        {
+          "igdbId": 7937,
+          "name": "La-Mulana 2",
+          "reason": "Ruínas inventadas que misturam várias culturas."
+        },
+        {
+          "igdbId": 9058,
+          "name": "Praetorians",
+          "reason": "O Egito é uma das três civilizações e um dos campos de batalha."
+        },
+        {
+          "igdbId": 9075,
+          "name": "Reflex Arena",
+          "reason": "Uma das arenas."
+        },
+        {
+          "igdbId": 9330,
+          "name": "Seven Kingdoms 2 HD",
+          "reason": "O Egito é uma de doze civilizações."
+        },
+        {
+          "igdbId": 9718,
+          "name": "A Valley Without Wind 2",
+          "reason": "Só a palavra-chave \"egypt\"."
+        },
+        {
+          "igdbId": 16729,
+          "name": "Elder Sign: Omens",
+          "reason": "Um dos lugares da investigação."
+        },
+        {
+          "igdbId": 23732,
+          "name": "Osiris: New Dawn",
+          "reason": "Osíris é o nome da missão espacial."
+        },
+        {
+          "igdbId": 24985,
+          "name": "Golf With Your Friends",
+          "reason": "Um dos campos de minigolfe."
+        },
+        {
+          "igdbId": 25627,
+          "name": "The Last Hope",
+          "reason": "O Egito é um de vários lugares."
+        },
+        {
+          "igdbId": 26370,
+          "name": "Abode",
+          "reason": "Só a palavra-chave \"egypt\"."
+        },
+        {
+          "igdbId": 29772,
+          "name": "MegaGlest",
+          "reason": "O Egito é uma de sete facções."
+        },
+        {
+          "igdbId": 34784,
+          "name": "Wild Animal Racing",
+          "reason": "Uma das pistas."
+        },
+        {
+          "igdbId": 84434,
+          "name": "Abo Hadeed",
+          "reason": "Egito de hoje, fora do escopo do Egito antigo."
+        },
+        {
+          "igdbId": 86480,
+          "name": "Downward Spiral: Horus Station",
+          "reason": "Hórus é o nome da estação espacial."
+        },
+        {
+          "igdbId": 88392,
+          "name": "Foundation",
+          "reason": "Cidade medieval; o Faraó é só uma referência de gênero."
+        },
+        {
+          "igdbId": 103320,
+          "name": "The Forgotten City",
+          "reason": "Cidade romana; o Wikidata aponta um lugar fora do tema."
+        },
+        {
+          "igdbId": 120889,
+          "name": "Sons of Ra",
+          "reason": "O resumo não traz o Egito."
+        },
+        {
+          "igdbId": 142011,
+          "name": "Pharm Pharaoh",
+          "reason": "\"Pharaoh\" é um trocadilho."
+        },
+        {
+          "igdbId": 143702,
+          "name": "Myth: Make Your True Hero",
+          "reason": "MMORPG que mistura várias mitologias."
+        },
+        {
+          "igdbId": 159909,
+          "name": "Rob Riches",
+          "reason": "Templos antigos genéricos."
+        },
+        {
+          "igdbId": 185945,
+          "name": "Cryonauts",
+          "reason": "Egito de 2069. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 219729,
+          "name": "Boxes: Lost Fragments",
+          "reason": "Mistura várias mitologias, sem uma no centro."
+        },
+        {
+          "igdbId": 272600,
+          "name": "Soulmask",
+          "reason": "Terra primitiva de crenças misteriosas, sem o Egito no resumo."
+        },
+        {
+          "igdbId": 318973,
+          "name": "Ascension: The Immortal Alchemist",
+          "reason": "Mistura as tradições do Egito e da Grécia helenísticos."
+        },
+        {
+          "igdbId": 325317,
+          "name": "Digseum",
+          "reason": "Escavações pelo mundo todo."
+        },
+        {
+          "igdbId": 327405,
+          "name": "Megabonk",
+          "reason": "Só a palavra-chave da mitologia egípcia."
+        },
+        {
+          "igdbId": 371467,
+          "name": "Brass & Bramble",
+          "reason": "Viagem da Irlanda ao Egito e ao Japão, sem uma cultura no centro."
+        },
+        {
+          "igdbId": 372144,
+          "name": "Crashout Crew",
+          "reason": "\"De Nile\" é um trocadilho."
+        },
+        {
+          "igdbId": 384820,
+          "name": "The Forsaken Tomb",
+          "reason": "Tema egípcio só na palavra-chave."
+        },
+        {
+          "igdbId": 425357,
+          "name": "Baleful Tactics",
+          "reason": "Cleópatra é uma de várias figuras históricas."
+        },
+        {
+          "igdbId": 122270,
+          "name": "Hourglass",
+          "reason": "Egito antigo de tecnologia avançada; a mitologia e a história egípcias não estão no centro. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 295019,
+          "name": "Pyramids and Aliens: Escape Room",
+          "reason": "Pirâmide construída por alienígenas. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 412101,
+          "name": "Profaned",
+          "reason": "Mundo de tema egípcio, só na estética. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 410135,
+          "name": "Whiskers In The Sand",
+          "reason": "Deserto de mortos-vivos de tema egípcio. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        }
+      ]
+    },
+    {
+      "slug": "mundo-celta",
+      "name": "Mundo celta",
+      "description": "Druidas, fadas e lendas da Irlanda, da Escócia e do País de Gales.",
+      "scope": "Jogos com a mitologia ou o folclore celtas, irlandeses, escoceses, galeses ou bretões no centro, ou ambientados na Irlanda, na Escócia, no País de Gales ou na Bretanha, de hoje ou do passado. Segue a regra geral de ambientação da curadoria.",
+      "published": true,
+      "suggest": {
+        "keywords": [
+          "celtic-mythology",
+          "irish-mythology",
+          "druids",
+          "banshee",
+          "irish",
+          "irish-folklore",
+          "celtic"
+        ],
+        "summaryTerms": [
+          "Celtic",
+          "Irish folklore",
+          "Irish mythology",
+          "Irish myth",
+          "druid",
+          "druids",
+          "Gaelic",
+          "Scottish folklore",
+          "selkie",
+          "selkies",
+          "banshee",
+          "Cú Chulainn",
+          "Morrigan",
+          "Morrígan",
+          "Welsh",
+          "Ireland",
+          "Scotland",
+          "Wales"
+        ],
+        "wikidataPlaces": ["Q27", "Q22", "Q25"]
+      },
+      "games": [
+        {
+          "igdbId": 7603,
+          "name": "Hellblade: Senua's Sacrifice"
+        },
+        {
+          "igdbId": 10023,
+          "name": "Barrow Hill: Curse of the Ancient Circle"
+        },
+        {
+          "igdbId": 17206,
+          "name": "The Last Crown: Midnight Horror"
+        },
+        {
+          "igdbId": 25680,
+          "name": "The Little Acre"
+        },
+        {
+          "igdbId": 29264,
+          "name": "A Tale of Two Kingdoms"
+        },
+        {
+          "igdbId": 31509,
+          "name": "Barrow Hill: The Dark Path"
+        },
+        {
+          "igdbId": 32694,
+          "name": "Graven: The Purple Moon Prophecy"
+        },
+        {
+          "igdbId": 35108,
+          "name": "Defend the Highlands"
+        },
+        {
+          "igdbId": 35357,
+          "name": "Beeswing"
+        },
+        {
+          "igdbId": 107211,
+          "name": "The Waylanders"
+        },
+        {
+          "igdbId": 111544,
+          "name": "Maid of Sker"
+        },
+        {
+          "igdbId": 115552,
+          "name": "The Morrigan"
+        },
+        {
+          "igdbId": 119673,
+          "name": "Helvetii"
+        },
+        {
+          "igdbId": 137993,
+          "name": "Clan O'Conall and the Crown of the Stag"
+        },
+        {
+          "igdbId": 212138,
+          "name": "The Good People: Na Daoine Maithe"
+        },
+        {
+          "igdbId": 242336,
+          "name": "Forge of the Fae"
+        },
+        {
+          "igdbId": 244770,
+          "name": "Lore: Curse of the Elemental"
+        },
+        {
+          "igdbId": 250960,
+          "name": "Hunter: The Reckoning - The Beast of Glenkildove"
+        },
+        {
+          "igdbId": 252837,
+          "name": "Still Wakes the Deep"
+        },
+        {
+          "igdbId": 260649,
+          "name": "SoulQuest"
+        },
+        {
+          "igdbId": 292604,
+          "name": "The Heirloom"
+        },
+        {
+          "igdbId": 315343,
+          "name": "Hungry Horrors"
+        },
+        {
+          "igdbId": 345146,
+          "name": "Shrouded Aspect"
+        },
+        {
+          "igdbId": 355026,
+          "name": "Eilean Mor: The Lost Keepers"
+        },
+        {
+          "igdbId": 394821,
+          "name": "Good Folk Cafe"
+        },
+        {
+          "igdbId": 395855,
+          "name": "Bibdu"
+        }
+      ],
+      "rejected": [
+        {
+          "igdbId": 15303,
+          "name": "Conquest of Elysium 3",
+          "reason": "Druida como uma das raças de estratégia."
+        },
+        {
+          "igdbId": 15972,
+          "name": "Spectromancer",
+          "reason": "Só uma carta de banshee."
+        },
+        {
+          "igdbId": 17532,
+          "name": "Northmark: Hour of the Wolf",
+          "reason": "Druida como classe de RPG."
+        },
+        {
+          "igdbId": 23371,
+          "name": "Masquerade: The Baubles of Doom",
+          "reason": "Orbes druídicos num mundo de fantasia genérico."
+        },
+        {
+          "igdbId": 28142,
+          "name": "Druidstone: The Secret of the Menhir Forest",
+          "reason": "Druida como classe de fantasia, sem a cultura celta no centro."
+        },
+        {
+          "igdbId": 34797,
+          "name": "Project Druid",
+          "reason": "Labirinto inspirado no jogo Druid, do C64."
+        },
+        {
+          "igdbId": 52298,
+          "name": "Logistical: British Isles",
+          "reason": "Entregas pelas cidades das Ilhas Britânicas, sem a cultura no centro."
+        },
+        {
+          "igdbId": 83891,
+          "name": "Friday the 13th: Killer Puzzle",
+          "reason": "Jason em Crystal Lake; o Wikidata aponta um dos cenários."
+        },
+        {
+          "igdbId": 126533,
+          "name": "Plot of the Druid",
+          "reason": "Druida como personagem de fantasia cômica."
+        },
+        {
+          "igdbId": 132376,
+          "name": "Company of Crime",
+          "reason": "Londres dos anos 1960; Scotland Yard é a polícia."
+        },
+        {
+          "igdbId": 136712,
+          "name": "171",
+          "reason": "Ambientação brasileira; o Wikidata aponta um lugar fora do tema."
+        },
+        {
+          "igdbId": 143702,
+          "name": "Myth: Make Your True Hero",
+          "reason": "MMORPG que mistura várias mitologias."
+        },
+        {
+          "igdbId": 165188,
+          "name": "Geogames",
+          "reason": "Plataforma de geografia com o Street View; \"Scotland Yard\" é um modo."
+        },
+        {
+          "igdbId": 196608,
+          "name": "Project Utgardr",
+          "reason": "Cultura nórdica, não celta."
+        },
+        {
+          "igdbId": 215887,
+          "name": "Falinere Fantasy",
+          "reason": "Druida como classe de RPG."
+        },
+        {
+          "igdbId": 371467,
+          "name": "Brass & Bramble",
+          "reason": "Viagem da Irlanda ao Egito e ao Japão, sem uma cultura no centro."
+        },
+        {
+          "igdbId": 386880,
+          "name": "Tornblade",
+          "reason": "Atmosfera eslava e celta misturada, sem uma cultura no centro."
+        },
+        {
+          "igdbId": 395812,
+          "name": "Hyperlane Highway",
+          "reason": "Só a palavra-chave \"irish\"."
+        },
+        {
+          "igdbId": 414745,
+          "name": "Selkie's Salvage&Co.",
+          "reason": "Selkie só no nome."
+        },
+        {
+          "igdbId": 419172,
+          "name": "Graveheart",
+          "reason": "Escócia de história alternativa com William Wallace zumbi. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        }
+      ]
+    },
+    {
+      "slug": "china-taiwan-e-hong-kong",
+      "name": "China, Taiwan e Hong Kong",
+      "description": "Lendas, dinastias e artes marciais da China.",
+      "scope": "Jogos com a mitologia, o folclore, a história, a filosofia ou a literatura chinesas, como o wuxia no centro, ou ambientados na China, em Taiwan ou em Hong Kong, de hoje ou do passado. Segue a regra geral de ambientação da curadoria.",
+      "published": true,
+      "suggest": {
+        "keywords": [
+          "china",
+          "chinese-mythology",
+          "ancient-china",
+          "historical-china",
+          "wuxia",
+          "taoism",
+          "chinese-zodiac",
+          "kung-fu"
+        ],
+        "summaryTerms": [
+          "China",
+          "Chinese mythology",
+          "Chinese folklore",
+          "ancient China",
+          "wuxia",
+          "xianxia",
+          "Three Kingdoms",
+          "Tang dynasty",
+          "Ming dynasty",
+          "Qing dynasty",
+          "Han dynasty",
+          "Taoist",
+          "Taoism",
+          "Daoist",
+          "Journey to the West",
+          "Sun Wukong",
+          "Monkey King",
+          "Chinese New Year"
+        ],
+        "wikidataPlaces": ["Q148"]
+      },
+      "games": [
+        {
+          "igdbId": 9384,
+          "name": "Kung Fu Strike: The Warrior's Rise"
+        },
+        {
+          "igdbId": 24444,
+          "name": "Detective Di: The Silk Rose Murders"
+        },
+        {
+          "igdbId": 26586,
+          "name": "Gaokao.Love.100Days"
+        },
+        {
+          "igdbId": 26776,
+          "name": "Detention"
+        },
+        {
+          "igdbId": 27069,
+          "name": "The Hong Kong Massacre"
+        },
+        {
+          "igdbId": 27692,
+          "name": "Shuyan Saga"
+        },
+        {
+          "igdbId": 29826,
+          "name": "Three Kingdoms: The Last Warlord"
+        },
+        {
+          "igdbId": 35526,
+          "name": "Oriental Empires"
+        },
+        {
+          "igdbId": 37026,
+          "name": "Unruly Heroes"
+        },
+        {
+          "igdbId": 45095,
+          "name": "Hidden Dragon: Legend"
+        },
+        {
+          "igdbId": 53763,
+          "name": "The Mysterious Cities of Gold: Secret Paths"
+        },
+        {
+          "igdbId": 86430,
+          "name": "Chinese Parents"
+        },
+        {
+          "igdbId": 94078,
+          "name": "9 Monkeys of Shaolin"
+        },
+        {
+          "igdbId": 97271,
+          "name": "A Perfect Day"
+        },
+        {
+          "igdbId": 99053,
+          "name": "Paper Dolls"
+        },
+        {
+          "igdbId": 102421,
+          "name": "Sense: A Cyberpunk Ghost Story"
+        },
+        {
+          "igdbId": 103616,
+          "name": "The Scroll of Taiwu"
+        },
+        {
+          "igdbId": 108787,
+          "name": "Bladed Fury"
+        },
+        {
+          "igdbId": 114520,
+          "name": "Road to Guangdong"
+        },
+        {
+          "igdbId": 116880,
+          "name": "China: Mao's legacy"
+        },
+        {
+          "igdbId": 121235,
+          "name": "Eastern Exorcist"
+        },
+        {
+          "igdbId": 122157,
+          "name": "My Vow to My Liege"
+        },
+        {
+          "igdbId": 123689,
+          "name": "Bloody Spell"
+        },
+        {
+          "igdbId": 127031,
+          "name": "The Rewinder"
+        },
+        {
+          "igdbId": 127939,
+          "name": "Amazing Cultivation Simulator"
+        },
+        {
+          "igdbId": 130530,
+          "name": "Paranormal HK"
+        },
+        {
+          "igdbId": 132045,
+          "name": "School Years"
+        },
+        {
+          "igdbId": 138747,
+          "name": "Path of Wuxia"
+        },
+        {
+          "igdbId": 139744,
+          "name": "Builders of China"
+        },
+        {
+          "igdbId": 143166,
+          "name": "Tale of Immortal"
+        },
+        {
+          "igdbId": 143435,
+          "name": "Terracotta"
+        },
+        {
+          "igdbId": 144022,
+          "name": "Sifu"
+        },
+        {
+          "igdbId": 156935,
+          "name": "Paper Dolls 2"
+        },
+        {
+          "igdbId": 164874,
+          "name": "The Matchless KungFu"
+        },
+        {
+          "igdbId": 185947,
+          "name": "Wukong"
+        },
+        {
+          "igdbId": 194821,
+          "name": "Nine Sols"
+        },
+        {
+          "igdbId": 198350,
+          "name": "No Return"
+        },
+        {
+          "igdbId": 198551,
+          "name": "Underdog Detective"
+        },
+        {
+          "igdbId": 201417,
+          "name": "Murders on the Yangtze River"
+        },
+        {
+          "igdbId": 202696,
+          "name": "Wandering Sword"
+        },
+        {
+          "igdbId": 226590,
+          "name": "Three Kingdoms Zhao Yun"
+        },
+        {
+          "igdbId": 246606,
+          "name": "Thriving City: Song"
+        },
+        {
+          "igdbId": 247896,
+          "name": "Town of Ancient Tea"
+        },
+        {
+          "igdbId": 259500,
+          "name": "Absurd Story: Back Home"
+        },
+        {
+          "igdbId": 259717,
+          "name": "YaoGuai Hunter"
+        },
+        {
+          "igdbId": 272861,
+          "name": "Cats Hidden in China"
+        },
+        {
+          "igdbId": 275459,
+          "name": "Hero's Adventure: Road to Passion"
+        },
+        {
+          "igdbId": 278802,
+          "name": "The Last Soldier of the Ming Dynasty"
+        },
+        {
+          "igdbId": 284620,
+          "name": "100 Cats Beijing"
+        },
+        {
+          "igdbId": 290731,
+          "name": "Rooster"
+        },
+        {
+          "igdbId": 296195,
+          "name": "The Hungry Lamb: Traveling in the Late Ming Dynasty"
+        },
+        {
+          "igdbId": 327527,
+          "name": "The Sisterhood Pasture"
+        },
+        {
+          "igdbId": 333603,
+          "name": "Heroes' Vow: Three Kingdoms"
+        },
+        {
+          "igdbId": 351103,
+          "name": "Road to Empress I"
+        },
+        {
+          "igdbId": 351268,
+          "name": "Moon Princess"
+        },
+        {
+          "igdbId": 376372,
+          "name": "Legacy of Shadows"
+        },
+        {
+          "igdbId": 386505,
+          "name": "Another Hero's Adventure"
+        },
+        {
+          "igdbId": 392056,
+          "name": "HexBreakerII"
+        },
+        {
+          "igdbId": 400355,
+          "name": "The Crane Rider's Tale"
+        },
+        {
+          "igdbId": 417068,
+          "name": "Lunar Crypt"
+        },
+        {
+          "igdbId": 418470,
+          "name": "Peach Garden Survivors"
+        },
+        {
+          "igdbId": 421427,
+          "name": "Martial Art's History"
+        },
+        {
+          "igdbId": 425023,
+          "name": "Westward Dash"
+        },
+        {
+          "igdbId": 25084,
+          "name": "Shenzhen I/O"
+        }
+      ],
+      "rejected": [
+        {
+          "igdbId": 787,
+          "name": "Serious Sam II",
+          "reason": "Só a palavra-chave \"chinese-accent\"."
+        },
+        {
+          "igdbId": 5968,
+          "name": "Double Dragon Neon",
+          "reason": "Só a palavra-chave \"kung-fu\"."
+        },
+        {
+          "igdbId": 10296,
+          "name": "Fairy Bloom Freesia",
+          "reason": "Só a palavra-chave \"kung-fu\"."
+        },
+        {
+          "igdbId": 13362,
+          "name": "Probably Archery",
+          "reason": "\"China shop\" é uma loja de louças."
+        },
+        {
+          "igdbId": 16664,
+          "name": "Wargame: Red Dragon",
+          "reason": "Guerra moderna; o Wikidata aponta um dos cenários."
+        },
+        {
+          "igdbId": 19349,
+          "name": "Rag Doll Kung Fu",
+          "reason": "Só a palavra-chave \"kung-fu\"."
+        },
+        {
+          "igdbId": 27038,
+          "name": "River City Ransom: Underground",
+          "reason": "Só a palavra-chave \"kung-fu\"."
+        },
+        {
+          "igdbId": 27158,
+          "name": "Touhou Shinkirou: Hopeless Masquerade",
+          "reason": "Jogo de luta japonês; só as palavras-chave."
+        },
+        {
+          "igdbId": 31393,
+          "name": "Shio",
+          "reason": "Só a palavra-chave \"kung-fu\"."
+        },
+        {
+          "igdbId": 35361,
+          "name": "Flying Tigers: Shadows Over China",
+          "reason": "Esquadrões americanos na China; a cultura chinesa não está no centro."
+        },
+        {
+          "igdbId": 51679,
+          "name": "Shaq Fu: A Legend Reborn",
+          "reason": "Briga de rua com ninjas; o Wikidata aponta um dos cenários."
+        },
+        {
+          "igdbId": 72374,
+          "name": "Projection: First Light",
+          "reason": "Viagem por várias culturas, sem uma no centro."
+        },
+        {
+          "igdbId": 75895,
+          "name": "Taste of Power",
+          "reason": "Choque de culturas inventado, sem uma no centro."
+        },
+        {
+          "igdbId": 113725,
+          "name": "Sun Wukong VS Robot",
+          "reason": "Só o personagem Sun Wukong."
+        },
+        {
+          "igdbId": 115821,
+          "name": "Mutropolis",
+          "reason": "\"Made in China\" é uma piada."
+        },
+        {
+          "igdbId": 121218,
+          "name": "Bookbound Brigade",
+          "reason": "Sun Wukong é um de vários personagens."
+        },
+        {
+          "igdbId": 219729,
+          "name": "Boxes: Lost Fragments",
+          "reason": "Mistura várias mitologias, sem uma no centro."
+        },
+        {
+          "igdbId": 310694,
+          "name": "Forestrike",
+          "reason": "Artes marciais sem a cultura chinesa no centro."
+        },
+        {
+          "igdbId": 346841,
+          "name": "Empire Game",
+          "reason": "A China é uma de várias civilizações."
+        },
+        {
+          "igdbId": 360068,
+          "name": "Gangs of Asia",
+          "reason": "Mistura sumô, ninjas e kung fu."
+        },
+        {
+          "igdbId": 392130,
+          "name": "Novel Simulator",
+          "reason": "Wuxia é um de vários cenários."
+        },
+        {
+          "igdbId": 11772,
+          "name": "Shadowrun: Hong Kong",
+          "reason": "Hong Kong cyberpunk do universo Shadowrun. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        },
+        {
+          "igdbId": 31505,
+          "name": "Lost in Secular Love",
+          "reason": "China antiga alternativa, com uma religião inventada. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        }
+      ]
+    },
+    {
+      "slug": "sudeste-asiatico",
+      "name": "Sudeste Asiático",
+      "description": "Mitos e lugares das Filipinas, Indonésia, Vietnã, Tailândia e vizinhos.",
+      "scope": "Jogos com o folclore, a mitologia, a história ou o cotidiano do Sudeste Asiático no centro, ou ambientados nas Filipinas, na Indonésia, no Vietnã, na Tailândia, na Malásia ou nos países vizinhos, de hoje ou do passado. Segue a regra geral de ambientação da curadoria.",
+      "published": true,
+      "suggest": {
+        "keywords": ["indonesia", "thailand", "vietnam"],
+        "summaryTerms": [
+          "Philippines",
+          "Filipino",
+          "Philippine",
+          "Indonesia",
+          "Indonesian",
+          "Javanese",
+          "Balinese",
+          "Bali",
+          "Vietnam",
+          "Vietnamese",
+          "Thailand",
+          "Thai",
+          "Malaysia",
+          "Malaysian",
+          "Malay",
+          "Cambodia",
+          "Khmer",
+          "Myanmar",
+          "Laos",
+          "aswang",
+          "Nusantara"
+        ],
+        "wikidataPlaces": ["Q928", "Q252", "Q881", "Q869", "Q833", "Q424", "Q836", "Q819"]
+      },
+      "games": [
+        {
+          "igdbId": 11712,
+          "name": "DreadOut"
+        },
+        {
+          "igdbId": 21793,
+          "name": "Home Sweet Home"
+        },
+        {
+          "igdbId": 23914,
+          "name": "Araya"
+        },
+        {
+          "igdbId": 34059,
+          "name": "Mayjasmine Episode 01: What is God?"
+        },
+        {
+          "igdbId": 35502,
+          "name": "Nightfall: Escape"
+        },
+        {
+          "igdbId": 81094,
+          "name": "Banyu Lintar Angin: Little Storm"
+        },
+        {
+          "igdbId": 102339,
+          "name": "Pamali: Indonesian Folklore Horror"
+        },
+        {
+          "igdbId": 110039,
+          "name": "A Space for the Unbound"
+        },
+        {
+          "igdbId": 110164,
+          "name": "DreadOut 2"
+        },
+        {
+          "igdbId": 113414,
+          "name": "Jack Axe"
+        },
+        {
+          "igdbId": 121331,
+          "name": "Home Sweet Home: Episode 2"
+        },
+        {
+          "igdbId": 134165,
+          "name": "Until Then"
+        },
+        {
+          "igdbId": 156017,
+          "name": "Let Me Out"
+        },
+        {
+          "igdbId": 173939,
+          "name": "The Death"
+        },
+        {
+          "igdbId": 185772,
+          "name": "Afterlove EP"
+        },
+        {
+          "igdbId": 204157,
+          "name": "Paper Ghost Stories: Third Eye Open"
+        },
+        {
+          "igdbId": 216760,
+          "name": "Bangkok Story: A Stray Dog"
+        },
+        {
+          "igdbId": 244493,
+          "name": "Cats Hidden in Bali"
+        },
+        {
+          "igdbId": 316461,
+          "name": "Agni: Village of Calamity"
+        },
+        {
+          "igdbId": 327154,
+          "name": "Lola's Lutong Bahay"
+        },
+        {
+          "igdbId": 343697,
+          "name": "DreadOut 3"
+        },
+        {
+          "igdbId": 355970,
+          "name": "Kuukiyomi: Consider It World - Thailand Ver."
+        },
+        {
+          "igdbId": 374649,
+          "name": "The Shadow of Ayutthaya"
+        },
+        {
+          "igdbId": 388689,
+          "name": "Late Night Duty"
+        },
+        {
+          "igdbId": 402492,
+          "name": "ISO/2004"
+        },
+        {
+          "igdbId": 407501,
+          "name": "Eskinita"
+        },
+        {
+          "igdbId": 414189,
+          "name": "Aswang Hunter"
+        },
+        {
+          "igdbId": 414191,
+          "name": "Jeep Horror"
+        },
+        {
+          "igdbId": 417265,
+          "name": "Jester Under Pressure"
+        },
+        {
+          "igdbId": 424882,
+          "name": "Kritsana"
+        }
+      ],
+      "rejected": [
+        {
+          "igdbId": 2042,
+          "name": "Magicka",
+          "reason": "Mitologia nórdica; o Wikidata aponta um lugar fora do tema."
+        },
+        {
+          "igdbId": 18166,
+          "name": "Rising Storm 2: Vietnam",
+          "reason": "A Guerra do Vietnã vista de fora, como cenário de tiro."
+        },
+        {
+          "igdbId": 29744,
+          "name": "Afghanistan '11",
+          "reason": "Guerra do Afeganistão."
+        },
+        {
+          "igdbId": 34496,
+          "name": "Nusakana",
+          "reason": "O resumo não traz a cultura indonésia."
+        },
+        {
+          "igdbId": 72374,
+          "name": "Projection: First Light",
+          "reason": "Viagem por várias culturas, sem uma no centro."
+        },
+        {
+          "igdbId": 75167,
+          "name": "DreadEye VR",
+          "reason": "O resumo não traz a cultura indonésia."
+        },
+        {
+          "igdbId": 107875,
+          "name": "Radio Commander",
+          "reason": "Comando de pelotões americanos contra o Vietcong."
+        },
+        {
+          "igdbId": 117549,
+          "name": "When I Was Young",
+          "reason": "Americano na Guerra do Vietnã."
+        },
+        {
+          "igdbId": 136712,
+          "name": "171",
+          "reason": "Ambientação brasileira; o Wikidata aponta um lugar fora do tema."
+        },
+        {
+          "igdbId": 143264,
+          "name": "What Comes After",
+          "reason": "O resumo não traz a cultura indonésia."
+        },
+        {
+          "igdbId": 146082,
+          "name": "Project to Escape",
+          "reason": "O resumo não traz a cultura indonésia."
+        },
+        {
+          "igdbId": 154984,
+          "name": "Military Conflict: Vietnam",
+          "reason": "A Guerra do Vietnã como cenário de tiro."
+        },
+        {
+          "igdbId": 202549,
+          "name": "Project Gunship",
+          "reason": "Simulação militar do Vietnã aos dias de hoje."
+        },
+        {
+          "igdbId": 360059,
+          "name": "Dancing with Ghosts",
+          "reason": "O resumo não traz a cultura tailandesa."
+        },
+        {
+          "igdbId": 305550,
+          "name": "Acts of Blood",
+          "reason": "Bandung distópica. Versão futurista, distópica ou inventada do lugar, sem a cultura no centro."
+        }
+      ]
+    }
+  ]
+}

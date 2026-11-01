@@ -1,6 +1,12 @@
 import { type INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { ApiErrorSchema, GameDetailSchema, GamePageSchema } from '@indie/contracts';
+import {
+  ApiErrorSchema,
+  CollectionDetailSchema,
+  CollectionSummarySchema,
+  GameDetailSchema,
+  GamePageSchema,
+} from '@indie/contracts';
 import request from 'supertest';
 import type { App } from 'supertest/types';
 import { seedReferenceData } from '../prisma/seed/reference-data';
@@ -13,6 +19,7 @@ import { CatalogBuilder } from './support/catalog-builder';
 
 describe('Catálogo', () => {
   let app: INestApplication<App>;
+  const gameIds = new Map<string, string>();
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] })
@@ -24,7 +31,8 @@ describe('Catálogo', () => {
     await app.init();
 
     const prisma = app.get(PrismaService);
-    await prisma.$executeRaw`TRUNCATE "IngestionRun", "Game", "Company", "Feature" CASCADE`;
+    await prisma.$executeRaw`
+      TRUNCATE "IngestionRun", "Game", "Company", "Feature", "Collection" CASCADE`;
     await seedReferenceData(prisma);
     const catalog = new CatalogBuilder(prisma);
     const { UPCOMING } = ReleaseStatus;
@@ -103,8 +111,27 @@ describe('Catálogo', () => {
         languages: [{ locale: 'pt-BR', interface: true }],
       },
     ]) {
-      await catalog.game(game);
+      const { id } = await catalog.game(game);
+      gameIds.set(game.name, id);
     }
+    const collection = (slug: string, sortOrder: number, gameNames: string[]) =>
+      prisma.collection.create({
+        data: {
+          slug,
+          name: `Coleção ${slug}`,
+          description: `Descrição de ${slug}`,
+          sortOrder,
+          games: { create: gameNames.map((name) => ({ gameId: gameIds.get(name)! })) },
+        },
+      });
+    await collection('plataformas', 1, [
+      'Celeste',
+      'Hollow Knight',
+      'Hollow Knight: Silksong',
+      'Jogo Rejeitado',
+    ]);
+    await collection('quebra-cabecas', 0, ['Outer Wilds', 'Baba Is You']);
+    await collection('so-fora-do-catalogo', 2, ['Jogo Rejeitado']);
   });
 
   afterAll(() => app.close());
@@ -319,6 +346,80 @@ describe('Catálogo', () => {
         error: 'Not Found',
         message: 'Jogo não encontrado.',
       });
+    });
+  });
+
+  describe('GET /api/collections', () => {
+    it('é público e lista na ordem do arquivo, com a contagem e as capas dos jogos do catálogo', async () => {
+      const response = await request(app.getHttpServer()).get('/api/collections').expect(200);
+
+      expect(CollectionSummarySchema.array().parse(response.body)).toEqual([
+        {
+          slug: 'quebra-cabecas',
+          name: 'Coleção quebra-cabecas',
+          description: 'Descrição de quebra-cabecas',
+          gameCount: 2,
+          coverImageIds: ['cover-baba-is-you', 'cover-outer-wilds'],
+        },
+        {
+          slug: 'plataformas',
+          name: 'Coleção plataformas',
+          description: 'Descrição de plataformas',
+          gameCount: 3,
+          coverImageIds: ['cover-hollow-knight-silksong', 'cover-celeste', 'cover-hollow-knight'],
+        },
+      ]);
+    });
+  });
+
+  describe('GET /api/collections/:slug', () => {
+    const collectionPage = (slug: string, query: Record<string, string> = {}) =>
+      request(app.getHttpServer()).get(`/api/collections/${slug}`).query(query);
+
+    it('é público e traz os jogos do catálogo, dos mais populares, sem os de fora', async () => {
+      const response = await collectionPage('plataformas').expect(200);
+      const detail = CollectionDetailSchema.parse(response.body);
+
+      expect(detail).toMatchObject({
+        slug: 'plataformas',
+        name: 'Coleção plataformas',
+        description: 'Descrição de plataformas',
+        games: { page: 1, pageSize: 24, total: 3, totalPages: 1 },
+      });
+      expect(detail.games.items.map(({ name }) => name)).toEqual([
+        'Hollow Knight: Silksong',
+        'Celeste',
+        'Hollow Knight',
+      ]);
+      expect(detail.games.items[1]?.genres).toEqual([
+        { slug: 'adventure', name: 'Aventura' },
+        { slug: 'platform', name: 'Plataforma' },
+      ]);
+    });
+
+    it('pagina com total e total de páginas', async () => {
+      const response = await collectionPage('plataformas', { page: '2', pageSize: '2' }).expect(
+        200,
+      );
+      const { games } = CollectionDetailSchema.parse(response.body);
+
+      expect(games).toMatchObject({ page: 2, pageSize: 2, total: 3, totalPages: 2 });
+      expect(games.items.map(({ name }) => name)).toEqual(['Hollow Knight']);
+    });
+
+    it.each(['nao-existe', 'so-fora-do-catalogo'])('responde 404 para %s', async (slug) => {
+      const response = await collectionPage(slug).expect(404);
+
+      expect(ApiErrorSchema.parse(response.body)).toMatchObject({
+        statusCode: 404,
+        message: 'Coleção não encontrada.',
+      });
+    });
+
+    it('recusa página fora dos limites', async () => {
+      const response = await collectionPage('plataformas', { pageSize: '49' });
+
+      expect(response.status).toBe(400);
     });
   });
 

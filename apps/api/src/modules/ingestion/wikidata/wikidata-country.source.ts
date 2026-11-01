@@ -62,28 +62,33 @@ export class WikidataCountrySource {
     return bySlug as ReadonlyMap<string, WikidataCountries>;
   }
 
-  private async query(sparql: string): Promise<unknown> {
-    const url = new URL(this.options.endpoint);
-    url.searchParams.set('query', sparql);
-    for (let attempt = 1; ; attempt++) {
-      const response = await fetch(url, {
-        headers: {
-          Accept: 'application/sparql-results+json',
-          'User-Agent': this.options.userAgent,
-        },
-        signal: AbortSignal.timeout(this.options.timeoutMs),
-      }).catch((error: unknown) => (error instanceof Error ? error : new Error(String(error))));
+  private query(sparql: string) {
+    return querySparql(this.options, sparql);
+  }
+}
 
-      if (response instanceof Response && response.ok) return response.json();
-      const reason =
-        response instanceof Response
-          ? `HTTP ${response.status}`
-          : `falha de rede (${response.message})`;
-      if (response instanceof Response) await response.body?.cancel();
-      if (attempt === this.options.maxAttempts) {
-        throw new Error(`Wikidata: ${reason} após ${attempt} tentativas`);
-      }
-      await sleep(this.options.retryDelayMs * attempt);
+// Usada também pelo script de sugestão das coleções.
+export async function querySparql(options: WikidataOptions, sparql: string): Promise<unknown> {
+  const url = new URL(options.endpoint);
+  url.searchParams.set('query', sparql);
+  for (let attempt = 1; ; attempt++) {
+    const response = await fetch(url, {
+      headers: {
+        Accept: 'application/sparql-results+json',
+        'User-Agent': options.userAgent,
+      },
+      signal: AbortSignal.timeout(options.timeoutMs),
+    }).catch((error: unknown) => (error instanceof Error ? error : new Error(String(error))));
+
+    if (response instanceof Response && response.ok) return response.json();
+    const reason =
+      response instanceof Response
+        ? `HTTP ${response.status}`
+        : `falha de rede (${response.message})`;
+    if (response instanceof Response) await response.body?.cancel();
+    if (attempt === options.maxAttempts) {
+      throw new Error(`Wikidata: ${reason} após ${attempt} tentativas`);
     }
+    await sleep(options.retryDelayMs * attempt);
   }
 }
