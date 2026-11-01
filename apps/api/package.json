@@ -10,6 +10,7 @@
     "start": "node dist/main.js",
     "ingest": "node dist/ingest.js",
     "ingest:dev": "tsx src/ingest.ts",
+    "collections:suggest": "tsx src/suggest-collections.ts",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:e2e": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.e2e.config.js --runInBand"
   },
