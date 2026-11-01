@@ -51,6 +51,8 @@ export const indieCriteriaSchema = z
       ratingsOnlyBefore: z.coerce.date(),
       postLaunchGraceDays: z.number().int().nonnegative(),
       postLaunchGraceRationale: z.string().min(1),
+      wantToPlayMinCount: z.number().int().positive(),
+      wantToPlayRationale: z.string().min(1),
     }),
     overridesPolicy: z.object({
       purpose: z.string().min(1),

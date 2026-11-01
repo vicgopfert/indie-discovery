@@ -1,6 +1,8 @@
 import {
+  catalogPopularityScale,
   normalizedPopularity,
   PopularityQuantizationError,
+  PopularityUnitMismatchError,
   popularityScale,
   reconstructedCount,
 } from './popularity';
@@ -23,6 +25,34 @@ describe('popularityScale', () => {
 
   it('não define escala sem nenhum valor positivo', () => {
     expect(popularityScale([0, 0])).toBeNull();
+  });
+});
+
+describe('catalogPopularityScale', () => {
+  it('usa o máximo e a mediana do catálogo quando a unidade coincide', () => {
+    const signal = popularityScale([1, 2, 5, 40].map((count) => count * UNIT));
+
+    expect(
+      catalogPopularityScale(
+        [1, 5, 7].map((count) => count * UNIT),
+        signal,
+      ),
+    ).toEqual({
+      unit: UNIT,
+      maxCount: 7,
+      medianCount: 5,
+    });
+  });
+
+  it('falha quando a unidade do catálogo diverge da do conjunto avaliado', () => {
+    const signal = popularityScale([1, 6].map((count) => count * UNIT));
+
+    expect(() =>
+      catalogPopularityScale(
+        [2, 6].map((count) => count * UNIT),
+        signal,
+      ),
+    ).toThrow(PopularityUnitMismatchError);
   });
 });
 

@@ -108,6 +108,7 @@ export class IngestionRepository {
         firstReleaseDate: true,
         criteriaVersion: true,
         syncedAt: true,
+        popularityCount: true,
       },
     });
     return new Map<number, StoredGame>(

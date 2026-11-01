@@ -11,6 +11,7 @@ export interface StoredGame {
   firstReleaseDate: Date | null;
   criteriaVersion: string;
   evaluatedAt: Date;
+  popularityCount: number;
 }
 
 export interface EvaluatedGame {
@@ -86,16 +87,20 @@ function transitionFlags({ game, verdict }: EvaluatedGame, input: ReviewFlagInpu
       inCatalog: verdict.accepted,
     });
   }
+  // A saída por falta de sinal com a contagem gravada no mínimo ou acima mede quanto o
+  // "Want to Play" oscila entre execuções (B-69).
   if (before.inCatalog !== verdict.accepted) {
+    const lostSignal = !verdict.accepted && verdict.reason === 'NO_INTEREST_SIGNAL';
     flag(ReviewFlagKind.VERDICT_CHANGED, {
       inCatalog: verdict.accepted,
       verdict,
       criteriaChanged: before.criteriaVersion !== input.criteriaVersion,
       postLaunchGraceEnded:
-        !verdict.accepted &&
-        verdict.reason === 'NO_INTEREST_SIGNAL' &&
+        lostSignal &&
         isWithinPostLaunchGrace(game, input.criteria, before.evaluatedAt) &&
         !isWithinPostLaunchGrace(game, input.criteria, input.now),
+      wantToPlayDropped:
+        lostSignal && before.popularityCount >= input.criteria.interestSignals.wantToPlayMinCount,
     });
   }
   return flags;

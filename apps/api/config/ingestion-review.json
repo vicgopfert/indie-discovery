@@ -1011,6 +1011,62 @@
       "name": "ACSoftware",
       "decision": "rejected",
       "decidedAt": "2026-10-23"
+    },
+    {
+      "igdbId": 52991,
+      "name": "Deppresick Team",
+      "decision": "rejected",
+      "decidedAt": "2026-10-30",
+      "note": "Recusada pelo teste de entrada no B-69: equipe de mods de Source, sem plataforma nem estúdio AAA."
+    },
+    {
+      "igdbId": 73684,
+      "name": "Lejonbringa Egendomsyssla AB",
+      "decision": "rejected",
+      "decidedAt": "2026-10-30",
+      "note": "Recusada pelo teste de entrada no B-69: empresa sueca de pequeno porte acima de Ace Maddox, sem plataforma nem estúdio AAA."
+    },
+    {
+      "igdbId": 3331,
+      "name": "Streamline Studios",
+      "decision": "rejected",
+      "decidedAt": "2026-10-30",
+      "note": "Recusada pelo teste de entrada no B-69: estúdio de codesenvolvimento e serviços do fundador (Streamline Media Group); trabalhar para jogos AAA não é controlar estúdio AAA."
+    },
+    {
+      "igdbId": 18998,
+      "name": "Puppet Combo",
+      "decision": "rejected",
+      "decidedAt": "2026-10-30",
+      "note": "Recusada pelo teste de entrada no B-69: selo indie de terror, sem plataforma nem estúdio AAA."
+    },
+    {
+      "igdbId": 49112,
+      "name": "Polyp's Pond",
+      "decision": "rejected",
+      "decidedAt": "2026-10-30",
+      "note": "Recusada pelo teste de entrada no B-69: selo pequeno acima de Jeremy Couillard, sem plataforma nem estúdio AAA."
+    },
+    {
+      "igdbId": 40637,
+      "name": "Cathedral Studios",
+      "decision": "rejected",
+      "decidedAt": "2026-10-30",
+      "note": "Recusada pelo teste de entrada no B-69: estúdio pequeno do Reino Unido (The Bornless), sem plataforma nem estúdio AAA."
+    },
+    {
+      "igdbId": 60271,
+      "name": "Re,AER",
+      "decision": "rejected",
+      "decidedAt": "2026-10-30",
+      "note": "Recusada pelo teste de entrada no B-69: círculo independente japonês acima de Acacia, sem plataforma nem estúdio AAA."
+    },
+    {
+      "igdbId": 24413,
+      "name": "NA",
+      "decision": "not_ownership",
+      "decidedAt": "2026-10-30",
+      "note": "Entrada \"NA\" da IGDB como empresa-mãe de Game Draft Studio: não é empresa, como \"Independent\" (B-69)."
     }
   ],
   "noDeveloperReview": {

@@ -35,6 +35,33 @@ export function popularityScale(acceptedCatalogValues: Iterable<number>): Popula
   return { unit, maxCount: sorted.at(-1)!, medianCount: median(sorted) };
 }
 
+export class PopularityUnitMismatchError extends Error {
+  constructor(
+    readonly catalogUnit: number,
+    readonly signalUnit: number,
+  ) {
+    super(
+      `A unidade do "Want to Play" no catálogo (1/${Math.round(1 / catalogUnit)}) diverge da do ` +
+        `conjunto avaliado (1/${Math.round(1 / signalUnit)}): a contagem gravada não seria a que ` +
+        'decidiu a entrada no catálogo',
+    );
+  }
+}
+
+// A contagem mínima do sinal de interesse é decidida com a unidade de todos os jogos avaliados;
+// o máximo e a mediana são os do catálogo. As duas unidades precisam coincidir, o que acontece
+// porque milhares de jogos do catálogo têm contagem 1.
+export function catalogPopularityScale(
+  catalogValues: Iterable<number>,
+  signalScale: PopularityScale | null,
+): PopularityScale | null {
+  const scale = popularityScale(catalogValues);
+  if (scale && signalScale && scale.unit !== signalScale.unit) {
+    throw new PopularityUnitMismatchError(scale.unit, signalScale.unit);
+  }
+  return scale;
+}
+
 // A contagem é o valor gravado no jogo: a unidade muda todo dia, a contagem de um jogo não.
 export function reconstructedCount(value: number, scale: PopularityScale | null) {
   if (scale === null || value <= 0) return 0;
