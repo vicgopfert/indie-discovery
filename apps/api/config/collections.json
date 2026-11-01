@@ -1,0 +1,6 @@
+{
+  "curationPolicy": "Um jogo entra numa coleção quando a cultura está no centro dele: mitologia, religião, folclore, música, história ou cotidiano. Ambientação num lugar real da coleção, de hoje ou do passado, conta sozinha. Uma versão futurista, distópica ou inventada de um lugar só conta se a cultura em si estiver no centro: o nome do lugar ou a estética não bastam. Também não bastam um nome, um item ou uma referência isolada, a origem do estúdio nem uma guerra vista só de fora, como cenário de tiro ou estratégia. Os candidatos vêm do script de sugestão (palavras-chave da IGDB, termos do resumo e local da narrativa no Wikidata), e cada um é aprovado ou recusado com o motivo pelo autor.",
+  "minGames": 10,
+  "minGamesRationale": "Mínimo do F-24 e do R-14: com menos de 10 jogos a coleção não sustenta a navegação. O arquivo não aceita coleção abaixo do mínimo; o jogo aprovado que sai do catálogo gera o alerta COLLECTION_GAME_OUT_OF_CATALOG.",
+  "collections": []
+}
