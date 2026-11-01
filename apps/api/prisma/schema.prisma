@@ -49,6 +49,7 @@ enum ReviewFlagKind {
   VERDICT_CHANGED
   LEFT_CANDIDATE_SET
   NO_DEVELOPER_VISIBLE
+  COLLECTION_GAME_OUT_OF_CATALOG
 }
 
 // E-mail guardado já normalizado (minúsculas, sem espaços): o índice único garante a unicidade.
@@ -138,6 +139,7 @@ model Game {
   companies           GameCompany[]
   features            GameFeature[]
   languages           GameLanguage[]
+  collections         CollectionGame[]
 
   @@index([inCatalog, releaseStatus])
   @@index([studioCountryCode])
@@ -175,6 +177,26 @@ model GameLanguage {
   language   Language @relation(fields: [languageId], references: [id], onDelete: Cascade)
 
   @@id([gameId, languageId])
+}
+
+// Coleção cultural curada em config/collections.json; a ingestão sincroniza o arquivo com o banco.
+model Collection {
+  id          String           @id @default(uuid()) @db.Uuid
+  slug        String           @unique
+  name        String
+  description String
+  sortOrder   Int
+  games       CollectionGame[]
+}
+
+model CollectionGame {
+  collectionId String     @db.Uuid
+  gameId       String     @db.Uuid
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  game         Game       @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@id([collectionId, gameId])
+  @@index([gameId])
 }
 
 model IngestionRun {
