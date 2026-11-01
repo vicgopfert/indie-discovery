@@ -1,4 +1,7 @@
 import type {
+  CollectionDetail,
+  CollectionPageQuery,
+  CollectionSummary,
   CountryOption,
   FeatureLabel,
   FeatureOption,
@@ -33,14 +36,7 @@ export class CatalogService {
   ) {}
 
   async searchGames(query: GameSearchQuery): Promise<GamePage> {
-    const { total, games } = await this.catalog.searchGames(query);
-    return {
-      items: games.map((game) => this.toSummary(game)),
-      page: query.page,
-      pageSize: query.pageSize,
-      total,
-      totalPages: Math.ceil(total / query.pageSize),
-    };
+    return this.toPage(await this.catalog.searchGames(query), query);
   }
 
   async findGame(slug: string): Promise<GameDetail> {
@@ -90,6 +86,37 @@ export class CatalogService {
       .filter(({ gameCount }) => gameCount >= this.countryOptionMinGames)
       .map(({ alpha2, namePt, gameCount }) => ({ code: alpha2, name: namePt, gameCount }))
       .sort(byName);
+  }
+
+  async listCollections(): Promise<CollectionSummary[]> {
+    const collections = await this.catalog.listCollections();
+    return collections.map(({ slug, name, description, _count, games }) => ({
+      slug,
+      name,
+      description,
+      gameCount: _count.games,
+      coverImageIds: games.map(({ game }) => game.coverImageId),
+    }));
+  }
+
+  // A coleção sem jogo no catálogo responde como inexistente, porque a lista também a esconde.
+  async findCollection(slug: string, query: CollectionPageQuery): Promise<CollectionDetail> {
+    const found = await this.catalog.findCollectionGames(slug, query);
+    if (!found || found.total === 0) throw new NotFoundException('Coleção não encontrada.');
+    return { ...found.collection, games: this.toPage(found, query) };
+  }
+
+  private toPage(
+    { total, games }: { total: number; games: GameSummaryRow[] },
+    { page, pageSize }: { page: number; pageSize: number },
+  ): GamePage {
+    return {
+      items: games.map((game) => this.toSummary(game)),
+      page,
+      pageSize,
+      total,
+      totalPages: Math.ceil(total / pageSize),
+    };
   }
 
   private toSummary(game: GameSummaryRow): GameSummary {

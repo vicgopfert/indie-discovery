@@ -1,4 +1,9 @@
-import { COUNTRY_UNKNOWN, type GameSearchQuery } from '@indie/contracts';
+import {
+  COLLECTION_PREVIEW_COVERS,
+  type CollectionPageQuery,
+  COUNTRY_UNKNOWN,
+  type GameSearchQuery,
+} from '@indie/contracts';
 import { Injectable } from '@nestjs/common';
 import { FeatureType, Prisma, ReleaseStatus } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -74,6 +79,31 @@ export interface FeatureCountRow {
   gameCount: number;
 }
 
+const inCatalog = { game: { inCatalog: true } } satisfies Prisma.CollectionGameWhereInput;
+
+const collectionSummarySelect = {
+  slug: true,
+  name: true,
+  description: true,
+  _count: { select: { games: { where: inCatalog } } },
+  games: {
+    where: inCatalog,
+    select: { game: { select: { coverImageId: true } } },
+    orderBy: [{ game: { popularityNorm: 'desc' } }, { game: { name: 'asc' } }],
+    take: COLLECTION_PREVIEW_COVERS,
+  },
+} satisfies Prisma.CollectionSelect;
+
+export type CollectionSummaryRow = Prisma.CollectionGetPayload<{
+  select: typeof collectionSummarySelect;
+}>;
+
+export interface CollectionGamesRow {
+  collection: { slug: string; name: string; description: string };
+  total: number;
+  games: GameSummaryRow[];
+}
+
 export interface CountryCountRow {
   alpha2: string;
   namePt: string;
@@ -136,6 +166,39 @@ export class CatalogRepository {
       namePt,
       gameCount: _count.games,
     }));
+  }
+
+  // Coleção sem nenhum jogo no catálogo fica de fora, como as opções de filtro.
+  listCollections(): Promise<CollectionSummaryRow[]> {
+    return this.prisma.collection.findMany({
+      where: { games: { some: inCatalog } },
+      select: collectionSummarySelect,
+      orderBy: { sortOrder: 'asc' },
+    });
+  }
+
+  async findCollectionGames(
+    slug: string,
+    { page, pageSize }: CollectionPageQuery,
+  ): Promise<CollectionGamesRow | null> {
+    const collection = await this.prisma.collection.findUnique({
+      where: { slug },
+      select: { slug: true, name: true, description: true },
+    });
+    if (!collection) return null;
+
+    const where = { inCatalog: true, collections: { some: { collection: { slug } } } };
+    const [total, games] = await this.prisma.$transaction([
+      this.prisma.game.count({ where }),
+      this.prisma.game.findMany({
+        where,
+        select: gameSummarySelect,
+        orderBy: ORDER.popular,
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+    ]);
+    return { collection, total, games };
   }
 
   // Filtrar pelo id usa o índice de GameFeature(featureId); pelo slug, o banco cruza a tabela

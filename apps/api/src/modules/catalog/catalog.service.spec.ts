@@ -1,7 +1,9 @@
-import { GameSearchQuerySchema } from '@indie/contracts';
+import { CollectionPageQuerySchema, GameSearchQuerySchema } from '@indie/contracts';
 import { NotFoundException } from '@nestjs/common';
 import type {
   CatalogRepository,
+  CollectionGamesRow,
+  CollectionSummaryRow,
   CountryCountRow,
   FeatureCountRow,
   GameDetailRow,
@@ -80,14 +82,29 @@ const celesteDetail: GameDetailRow = {
 
 class FakeCatalog implements Pick<
   CatalogRepository,
-  'searchGames' | 'countGamesByFeature' | 'findGameBySlug' | 'countGamesByCountry'
+  | 'searchGames'
+  | 'countGamesByFeature'
+  | 'findGameBySlug'
+  | 'countGamesByCountry'
+  | 'listCollections'
+  | 'findCollectionGames'
 > {
   constructor(
     private readonly games: { total: number; games: GameSummaryRow[] },
     private readonly features: FeatureCountRow[] = [],
     private readonly detail: GameDetailRow | null = null,
     private readonly countries: CountryCountRow[] = [],
+    private readonly collections: CollectionSummaryRow[] = [],
+    private readonly collectionGames: CollectionGamesRow | null = null,
   ) {}
+
+  listCollections() {
+    return Promise.resolve(this.collections);
+  }
+
+  findCollectionGames() {
+    return Promise.resolve(this.collectionGames);
+  }
 
   countGamesByCountry() {
     return Promise.resolve(this.countries);
@@ -223,6 +240,56 @@ describe('CatalogService', () => {
 
     it('jogo inexistente ou fora do catálogo responde 404', async () => {
       await expect(findGame(null)).rejects.toThrow(new NotFoundException('Jogo não encontrado.'));
+    });
+  });
+
+  describe('coleções', () => {
+    const noGames = { total: 0, games: [] };
+    const brasil = { slug: 'brasil', name: 'Brasil', description: 'Folclore e história' };
+
+    it('lista as coleções com a contagem e as capas', async () => {
+      const catalog = new FakeCatalog(
+        noGames,
+        [],
+        null,
+        [],
+        [{ ...brasil, _count: { games: 12 }, games: [{ game: { coverImageId: 'co1' } }] }],
+      );
+
+      expect(await service(catalog).listCollections()).toEqual([
+        { ...brasil, gameCount: 12, coverImageIds: ['co1'] },
+      ]);
+    });
+
+    it('monta a página da coleção com os jogos em português', async () => {
+      const query = CollectionPageQuerySchema.parse({ page: '2', pageSize: '1' });
+      const catalog = new FakeCatalog(noGames, [], null, [], [], {
+        collection: brasil,
+        total: 2,
+        games: [celeste],
+      });
+
+      const detail = await service(catalog).findCollection('brasil', query);
+
+      expect(detail).toMatchObject({
+        ...brasil,
+        games: { page: 2, pageSize: 1, total: 2, totalPages: 2 },
+      });
+      expect(detail.games.items[0]?.genres.map(({ name }) => name)).toEqual([
+        'Aventura',
+        'Quebra-cabeça',
+      ]);
+    });
+
+    it.each<[string, CollectionGamesRow | null]>([
+      ['inexistente', null],
+      ['sem jogos no catálogo', { collection: brasil, total: 0, games: [] }],
+    ])('coleção %s responde 404', async (_, found) => {
+      const catalog = new FakeCatalog(noGames, [], null, [], [], found);
+
+      await expect(
+        service(catalog).findCollection('brasil', CollectionPageQuerySchema.parse({})),
+      ).rejects.toThrow(new NotFoundException('Coleção não encontrada.'));
     });
   });
 
