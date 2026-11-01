@@ -50,7 +50,7 @@ Marque `[x]` ao concluir um item (quando o CI estiver verde, o teste da regra pr
 - [x] **B-23** (M) Página de catálogo com filtros na URL
 - [x] **B-24** (M) Página do jogo (selo "Em breve", atribuição IGDB, metadados no servidor, capa direto da CDN da IGDB sem o otimizador da Vercel)
 - [ ] **B-25** (P) Página "Como funciona" (lista grandes empresas, estúdios controlados e exceções manuais com motivo e fonte)
-- [ ] **B-57** (M) Coleções culturais curadas: modelo, arquivo de curadoria, sugestão de candidatos, endpoints
+- [x] **B-57** (M) Coleções culturais curadas: modelo, arquivo de curadoria, sugestão de candidatos, endpoints — concluído em 01/11/2026: 10 coleções publicadas (Brasil com 29 jogos, de 22 a 131 nas outras) e Povos indígenas em rascunho (`docs/colecoes.md`)
 - [ ] **B-58** (M) Interface das coleções: vitrine "Explore por cultura", página da coleção, indicação na ficha
 
 ## E4 — Biblioteca do jogador (S7; B-28 e B-30 na S9, B-29 na S10)
