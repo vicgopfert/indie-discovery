@@ -4,6 +4,7 @@ import type { IngestionEnv } from '../../config/ingestion-env';
 import { PrismaService } from '../../prisma/prisma.service';
 import { IgdbCatalogSource } from './igdb/igdb-catalog.source';
 import { IgdbClient } from './igdb/igdb.client';
+import { readCollectionsConfig } from './collections/collections.config';
 import { readVersionedIndieCriteria } from './criteria/indie-criteria.config';
 import { readIngestionReview } from './review-flags/ingestion-review.config';
 import { readIngestionConfig } from './ingestion-config';
@@ -40,6 +41,7 @@ import { readTfidfConfig } from '../recommendation/tfidf';
             review: readIngestionReview(criteria.criteria),
             tfidf: readTfidfConfig(),
             ingestion,
+            collections: readCollectionsConfig(),
           },
         );
       },
