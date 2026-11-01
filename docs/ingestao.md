@@ -301,6 +301,31 @@ do dobro da tabela viva, longe do limite de 1 GB do Neon. O dado responde à per
 os pesos persistidos são regravados quase inteiros a cada execução, enquanto o IDF de
 `Feature` (cerca de 4 mil linhas) basta para reconstruí-los na inicialização da API.
 
+## Carga em produção do B-69 (Neon, 01/11/2026)
+
+Primeira execução do workflow "Ingestão" com o "Want to Play" como sinal de interesse:
+
+| | |
+| --- | --- |
+| Duração da execução | 4 min 4 s |
+| Conjunto candidato | 131.316 jogos, nenhum fora do schema |
+| Catálogo | 22.805 jogos: 16.999 lançados, 2.861 por lançar com data e 2.945 sem data; a carga local do mesmo dia teve 22.802 |
+| Popularidade | máximo 766 pessoas, mediana 6 |
+| País do estúdio | 38,6% pela IGDB, 8,4% pelo Wikidata, 52,9% não informado |
+| Alertas | 29: 21 `RELEASE_DATE_ASSIGNED` e 8 `VERDICT_CHANGED`; nenhum de empresa |
+| Banco | 106 MB; `GameFeature` 44 MB, `Game` 29 MB, `GameLanguage` 18 MB |
+
+Os 8 `VERDICT_CHANGED` são saídas por falta de sinal, sem fim de carência nem
+`wantToPlayDropped`: os seis jogos por lançar que perderam a data na IGDB, vistos na carga
+local de 01/11, e *MarsCity3026* e *Starcult Night Twisted Age*, vistos na de 30/10. Os
+alertas de empresa da carga local não voltaram, porque as empresas já estavam revisadas na
+configuração. *Shadowveil: Legend of The Five Rings* não aparece: ele só entraria pelo "Want
+to Play", e a regra que o exclui chegou à produção junto com o sinal.
+
+A mudança da versão do critério regravou as linhas de `Game` (19.730 linhas mortas, perto do
+catálogo anterior), e `GameFeature` ficou com 132.802 linhas mortas, como nas execuções
+anteriores; o autovacuum reaproveita o espaço.
+
 ## Medições do B-61 (24/10/2026)
 
 **Quanto da carência se resolve sozinha.** O destino dos 3.151 jogos "por lançar" com data
