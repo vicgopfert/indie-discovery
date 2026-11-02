@@ -86,7 +86,7 @@ Entrega: **M1**.
 Entrega: avaliações e listas pela API; índice carregado com memória medida; e2e de autenticação no CI.
 
 - [x] **B-19** (M, E2) Suíte e2e de autenticação
-- [ ] **B-26** (P, E4) Modelos `Rating`, `ListEntry`, `UserPreference` + migration
+- [x] **B-26** (P, E4) Modelos `Rating`, `ListEntry`, `UserPreference` + migration — concluído em 02/11/2026: nota de 1 a 5 garantida por `CHECK` no banco e pelo contrato; jogo e atributo com avaliação, lista ou preferência não podem ser apagados (`Restrict`)
 - [ ] **B-27** (M, E4) Endpoints `/me/*`: avaliação, listas, biblioteca, preferências, modo
 - [ ] **B-31** (M, E5) `ContentIndex`: carga dos vetores na inicialização + recarga protegida por segredo; decidir se `tfidfWeight` continua persistido ou se os pesos são reconstruídos do IDF na inicialização (medido em 25/10/2026: uma execução em outro dia regravou 135 mil das 189 mil linhas de `GameFeature`)
   - Resolver as dependências entre pastas deixadas pela reorganização da ingestão: `recommendation/tfidf.ts` importa `MappedFeature` do mapeador da IGDB; `igdb/igdb-catalog.source.ts` importa tipos de `review-flags/`; `persistence/` importa `StoredGame` e `ReviewFlag` de `review-flags/`; `criteria/`, `review-flags/` e `persistence/` dependem de `MappedGame`, definido no mapeador da IGDB; `igdb/` importa `ingestion-config.ts` da raiz do módulo

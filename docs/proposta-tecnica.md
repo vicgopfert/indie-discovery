@@ -515,6 +515,7 @@ O diagrama entidade-relacionamento completo está na seção 11 (diagrama 3).
 | Decisão | Justificativa |
 | --- | --- |
 | Chaves compostas em `Rating` (usuário, jogo), `ListEntry` (usuário, jogo, lista), `UserPreference` e tabelas associativas | O banco garante que não há duas avaliações do mesmo jogo pela mesma pessoa; o `PUT` vira um *upsert* simples |
+| Nota de 1 a 5 numa restrição `CHECK` da migration, além do contrato (`RatingScoreSchema`); `Restrict` nas chaves estrangeiras de `Rating` e `ListEntry` para `Game` e de `UserPreference` para `Feature`, e cascata nas de `User` | O Prisma não declara `CHECK` no schema, então ela fica na migration e vale até para gravação por fora da API. A ingestão nunca apaga jogo nem atributo, e o `Restrict` impede que uma exclusão manual leve avaliações, listas e preferências sem aviso; apagar o usuário leva os dados dele junto (B-26) |
 | `igdbId` único em `Game`, `Company`, `Language`; único composto `(type, igdbId)` em `Feature` | Ingestão idempotente: rodar duas vezes atualiza em vez de duplicar. Gêneros, temas e palavras-chave têm numerações independentes na IGDB |
 | `slug` único em `Game` | URLs legíveis e estáveis para a ficha do jogo e para buscadores |
 | Jogo rejeitado na primeira avaliação não é gravado; jogo gravado que passa a ser rejeitado fica com `inCatalog = false`, com o veredito (`criteriaVerdict`) e a versão do critério (`criteriaVersion`, hash do arquivo) | Avaliações e listas apontam para o jogo, então ele não é apagado. O campo se chama `inCatalog`, não `isIndie`, porque o jogo sai também por motivos que não dizem nada sobre ser indie (cancelado, ficha incompleta, sem sinal de interesse); as consultas da interface sempre filtram `inCatalog = true` (renomeado no B-13) |
@@ -1026,7 +1027,7 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 
 | ID | Item | Prior. | Depende de | Critério de conclusão | Esf. |
 | --- | --- | --- | --- | --- | --- |
-| B-26 | Modelos Rating, ListEntry e UserPreference com migration | P0 | B-15 | Restrições de unicidade e nota entre 1 e 5 garantidas pelo banco e pelo schema | P |
+| B-26 | Modelos Rating, ListEntry e UserPreference com migration | P0 | B-15 | Restrições de unicidade e nota entre 1 e 5 garantidas pelo banco e pelo schema. **Concluído em 02/11/2026:** chaves compostas, `CHECK` da nota na migration e `Restrict` para jogo e atributo, cobertos por testes e2e contra o PostgreSQL | P |
 | B-27 | Endpoints de avaliação, listas, biblioteca, preferências e modo (`/me/*`) (F-08, F-12) | P0 | B-26, B-17 | `userId` vem só da sessão; `PUT` repetido não duplica | M |
 | B-28 | Componentes de avaliação e listas na página do jogo (F-08) | P0 | B-27, B-24 | Usuário deslogado é levado ao login; logado vê o próprio estado e altera com retorno visual | M |
 | B-29 | Página de perfil com avaliações e listas (F-09) | P0 | B-28 | Estados vazios orientam o próximo passo; remover avaliação pela página funciona; avatar com as iniciais do nome no perfil e no cabeçalho | P |
