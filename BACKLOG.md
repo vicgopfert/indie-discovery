@@ -87,7 +87,7 @@ Entrega: avaliações e listas pela API; índice carregado com memória medida; 
 
 - [x] **B-19** (M, E2) Suíte e2e de autenticação
 - [x] **B-26** (P, E4) Modelos `Rating`, `ListEntry`, `UserPreference` + migration — concluído em 02/11/2026: nota de 1 a 5 garantida por `CHECK` no banco e pelo contrato; jogo e atributo com avaliação, lista ou preferência não podem ser apagados (`Restrict`)
-- [ ] **B-27** (M, E4) Endpoints `/me/*`: avaliação, listas, biblioteca, preferências, modo
+- [x] **B-27** (M, E4) Endpoints `/me/*`: avaliação, listas, biblioteca, preferências, modo — concluído em 02/11/2026: jogo pelo slug na URL, "concluídos" e "quero jogar" exclusivos, jogo fora do catálogo mantido na biblioteca com `inCatalog: false`
 - [ ] **B-31** (M, E5) `ContentIndex`: carga dos vetores na inicialização + recarga protegida por segredo; decidir se `tfidfWeight` continua persistido ou se os pesos são reconstruídos do IDF na inicialização (medido em 25/10/2026: uma execução em outro dia regravou 135 mil das 189 mil linhas de `GameFeature`)
   - Resolver as dependências entre pastas deixadas pela reorganização da ingestão: `recommendation/tfidf.ts` importa `MappedFeature` do mapeador da IGDB; `igdb/igdb-catalog.source.ts` importa tipos de `review-flags/`; `persistence/` importa `StoredGame` e `ReviewFlag` de `review-flags/`; `criteria/`, `review-flags/` e `persistence/` dependem de `MappedGame`, definido no mapeador da IGDB; `igdb/` importa `ingestion-config.ts` da raiz do módulo
 - [x] **B-57** (M, E3) Coleções culturais curadas: modelo, arquivo de curadoria, sugestão de candidatos, endpoints — concluído em 01/11/2026: 10 coleções publicadas (Brasil com 29 jogos, de 22 a 131 nas outras) e Povos indígenas em rascunho (`docs/colecoes.md`)
@@ -141,6 +141,11 @@ Entrega: dois ensaios realizados, texto entregue, slides revisados.
 ## Contínuo
 
 - [ ] **B-47** (—, E8) Escrita do TCC (contínua, ~3h/semana)
+
+## Perguntas em aberto
+
+- [ ] A ficha de um jogo fora do catálogo deveria abrir para quem já o tem na biblioteca? Decidir no B-28 ou no B-29, com a interface pronta (levantada no B-27)
+- [ ] Estar na biblioteca de algum usuário da plataforma deveria contar como sinal de interesse no critério indie? (levantada no B-27)
 
 ---
 
