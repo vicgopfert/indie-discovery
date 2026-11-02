@@ -1,4 +1,10 @@
 import { FeatureType, ReleaseStatus } from '../../../generated/prisma/client';
+import type {
+  MappedCompany,
+  MappedFeature,
+  MappedGame,
+  MappedLanguageSupport,
+} from '../model/mapped-game';
 import type { IgdbGame } from './igdb-game.schema';
 
 // Códigos conferidos na API da IGDB (game_statuses, website_types, language_support_types).
@@ -6,46 +12,6 @@ const CANCELLED_STATUS = 6;
 const OFFICIAL_WEBSITE = 1;
 const STORE_WEBSITES_BY_PREFERENCE = [13, 15, 16, 17]; // Steam, itch.io, Epic, GOG
 const LANGUAGE_SUPPORT = { audio: 1, subtitles: 2, interface: 3 } as const;
-
-export interface MappedCompany {
-  igdbId: number;
-  name: string;
-  countryCode: number | null;
-  isDeveloper: boolean;
-  isPublisher: boolean;
-}
-
-export interface MappedFeature {
-  type: FeatureType;
-  igdbId: number;
-  name: string;
-  slug: string;
-}
-
-export interface MappedLanguageSupport {
-  languageIgdbId: number;
-  interface: boolean;
-  subtitles: boolean;
-  audio: boolean;
-}
-
-export interface MappedGame {
-  igdbId: number;
-  slug: string;
-  name: string;
-  summary: string | null;
-  coverImageId: string | null;
-  firstReleaseDate: Date | null;
-  releaseStatus: ReleaseStatus;
-  isCancelled: boolean;
-  storeUrl: string | null;
-  studioCountryCode: number | null;
-  ratingCount: number;
-  hypes: number;
-  companies: MappedCompany[];
-  features: MappedFeature[];
-  languages: MappedLanguageSupport[];
-}
 
 export function mapIgdbGame(game: IgdbGame, now: Date): MappedGame {
   const firstReleaseDate =

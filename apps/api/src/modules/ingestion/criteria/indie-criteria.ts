@@ -1,5 +1,5 @@
 import { FeatureType, ReleaseStatus } from '../../../generated/prisma/client';
-import type { MappedCompany, MappedGame } from '../igdb/igdb.mapper';
+import type { MappedCompany, MappedGame } from '../model/mapped-game';
 import type { IndieCriteria } from './indie-criteria.config';
 
 export type RejectionReason =

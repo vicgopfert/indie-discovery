@@ -5,9 +5,10 @@ import {
 } from '../../../generated/prisma/client';
 import type { PrismaService } from '../../../prisma/prisma.service';
 import type { CollectionWrite } from '../collections/collections';
-import type { MappedGame } from '../igdb/igdb.mapper';
+import type { MappedGame } from '../model/mapped-game';
+import type { ReviewFlag } from '../model/review-flag';
+import type { StoredGame } from '../model/stored-game';
 import type { StudioCountry } from '../studio-country/studio-country';
-import type { ReviewFlag, StoredGame } from '../review-flags/review-flags';
 import type { FeatureKey } from '../../recommendation/tfidf';
 
 export interface CatalogGame {
