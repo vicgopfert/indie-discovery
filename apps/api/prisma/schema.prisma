@@ -52,17 +52,26 @@ enum ReviewFlagKind {
   COLLECTION_GAME_OUT_OF_CATALOG
 }
 
+enum ListType {
+  FAVORITE
+  COMPLETED
+  WANT_TO_PLAY
+}
+
 // E-mail guardado já normalizado (minúsculas, sem espaços): o índice único garante a unicidade.
 model User {
-  id                    String        @id @default(uuid()) @db.Uuid
-  email                 String        @unique
+  id                    String           @id @default(uuid()) @db.Uuid
+  email                 String           @unique
   passwordHash          String
   displayName           String
-  role                  UserRole      @default(USER)
-  discoveryMode         DiscoveryMode @default(BALANCED)
+  role                  UserRole         @default(USER)
+  discoveryMode         DiscoveryMode    @default(BALANCED)
   onboardingCompletedAt DateTime?
-  createdAt             DateTime      @default(now())
+  createdAt             DateTime         @default(now())
   sessions              Session[]
+  ratings               Rating[]
+  listEntries           ListEntry[]
+  preferences           UserPreference[]
 }
 
 // Guarda só o hash SHA-256 do token; o token em si existe apenas no cookie do navegador.
@@ -76,6 +85,41 @@ model Session {
 
   @@index([userId])
   @@index([expiresAt])
+}
+
+// A nota de 1 a 5 é garantida por uma CHECK na migration, que o Prisma não declara no schema.
+// A ingestão nunca apaga jogos nem atributos (o jogo sai do catálogo por inCatalog), e o
+// Restrict impede que uma exclusão manual leve avaliações, listas e preferências em silêncio.
+model Rating {
+  userId    String   @db.Uuid
+  gameId    String   @db.Uuid
+  score     Int
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game      Game     @relation(fields: [gameId], references: [id], onDelete: Restrict)
+
+  @@id([userId, gameId])
+}
+
+model ListEntry {
+  userId    String   @db.Uuid
+  gameId    String   @db.Uuid
+  listType  ListType
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game      Game     @relation(fields: [gameId], references: [id], onDelete: Restrict)
+
+  @@id([userId, gameId, listType])
+}
+
+model UserPreference {
+  userId    String   @db.Uuid
+  featureId String   @db.Uuid
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  feature   Feature  @relation(fields: [featureId], references: [id], onDelete: Restrict)
+
+  @@id([userId, featureId])
 }
 
 model Country {
@@ -106,13 +150,14 @@ model Company {
 }
 
 model Feature {
-  id     String        @id @default(uuid()) @db.Uuid
-  type   FeatureType
-  igdbId Int
-  name   String
-  slug   String
-  idf    Float         @default(0)
-  games  GameFeature[]
+  id          String           @id @default(uuid()) @db.Uuid
+  type        FeatureType
+  igdbId      Int
+  name        String
+  slug        String
+  idf         Float            @default(0)
+  games       GameFeature[]
+  preferences UserPreference[]
 
   @@unique([type, igdbId])
 }
@@ -140,6 +185,8 @@ model Game {
   features            GameFeature[]
   languages           GameLanguage[]
   collections         CollectionGame[]
+  ratings             Rating[]
+  listEntries         ListEntry[]
 
   @@index([inCatalog, releaseStatus])
   @@index([studioCountryCode])
