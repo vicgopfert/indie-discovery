@@ -204,11 +204,10 @@ model GameCompany {
 }
 
 model GameFeature {
-  gameId      String  @db.Uuid
-  featureId   String  @db.Uuid
-  tfidfWeight Float   @default(0)
-  game        Game    @relation(fields: [gameId], references: [id], onDelete: Cascade)
-  feature     Feature @relation(fields: [featureId], references: [id], onDelete: Cascade)
+  gameId    String  @db.Uuid
+  featureId String  @db.Uuid
+  game      Game    @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  feature   Feature @relation(fields: [featureId], references: [id], onDelete: Cascade)
 
   @@id([gameId, featureId])
   @@index([featureId])

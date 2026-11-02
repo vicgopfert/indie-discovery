@@ -23,7 +23,9 @@ import {
   RunIngestionUseCase,
 } from '../src/modules/ingestion/run-ingestion.use-case';
 import { WikidataCountrySource } from '../src/modules/ingestion/wikidata/wikidata-country.source';
-import { readTfidfConfig } from '../src/modules/recommendation/tfidf';
+import { buildContentIndex } from '../src/modules/recommendation/content-index';
+import { ContentIndexRepository } from '../src/modules/recommendation/content-index.repository';
+import { computeIdf, readTfidfConfig, tfidfVector } from '../src/modules/recommendation/tfidf';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { FakeIgdbServer, type ReceivedRequest } from './support/fake-igdb-server';
 
@@ -237,9 +239,39 @@ describe('Ingestão', () => {
     const run = await prisma.ingestionRun.findUniqueOrThrow({ where: { id: result.runId } });
     expect(run).toMatchObject({ criteriaVersion: versioned.version, popularityUnit: UNIT });
     expect(run.popularityMedian).toBe(medianCount);
-    expect(await prisma.gameFeature.count({ where: { tfidfWeight: { gt: 0 } } })).toBeGreaterThan(
-      0,
+  });
+
+  // Os pesos não são gravados: a API os refaz do IDF de Feature, e precisam sair iguais aos
+  // calculados a partir dos atributos que a IGDB mandou.
+  it('grava o IDF de que a API refaz os mesmos vetores', async () => {
+    await ingest.execute(NOW);
+    const tfidf = readTfidfConfig();
+    const mapped = accepted.map((raw) => mapIgdbGame(igdbGameSchema.parse(raw), NOW));
+    const idf = computeIdf(
+      mapped.map((game) => game.features),
+      tfidf,
     );
+
+    const index = buildContentIndex(await new ContentIndexRepository(prisma).loadRows(), tfidf);
+
+    expect(index.games).toHaveLength(mapped.length);
+    for (const game of mapped) {
+      const expected = new Map(
+        [...tfidfVector(game.features, idf, tfidf).weights].map(([key, weight]) => {
+          const feature = game.features.find((f) => `${f.type}:${f.igdbId}` === key)!;
+          return [`${feature.type}:${feature.slug}`, weight];
+        }),
+      );
+      const indexed = index.games.find((g) => g.slug === game.slug)!;
+      const rebuilt = new Map(
+        [...indexed.featurePositions].map((position, i) => {
+          const { type, slug } = index.features[position]!;
+          return [`${type}:${slug}`, indexed.weights[i]!];
+        }),
+      );
+      expect(rebuilt.size).toBe(expected.size);
+      for (const [key, weight] of expected) expect(rebuilt.get(key)).toBeCloseTo(weight, 12);
+    }
   });
 
   it('alerta o jogo do catálogo que fica sem desenvolvedora e visível', async () => {

@@ -29,7 +29,7 @@ import type { ReviewFlag } from './model/review-flag';
 import type { StoredGame } from './model/stored-game';
 import { resolveStudioCountry, type WikidataCountries } from './studio-country/studio-country';
 import type { WikidataCountrySource } from './wikidata/wikidata-country.source';
-import { computeIdf, type TfidfConfig, tfidfVector } from '../recommendation/tfidf';
+import { computeIdf, type TfidfConfig } from '../recommendation/tfidf';
 
 export interface IngestionSettings {
   criteria: VersionedIndieCriteria;
@@ -138,7 +138,6 @@ export class RunIngestionUseCase {
         popularityCount: count,
         popularityNorm: normalizedPopularity(count, scale),
         studioCountry: resolveStudioCountry(game.studioCountryCode, countries.countriesOf(game)),
-        weights: tfidfVector(game.features, idf, this.settings.tfidf).weights,
       };
     });
     const outOfCatalog: OutOfCatalogGame[] = [
