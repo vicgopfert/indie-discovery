@@ -12,6 +12,6 @@ import { FeatureLabels } from './feature-labels';
     { provide: COUNTRY_OPTION_MIN_GAMES, useValue: 20 },
     { provide: FeatureLabels, useFactory: () => FeatureLabels.fromFile() },
   ],
-  exports: [FeatureLabels],
+  exports: [FeatureLabels, CatalogService],
 })
 export class CatalogModule {}
