@@ -2,7 +2,6 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { z } from 'zod';
 import { FeatureType } from '../../generated/prisma/client';
-import type { MappedFeature } from '../ingestion/model/mapped-game';
 
 const FEATURE_TYPES = [FeatureType.GENRE, FeatureType.THEME, FeatureType.KEYWORD] as const;
 
@@ -48,23 +47,27 @@ export interface TfidfVector {
   presentBlocks: readonly FeatureType[];
 }
 
-type Feature = Pick<MappedFeature, 'type' | 'igdbId' | 'name'>;
+export interface ContentFeature {
+  type: FeatureType;
+  igdbId: number;
+  name: string;
+}
 
-export function featureKey(feature: Pick<Feature, 'type' | 'igdbId'>): FeatureKey {
+export function featureKey(feature: Pick<ContentFeature, 'type' | 'igdbId'>): FeatureKey {
   return `${feature.type}:${feature.igdbId}`;
 }
 
 export function excludedKeywordMatcher(config: TfidfConfig) {
   const names = new Set(config.excludedKeywords.map((name) => name.toLowerCase()));
   const patterns = config.excludedKeywordPatterns.map((pattern) => new RegExp(pattern, 'i'));
-  return (feature: Feature) =>
+  return (feature: ContentFeature) =>
     feature.type === FeatureType.KEYWORD &&
     (names.has(feature.name.toLowerCase()) || patterns.some((p) => p.test(feature.name)));
 }
 
 // IDF = ln(N / df), só para atributos dentro dos limites de frequência e fora da lista de
 // palavras-chave excluídas.
-export function computeIdf(catalog: readonly Feature[][], config: TfidfConfig): IdfTable {
+export function computeIdf(catalog: readonly ContentFeature[][], config: TfidfConfig): IdfTable {
   const isExcluded = excludedKeywordMatcher(config);
   const documentFrequency = new Map<FeatureKey, number>();
   for (const features of catalog) {
@@ -88,7 +91,7 @@ export function computeIdf(catalog: readonly Feature[][], config: TfidfConfig): 
 // tipo ausente é redistribuída entre os presentes. No modo "global", todos os atributos são
 // normalizados juntos, com o peso do tipo multiplicando o IDF. Nos dois, o vetor tem norma 1.
 export function tfidfVector(
-  features: readonly Pick<Feature, 'type' | 'igdbId'>[],
+  features: readonly Pick<ContentFeature, 'type' | 'igdbId'>[],
   idf: IdfTable,
   config: TfidfConfig,
 ): TfidfVector {

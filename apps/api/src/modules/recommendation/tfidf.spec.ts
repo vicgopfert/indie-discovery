@@ -1,28 +1,26 @@
 import { FeatureType } from '../../generated/prisma/client';
-import type { MappedFeature } from '../ingestion/model/mapped-game';
 import {
   computeIdf,
   excludedKeywordMatcher,
   type TfidfConfig,
   tfidfConfigSchema,
+  type ContentFeature,
   type TfidfVector,
   readTfidfConfig,
   tfidfVector,
 } from './tfidf';
 
-type Feature = Pick<MappedFeature, 'type' | 'igdbId' | 'name'>;
-
-const genre = (igdbId: number, name = `g${igdbId}`): Feature => ({
+const genre = (igdbId: number, name = `g${igdbId}`): ContentFeature => ({
   type: FeatureType.GENRE,
   igdbId,
   name,
 });
-const theme = (igdbId: number, name = `t${igdbId}`): Feature => ({
+const theme = (igdbId: number, name = `t${igdbId}`): ContentFeature => ({
   type: FeatureType.THEME,
   igdbId,
   name,
 });
-const keyword = (igdbId: number, name = `k${igdbId}`): Feature => ({
+const keyword = (igdbId: number, name = `k${igdbId}`): ContentFeature => ({
   type: FeatureType.KEYWORD,
   igdbId,
   name,
@@ -39,7 +37,7 @@ const config: TfidfConfig = {
 
 // 5 jogos: o gênero 1 está em todos (indie), o 2 em 2, o tema 1 em 3, a palavra-chave 1 em 2
 // e a 2 em 1 só.
-const catalog: Feature[][] = [
+const catalog: ContentFeature[][] = [
   [genre(1), genre(2), theme(1), keyword(1)],
   [genre(1), genre(2), theme(1), keyword(1)],
   [genre(1), theme(1), keyword(2)],
