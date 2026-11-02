@@ -6,6 +6,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
 import { HealthModule } from './modules/health/health.module';
 import { LibraryModule } from './modules/library/library.module';
+import { RecommendationModule } from './modules/recommendation/recommendation.module';
 import { UsersModule } from './modules/users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
 
@@ -19,6 +20,7 @@ import { PrismaModule } from './prisma/prisma.module';
     UsersModule,
     CatalogModule,
     LibraryModule,
+    RecommendationModule,
   ],
 })
 export class AppModule {}
