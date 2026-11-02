@@ -1,5 +1,5 @@
 import { ReviewFlagKind } from '../../../generated/prisma/client';
-import type { ReviewFlag } from '../review-flags/review-flags';
+import type { ReviewFlag } from '../model/review-flag';
 import type { CollectionsConfig } from './collections.config';
 
 const published = (collections: CollectionsConfig['collections']) =>

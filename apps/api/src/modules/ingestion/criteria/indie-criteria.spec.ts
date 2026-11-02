@@ -1,7 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { igdbGameSchema } from '../igdb/igdb-game.schema';
-import { type MappedCompany, type MappedGame, mapIgdbGame } from '../igdb/igdb.mapper';
+import { mapIgdbGame } from '../igdb/igdb.mapper';
+import type { MappedCompany, MappedGame } from '../model/mapped-game';
 import { type CriteriaVerdict, evaluateIndieCriteria } from './indie-criteria';
 import { type IndieCriteria, readIndieCriteria } from './indie-criteria.config';
 

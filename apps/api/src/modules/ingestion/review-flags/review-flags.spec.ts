@@ -1,15 +1,11 @@
 import { ReviewFlagKind } from '../../../generated/prisma/client';
-import type { MappedCompany, MappedGame } from '../igdb/igdb.mapper';
+import type { IgdbCompanyNode } from '../model/igdb-records';
+import type { MappedCompany, MappedGame } from '../model/mapped-game';
+import type { StoredGame } from '../model/stored-game';
 import type { CriteriaVerdict } from '../criteria/indie-criteria';
 import { readIndieCriteria } from '../criteria/indie-criteria.config';
 import { readIngestionReview } from './ingestion-review.config';
-import {
-  ancestorsOf,
-  detectReviewFlags,
-  type IgdbCompanyNode,
-  type ReviewFlagInput,
-  type StoredGame,
-} from './review-flags';
+import { ancestorsOf, detectReviewFlags, type ReviewFlagInput } from './review-flags';
 
 const NOW = new Date('2026-10-23T00:00:00Z');
 const criteria = readIndieCriteria();

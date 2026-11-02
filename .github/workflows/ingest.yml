@@ -47,6 +47,24 @@ jobs:
       - name: Ingestão
         run: pnpm --filter @indie/api run ingest
 
+      # Direto no Render, sem passar pela Vercel. Se a API estiver hibernando, a chamada a acorda
+      # (cerca de um minuto), e a recarga só repete a carga da inicialização.
+      - name: Recarga do índice de conteúdo
+        env:
+          API_URL: ${{ vars.API_URL }}
+          INTERNAL_RELOAD_SECRET: ${{ secrets.INTERNAL_RELOAD_SECRET }}
+        run: |
+          if [ -z "$API_URL" ] || [ -z "$INTERNAL_RELOAD_SECRET" ]; then
+            echo "::error::Configure a variável API_URL e o segredo INTERNAL_RELOAD_SECRET do repositório."
+            exit 1
+          fi
+          response="$(curl --fail-with-body --silent --show-error --max-time 120 \
+            --retry 3 --retry-delay 10 --retry-all-errors \
+            -X POST -H "Authorization: Bearer $INTERNAL_RELOAD_SECRET" \
+            "$API_URL/api/internal/reload-index")"
+          echo "$response"
+          { echo '## Índice de conteúdo'; echo '```'; echo "$response"; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Resumo da execução
         if: always()
         run: |

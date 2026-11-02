@@ -16,6 +16,7 @@ import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/configure-app';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { CatalogBuilder } from './support/catalog-builder';
+import { contentIndexLoaded } from './support/content-index';
 
 describe('Biblioteca, preferências e modo (/me)', () => {
   let app: INestApplication<App>;
@@ -32,6 +33,7 @@ describe('Biblioteca, preferências e modo (/me)', () => {
     app = moduleRef.createNestApplication();
     configureApp(app);
     await app.init();
+    await contentIndexLoaded(app);
     prisma = app.get(PrismaService);
     origin = app.get(ConfigService).getOrThrow<string>('WEB_ORIGIN');
   });

@@ -1,11 +1,9 @@
+import type { IgdbScopeRecord } from '../model/igdb-records';
+
 // Jogo gravado que não voltou no conjunto candidato. A desativação só acontece quando a busca
 // trouxe quase tudo o que a última execução bem-sucedida trouxe: uma resposta parcial da IGDB não
 // pode tirar jogos do catálogo.
 export type MissingCause = 'LOST_INDIE_GENRE' | 'OUT_OF_SCOPE' | 'NOT_FOUND';
-
-export interface IgdbScopeRecord {
-  genres: number[];
-}
 
 export function canDeactivateMissing(
   fetched: number,

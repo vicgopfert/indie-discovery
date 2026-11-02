@@ -4,6 +4,7 @@ import { AppModule } from '../src/app.module';
 import { ListType } from '../src/generated/prisma/client';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { CatalogBuilder } from './support/catalog-builder';
+import { contentIndexLoaded } from './support/content-index';
 
 describe('Avaliações, listas e preferências no banco', () => {
   let app: INestApplication;
@@ -16,6 +17,7 @@ describe('Avaliações, listas e preferências no banco', () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
     app = moduleRef.createNestApplication();
     await app.init();
+    await contentIndexLoaded(app);
     prisma = app.get(PrismaService);
   });
 

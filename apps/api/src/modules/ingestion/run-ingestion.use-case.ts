@@ -5,7 +5,7 @@ import { collectionFlags, collectionWrites } from './collections/collections';
 import type { CollectionsConfig } from './collections/collections.config';
 import type { IgdbCatalogSource } from './igdb/igdb-catalog.source';
 import { igdbGameSchema } from './igdb/igdb-game.schema';
-import { type MappedGame, mapIgdbGame } from './igdb/igdb.mapper';
+import { mapIgdbGame } from './igdb/igdb.mapper';
 import { evaluateIndieCriteria } from './criteria/indie-criteria';
 import type { VersionedIndieCriteria } from './criteria/indie-criteria.config';
 import type { IngestionReview } from './review-flags/ingestion-review.config';
@@ -23,15 +23,13 @@ import {
   popularityScale,
   reconstructedCount,
 } from './popularity/popularity';
-import {
-  detectReviewFlags,
-  type EvaluatedGame,
-  type ReviewFlag,
-  type StoredGame,
-} from './review-flags/review-flags';
+import { detectReviewFlags, type EvaluatedGame } from './review-flags/review-flags';
+import type { MappedGame } from './model/mapped-game';
+import type { ReviewFlag } from './model/review-flag';
+import type { StoredGame } from './model/stored-game';
 import { resolveStudioCountry, type WikidataCountries } from './studio-country/studio-country';
 import type { WikidataCountrySource } from './wikidata/wikidata-country.source';
-import { computeIdf, type TfidfConfig, tfidfVector } from '../recommendation/tfidf';
+import { computeIdf, type TfidfConfig } from '../recommendation/tfidf';
 
 export interface IngestionSettings {
   criteria: VersionedIndieCriteria;
@@ -140,7 +138,6 @@ export class RunIngestionUseCase {
         popularityCount: count,
         popularityNorm: normalizedPopularity(count, scale),
         studioCountry: resolveStudioCountry(game.studioCountryCode, countries.countriesOf(game)),
-        weights: tfidfVector(game.features, idf, this.settings.tfidf).weights,
       };
     });
     const outOfCatalog: OutOfCatalogGame[] = [

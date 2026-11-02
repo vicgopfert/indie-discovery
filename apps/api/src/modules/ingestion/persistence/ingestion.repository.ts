@@ -5,9 +5,10 @@ import {
 } from '../../../generated/prisma/client';
 import type { PrismaService } from '../../../prisma/prisma.service';
 import type { CollectionWrite } from '../collections/collections';
-import type { MappedGame } from '../igdb/igdb.mapper';
+import type { MappedGame } from '../model/mapped-game';
+import type { ReviewFlag } from '../model/review-flag';
+import type { StoredGame } from '../model/stored-game';
 import type { StudioCountry } from '../studio-country/studio-country';
-import type { ReviewFlag, StoredGame } from '../review-flags/review-flags';
 import type { FeatureKey } from '../../recommendation/tfidf';
 
 export interface CatalogGame {
@@ -16,7 +17,6 @@ export interface CatalogGame {
   popularityCount: number;
   popularityNorm: number;
   studioCountry: StudioCountry;
-  weights: ReadonlyMap<FeatureKey, number>;
 }
 
 export interface OutOfCatalogGame {
@@ -129,9 +129,6 @@ export class IngestionRepository {
         ...this.upsertFeatures(write),
         ...this.upsertCatalogGames(write),
         ...this.markOutOfCatalog(write),
-        this.prisma.$executeRaw`
-          UPDATE "GameFeature" gf SET "tfidfWeight" = 0
-          FROM "Game" g WHERE g."id" = gf."gameId" AND NOT g."inCatalog" AND gf."tfidfWeight" <> 0`,
         ...this.syncGameCompanies(write.catalog),
         ...this.syncGameFeatures(write.catalog),
         ...this.syncGameLanguages(write.catalog),
@@ -327,12 +324,8 @@ export class IngestionRepository {
       catalog,
       (games) => {
         const ids = games.map(({ game }) => game.igdbId);
-        const rows = games.flatMap(({ game, weights }) =>
-          game.features.map((f) => ({
-            gameId: game.igdbId,
-            ...f,
-            weight: weights.get(`${f.type}:${f.igdbId}`) ?? 0,
-          })),
+        const rows = games.flatMap(({ game }) =>
+          game.features.map((f) => ({ gameId: game.igdbId, ...f })),
         );
         const gameIds = rows.map((r) => r.gameId);
         const types = rows.map((r) => r.type);
@@ -348,19 +341,13 @@ export class IngestionRepository {
                 AND t.feature_id = f."igdbId"
             )`,
           this.prisma.$executeRaw`
-          INSERT INTO "GameFeature" AS gf ("gameId", "featureId", "tfidfWeight")
-          SELECT g."id", f."id", t.weight
-          FROM unnest(
-            ${gameIds}::int[],
-            ${types}::text[],
-            ${featureIds}::int[],
-            ${rows.map((r) => r.weight)}::float8[]
-          ) AS t(game_id, type, feature_id, weight)
+          INSERT INTO "GameFeature" ("gameId", "featureId")
+          SELECT g."id", f."id"
+          FROM unnest(${gameIds}::int[], ${types}::text[], ${featureIds}::int[])
+            AS t(game_id, type, feature_id)
           JOIN "Game" g ON g."igdbId" = t.game_id
           JOIN "Feature" f ON f."type" = t.type::"FeatureType" AND f."igdbId" = t.feature_id
-          ON CONFLICT ("gameId", "featureId") DO UPDATE
-          SET "tfidfWeight" = EXCLUDED."tfidfWeight"
-          WHERE gf."tfidfWeight" IS DISTINCT FROM EXCLUDED."tfidfWeight"`,
+          ON CONFLICT ("gameId", "featureId") DO NOTHING`,
         ];
       },
       GAMES_PER_LINK_STATEMENT,

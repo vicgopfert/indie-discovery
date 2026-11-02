@@ -1,34 +1,15 @@
 import { ReviewFlagKind } from '../../../generated/prisma/client';
-import type { MappedGame } from '../igdb/igdb.mapper';
+import type { IgdbCompanyNode } from '../model/igdb-records';
+import type { MappedGame } from '../model/mapped-game';
+import type { ReviewFlag } from '../model/review-flag';
+import type { StoredGame } from '../model/stored-game';
 import { type CriteriaVerdict, isWithinPostLaunchGrace } from '../criteria/indie-criteria';
 import type { IndieCriteria } from '../criteria/indie-criteria.config';
 import type { IngestionReview } from './ingestion-review.config';
 
-export interface StoredGame {
-  igdbId: number;
-  name: string;
-  inCatalog: boolean;
-  firstReleaseDate: Date | null;
-  criteriaVersion: string;
-  evaluatedAt: Date;
-  popularityCount: number;
-}
-
 export interface EvaluatedGame {
   game: MappedGame;
   verdict: CriteriaVerdict;
-}
-
-export interface IgdbCompanyNode {
-  name: string;
-  parentIgdbId: number | null;
-}
-
-export interface ReviewFlag {
-  kind: ReviewFlagKind;
-  igdbId: number;
-  gameName: string;
-  detail: Record<string, unknown>;
 }
 
 export interface ReviewFlagInput {
