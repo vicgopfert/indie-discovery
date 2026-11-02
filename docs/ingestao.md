@@ -31,10 +31,13 @@ composição do catálogo, as coleções, os alertas e o tamanho do banco.
    "'Want to Play' como sinal de interesse").
 4. Sobe as cadeias de empresa-mãe das desenvolvedoras dos jogos aceitos. Busca no
    Wikidata o país dos jogos sem país na IGDB (seção "País do estúdio").
-5. Calcula IDF e vetores TF-IDF sobre o catálogo aceito.
+5. Calcula o IDF sobre o catálogo aceito. Os vetores TF-IDF não são gravados: a API os
+   refaz a partir do IDF de `Feature` (B-31; `docs/vetorizacao-tfidf.md`).
 6. Detecta os alertas de revisão, entre eles os das coleções (seção "Coleções").
 7. Grava tudo numa única transação, com as coleções publicadas de `config/collections.json`,
    e fecha a execução com contagens, escala da popularidade e resumo de erros.
+8. No workflow "Ingestão", chama `POST /api/internal/reload-index` para a API recarregar o
+   índice de conteúdo sem reiniciar.
 
 Jogo rejeitado na primeira avaliação não é gravado. Jogo gravado que passa a ser
 rejeitado fica com `inCatalog = false`, com o veredito e a versão do critério, porque
@@ -260,6 +263,8 @@ ou a menos muda o N, todos os IDF e todos os pesos (a tabela tem 189 mil linhas 
 medição entre dias está na seção "Execução em outro dia". Pergunta para o B-31: se o índice de
 recomendação é montado em memória na API, é preciso persistir `tfidfWeight`? O IDF em
 `Feature` (cerca de 4 mil linhas) basta para reconstruir os pesos na inicialização.
+**Resolvido no B-31 (02/11/2026):** a coluna saiu e a API refaz os pesos; ver "Carga local
+sem os pesos gravados (B-31)".
 
 ## Carga em produção (Neon, 24/10/2026, B-14)
 
@@ -340,6 +345,25 @@ to Play", e a regra que o exclui chegou à produção junto com o sinal.
 A mudança da versão do critério regravou as linhas de `Game` (19.730 linhas mortas, perto do
 catálogo anterior), e `GameFeature` ficou com 132.802 linhas mortas, como nas execuções
 anteriores; o autovacuum reaproveita o espaço.
+
+## Carga local sem os pesos gravados (B-31, 02/11/2026)
+
+Primeira carga depois de tirar `GameFeature.tfidfWeight`, sobre a carga local de 01/11:
+
+| | |
+| --- | --- |
+| Duração | 11 min 56 s, gravação em 10 s; pico de 599 MB |
+| Catálogo | 22.825 jogos (+18) |
+| Alertas | 16: 12 `VERDICT_CHANGED` e 4 `RELEASE_DATE_ASSIGNED` |
+| `GameFeature` | 309 vínculos inseridos, nenhum atualizado ou removido, nenhuma linha morta |
+| `Feature` | 2.690 IDF regravados, os dos atributos dentro dos limites |
+
+Com os pesos gravados, uma carga em outro dia regravava cerca de 72% de `GameFeature`
+(seção "Execução em outro dia"); agora a tabela só muda quando muda um vínculo.
+
+Observação, sem mudança neste item: a mesma carga atualizou 19.519 linhas de `Game`, porque
+a popularidade máxima do catálogo passou de 766 para 768 pessoas e o `popularityNorm` de
+todos os jogos é dividido por ela.
 
 ## Medições do B-61 (24/10/2026)
 

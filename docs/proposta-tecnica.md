@@ -224,8 +224,8 @@ Prefixo global `/api`. Respostas em JSON; erros sempre no mesmo formato.
 | `GET /api/me/preferences` | Autenticado | Gêneros e temas escolhidos, com o nome em português. **Acrescentado no B-27 (02/11/2026):** a partida a frio pode ser refeita (F-10) e precisa mostrar a escolha anterior |
 | `PATCH /api/me` | Autenticado | Modo de descoberta (`{ discoveryMode }`); devolve o usuário como `GET /api/auth/me` |
 | `GET /api/recommendations?mode=&limit=` | Autenticado | Recomendações com motivo |
-| `GET /api/health` | Público | Saúde da API, do banco e do índice de conteúdo |
-| `POST /api/internal/reload-index` | Segredo de ambiente | Recarrega o índice de conteúdo após uma ingestão; fora da documentação pública |
+| `GET /api/health` | Público | Saúde da API, do banco e do índice de conteúdo (`ready` com quantos jogos e quando carregou, `loading` ou `failed`). Responde 200 mesmo em `degraded`: o health check do Render aceita qualquer 2xx ou 3xx, e um código de erro faria o Render tirar do ar, ou reiniciar em ciclo, uma API que ainda serve catálogo e contas (B-31) |
+| `POST /api/internal/reload-index` | Segredo de ambiente | Recarrega o índice de conteúdo após uma ingestão, com `Authorization: Bearer <INTERNAL_RELOAD_SECRET>`, comparado em tempo constante; isenta do `OriginGuard`, porque é chamada de servidor para servidor e sem cookie. O índice novo só substitui o anterior depois de pronto; se a carga falha, o anterior continua e a rota responde 503. Chamada pelo workflow "Ingestão"; fora da documentação pública (B-31) |
 
 Formato de erro padronizado, produzido pelo filtro global de exceções:
 
@@ -502,7 +502,7 @@ O diagrama entidade-relacionamento completo está na seção 11 (diagrama 3).
 | `GameCompany` | Papel de cada empresa em cada jogo (desenvolvedora, publicadora) | Ingestão | F-03 |
 | `Country` | Tabela de países (código ISO 3166-1 numérico, sigla, nome em português) | Seed | F-06 |
 | `Feature` | Atributo de conteúdo: gênero, tema ou palavra-chave, com seu peso IDF | Ingestão | F-04, F-05, F-10 |
-| `GameFeature` | Associação jogo-atributo com o peso TF-IDF | Ingestão | F-04, F-11 |
+| `GameFeature` | Associação jogo-atributo; o peso TF-IDF não é gravado, a API o refaz a partir do IDF de `Feature` (B-31) | Ingestão | F-04, F-11 |
 | `Language` e `GameLanguage` | Idiomas e tipo de suporte (interface, legendas, áudio) | Seed + ingestão | F-06 |
 | `Rating` | Nota de 1 a 5 de um usuário para um jogo | Usuário | F-08 |
 | `ListEntry` | Jogo em uma lista do usuário (favoritos, concluídos, quero jogar) | Usuário | F-08 |
@@ -524,6 +524,7 @@ O diagrama entidade-relacionamento completo está na seção 11 (diagrama 3).
 | Busca textual por nome com `ILIKE` no P0 | Suficiente para cerca de 20 mil jogos; busca *full-text* do PostgreSQL fica como P2. O Prisma repassa o texto sem escapar, então `%`, `_` e `\` digitados são escapados pela API (B-20). A busca diferencia acentos ("pokemon" não acha "Pokémon"); resolver isso exige a extensão `unaccent` ou a busca *full-text* |
 | Nomes de gênero e tema traduzidos na leitura, por um arquivo versionado (`config/feature-labels.json`) indexado pelo slug | A IGDB entrega os nomes em inglês e a interface é em português. O banco continua igual à IGDB; um slug sem tradução aparece com o nome original, e a mesma tradução serve à explicação das recomendações. O gênero Indie, presente em todos os jogos do catálogo, fica fora das opções de filtro e dos cards, porque não distingue um jogo de outro (B-20) |
 | Recomendações não são persistidas | São calculadas na hora a partir do índice em memória; persistir criaria problema de invalidação sem benefício no MVP |
+| Pesos TF-IDF refeitos na API, a partir do IDF gravado em `Feature`; `GameFeature` guarda só o vínculo | Qualquer mudança no catálogo muda o N, todos os IDF e quase todos os pesos: gravados, eles eram regravados em cerca de 72% das linhas de `GameFeature` a cada execução. Refeitos com a mesma função da ingestão, saem iguais aos gravados (comparação de 02/11/2026: 166.282 pesos, diferença máxima de 1,1 × 10⁻¹⁶), e mudar as fatias ou a normalização em `config/recommendation.json` passa a valer com a recarga do índice, sem nova ingestão (B-31; `docs/vetorizacao-tfidf.md`) |
 | Imagens de capa não são armazenadas | Guarda-se só o identificador da imagem; a URL é montada para a CDN de imagens da IGDB, com atribuição visível. Cada tela pede o tamanho que a própria CDN já serve (`t_cover_small`, `t_cover_big`…), carregado sob demanda, sem passar pelo otimizador de imagens da Vercel: a cota mensal do plano gratuito pode não comportar um catálogo de cerca de 20 mil jogos. Jogo sem capa mostra uma imagem substituta. Se a CDN da IGDB cair, somem só as capas |
 | Fotos de perfil não são enviadas pelo usuário | O avatar é feito com as iniciais do nome, no frontend. No P1, uma conta com Steam (F-31) ou Google (F-32) vinculado usa o avatar de lá, guardando só a URL em `User.avatarUrl`, com a origem em `User.avatarSource`. Upload próprio é P2 (F-33): o disco do Render é apagado a cada deploy e o banco não é lugar de arquivo, então ele exige um serviço de armazenamento de objetos, além de validação, redimensionamento e exclusão junto com a conta |
 | Critério indie em arquivo JSON versionado (`config/indie-criteria.json`) | Fica rastreável no Git, revisável na banca e alterável sem migration |
@@ -709,7 +710,6 @@ erDiagram
     GAME_FEATURE {
         uuid gameId PK, FK
         uuid featureId PK, FK
-        float tfidfWeight
     }
     LANGUAGE {
         uuid id PK
@@ -1038,11 +1038,11 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 
 | ID | Item | Prior. | Depende de | Critério de conclusão | Esf. |
 | --- | --- | --- | --- | --- | --- |
-| B-31 | `ContentIndex`: carga dos vetores na inicialização e recarga protegida por segredo | P0 | B-12, B-14 | Memória ocupada medida com o catálogo real e registrada; recarga sem reiniciar a API; decidido se `GameFeature.tfidfWeight` continua persistido ou se os pesos são reconstruídos na inicialização a partir do IDF de `Feature` (qualquer mudança no catálogo regrava os pesos: a execução de 25/10/2026, com 5 jogos a mais, regravou 135 mil das 189 mil linhas de `GameFeature`; `docs/ingestao.md`) | M |
+| B-31 | `ContentIndex`: carga dos vetores na inicialização e recarga protegida por segredo | P0 | B-12, B-14 | Memória ocupada medida com o catálogo real e registrada; recarga sem reiniciar a API; decidido se `GameFeature.tfidfWeight` continua persistido ou se os pesos são reconstruídos na inicialização a partir do IDF de `Feature` (qualquer mudança no catálogo regrava os pesos: a execução de 25/10/2026, com 5 jogos a mais, regravou 135 mil das 189 mil linhas de `GameFeature`; `docs/ingestao.md`). **Concluído em 02/11/2026:** pesos refeitos na API a partir do IDF e coluna removida, depois de conferidos contra os 166.282 pesos gravados (diferença máxima de 1,1 × 10⁻¹⁶); índice de 22.825 jogos em cerca de 1 s, com cerca de 19 MB de heap e RSS da API entre 274 e 338 MB no build local; recarga pelo workflow "Ingestão" (`docs/vetorizacao-tfidf.md`) | M |
 | B-62 | Modo de jogo e perspectiva como quarto bloco do vetor de conteúdo (decisão do M0, seção 8.9) | P0 | B-12, B-13, B-69 | Ingestão grava os dois campos; bloco com fatia própria em `config/recommendation.json`, fora da explicação ao jogador (F-11); a fatia só fica acima de zero se melhorar o acerto@10 no protocolo do B-37 (a queda de vetores idênticos de 21% para 13,4% mede distinção, não qualidade) | M |
 | B-63 | Palavras do resumo como bloco do vetor de conteúdo, em TF-IDF e sem embeddings (decisão do M0, seção 8.9) | P0 | B-31, B-62 | Pesos das palavras calculados em memória pela API a partir do resumo, com a lista de palavras irrelevantes e os limites de frequência em `config/recommendation.json`; fora da explicação ao jogador por enquanto (entrar ou não decide-se no B-37, com exemplos reais); a fatia só fica acima de zero se melhorar o acerto@10 no B-37. Pontos a observar no B-37, sem tratar antes: resumos só em inglês, sem radicalização, nomes próprios e linguagem de divulgação. Primeiro item do plano de corte depois dos P1 | M |
 | B-32 | Núcleo de pontuação em funções puras: perfil ponderado, cosseno, termo de popularidade, seleção, desempate e explicação (F-11) | P0 | B-31 | Testes unitários com catálogo sintético comprovam ordem esperada, exclusão de já avaliados, efeito de nota negativa e atributos da explicação | G |
-| B-33 | `GenerateRecommendationsUseCase` e `GET /recommendations` com os três modos e casos-limite (F-11, F-12) | P0 | B-32, B-27, B-17 | Resposta inclui motivo; sem perfil indica onboarding; tempo de resposta medido com o catálogo real (**marco M2**) | M |
+| B-33 | `GenerateRecommendationsUseCase` e `GET /recommendations` com os três modos e casos-limite (F-11, F-12) | P0 | B-32, B-27, B-17 | Resposta inclui motivo; sem perfil indica onboarding; com o índice de conteúdo indisponível (`loading` ou `failed`), responde 503 com mensagem clara, nunca lista vazia (decidido no B-31); tempo de resposta medido com o catálogo real (**marco M2**) | M |
 | B-34 | Fluxo de partida a frio: escolha de gêneros e temas e avaliação opcional de até 4 jogos (F-10) | P0 | B-33, B-28 | Novo usuário sai do onboarding com recomendações, mesmo pulando as avaliações | M |
 | B-35 | Página de recomendações com cartões, motivo e seletor de modo (F-11, F-12) | P0 | B-33, B-40 | Trocar o modo atualiza a lista e persiste a escolha | M |
 | B-36 | E2e de recomendação e teste de determinismo | P0 | B-33 | Avaliar um jogo muda a lista seguinte; mesmo estado gera mesma lista; modos produzem listas diferentes | P |

@@ -22,6 +22,44 @@ catálogo aceito pelo critério indie (19.998 jogos).
    - **`global`:** todos os atributos normalizados juntos, com o IDF multiplicado pelo
      peso do tipo (1 / 1 / 0,5). Era a primeira versão.
 
+## Índice em memória (B-31, 02/11/2026)
+
+A ingestão grava só o IDF de cada atributo em `Feature`; os pesos não são gravados. A API
+(`ContentIndexService`, em `apps/api/src/modules/recommendation/`) lê o catálogo e refaz
+o vetor de cada jogo com a mesma função da ingestão (`tfidfVector`), na inicialização e a
+cada `POST /api/internal/reload-index`. Mudar as fatias ou a normalização em
+`config/recommendation.json` passa a valer com a recarga, sem nova ingestão, o que
+interessa à calibração do B-37. O IDF continua vindo da ingestão: mudar os limites de
+frequência ou as palavras-chave excluídas exige uma nova carga.
+
+**Comparação com os pesos gravados, antes de tirar a coluna.** No catálogo local de 01/11
+(22.807 jogos e 211.422 vínculos), os 166.282 pesos diferentes de zero gravados pela
+ingestão foram todos refeitos, sem nenhum a mais ou a menos; a maior diferença foi de
+1,1 × 10⁻¹⁶, arredondamento de ponto flutuante. Os vínculos restantes são de atributos
+fora dos limites de frequência ou excluídos, com peso zero nos dois lados.
+
+**Carga e memória**, no build de produção, com o catálogo local de 02/11 (22.825 jogos e
+2.690 atributos):
+
+| | |
+| --- | --- |
+| Carga na inicialização | cerca de 1 s (leitura e montagem) |
+| Recarga | cerca de 0,65 s |
+| Índice retido | cerca de 19 MB de heap, medido com coleta de lixo forçada |
+| RSS da API depois da carga da inicialização | 274 MB |
+| RSS depois de três recargas seguidas | estável em torno de 338 MB |
+
+O limite do Render é de 512 MB. A primeira versão da leitura trazia os vínculos como pares
+de UUID, cerca de 200 mil objetos, e levava o RSS a 311 MB na inicialização e a 396 MB
+depois de uma recarga; a leitura passou a trazer cada jogo com as posições dos seus
+atributos, em inteiros. Boa parte do RSS é o custo de abrir a conexão e das primeiras
+consultas, que existe sem o índice. Em produção, cada carga registra no log a linha
+"Índice de conteúdo carregado", com jogos, atributos, tempo, heap e RSS.
+
+Se a carga falha na inicialização, a API sobe mesmo assim, com o índice em `failed` em
+`GET /api/health`, que continua respondendo 200 em `degraded`, porque o health check do
+Render aceita qualquer 2xx ou 3xx. Uma recarga que falha mantém o índice anterior.
+
 ## Por que o padrão é por bloco
 
 Com a normalização global, as palavras-chave raras dominam o vetor. Uma palavra-chave
