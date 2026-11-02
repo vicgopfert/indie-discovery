@@ -136,6 +136,19 @@ describe('ContentIndexService', () => {
     expect(service.index).toBeNull();
   });
 
+  it('settled espera a carga em andamento sem disparar outra nem propagar a falha', async () => {
+    const { service, repository } = serviceWith(() =>
+      Promise.reject(new Error('banco fora do ar')),
+    );
+    service.reload().catch(() => undefined);
+
+    await expect(service.settled()).resolves.toBeUndefined();
+    await expect(service.settled()).resolves.toBeUndefined();
+
+    expect(repository.loadRows).toHaveBeenCalledTimes(1);
+    expect(service.status()).toEqual({ status: 'failed' });
+  });
+
   it('uma recarga que falha mantém o índice anterior', async () => {
     let fail = false;
     const { service } = serviceWith(() =>

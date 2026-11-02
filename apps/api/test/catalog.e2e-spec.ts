@@ -16,6 +16,7 @@ import { ReleaseStatus, StudioCountrySource } from '../src/generated/prisma/clie
 import { COUNTRY_OPTION_MIN_GAMES } from '../src/modules/catalog/catalog.service';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { CatalogBuilder } from './support/catalog-builder';
+import { contentIndexLoaded } from './support/content-index';
 
 describe('Catálogo', () => {
   let app: INestApplication<App>;
@@ -29,6 +30,7 @@ describe('Catálogo', () => {
     app = moduleRef.createNestApplication();
     configureApp(app);
     await app.init();
+    await contentIndexLoaded(app);
 
     const prisma = app.get(PrismaService);
     await prisma.$executeRaw`

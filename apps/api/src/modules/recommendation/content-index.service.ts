@@ -40,7 +40,12 @@ export class ContentIndexService implements OnApplicationBootstrap, OnModuleDest
     this.reload().catch(() => undefined);
   }
 
-  async onModuleDestroy() {
+  onModuleDestroy() {
+    return this.settled();
+  }
+
+  // Espera a carga em andamento, se houver, sem disparar outra e sem propagar a falha.
+  async settled(): Promise<void> {
     await this.pending?.catch(() => undefined);
   }
 

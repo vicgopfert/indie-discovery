@@ -40,7 +40,7 @@ describe('Índice de conteúdo', () => {
   const reload = () => request(app.getHttpServer()).post('/api/internal/reload-index');
 
   it('carrega os jogos do catálogo na inicialização', async () => {
-    await contentIndex.reload();
+    await contentIndex.settled();
 
     const index = contentIndex.index!;
     expect(index.games.map((game) => game.slug).sort()).toEqual(['celeste', 'hades']);

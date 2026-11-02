@@ -14,10 +14,7 @@ describe('GET /api/health', () => {
     const app: INestApplication<App> = (await builder.compile()).createNestApplication();
     configureApp(app);
     await app.init();
-    await app
-      .get(ContentIndexService)
-      .reload()
-      .catch(() => undefined);
+    await app.get(ContentIndexService).settled();
     return app;
   }
 

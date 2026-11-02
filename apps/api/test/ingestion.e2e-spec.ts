@@ -28,6 +28,7 @@ import { ContentIndexRepository } from '../src/modules/recommendation/content-in
 import { computeIdf, readTfidfConfig, tfidfVector } from '../src/modules/recommendation/tfidf';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { FakeIgdbServer, type ReceivedRequest } from './support/fake-igdb-server';
+import { contentIndexLoaded } from './support/content-index';
 
 type RawGame = {
   id: number;
@@ -133,6 +134,7 @@ describe('Ingestão', () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
     app = moduleRef.createNestApplication();
     await app.init();
+    await contentIndexLoaded(app);
     prisma = app.get(PrismaService);
     await seedReferenceData(prisma);
 
