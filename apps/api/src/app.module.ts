@@ -5,6 +5,7 @@ import { HttpSecurityModule } from './common/http-security.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
 import { HealthModule } from './modules/health/health.module';
+import { LibraryModule } from './modules/library/library.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -15,6 +16,7 @@ import { PrismaModule } from './prisma/prisma.module';
     HealthModule,
     AuthModule,
     CatalogModule,
+    LibraryModule,
   ],
 })
 export class AppModule {}

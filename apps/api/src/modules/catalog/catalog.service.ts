@@ -119,7 +119,7 @@ export class CatalogService {
     };
   }
 
-  private toSummary(game: GameSummaryRow): GameSummary {
+  toSummary(game: GameSummaryRow): GameSummary {
     return {
       ...summaryFields(game),
       genres: this.labeled(
@@ -129,7 +129,7 @@ export class CatalogService {
     };
   }
 
-  private labeled(type: LabeledFeatureType, features: FeatureLabel[]): FeatureLabel[] {
+  labeled(type: LabeledFeatureType, features: FeatureLabel[]): FeatureLabel[] {
     return features
       .filter(({ slug }) => !this.labels.isHidden(type, slug))
       .map(({ slug, name }) => ({ slug, name: this.labels.name(type, slug, name) }))

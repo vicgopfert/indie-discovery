@@ -32,7 +32,7 @@ const ORDER: Record<GameSearchQuery['sort'], Prisma.GameOrderByWithRelationInput
   name: [{ name: 'asc' }, { id: 'asc' }],
 };
 
-const gameSummarySelect = {
+export const gameSummarySelect = {
   slug: true,
   name: true,
   coverImageId: true,
