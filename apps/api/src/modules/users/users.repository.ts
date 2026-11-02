@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, type User } from '../../generated/prisma/client';
+import { type DiscoveryMode, Prisma, type User } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
 export interface NewUser {
@@ -31,5 +31,9 @@ export class UsersRepository {
 
   findByEmail(email: string): Promise<User | null> {
     return this.prisma.user.findUnique({ where: { email } });
+  }
+
+  updateDiscoveryMode(id: string, discoveryMode: DiscoveryMode): Promise<User> {
+    return this.prisma.user.update({ where: { id }, data: { discoveryMode } });
   }
 }
