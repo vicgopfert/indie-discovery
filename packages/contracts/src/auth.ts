@@ -29,17 +29,27 @@ export const RegisterSchema = z.object({
 
 export type RegisterInput = z.infer<typeof RegisterSchema>;
 
+export const DISCOVERY_MODES = ['POPULAR', 'BALANCED', 'DISCOVERY'] as const;
+
 export const UserSchema = z.object({
   id: z.uuid(),
   email: z.string(),
   displayName: z.string(),
   role: z.enum(['USER', 'ADMIN']),
-  discoveryMode: z.enum(['POPULAR', 'BALANCED', 'DISCOVERY']),
+  discoveryMode: z.enum(DISCOVERY_MODES),
   onboardingCompletedAt: z.iso.datetime().nullable(),
   createdAt: z.iso.datetime(),
 });
 
 export type User = z.infer<typeof UserSchema>;
+
+export const UpdateMeSchema = z.object({
+  discoveryMode: z.enum(DISCOVERY_MODES, {
+    error: 'Modo deve ser POPULAR, BALANCED ou DISCOVERY.',
+  }),
+});
+
+export type UpdateMeInput = z.infer<typeof UpdateMeSchema>;
 
 // No login, a senha só precisa existir: a política de tamanho é do cadastro, e repeti-la aqui
 // diria a quem tenta adivinhar quais senhas nem vale testar.
