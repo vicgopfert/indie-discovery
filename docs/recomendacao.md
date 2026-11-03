@@ -249,6 +249,21 @@ origem"). Sobre o que vem do núcleo:
   Equilibrado. É um indício de que o λ de 0,3 está dominando a afinidade, a verificar no B-37.
 - **Listas `empty` e `popular`:** sem o seletor de modo, porque o modo não as muda.
 
+## Limitação identificada (03/11/2026)
+
+Em produção, um perfil com vários jogos de RPG e aventura bem avaliados e alguns de terror
+recebeu só RPG e aventura no top-20.
+
+- **Causa:** o perfil é um vetor único, `u = Σ w · v + β · Σ e_f`. O cosseno favorece o gosto
+  dominante: um jogo de terror sem RPG nem aventura tem produto escalar pequeno com `u`, mesmo
+  com a componente de terror positiva. O gosto secundário fica diluído.
+- **Efeito:** os jogos que atendem o gosto secundário, justamente os menos expostos, quase nunca
+  aparecem, o que contraria a proposta da plataforma. O corte fixo de 20 itens também prende o
+  jogador.
+- **Correção:** prateleiras por interesse, lista principal que intercala os interesses na
+  proporção do peso de cada um e "ver mais" paginado, no B-71 (API) e no B-72 (interface). A
+  regra e o registro do desvio estão na seção 12 da proposta técnica, item 4.
+
 ## Limitações
 
 - **Lista de populares:** não respeita o modo, como previsto na proposta.
