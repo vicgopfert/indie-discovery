@@ -1,8 +1,12 @@
 # Estilos: medição de uma camada curada sobre as palavras-chave (B-73)
 
 Medição feita em 03/11/2026 no banco local, com o catálogo de 22.825 jogos (`inCatalog`). É só
-medição: os estilos não foram implementados e a pontuação não mudou. A decisão sobre a
-implementação é do autor.
+medição: os estilos não foram implementados e a pontuação não mudou.
+
+**Atualizado em 03/11/2026, depois da revisão do autor:**
+- A taxonomia foi revista (seção 2, "Revisão do autor") e a medição rodou de novo. Os números deste documento são os da taxonomia revisada; os da primeira rodada ficam registrados onde mudaram.
+- O autor aprovou o caminho só de exibição como **B-74**, antes do B-36, e o filtro do catálogo como **B-75**, um item P1. O caminho no vetor virou variante do B-37.
+- Na implementação do B-74, o rascunho `config/styles.draft.json` passa a ser `config/styles.json`.
 
 ## Por que medir
 
@@ -26,19 +30,21 @@ transparente do critério indie e das coleções.
 ## Resumo
 
 - **Cobertura:**
-  - com palavras-chave e resumo, **58,4% do catálogo** tem ao menos um estilo;
-  - só com palavras-chave, 40,2%; só com o resumo, 40,5%. As duas fontes se completam.
+  - com palavras-chave e resumo, **53,5% do catálogo** tem ao menos um estilo (58,4% antes da revisão, que tirou as palavras e os termos de presença);
+  - só com palavras-chave, 37,5%; só com o resumo, 35,5%. As duas fontes se completam.
 - **Recortes de vetor pobre:**
   - as palavras-chave quase não ajudam: 0% dos jogos de vetor idêntico ao de 10 ou mais e 0% do grupo só com Aventura e Ação;
-  - o resumo cobre de 34% a 37% desses jogos.
-- **Perfis de teste:** dos 600 jogos com peso positivo nas bibliotecas dos 200 perfis da semente 71, 56,0% têm ao menos um estilo.
-- **Precisão do resumo:** na amostra de 20 jogos que recebem um estilo só pelo resumo, 17 estão corretos, 1 é duvidoso e 2 estão incorretos. Os dois erros vêm de termos que dá para tirar ("farming" e "wasteland" sozinhos).
+  - o resumo cobre de 30% a 32% desses jogos.
+- **Perfis de teste:** dos 600 jogos com peso positivo nas bibliotecas dos 200 perfis da semente 71, 52,7% têm ao menos um estilo.
+- **Precisão do resumo:**
+  - na amostra da taxonomia revisada (20 jogos que recebem um estilo só pelo resumo), os 20 estão corretos, 2 com evidência fraca;
+  - na primeira rodada, foram 17 corretos, 1 duvidoso e 2 incorretos ("farming" e "wasteland" sozinhos). Os dois termos saíram na revisão, com outros dez do mesmo tipo.
 - **Desempate dos interesses:** em mais da metade das escolhas de interesse (de 55% a 67%, conforme o cenário), dois ou mais atributos empatam na cobertura. O desempate decide a maioria das escolhas, e trocar o desempate muda os interesses de cerca de metade dos perfis.
-- **Critério de decisão:** cobertura acima de 50% e precisão aceitável. Pela regra registrada, a recomendação é um item de implementação antes do B-37, pelo caminho só de exibição (seção 6).
+- **Critério de decisão:** cobertura acima de 50% e precisão aceitável, antes e depois da revisão. O autor aprovou a implementação pelo caminho só de exibição (B-74, seção 6).
 
 ## Método e reprodução
 
-- **Rascunho:** `apps/api/config/styles.draft.json`, com 50 estilos. Cada estilo tem o slug, o nome em português, a categoria, as palavras-chave da IGDB (pelo slug, como nas coleções) e os termos do resumo. A API não lê este arquivo.
+- **Rascunho:** `apps/api/config/styles.draft.json`, com 49 estilos depois da revisão. Cada estilo tem o slug, o nome em português, a categoria, as palavras-chave da IGDB (pelo slug, como nas coleções) e os termos do resumo. A API não lê este arquivo.
 - **Regra de casamento:** em `apps/api/src/modules/styles/styles-draft.ts`.
   - A palavra-chave casa pelo slug.
   - O termo do resumo casa como palavra inteira, sem diferenciar maiúsculas. A busca e o recorte do trecho são as mesmas funções do `collections:suggest`.
@@ -361,7 +367,7 @@ padrões de metadados). São 3.910 palavras-chave distintas. A mais frequente, "
 
 ## 2. Rascunho da taxonomia (para revisão)
 
-São 50 estilos em três categorias. Ficaram de fora:
+São 49 estilos em três categorias, depois da revisão do autor (50 na primeira rodada). Ficaram de fora:
 - **cultura e lugar**, que são das coleções;
 - **estilos que repetiriam um gênero ou tema da IGDB:** Visual Novel, Music, Tactical, Comedy, Warfare, Stealth, Mystery, Romance, Survival, Sandbox.
 
@@ -380,11 +386,11 @@ acima do limite de 40% dos interesses.
 | **Sobrevivência contra hordas** | bullet-heaven, horde-survival, auto-shooter, vampire-survivors | "bullet heaven", "survivors-like", "survivor-like", "survivorslike", "horde survival", "horde-survival" | 77 (0,3%) · 69 (0,3%) · 122 (0,5%) |
 | **Tower defense** | tower-defense, tower-offense | "tower defense", "tower defence", "tower-defense" | 255 (1,1%) · 252 (1,1%) · 353 (1,5%) |
 | **Construção de cidades e colônias** | city-builder, city-building, colony-simulator, colony-builder, colony-simulation, colony, god-game | "city builder", "city-builder", "city building", "city-building", "colony sim", "colony simulator", "colony builder", "colony management", "god game" | 285 (1,2%) · 179 (0,8%) · 370 (1,6%) |
-| **Automação e fábricas** | automation, factory, factory-simulation, conveyor-belt | "automation", "automate", "conveyor belt", "conveyor belts", "production lines", "factory builder", "factory-building" | 158 (0,7%) · 158 (0,7%) · 263 (1,2%) |
-| **Gestão de negócios** | tycoon, business-simulation, management-sim, store-management, shop-management, restaurant-management, shop-keeper, sports-manager | "tycoon", "business sim", "business simulation", "management sim", "shopkeeper", "run your own shop", "run your own restaurant" | 173 (0,8%) · 168 (0,7%) · 302 (1,3%) |
-| **Fazenda e vida no campo** | farming, farming-simulator, farm, agriculture, life-simulation, life-sim | "farming", "farm sim", "farming sim", "farming simulator", "life sim", "life simulation", "life simulator", "grow crops", "harvest crops" | 405 (1,8%) · 248 (1,1%) · 538 (2,4%) |
-| **Coleta e construção** | crafting, base-building, resource-gathering, open-world-survival-craft, crafting-survival | "crafting", "survival crafting", "survival-crafting", "base building", "base-building", "gather resources", "gathering resources" | 690 (3,0%) · 426 (1,9%) · 994 (4,4%) |
-| **Incremental e idle** | idler, idle, idle-game, incremental, incremental-game, clicker, clicker-game, semi-active-idle | "idle game", "incremental game", "clicker game", "idle clicker", "incremental", "idler" | 331 (1,5%) · 286 (1,3%) · 434 (1,9%) |
+| **Automação e fábricas** | automation, factory, factory-simulation, conveyor-belt | "conveyor belt", "conveyor belts", "production lines", "factory builder", "factory-building" | 158 (0,7%) · 51 (0,2%) · 191 (0,8%) |
+| **Gestão de negócios** | tycoon, business-simulation, management-sim, store-management, shop-management, shop-keeper, sports-manager | "tycoon", "business sim", "business simulation", "management sim", "shopkeeper", "run your own shop" | 160 (0,7%) · 168 (0,7%) · 289 (1,3%) |
+| **Fazenda e vida no campo** | farming, farming-simulator, farm, agriculture, life-simulation, life-sim | "farm sim", "farming sim", "farming simulator", "life sim", "life simulation", "life simulator", "grow crops", "harvest crops", "farm life", "farming game" | 405 (1,8%) · 152 (0,7%) · 486 (2,1%) |
+| **Coleta e construção** | base-building, open-world-survival-craft, crafting-survival | "survival crafting", "survival-crafting", "crafting survival", "survival craft", "base building", "base-building" | 266 (1,2%) · 100 (0,4%) · 338 (1,5%) |
+| **Incremental e idle** | idler, idle, idle-game, incremental, incremental-game, clicker, clicker-game, semi-active-idle | "idle game", "incremental game", "clicker game", "idle clicker", "idler" | 331 (1,5%) · 174 (0,8%) · 388 (1,7%) |
 | **Plataforma de precisão** | precision-platforming, precision-platformer | "precision platformer", "precision platforming", "precision-platformer" | 133 (0,6%) · 54 (0,2%) · 166 (0,7%) |
 | **Lógica e sokoban** | logic-puzzle, sokoban, sokoban-like, grid-based-puzzles, block-puzzle, sliding-puzzle, picture-based-logic-puzzle | "sokoban", "logic puzzle", "logic puzzles", "nonogram", "nonograms", "picross", "block-pushing", "box-pushing" | 183 (0,8%) · 68 (0,3%) · 221 (1,0%) |
 | **Objetos escondidos e salas de fuga** | hidden-object, escape-room | "hidden object", "hidden-object", "hidden objects", "escape room", "escape-room" | 251 (1,1%) · 139 (0,6%) · 314 (1,4%) |
@@ -394,55 +400,95 @@ acima do limite de 40% dos interesses.
 | **Immersive sim** | immersive-sim | "immersive sim", "immersive-sim" | 94 (0,4%) · 26 (0,1%) · 106 (0,5%) |
 | **Exploração de masmorras** | dungeon-crawler, dungeon-crawling, randomly-generated-dungeons, mystery-dungeon | "dungeon crawler", "dungeon-crawler", "dungeon crawling", "dungeon-crawling", "dungeon crawl" | 254 (1,1%) · 235 (1,0%) · 400 (1,8%) |
 | **Coleta de criaturas** | creature-collector, creature-collection, monster-tamer, monster-catching, creature-compendium | "monster tamer", "monster-taming", "monster taming", "creature collector", "creature-collecting", "creature collecting" | 125 (0,5%) · 40 (0,2%) · 145 (0,6%) |
-| **Tiro retrô em primeira pessoa** | boomer-shooter, arena-shooter, movement-shooter | "boomer shooter", "retro fps", "retro shooter", "old-school fps", "arena shooter" | 135 (0,6%) · 99 (0,4%) · 203 (0,9%) |
+| **Tiro retrô em primeira pessoa** | boomer-shooter, movement-shooter | "boomer shooter", "retro fps", "retro shooter", "old-school fps" | 70 (0,3%) · 54 (0,2%) · 105 (0,5%) |
 | **Simulador de namoro e otome** | dating-simulation, dating, dating-sim, otome | "dating sim", "dating simulator", "otome" | 171 (0,7%) · 80 (0,4%) · 206 (0,9%) |
-| **Culinária** | cooking, cooking-simulation, restaurant | "cooking", "cooking game", "cooking sim" | 196 (0,9%) · 108 (0,5%) · 243 (1,1%) |
+| **Culinária** | cooking-simulation, restaurant-management | "cooking game", "cooking sim", "cooking simulator", "restaurant sim", "restaurant management", "run your own restaurant" | 31 (0,1%) · 54 (0,2%) · 77 (0,3%) |
 | **Loops e viagem no tempo** | time-loop, time-travel, time-manipulation | "time loop", "time-loop", "time travel", "time-travel", "rewind time", "time manipulation" | 165 (0,7%) · 93 (0,4%) · 223 (1,0%) |
 
 ### Tom e atmosfera (8)
 
 | Estilo | Palavras-chave da IGDB (slug) | Termos do resumo | Jogos: palavras-chave · resumo · as duas |
 | --- | --- | --- | --- |
-| **Aconchegante** | cozy, cozy-adventure, wholesome, relaxing, relaxed | "cozy", "cosy", "wholesome", "relaxing" | 841 (3,7%) · 843 (3,7%) · 1338 (5,9%) |
+| **Aconchegante** | cozy, cozy-adventure, wholesome, relaxing, relaxed | "cozy", "cosy", "wholesome" | 841 (3,7%) · 624 (2,7%) · 1179 (5,2%) |
 | **Terror psicológico** | psychological-horror, psychological-thriller, psychological, psychological-trauma | "psychological horror", "psychological thriller" | 542 (2,4%) · 322 (1,4%) · 735 (3,2%) |
 | **Terror de sobrevivência** | survival-horror, first-person-horror, asymmetrical-survival-horror, jump-scare-moment | "survival horror", "survival-horror" | 340 (1,5%) · 365 (1,6%) · 594 (2,6%) |
-| **Terror cósmico** | lovecraftian, h-p-lovecraft, cosmic-horror, eldritch-horror | "lovecraftian", "lovecraft", "eldritch", "cosmic horror" | 169 (0,7%) · 144 (0,6%) · 246 (1,1%) |
-| **Terror analógico e liminar** | analog-horror, liminal-space, vhs, found-footage, creepypasta, mascot-horror | "analog horror", "liminal", "found footage", "backrooms", "creepypasta" | 106 (0,5%) · 99 (0,4%) · 182 (0,8%) |
+| **Terror cósmico** | lovecraftian, h-p-lovecraft, cosmic-horror, eldritch-horror | "lovecraftian", "lovecraft", "eldritch horror", "eldritch horrors", "cosmic horror" | 169 (0,7%) · 117 (0,5%) · 230 (1,0%) |
+| **Terror analógico e liminar** | analog-horror, liminal-space, vhs, found-footage, creepypasta, mascot-horror | "analog horror", "liminal space", "liminal spaces", "found footage", "backrooms", "creepypasta" | 106 (0,5%) · 80 (0,4%) · 166 (0,7%) |
 | **Surreal e psicodélico** | surreal, surrealism, surreal-horror, surreal-comedy, psychedelic, dreams | "surreal", "surrealist", "psychedelic", "dreamlike", "dream-like" | 370 (1,6%) · 296 (1,3%) · 589 (2,6%) |
-| **Emocionante** | emotional, emotional-narrative, emotional-story | "heartfelt", "heartwarming", "heart-warming", "emotional", "touching story", "bittersweet" | 162 (0,7%) · 172 (0,8%) · 314 (1,4%) |
+| **Emotivo** | emotional, emotional-narrative, emotional-story | "heartfelt story", "heartfelt narrative", "heartwarming", "heart-warming", "emotional", "touching story", "bittersweet" | 162 (0,7%) · 151 (0,7%) · 295 (1,3%) |
 | **Humor ácido e paródia** | dark-humor, dark-comedy, parody, satire, absurdist-comedy, surreal-comedy, self-referential-humor, absurd | "dark humor", "dark humour", "dark comedy", "satire", "satirical", "parody", "absurdist" | 333 (1,5%) · 94 (0,4%) · 395 (1,7%) |
 
-### Ambientação (16)
+### Ambientação (15)
 
 | Estilo | Palavras-chave da IGDB (slug) | Termos do resumo | Jogos: palavras-chave · resumo · as duas |
 | --- | --- | --- | --- |
-| **Pós-apocalíptico** | post-apocalyptic, apocalypse, apocalyptic, postapocalyptic, zombie-apocalypse | "post-apocalyptic", "postapocalyptic", "post apocalyptic", "apocalypse", "wasteland" | 379 (1,7%) · 406 (1,8%) · 651 (2,9%) |
+| **Pós-apocalíptico** | post-apocalyptic, apocalypse, apocalyptic, postapocalyptic, zombie-apocalypse | "post-apocalyptic", "postapocalyptic", "post apocalyptic" | 379 (1,7%) · 229 (1,0%) · 517 (2,3%) |
 | **Zumbis** | zombies, zombie, zombie-shooter, zombie-survival, zombie-apocalypse, zombie-virus, nazi-zombies | "zombie", "zombies" | 228 (1,0%) · 268 (1,2%) · 389 (1,7%) |
 | **Cyberpunk** | cyberpunk, cyberpunk-rpg, cybernetics, cyberspace, tech-noir | "cyberpunk", "cyber-punk" | 310 (1,4%) · 171 (0,7%) · 379 (1,7%) |
 | **Steampunk** | steampunk | "steampunk", "dieselpunk" | 130 (0,6%) · 76 (0,3%) · 172 (0,8%) |
 | **Distopia** | dystopian, dystopian-future | "dystopian", "dystopia", "totalitarian" | 145 (0,6%) · 142 (0,6%) · 253 (1,1%) |
-| **Espaço e naves** | space, spaceship, spaceships, space-simulation, space-combat, space-battle, space-exploration, space-mining, space-strategy, spaceship-customization, space-adventure, space-shooter, space-station | "spaceship", "spaceships", "starship", "starships", "space station", "outer space", "space exploration" | 458 (2,0%) · 329 (1,4%) · 689 (3,0%) |
-| **Medieval** | medieval, medieval-fantasy, knights | "medieval", "knights" | 406 (1,8%) · 333 (1,5%) · 630 (2,8%) |
+| **Espaço e naves** | spaceship, spaceships, space-ship, space-ships, starship, space-simulation, space-combat, space-battle, space-exploration, space-mining, space-strategy, spaceship-customization, space-adventure, space-shooter, space-station, space-travel, astronaut | "spaceship", "spaceships", "starship", "starships", "space station", "outer space", "space exploration", "space travel", "astronaut", "astronauts" | 284 (1,2%) · 370 (1,6%) · 581 (2,5%) |
+| **Medieval** | medieval, medieval-fantasy | "medieval" | 389 (1,7%) · 270 (1,2%) · 556 (2,4%) |
 | **Fantasia sombria e gótico** | dark-fantasy, dark-fantasy-adventure, gothic, gothic-horror, gothic-adventure, gothic-mystery | "dark fantasy", "gothic", "grimdark" | 287 (1,3%) · 199 (0,9%) · 412 (1,8%) |
-| **Magia e bruxaria** | magic, wizards, witches, witch, magician, spellcaster, magic-school, alchemy | "wizard", "wizards", "witch", "witches", "sorcery", "sorcerer", "spellcasting", "alchemy", "alchemist" | 492 (2,2%) · 366 (1,6%) · 772 (3,4%) |
-| **Sobrenatural: fantasmas, demônios e vampiros** | supernatural, ghosts, ghost, ghost-hunting, ghost-hunter, ghostbusting, demons, demon, demon-hunter, vampire, vampires, vampire-hunter, dracula, occult, cult | "haunted", "paranormal", "occult", "supernatural", "ghosts", "demonic", "vampire", "vampires", "dracula" | 468 (2,1%) · 669 (2,9%) · 1002 (4,4%) |
-| **Robôs e mechas** | robots, robot, robot-protagonist, robot-combat, mech, mecha, mechs | "robot", "robots", "mech", "mechs", "mecha" | 433 (1,9%) · 512 (2,2%) · 775 (3,4%) |
+| **Magia e bruxaria** | witches, witch, witch-hunter, wizards, wizardry, spellcaster, spell-caster, spells, magic-school, necromancy, sword-sorcery, battle-mage, mages | "witchcraft", "witch", "witches", "wizard", "wizards", "sorcery", "sorcerer", "sorceress", "spellcasting", "spellcaster", "necromancer", "necromancy", "warlock" | 223 (1,0%) · 367 (1,6%) · 537 (2,4%) |
+| **Sobrenatural: fantasmas, demônios e vampiros** | supernatural, ghosts, ghost, ghost-hunting, ghost-hunter, ghostbusting, demons, demon, demon-hunter, vampire, vampires, vampire-hunter, dracula, occult, cult | "haunted house", "haunted mansion", "paranormal", "occult", "ghosts", "vampires", "dracula" | 468 (2,1%) · 308 (1,3%) · 711 (3,1%) |
+| **Robôs e mechas** | robot-protagonist, robot-combat, mech, mecha, mechs | "mech", "mechs", "mecha", "giant robot", "giant robots", "play as a robot" | 149 (0,7%) · 140 (0,6%) · 231 (1,0%) |
 | **Alienígenas** | aliens, alien, alien-invasion, alien-world, alien-protagonist, alien-abduction, ufo | "aliens", "alien invasion", "extraterrestrial", "extraterrestrials", "ufo" | 243 (1,1%) · 195 (0,9%) · 390 (1,7%) |
 | **Piratas** | pirates, pirate, undead-pirates | "pirate", "pirates" | 107 (0,5%) · 165 (0,7%) · 211 (0,9%) |
-| **Crime e noir** | crime, organized-crime, mafia, heist, noir, film-noir, neo-noir | "noir", "heist", "mafia", "gangster", "gangsters" | 278 (1,2%) · 154 (0,7%) · 382 (1,7%) |
-| **Fundo do mar** | underwater, underwater-gameplay, ocean, ocean-exploration, deep-sea, sea-monster | "underwater", "deep sea", "ocean floor", "ocean depths" | 153 (0,7%) · 78 (0,3%) · 206 (0,9%) |
-| **Protagonista animal** | animal-protagonist, animal-protagonists, anthropomorphism, talking-animals, cat, cats, dog, dogs | "play as a cat", "play as a dog", "play as a fox", "play as a frog", "play as a bird", "play as a duck", "play as a raccoon", "play as a rabbit", "play as a bunny" | 599 (2,6%) · 13 (0,1%) · 606 (2,7%) |
+| **Crime e noir** | organized-crime, mafia, heist, noir, film-noir, neo-noir | "noir", "heist", "mafia", "gangster", "gangsters" | 121 (0,5%) · 154 (0,7%) · 235 (1,0%) |
+| **Fundo do mar** | underwater, ocean-exploration, deep-sea, sea-monster | "underwater world", "underwater exploration", "deep sea", "ocean floor", "ocean depths" | 92 (0,4%) · 28 (0,1%) · 113 (0,5%) |
 
-### Pontos para revisar
+### Revisão do autor (03/11/2026)
 
-- **Termos do resumo a tirar, pela amostra:**
-  - "farming" sozinho casa com jogos de sobrevivência em que plantar é uma atividade entre várias. Ficariam "farming sim", "farming simulator", "farm life" e "life sim".
-  - "wasteland" casa com qualquer lugar ermo (Pyre é fantasia, não pós-apocalipse). Ficariam "post-apocalyptic" e "apocalypse".
-- **Palavras-chave de presença, não de foco.** O lado das palavras-chave não foi amostrado.
-  - "cat", "dog", "magic", "space", "robots" e "crafting" dizem que o elemento aparece, não que o jogo é sobre ele.
-  - "Protagonista animal" depende quase só de "cat" e "dog" (599 jogos pelas palavras-chave, 13 pelo resumo). Talvez fique melhor como "Animais", ou só com "animal-protagonist" e "talking-animals".
-- **Estilos amplos:** Roguelike (9,6%), Aconchegante (5,9%), Coleta e construção (4,4%) e Sobrenatural (4,4%) são os maiores. Estão longe do limite de 40%, mas Sobrenatural junta três temas (fantasmas, demônios, vampiros) que talvez valham separados.
-- **Junções a decidir:** "Objetos escondidos e salas de fuga", "Fazenda e vida no campo" e "Robôs e mechas" juntam públicos próximos, mas não iguais.
+Decisões do autor:
+- **Palavras-chave de presença não valem como evidência sozinhas.** "cat", "dog", "magic" e "space" dizem que o elemento aparece, não que o jogo é sobre ele.
+- **"Protagonista animal" saiu:** dependia quase só de "cat" e "dog".
+- **"Magia e bruxaria" e "Espaço e naves" ficam só com palavras-chave e termos específicos.**
+  - Magia: witches, witch, witch-hunter, wizards, wizardry, spellcaster, spell-caster, spells, magic-school, necromancy, sword-sorcery, battle-mage e mages; no resumo, witchcraft, witch, witches, wizard, wizards, sorcery, sorcerer, sorceress, spellcasting, spellcaster, necromancer, necromancy e warlock. Saíram magic, magician e alchemy.
+  - Espaço: as palavras-chave de naves, estação, viagem e exploração espacial, e astronaut; no resumo, spaceship(s), starship(s), space station, outer space, space exploration, space travel e astronaut(s). Saiu space.
+- **"Sobrenatural" fica junto por enquanto.** A separação em fantasmas, demônios e vampiros será revista depois do teste de usabilidade (B-44).
+- **"Emocionante" virou "Emotivo":** o estilo vem de "emotional", e "emocionante" quer dizer empolgante.
+- **Os termos que erraram na amostra saíram:** "farming" e "wasteland".
+
+Pelo mesmo critério, foram conferidos todos os termos do resumo. Para cada termo, contei quantos jogos ele marca sem a palavra-chave e li três trechos sorteados.
+
+**Palavras-chave de presença** que saíram também de outros estilos:
+
+| Estilo | Saiu | Por quê |
+| --- | --- | --- |
+| Robôs e mechas | robots, robot | presença; ficaram robot-protagonist, robot-combat, mech, mecha e mechs |
+| Crime e noir | crime | presença |
+| Culinária | cooking, restaurant | presença: cozinhar é atividade em jogos de sobrevivência; ficaram cooking-simulation e restaurant-management |
+| Coleta e construção | crafting, resource-gathering | presença em quase todo RPG; ficaram base-building e as de sobrevivência com construção |
+| Medieval | knights | presença |
+| Fundo do mar | underwater-gameplay, ocean | presença de uma fase subaquática |
+| Tiro retrô em primeira pessoa | arena-shooter | inclui shooters em visão de cima |
+
+**Termos do resumo** que saíram ou ficaram mais exatos:
+
+| Termo | Exemplo do problema | Ficou |
+| --- | --- | --- |
+| apocalypse | "prevent the apocalypse" em fantasia | só post-apocalyptic e variantes |
+| incremental | "incremental power curve" num roguelite | incremental game |
+| automate, automation | "increasing automation" num jogo de cartas | conveyor belt(s), production lines, factory builder |
+| relaxing | "may seem relaxing... in fact danger" | cozy, cosy, wholesome |
+| haunted | "haunted by rent" | haunted house, haunted mansion |
+| supernatural | "supernatural abilities" num jogo de ação | paranormal, occult, ghosts |
+| demonic | "demonic monsters" como inimigos | — |
+| vampire | "inspired by Vampire Survivors" | vampires, dracula |
+| heartfelt | "heartfelt tribute to the racing games" | heartfelt story, heartfelt narrative |
+| liminal | "this liminal world" num minigame | liminal space(s), backrooms |
+| eldritch | "the eldritch cutie" num jogo de namoro | eldritch horror(s), lovecraftian |
+| arena shooter | "twin stick arena shooter" | boomer shooter, retro fps |
+| robot, robots | "fly your DiscPod robot" | mech(s), mecha, giant robot(s) |
+| cooking, crafting, gather resources | "farming, hunting, cooking, crafting" numa lista de atividades | cooking game, survival crafting, base building |
+
+Ficaram, por serem quase sempre o assunto do jogo quando aparecem no resumo: witch, wizard, aliens, zombie(s), pirate(s), ghosts, cozy e emotional. Erros isolados continuam possíveis, como "Choose witch end", erro de digitação de "which".
+
+**Pontos que continuam para o B-74 e depois:**
+- **Junções a observar:** "Objetos escondidos e salas de fuga", "Fazenda e vida no campo" e "Robôs e mechas" juntam públicos próximos, mas não iguais.
+- **Culinária ficou pequena:** 77 jogos (0,3%), mas acima do mínimo de 3.
+- **Estilos maiores:** Roguelike (9,6%), Aconchegante (5,2%) e Narrativa com escolhas (4,2%), todos longe do limite de 40%.
 
 ### Palavras-chave frequentes que ficaram de fora
 
@@ -465,9 +511,9 @@ acima do limite de 40% dos interesses.
 
 | Versão | Jogos com ao menos um estilo | Mediana de estilos por jogo | Mediana entre os cobertos |
 | --- | --- | --- | --- |
-| Só palavras-chave | 9181 (40,2%) | 0 | 1 |
-| Só resumo | 9247 (40,5%) | 0 | 1 |
-| As duas | 13320 (58,4%) | 1 | 1 |
+| Só palavras-chave | 8559 (37,5%) | 0 | 1 |
+| Só resumo | 8094 (35,5%) | 0 | 1 |
+| As duas | 12200 (53,5%) | 1 | 1 |
 
 A mediana de estilos por jogo é 1 com as duas fontes. Entre os jogos cobertos, a mediana também
 é 1: o estilo é um rótulo, não uma descrição completa.
@@ -476,54 +522,59 @@ A mediana de estilos por jogo é 1 com as duas fontes. Entre os jogos cobertos, 
 
 | Recorte | Jogos | Só palavras-chave | Só resumo | As duas |
 | --- | --- | --- | --- | --- |
-| Vetor idêntico ao de pelo menos 10 outros jogos | 4844 (21,2%) | 0 (0,0%) | 1784 (36,8%) | 1784 (36,8%) |
-| Até 2 etiquetas no vetor | 3942 (17,3%) | 69 (1,8%) | 1377 (34,9%) | 1404 (35,6%) |
-| Só Aventura e Ação no vetor | 507 (2,2%) | 0 (0,0%) | 171 (33,7%) | 171 (33,7%) |
+| Vetor idêntico ao de pelo menos 10 outros jogos | 4844 (21,2%) | 0 (0,0%) | 1530 (31,6%) | 1530 (31,6%) |
+| Até 2 etiquetas no vetor | 3942 (17,3%) | 58 (1,5%) | 1177 (29,9%) | 1201 (30,5%) |
+| Só Aventura e Ação no vetor | 507 (2,2%) | 0 (0,0%) | 152 (30,0%) | 152 (30,0%) |
 
 As palavras-chave não ajudam nesses recortes: um jogo com vetor idêntico ao de muitos outros
-quase nunca tem palavra-chave. É o resumo que alcança um terço deles. Para os jogos que a
+quase nunca tem palavra-chave. É o resumo que alcança cerca de 30% deles. Para os jogos que a
 recomendação por conteúdo hoje não distingue, a única fonte nova de especificidade é o texto.
 
 ### Nos perfis de teste (semente 71)
 
 | Versão | Com ao menos um estilo |
 | --- | --- |
-| Só palavras-chave | 235 (39,2%) |
-| Só resumo | 229 (38,2%) |
-| As duas | 336 (56,0%) |
+| Só palavras-chave | 223 (37,2%) |
+| Só resumo | 207 (34,5%) |
+| As duas | 316 (52,7%) |
 
 ## 4. Precisão dos termos do resumo
 
-Dos 5.932 jogos que recebem ao menos um estilo só pelo resumo, sem a palavra-chave
-correspondente, foram sorteados 20 (semente 73). A classificação é preliminar, para revisão do
-autor.
+Com a taxonomia revisada, 5.029 jogos recebem ao menos um estilo só pelo resumo, sem a
+palavra-chave correspondente. Foram sorteados 20 (semente 73). A classificação é preliminar,
+para revisão do autor.
 
 | # | Jogo | Estilo | Termo | Trecho | Classificação preliminar |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Tower of Spirit | Narrativa com escolhas | choices matter | Tower of Spirit is a fast turn-based RPG where your choices matter. Gather a group of unique characters, survive a serie of ra… | Correto: o próprio resumo diz que as escolhas mudam o jogo |
-| 2 | Tiny Knight and the Corrupted Crystal | Roguelike | roguelite | …Knight and the Corrupted Crystal is a single-player action roguelite built around an incremental power curve. The knight's corru… | Correto: "action roguelite" |
+| 1 | Pirate Pillage and Plunder | Roguelike | roguelike | …d of card game and auto battler, wrapped together in a neat roguelike package. Choose your faction, amass an army from thousands… | Correto: "neat roguelike package" |
+| 2 | Imscared | Surreal e psicodélico | surreal | …game that protagonizes the player, putting him or her in a surreal first-person experience. Find keys, open doors and search f… | Correto: "surreal first-person experience" |
 | 3 | Deliverance | Terror de sobrevivência | survival horror | Deliverance is a first-person survival horror game in which you are put into the captivity of a deranged… | Correto: terror de sobrevivência em primeira pessoa |
-| 4 | Northanda Chronicles | Roguelike | roguelike | …ster role-driven combat in Northanda Chronicles, a tactical roguelike deckbuilder. Recruit three heroes from countless combinatio… | Correto: "tactical roguelike deckbuilder"; também recebe Construção de baralho |
-| 5 | Abyssbound | Roguelike | roguelite | A dark, atmospheric action-adventure dungeon roguelite for 1–4 players. Descend into ever-shifting dungeons, guide… | Correto: "dungeon roguelite" |
-| 6 | Hack Fate | Cyberpunk | cyberpunk | Hack Fate is a fast-paced, cyberpunk pixel-style hack-and-slash action game. In a flash of light… | Correto: ambientação cyberpunk declarada |
-| 7 | DiscPods | Robôs e mechas | robot | Fly your DiscPod robot and compete by being the ultimate and only winner of the ar… | Duvidoso: o "robô" é o veículo de uma arena competitiva; robôs não são o assunto do jogo |
-| 8 | Lonely Path | Aconchegante | relaxing | Lonely Path is a relaxing puzzle game where you move and stacks tiles to create paths… | Correto: quebra-cabeça "relaxing" |
-| 9 | The Front | Coleta e construção | crafting | The Front is a survival-open-world-crafting shooter game. Players will assume the role of a resistance… | Correto: sobrevivência com crafting em mundo aberto |
-| 10 | Outpath | Coleta e construção | base building | An experimental clicker base building game. Craft, gather & manage resources, base building, isla… | Correto: "base building"; também seria Incremental e idle ("clicker") |
-| 11 | CryoFall | Fazenda e vida no campo | farming | …to make their own mark on their world. Discover new ways of farming, hunting, cooking, crafting, mining, building, and trading,… | Incorreto: jogo de sobrevivência online em que plantar é uma atividade entre várias; o estilo promete um jogo de fazenda |
-| 12 | SimAirport | Gestão de negócios | tycoon | A modern tycoon-style sim where you design, build, and manage every aspect… | Correto: "tycoon-style sim" |
-| 13 | Rooster | Emocionante | heartfelt | A heartfelt, story-rich casual puzzle adventure celebrating the best of… | Correto: "heartfelt, story-rich" |
-| 14 | Erebus-9 | Espaço e naves | space station | …ive first-person psychological horror. Explore the derelict space station, solve puzzles, and run from the horrors that reside onboar… | Correto: passa-se numa estação espacial abandonada |
-| 15 | Pyre | Pós-apocalíptico | wasteland | …cavengers who discovers them, is sent in exile to a lawless wasteland called the Downside and has to lead their ever-growing part… | Incorreto: fantasia num purgatório; "wasteland" é só um lugar ermo, não pós-apocalipse |
-| 16 | Heavy Metal Death Can | Zumbis | zombies | …ainst the terrifying Sludge which has turned your crew into Zombies. Look for survivors and uncover the truth behind the madnes… | Correto: a tripulação vira zumbi |
-| 17 | Death of a Wish | Surreal e psicodélico | surreal | …nst the Nightmares. Explore a bleak dreamworld filled with surreal new characters, encounters, and stories. The theocratic cit… | Correto: mundo de sonho com personagens surreais |
-| 18 | No One Returns | Terror de sobrevivência | survival horror | …d everyone is simply gone? No One Returns is a third-person survival horror game. Play as Denis, search a chillingly silent city for cl… | Correto: "third-person survival horror" |
-| 19 | Rocket Wars | Espaço e naves | spaceship | …d furious pvp battles! In Rocket Wars you take control of a spaceship with different strengths and weaknesses and proceed to do a… | Correto: o jogador controla uma nave |
-| 20 | Hare in the Hat | Objetos escondidos e salas de fuga | hidden object | …to save him! Join the fabulous adventure in perfect mix of hidden object, puzzle and room escape genres! | Correto: "hidden object, puzzle and room escape" |
+| 4 | Super Star Path | Alienígenas | aliens | …Hop into your spaceship, open a path through huge waves of aliens and other hazards, and face intense boss battles! | Correto: nave contra ondas de alienígenas |
+| 5 | Himbo Harem Homicide | Investigação e detetive | whodunit | A classic whodunit—but with a harem of himbos! Determine which of your hunky h… | Correto: "a classic whodunit" |
+| 6 | Princess.Loot.Pixel.Again | Roguelike | rogue-lite | …a combo system and special strikes, there is also a bit of rogue-lite genre. The principal aim is to get through all floors of th… | Correto, fraco: "a bit of rogue-lite genre": o elemento é secundário |
+| 7 | Star Crafter | Coleta e construção | survival crafting | A space survival crafting mining base building and star system building game. Craft r… | Correto: "space survival crafting" |
+| 8 | Mousebusters | Sobrenatural: fantasmas, demônios e vampiros | ghosts | …themselves having to join the Mousebusters to take out the ghosts haunting every resident of the building. | Correto: caçar os fantasmas do prédio |
+| 9 | Ignite the Depths | Exploração de masmorras | dungeon crawler | Ignite the Depths is a cooperative hack-and-slash dungeon crawler set across three hand-crafted dimensions. Venture into the… | Correto: "hack-and-slash dungeon crawler" |
+| 10 | Blackwind | Alienígenas | alien invasion | …ager trapped inside a prototype battle armor suit during an alien invasion. Face off against enemies, cut through their ranks, and fig… | Correto: passa-se durante uma invasão alienígena |
+| 11 | There Are No Orcs | Roguelike | roguelike | An RTS-Roguelike hybrid with auto-battling troops. Master building placement… | Correto: "RTS-Roguelike hybrid" |
+| 12 | Ib | Terror psicológico | psychological horror | Ib is a freeware adventure video game with elements of psychological horror released in 2012 for Microsoft Windows by the Japanese arti… | Correto: "elements of psychological horror" |
+| 13 | Mr. Grin's Final Act | Terror de sobrevivência | survival horror | …Now you're back... and so is Mr. Grin. In this first-person survival horror, scavenge badges, rewire circuits, crack safes. Stay out of… | Correto: "first-person survival horror" |
+| 14 | Hell is Other Demons | Bullet hell e shoot 'em up | bullet hell | …is Other Demons is a frantic, highscore driven, four-color, Bullet Hell Platformer with pixel art. | Correto: "Bullet Hell Platformer" |
+| 15 | This Strange Realm of Mine | Terror psicológico | psychological horror | …alm Of Mine is a First Person Shooter mixed with poetry and psychological horror. Graphic style is 3D mixed with pixel art. | Correto: "poetry and psychological horror" |
+| 16 | Wilderings: The Lost Spring | Metroidvania | metroidvania | …an open-world action roguelite with creature collection and metroidvania-like progression that tells an emotionally impactful story… | Correto: "metroidvania-like progression" |
+| 17 | Kadomon: Hyper Auto Battlers | Roguelike | roguelike | Collect and battle over 180 unique creatures in this roguelike auto-battler. Level-up and evolve your Kādomon as you assem… | Correto: "roguelike auto-battler" |
+| 18 | Savior Syndrome: The Crimson Sun | Sobrenatural: fantasmas, demônios e vampiros | occult | …d RPG set in a world where genetic experiments coexist with occult practices. | Correto, fraco: "occult practices" num mundo de ficção científica |
+| 19 | Remote Life 2: Fearless | Alienígenas | aliens | …a sci-fi an action packed platformer. Combat against scary aliens and escape from the monster Hive. After the success of the… | Correto: combate contra alienígenas |
+| 20 | The Citadel Project | Fantasia sombria e gótico | dark fantasy | …-horror elements, inspired by the Thief series and set in a dark fantasy world. Use your tools and surroundings wisely, stay hidden… | Correto: "set in a dark fantasy world" |
 
-**Resultado:** 17 corretos, 1 duvidoso e 2 incorretos, ou seja, de 85% a 90%.
-- Os dois erros vêm de termos isolados que descrevem uma atividade ou um lugar, e não o jogo ("farming", "wasteland"). Saem do rascunho na revisão.
-- O duvidoso ("robot" num jogo de arena com veículos-robô) mostra o limite da evidência por uma palavra só.
+**Resultado:** 20 corretos, 2 com evidência fraca (um "pouco" de roguelite; práticas ocultas
+num mundo de ficção científica).
+
+**Primeira rodada**, antes da revisão (5.932 jogos, mesma semente): 17 corretos, 1 duvidoso e 2
+incorretos, de 85% a 90%.
+- Os erros foram CryoFall ("farming", plantar como uma atividade entre várias) e Pyre ("wasteland", um lugar ermo num mundo de fantasia).
+- O duvidoso foi DiscPods ("robot", o veículo de uma arena).
+- Os três termos saíram na revisão.
 
 A amostra cobre só o resumo. Na curadoria, vale amostrar também as palavras-chave de presença
 (seção 2, "Pontos para revisar").
@@ -555,25 +606,26 @@ estilos:
 | A. Gêneros e temas, desempate por u_k (atual) | 0 / 22 / 129 / 49 / 0 | 427 | 256 | 0 | 556 (92,7%) |
 | B. Gêneros e temas, pelo menos frequente | 0 / 22 / 129 / 49 / 0 | 427 | 237 | 0 | 556 (92,7%) |
 | E. Gêneros e temas, pelo peso na biblioteca | 0 / 22 / 129 / 49 / 0 | 427 | 237 | 0 | 556 (92,7%) |
-| C. Com estilos, desempate por u_k | 0 / 19 / 128 / 53 / 0 | 434 | 292 | 31 | 568 (94,7%) |
-| D. Com estilos, pelo menos frequente | 0 / 19 / 128 / 53 / 0 | 434 | 285 | 165 | 568 (94,7%) |
-| F. Com estilos, pelo peso na biblioteca | 0 / 19 / 128 / 53 / 0 | 434 | 285 | 148 | 568 (94,7%) |
+| C. Com estilos, desempate por u_k | 0 / 19 / 129 / 52 / 0 | 433 | 289 | 27 | 567 (94,5%) |
+| D. Com estilos, pelo menos frequente | 0 / 19 / 129 / 52 / 0 | 433 | 280 | 159 | 567 (94,5%) |
+| F. Com estilos, pelo peso na biblioteca | 0 / 19 / 129 / 52 / 0 | 433 | 280 | 143 | 567 (94,5%) |
 
 - A → B: 106 perfis mudam, 172 escolhas mudam de atributo ou de posição.
 - A → E: 98 perfis mudam, 164 escolhas mudam de atributo ou de posição.
-- C → D: 149 perfis mudam, 236 escolhas mudam de atributo ou de posição.
-- C → F: 134 perfis mudam, 220 escolhas mudam de atributo ou de posição.
-- Estilos mais escolhidos em D: Roguelike (11), Alienígenas (7), Pós-apocalíptico (6), Metroidvania (6), Incremental e idle (6), Exploração de masmorras (6), Terror psicológico (6), Soulslike (6), Narrativa com escolhas (5), Terror analógico e liminar (5).
-- Estilos mais escolhidos em F: Roguelike (9), Alienígenas (7), Incremental e idle (6), Soulslike (6), Narrativa com escolhas (5), Terror analógico e liminar (5), Pós-apocalíptico (5), Aconchegante (5), Metroidvania (5), Exploração de masmorras (5).
+- C → D: 147 perfis mudam, 232 escolhas mudam de atributo ou de posição.
+- C → F: 132 perfis mudam, 216 escolhas mudam de atributo ou de posição.
+- Estilos mais escolhidos em D: Roguelike (11), Incremental e idle (7), Alienígenas (7), Narrativa com escolhas (6), Pós-apocalíptico (6), Aconchegante (6), Metroidvania (6), Exploração de masmorras (6), Terror psicológico (6), Soulslike (6).
+- Estilos mais escolhidos em F: Roguelike (9), Aconchegante (7), Incremental e idle (7), Alienígenas (7), Narrativa com escolhas (6), Soulslike (6), Pós-apocalíptico (5), Metroidvania (5), Exploração de masmorras (5), Terror psicológico (5).
 
 - **Os empates são a regra.** Uma biblioteca de três jogos bem avaliados tem muitos atributos nos mesmos jogos. De 55% a 67% das escolhas tiveram empate na cobertura, e qualquer troca de desempate muda os interesses de cerca de metade dos perfis.
 - **Pelo menos frequente:** favorece o atributo mais específico, mas pode escolher um detalhe do jogo. No caso Amnesia, venceria Furtividade (2,0% do catálogo), que só esse jogo tem, e não Terror, que está em três dos oito jogos.
 - **Pelo peso na biblioteca:** escolhe o atributo que mais aparece nos jogos de que o jogador gostou, e só depois o mais específico. No caso Amnesia, venceria Terror. É o que mais se aproxima do que a prateleira promete ("Porque você curte Terror"). **Recomendado** para acompanhar os estilos.
 - **Com estilos:**
   - os perfis com um interesse só caem de 22 para 19;
-  - a cobertura dos jogos com peso positivo sobe de 92,7% para 94,7%;
-  - com o desempate pelo peso na biblioteca, 148 dos 434 interesses (34%) passam a ser estilos. Os mais escolhidos são Roguelike, Alienígenas, Incremental e idle e Soulslike.
-  - Com o desempate por `u_k`, só 31 são estilos. O `u_k` de um estilo soma só as palavras-chave dele no vetor, e um estilo que veio do resumo tem `u_k` zero.
+  - a cobertura dos jogos com peso positivo sobe de 92,7% para 94,5%;
+  - com o desempate pelo peso na biblioteca, 143 dos 433 interesses (33%) passam a ser estilos. Os mais escolhidos são Roguelike, Aconchegante, Incremental e idle e Alienígenas.
+  - Com o desempate por `u_k`, só 27 são estilos. O `u_k` de um estilo soma só as palavras-chave dele no vetor, e um estilo que veio do resumo tem `u_k` zero.
+  - Na primeira rodada, antes da revisão, eram 148 de 434 e 94,7%.
 
 ## 6. Estimativa de implementação
 
@@ -631,16 +683,18 @@ Registrado antes da medição:
 - **Se a cobertura com palavras-chave e resumo passar de 50% do catálogo e a precisão da amostra for aceitável:** propor um item de implementação antes do B-37, com o caminho recomendado e o esforço.
 - **Se não passar:** registrar a especificidade como limitação dos dados, com os números.
 
-**Resultado:** cobertura de 58,4% e precisão de 85% a 90% na amostra. O critério foi atendido.
+**Resultado:**
+- **Primeira rodada:** cobertura de 58,4% e precisão de 85% a 90% na amostra.
+- **Com a taxonomia revisada:** 53,5% e 20 de 20.
 
-**Item proposto, para decisão do autor:**
-- **(M, E5) Estilos curados como camada de exibição, antes do B-37:**
-  - revisão do rascunho e `config/styles.json`;
-  - tabela `GameStyle` preenchida pela ingestão;
-  - estilos como candidatos a interesse, com o desempate pelo peso na biblioteca;
-  - prateleiras de estilo;
-  - estilos no motivo.
-- **Item separado e opcional:** o filtro do catálogo (P na API e P na interface).
-- **O B-37** acrescenta a variante dos estilos no vetor ao protocolo.
+O critério foi atendido nas duas.
 
-Nada disso entrou no backlog: a decisão é do autor.
+**Decisão do autor (03/11/2026):**
+- **B-74 (M, E5), na S9, antes do B-36:** estilos como camada de exibição.
+  - **Atribuição:** na carga do índice, a partir de `config/styles.json`, sem consulta nova por requisição e sem nova ingestão. A tabela `GameStyle` proposta na seção 6 não é necessária para isso.
+  - **Interesses:** os estilos concorrem ao lado de gêneros e temas, com o limite de 40%.
+  - **Desempate:** pelo peso na biblioteca e depois pelo menos frequente, para todos os atributos.
+  - **Prateleiras:** "Porque você curte `<estilo>`".
+  - **Motivo:** o estilo entra só pela contribuição das palavras-chave dele (seção 12 da proposta técnica).
+- **B-75 (M, E3), P1:** filtro de estilo no catálogo, fora do núcleo da tese. Se entrar, a página "Como funciona" (B-25) passa a listar os estilos e as palavras-chave de cada um.
+- **B-37:** testa o caminho b como variante, com o mesmo critério de acerto@10.
