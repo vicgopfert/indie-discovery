@@ -39,7 +39,7 @@ const countryList = listParam(
   }),
 );
 
-const positiveInt = (max: number, label: string) =>
+export const positiveInt = (max: number, label: string) =>
   z.coerce
     .number({ error: `${label} deve ser um número.` })
     .int({ error: `${label} deve ser um número inteiro.` })
