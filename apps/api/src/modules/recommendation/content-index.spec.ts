@@ -38,7 +38,7 @@ function rowsFor(games: Record<string, ContentFeature[]>): ContentIndexRows {
     ).values(),
   ]
     .filter((f) => (idf.get(featureKey(f)) ?? 0) > 0)
-    .map((f) => ({ ...f, slug: f.name, idf: idf.get(featureKey(f))! }));
+    .map((f) => ({ ...f, id: `f-${featureKey(f)}`, slug: f.name, idf: idf.get(featureKey(f))! }));
   const position = new Map(features.map((f, i) => [featureKey(f), i]));
   return {
     features,
@@ -86,6 +86,36 @@ describe('buildContentIndex', () => {
     const vazio = index.games[index.positionByGameId.get('g-vazio')!]!;
     expect(vazio.weights).toHaveLength(0);
     expect(index.games).toHaveLength(5);
+  });
+
+  it('monta o vetor de um jogo fora do índice igual ao que ele teria no índice', () => {
+    const withoutCeleste = buildContentIndex(
+      { ...rows, games: rows.games.filter((game) => game.slug !== 'celeste') },
+      config,
+    );
+    const celeste = index.games[index.positionByGameId.get('g-celeste')!]!;
+
+    expect(withoutCeleste.positionByGameId.has('g-celeste')).toBe(false);
+    expect(withoutCeleste.vectorOf(catalog.celeste!)).toEqual({
+      featurePositions: celeste.featurePositions,
+      weights: celeste.weights,
+    });
+  });
+
+  it('ignora no vetor de fora o atributo que não está no índice', () => {
+    const tunic = index.games[index.positionByGameId.get('g-tunic')!]!;
+
+    expect(index.vectorOf(catalog.tunic!)).toEqual({
+      featurePositions: tunic.featurePositions,
+      weights: tunic.weights,
+    });
+    expect(index.vectorOf([feature('GENRE', 9)]).weights).toHaveLength(0);
+  });
+
+  it('acha a posição de cada atributo pelo id gravado no banco', () => {
+    for (const [position, { id }] of index.features.entries()) {
+      expect(index.positionByFeatureId.get(id)).toBe(position);
+    }
   });
 
   it('traz os dados que a recomendação usa para filtrar e ordenar', () => {

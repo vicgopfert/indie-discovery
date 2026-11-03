@@ -1,9 +1,22 @@
 import type { FeatureType, ReleaseStatus } from '../../generated/prisma/client';
-import { type FeatureKey, featureKey, type TfidfConfig, tfidfVector } from './tfidf';
+import {
+  type ContentFeature,
+  type FeatureKey,
+  featureKey,
+  type TfidfConfig,
+  tfidfVector,
+} from './tfidf';
 
 export interface ContentIndexRows {
   // Só os atributos com IDF acima de zero: os descartados pelos limites não entram no vetor.
-  features: { type: FeatureType; igdbId: number; slug: string; name: string; idf: number }[];
+  features: {
+    id: string;
+    type: FeatureType;
+    igdbId: number;
+    slug: string;
+    name: string;
+    idf: number;
+  }[];
   // featurePositions aponta para a lista de atributos acima.
   games: {
     id: string;
@@ -15,25 +28,33 @@ export interface ContentIndexRows {
 }
 
 export interface IndexedFeature {
+  id: string;
   type: FeatureType;
   slug: string;
   name: string;
 }
 
 // Vetor esparso com as posições em ordem crescente, para o produto escalar andar em paralelo.
-export interface IndexedGame {
+export interface ContentVector {
+  featurePositions: Int32Array;
+  weights: Float64Array;
+}
+
+export interface IndexedGame extends ContentVector {
   id: string;
   slug: string;
   releaseStatus: ReleaseStatus;
   popularityNorm: number;
-  featurePositions: Int32Array;
-  weights: Float64Array;
 }
 
 export interface ContentIndex {
   games: readonly IndexedGame[];
   features: readonly IndexedFeature[];
   positionByGameId: ReadonlyMap<string, number>;
+  positionByFeatureId: ReadonlyMap<string, number>;
+  // O vetor de um jogo fora do índice (o que saiu do catálogo e continua na biblioteca), com o
+  // mesmo IDF e as mesmas posições: atributo fora do índice fica de fora, como nos outros jogos.
+  vectorOf(features: readonly Pick<ContentFeature, 'type' | 'igdbId'>[]): ContentVector;
 }
 
 // Os pesos são refeitos a partir do IDF gravado na ingestão, com a mesma conta dela (tfidfVector).
@@ -46,22 +67,26 @@ export function buildContentIndex(rows: ContentIndexRows, config: TfidfConfig): 
     positionByKey.set(key, position);
   });
 
-  const games = rows.games.map(({ featurePositions, ...game }) => {
-    const features = featurePositions.map((position) => rows.features[position]!);
-    const { weights } = tfidfVector(features, idf, config);
-    const entries = [...weights]
+  const vectorOf = (features: readonly Pick<ContentFeature, 'type' | 'igdbId'>[]) => {
+    const entries = [...tfidfVector(features, idf, config).weights]
       .map(([key, weight]) => [positionByKey.get(key)!, weight] as const)
       .sort(([a], [b]) => a - b);
     return {
-      ...game,
       featurePositions: Int32Array.from(entries, ([position]) => position),
       weights: Float64Array.from(entries, ([, weight]) => weight),
     };
-  });
+  };
+
+  const games = rows.games.map(({ featurePositions, ...game }) => ({
+    ...game,
+    ...vectorOf(featurePositions.map((position) => rows.features[position]!)),
+  }));
 
   return {
     games,
-    features: rows.features.map(({ type, slug, name }) => ({ type, slug, name })),
+    features: rows.features.map(({ id, type, slug, name }) => ({ id, type, slug, name })),
     positionByGameId: new Map(games.map(({ id }, position) => [id, position])),
+    positionByFeatureId: new Map(rows.features.map(({ id }, position) => [id, position])),
+    vectorOf,
   };
 }

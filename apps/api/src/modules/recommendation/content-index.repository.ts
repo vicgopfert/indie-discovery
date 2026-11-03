@@ -15,7 +15,7 @@ export class ContentIndexRepository {
     const [features, games] = await this.prisma.$transaction(
       [
         this.prisma.$queryRaw<ContentIndexRows['features']>`
-          SELECT "type", "igdbId", "slug", "name", "idf"
+          SELECT "id", "type", "igdbId", "slug", "name", "idf"
           FROM "Feature" WHERE "idf" > 0
           ORDER BY "type", "igdbId"`,
         this.prisma.$queryRaw<ContentIndexRows['games']>`
