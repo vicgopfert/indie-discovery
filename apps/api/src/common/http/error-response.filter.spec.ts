@@ -1,4 +1,11 @@
-import { type ArgumentsHost, BadRequestException, ConflictException, Logger } from '@nestjs/common';
+import {
+  type ArgumentsHost,
+  BadRequestException,
+  ConflictException,
+  InternalServerErrorException,
+  Logger,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { ErrorResponseFilter } from './error-response.filter';
 
 function hostFor() {
@@ -43,6 +50,40 @@ describe('ErrorResponseFilter', () => {
     expect(response.json).toHaveBeenCalledWith(
       expect.objectContaining({ statusCode: 400, message: ['email: Invalid email address'] }),
     );
+  });
+
+  it('mantém a mensagem de um 503 lançado de propósito e o registra como aviso', () => {
+    const { host, response } = hostFor();
+    const logWarn = jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+
+    filter.catch(new ServiceUnavailableException('Índice carregando'), host);
+
+    expect(response.status).toHaveBeenCalledWith(503);
+    expect(response.json).toHaveBeenCalledWith({
+      statusCode: 503,
+      error: 'Service Unavailable',
+      message: 'Índice carregando',
+      requestId: 'req-12345678',
+    });
+    expect(logWarn).toHaveBeenCalledWith(
+      expect.objectContaining({ requestId: 'req-12345678', status: 503 }),
+    );
+    expect(logError).not.toHaveBeenCalled();
+    logWarn.mockRestore();
+  });
+
+  it('esconde a mensagem de um 500, mesmo lançado como erro HTTP', () => {
+    const { host, response } = hostFor();
+
+    filter.catch(new InternalServerErrorException('consulta com a senha do banco'), host);
+
+    expect(response.json).toHaveBeenCalledWith(
+      expect.objectContaining({
+        statusCode: 500,
+        message: 'Erro interno; tente novamente mais tarde',
+      }),
+    );
+    expect(logError).toHaveBeenCalled();
   });
 
   it('esconde o detalhe de um erro inesperado e o registra no log', () => {
