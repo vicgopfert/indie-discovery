@@ -8,6 +8,7 @@ describe('readScoringConfig', () => {
       popularityWeightByMode: { POPULAR: -0.2, BALANCED: 0, DISCOVERY: 0.3 },
       lists: {
         maxInterests: 4,
+        interestMaxDocumentRatio: 0.4,
         shelfMinItems: 4,
         overviewMainSize: 20,
         overviewShelfSize: 10,
@@ -29,6 +30,8 @@ describe('readScoringConfig', () => {
     expect(withLists({ shelfMinItems: 11 })).toBe(false);
     expect(withLists({ maxInterests: 0 })).toBe(false);
     expect(withLists({ pageSize: 2.5 })).toBe(false);
+    expect(withLists({ interestMaxDocumentRatio: 0 })).toBe(false);
+    expect(withLists({ interestMaxDocumentRatio: 1.2 })).toBe(false);
   });
 
   it('recusa bônus de lista negativo e modo sem λ', () => {

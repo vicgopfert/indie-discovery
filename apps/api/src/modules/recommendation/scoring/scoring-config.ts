@@ -11,6 +11,8 @@ const listsConfigSchema = z
   .object({
     maxInterests: size,
     maxInterestsRationale: z.string().min(1),
+    interestMaxDocumentRatio: z.number().gt(0).lte(1),
+    interestMaxDocumentRatioRationale: z.string().min(1),
     shelfMinItems: size,
     shelfMinItemsRationale: z.string().min(1),
     overviewMainSize: size,

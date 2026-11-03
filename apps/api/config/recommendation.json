@@ -77,6 +77,8 @@
     "lists": {
       "maxInterests": 4,
       "maxInterestsRationale": "Quantos gêneros ou temas viram interesse, cada um com uma prateleira e uma cota na lista principal (B-71). O registro da correção do F-11 fixou de 3 a 5; 4 fica no meio: a partida a frio exige ao menos 3 preferências, então quase todo perfil tem 3 interesses ou mais, e com 5 a visão geral passaria de 80 cartões. A escolha é gulosa pela cobertura da biblioteca e para antes se nenhum atributo cobrir peso novo.",
+      "interestMaxDocumentRatio": 0.4,
+      "interestMaxDocumentRatioRationale": "Um gênero ou tema presente em mais de 40% do catálogo não vira interesse. Um atributo em quase metade dos jogos cobre a biblioteca inteira e impede a escolha dos outros interesses, e uma prateleira com ele não ajuda a descobrir nada. Medido no catálogo local em 03/11/2026, o limite tira só Aventura (54%) e o tema Ação (53%); 30% daria o mesmo resultado. Esses atributos continuam na pontuação, no perfil e no motivo de cada jogo.",
       "shelfMinItems": 4,
       "shelfMinItemsRationale": "Na visão geral, a prateleira que fica com menos jogos que isso, já sem os que apareceram antes, não aparece: com 1 a 3 jogos ela parece quebrada. O interesse continua contando nas cotas da lista principal, e o \"ver mais\" dele continua existindo.",
       "overviewMainSize": 20,
