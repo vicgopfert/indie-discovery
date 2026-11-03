@@ -197,28 +197,32 @@ Todas as respostas vieram com `basis: profile` e 20 itens.
 | Só por preferências | Descobertas | 177 ms (574) | 213 ms (790) |
 | `GET /api/health`, para comparar | — | 139 ms (162) | 181 ms (274) |
 
-**Tempo no servidor** (`durationMs` do log do Render), nas 180 requisições do perfil por
-avaliações:
+**Tempo no servidor** (`durationMs` do log do Render), nas 360 requisições medidas, mediana
+(p90):
 
-| Modo | Direto no Render, mediana (p90) | Pela Vercel, mediana (p90) |
-| --- | --- | --- |
-| Populares | 64 ms (167) | 65 ms (150) |
-| Equilibrado | 59 ms (415) | 32 ms (227) |
-| Descobertas | 64 ms (148) | 96 ms (209) |
+| Perfil | Modo | Direto no Render | Pela Vercel |
+| --- | --- | --- | --- |
+| Por avaliações | Populares | 64 ms (167) | 65 ms (150) |
+| Por avaliações | Equilibrado | 59 ms (415) | 32 ms (227) |
+| Por avaliações | Descobertas | 64 ms (148) | 96 ms (209) |
+| Só por preferências | Populares | 37 ms (71) | 33 ms (102) |
+| Só por preferências | Equilibrado | 32 ms (69) | 32 ms (39) |
+| Só por preferências | Descobertas | 37 ms (107) | 37 ms (102) |
 
-No conjunto, a mediana ficou em 60 ms e o p95 em 646 ms. Do perfil só por preferências, o
-log trouxe 19 das 30 chamadas do modo Populares direto no Render: 38 ms de mediana.
+No conjunto, o perfil por avaliações ficou em 62 ms de mediana e 658 ms no p95, e o só por
+preferências em 33 ms e 213 ms.
 
 **Leitura:**
 
 - **Rede:** a maior parte do tempo. A rota de saúde, que só faz um `SELECT 1`, já leva
   139 ms daqui até o Render, e a Vercel acrescenta de 10 a 90 ms.
-- **Servidor:** de 3 a 4 vezes o tempo local (15 ms), coerente com a carga do índice no Render,
+- **Servidor:** de 2 a 4 vezes o tempo local (15 ms), coerente com a carga do índice no Render,
   que também foi muito mais lenta que na máquina local (B-31).
 - **Picos:**
-  - **o que se vê:** cerca de 1 requisição em 10 levou de 415 a 816 ms no servidor (18 das
-    180). Aparecem em todos os modos e nos dois caminhos, em intervalos regulares de cerca
-    de 3 s, e a rota de saúde não teve nenhum;
+  - **o que se vê:** acima de 400 ms no servidor, 18 das 180 requisições do perfil por
+    avaliações (de 415 a 816 ms, cerca de 1 em 10) e 7 das 180 do só por preferências (de 497
+    a 695 ms). Aparecem em todos os modos e nos dois caminhos, em intervalos regulares de cerca
+    de 3 s no perfil por avaliações, e a rota de saúde não teve nenhum;
   - **causa provável:** a falta de CPU da instância gratuita, que fica limitada depois de um
     pico de uso, ou a coleta de lixo do Node. Não foi isolada.
 - **Conclusão (RNF-03):** sem espera perceptível na demonstração. Fim a fim, a mediana ficou
