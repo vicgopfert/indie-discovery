@@ -182,7 +182,7 @@ Para um desenvolvedor só, o contrato único e o pipeline único pesam mais que 
 | `UsersModule` | Dados do usuário e modo de descoberta | `UsersService` |
 | `CatalogModule` | Busca, filtros, ficha do jogo, listas de gêneros e temas, coleções culturais | `CatalogRepository` (leitura) |
 | `LibraryModule` | Avaliações, listas e preferências de partida a frio | `LibraryRepository` (leitura) |
-| `RecommendationModule` | Índice de conteúdo em memória, pontuação, explicação | — |
+| `RecommendationModule` | Índice de conteúdo em memória, pontuação, explicação e `GET /recommendations`; usa o `CatalogModule` para o resumo dos jogos e os nomes em português | `ContentIndexService` (estado do índice, para a rota de saúde) |
 | `IngestionModule` | Cliente IGDB, mapeamento, critério indie, TF-IDF, execução | — (só carregado pela aplicação de ingestão) |
 | `HealthModule` | Saúde da API e do banco | — |
 | `PrismaModule` | Cliente Prisma único e configurado | `PrismaService` |
@@ -223,7 +223,7 @@ Prefixo global `/api`. Respostas em JSON; erros sempre no mesmo formato.
 | `PUT /api/me/preferences` | Autenticado | Troca as preferências da partida a frio pelo conjunto `{ genres, themes }` enviado, com pelo menos 3 itens e só as opções de `GET /api/features`; a primeira vez preenche `onboardingCompletedAt` (B-27) |
 | `GET /api/me/preferences` | Autenticado | Gêneros e temas escolhidos, com o nome em português. **Acrescentado no B-27 (02/11/2026):** a partida a frio pode ser refeita (F-10) e precisa mostrar a escolha anterior |
 | `PATCH /api/me` | Autenticado | Modo de descoberta (`{ discoveryMode }`); devolve o usuário como `GET /api/auth/me` |
-| `GET /api/recommendations?mode=&limit=` | Autenticado | Recomendações com motivo |
+| `GET /api/recommendations?mode=&limit=` | Autenticado | Recomendações com motivo. `mode` é `popular`, `balanced` ou `discovery`, em minúsculas como os demais parâmetros; sem ele, vale o modo salvo no usuário, e a consulta não grava a escolha (quem grava é o `PATCH /api/me`). `limit` vai de 1 a 50 (padrão 20). Responde `{ mode, basis, items }`: `mode` com os valores do banco; `basis` `profile` (pelo perfil), `popular` (perfil sem nenhum atributo a favor: os mais populares) ou `empty` (sem avaliações, listas nem preferências gravadas: a interface leva à partida a frio). Cada item traz o resumo do jogo como no catálogo, o motivo (`features`, de 1 a 3 gêneros ou temas em português na ordem da contribuição, ou `liked-game`, o jogo da biblioteca que mais pesou, com `inCatalog`, porque pode ter saído do catálogo) e `lowKnown`, só verdadeiro no modo Descobertas. A pontuação não sai na resposta. Com o índice de conteúdo carregando ou com falha, responde 503 com mensagem clara, nunca lista vazia (B-33) |
 | `GET /api/health` | Público | Saúde da API, do banco e do índice de conteúdo (`ready` com quantos jogos e quando carregou, `loading` ou `failed`). Responde 200 mesmo em `degraded`: o health check do Render aceita qualquer 2xx ou 3xx, e um código de erro faria o Render tirar do ar, ou reiniciar em ciclo, uma API que ainda serve catálogo e contas (B-31) |
 | `POST /api/internal/reload-index` | Segredo de ambiente | Recarrega o índice de conteúdo após uma ingestão, com `Authorization: Bearer <INTERNAL_RELOAD_SECRET>`, comparado em tempo constante; isenta do `OriginGuard`, porque é chamada de servidor para servidor e sem cookie. O índice novo só substitui o anterior depois de pronto; se a carga falha, o anterior continua e a rota responde 503. Chamada pelo workflow "Ingestão"; fora da documentação pública (B-31) |
 
@@ -330,8 +330,8 @@ apps/api/
 │     ├─ catalog/              controller, service, catalog.repository
 │     ├─ library/
 │     ├─ recommendation/
-│     │  ├─ content-index.ts
-│     │  ├─ scoring.ts         funções puras
+│     │  ├─ content-index.ts   índice em memória e vetor de um jogo fora dele
+│     │  ├─ scoring/           funções puras: perfil, pontuação, desempate, motivo e lista de populares
 │     │  ├─ tfidf.ts           funções puras, usadas pela ingestão e pelo índice
 │     │  └─ generate-recommendations.use-case.ts
 │     ├─ ingestion/
@@ -804,25 +804,24 @@ sequenceDiagram
     participant W as Next.js
     participant C as RecommendationController
     participant U as GenerateRecommendationsUseCase
-    participant L as LibraryRepository
+    participant L as RecommendationRepository
     participant I as ContentIndex (memória)
-    participant G as CatalogRepository
     J->>W: Abre recomendações no modo Equilibrado
     W->>C: GET /api/recommendations?mode=balanced&limit=20
     C->>U: execute(userId, mode, limit)
     U->>L: Avaliações, listas e preferências do usuário
-    L-->>U: Interações
-    alt sem avaliações nem preferências
+    L-->>U: Interações e, dos jogos fora do índice, os atributos
+    alt sem avaliações, listas nem preferências
         U-->>C: Lista vazia + indicação de onboarding
     else perfil disponível
-        U->>I: Vetores TF-IDF dos jogos com interação
+        U->>I: Vetores TF-IDF dos jogos com interação (fora do índice, com o IDF dele)
         U->>U: Monta o vetor de perfil ponderado
         U->>I: Similaridade do cosseno com os candidatos
         U->>U: score = cos - lambda(modo) x popularidade
         U->>U: Exclui jogos já avaliados, ordena e corta
         U->>U: Extrai os atributos de maior contribuição
-        U->>G: Dados de exibição dos jogos escolhidos
-        G-->>U: Nome, capa, status e link oficial
+        U->>L: Dados de exibição dos jogos escolhidos
+        L-->>U: Nome, capa, situação, data e gêneros
         U-->>C: Recomendações com justificativa
     end
     C-->>W: 200 + JSON
@@ -911,7 +910,7 @@ pop_j = log(1 + p_j/u) / log(1 + p_max/u)      popularidade normalizada entre 0 
 
 `p_j` é a fração da base de usuários da IGDB que marcou o jogo como "quero jogar" (primitivo "Want to Play" do PopScore), o mesmo indicador para jogos lançados e não lançados; zero quando não houver valor. **Revisto no B-13:** o valor não é uma contagem. Todos os 16.730 valores do catálogo aceito são múltiplos inteiros de 1/881.744, então o sistema reconstrói a contagem dividindo pela unidade `u`, a menor fração positiva da execução; se algum valor sair da grade, a execução falha em vez de normalizar errado. `p_max` é o máximo do **catálogo aceito** (763 pessoas em 23/10/2026), não o da IGDB inteira (1.708). Com o valor bruto na fórmula, `log(1 + p) ≈ p` e a normalização vira linear: a mediana de `pop_j` sairia 0,0066; com a contagem, sai 0,27, e o p90, 0,57. Limitação: a IGDB recalcula o valor todo dia, mas o sistema só o atualiza a cada ingestão. **Decidido no M0** (relatório do M0, `docs/m0-relatorio-igdb.md`, seção 8): substitui a proposta original (contagem de avaliações e, para não lançados, `hypes`), porque existe para 91% dos jogos lançados e 43% dos não lançados, enquanto as avaliações existem em 47% do catálogo (praticamente só lançados) e os `hypes` em 27% dos não lançados. A escala logarítmica evita que poucos sucessos dominem a normalização.
 
-**4. Seleção.** Candidatos são todos os jogos indie que o usuário não avaliou e que não estão em nenhuma de suas listas, com cosseno acima de zero, para que todo jogo recomendado tenha ao menos um atributo a favor; jogo com vetor vazio fica de fora. Ordenação por pontuação. **Desempate, decidido no B-32:** sorteio fixo por usuário (hash de `userId + gameId`, com o id do jogo como último critério), para que o mesmo estado produza sempre a mesma lista e usuários com gosto parecido vejam empatados diferentes. A popularidade não entra no desempate (decisão do B-12): ela já está no termo λ do modo e, no desempate, contaria duas vezes, uma delas invisível. Os empates são frequentes: no modo Equilibrado, o sorteio decide boa parte do top-20 (medições em `docs/recomendacao.md`). Filtros opcionais da requisição (por exemplo, só "em breve") são aplicados antes do corte.
+**4. Seleção.** Candidatos são todos os jogos indie que o usuário não avaliou e que não estão em nenhuma de suas listas, com cosseno acima de zero, para que todo jogo recomendado tenha ao menos um atributo a favor; jogo com vetor vazio fica de fora. Ordenação por pontuação. **Desempate, decidido no B-32:** sorteio fixo por usuário (hash de `userId + gameId`, com o id do jogo como último critério), para que o mesmo estado produza sempre a mesma lista e usuários com gosto parecido vejam empatados diferentes. A popularidade não entra no desempate (decisão do B-12): ela já está no termo λ do modo e, no desempate, contaria duas vezes, uma delas invisível. Os empates são frequentes: no modo Equilibrado, o sorteio decide boa parte do top-20 (medições em `docs/recomendacao.md`). A rota não recebe filtros (decidido no B-33): nenhuma tela do P0 os usa.
 
 **5. Explicação.** A contribuição de cada atributo k para a similaridade é `u_k · v_jk / (‖u‖ · ‖v_j‖)`. Os 1 a 3 gêneros ou temas com maior contribuição positiva viram o texto "Recomendado por: Roguelike, Fantasia". **Decidido no B-32:** palavras-chave nunca viram motivo, porque não têm tradução e, raras, produzem motivos como "anxiety" (B-12). Sem gênero ou tema a favor, o motivo é "Porque você gostou de `<jogo>`": o jogo da biblioteca de maior `w_i · cos(v_i, v_j)`. A mesma reserva cobre os blocos do B-62 e do B-63, que não viram motivo. No modo Descobertas, o cartão acrescenta "pouco conhecido" quando o termo de popularidade foi decisivo: o jogo ficaria fora da lista se a ordem fosse só pelo cosseno.
 
@@ -925,11 +924,12 @@ Todos os pesos (bônus de lista, β, peso por tipo de atributo, limites de desca
 
 | Situação | Comportamento |
 | --- | --- |
-| Usuário sem avaliações nem preferências | A API devolve lista vazia com indicação de onboarding; a interface leva à partida a frio |
+| Usuário sem avaliações, listas nem preferências | A API devolve lista vazia com `basis: empty`; a interface leva à partida a frio. A decisão é pelo que está gravado: quem tem preferências que saíram do índice recebe os populares, e não volta para a partida a frio (B-33) |
+| Jogo da biblioteca que saiu do catálogo | Continua no perfil: o vetor é montado com os atributos dele no banco e o IDF do índice. Pode ser citado no motivo "Porque você gostou de", marcado como fora do catálogo (B-33) |
 | Perfil só com notas negativas ou neutras (vetor sem componente positiva) | Recomenda os jogos mais populares dos gêneros preferidos, se houver, ou do catálogo; o cartão informa que a lista vai melhorar com mais avaliações |
 | Poucos candidatos depois dos filtros | Devolve os que houver, sem completar com jogos fora do filtro |
 | IGDB indisponível | Nenhum efeito sobre o usuário: a recomendação usa apenas dados já ingeridos (RNF-02) |
-| Índice ainda carregando na inicialização | Rota de recomendações responde 503 com mensagem clara; a rota de saúde informa o estado |
+| Índice carregando na inicialização ou com falha | Rota de recomendações responde 503 com mensagem clara; a rota de saúde informa o estado |
 
 ### Avaliação da qualidade (F-14, B-37)
 
@@ -1042,7 +1042,7 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | B-62 | Modo de jogo e perspectiva como quarto bloco do vetor de conteúdo (decisão do M0, seção 8.9) | P0 | B-12, B-13, B-69 | Ingestão grava os dois campos; bloco com fatia própria em `config/recommendation.json`, fora da explicação ao jogador (F-11); a fatia só fica acima de zero se melhorar o acerto@10 no protocolo do B-37 (a queda de vetores idênticos de 21% para 13,4% mede distinção, não qualidade) | M |
 | B-63 | Palavras do resumo como bloco do vetor de conteúdo, em TF-IDF e sem embeddings (decisão do M0, seção 8.9) | P0 | B-31, B-62 | Pesos das palavras calculados em memória pela API a partir do resumo, com a lista de palavras irrelevantes e os limites de frequência em `config/recommendation.json`; fora da explicação ao jogador por enquanto (entrar ou não decide-se no B-37, com exemplos reais); a fatia só fica acima de zero se melhorar o acerto@10 no B-37. Pontos a observar no B-37, sem tratar antes: resumos só em inglês, sem radicalização, nomes próprios e linguagem de divulgação. Primeiro item do plano de corte depois dos P1 | M |
 | B-32 | Núcleo de pontuação em funções puras: perfil ponderado, cosseno, termo de popularidade, seleção, desempate e explicação (F-11) | P0 | B-31 | Testes unitários com catálogo sintético comprovam ordem esperada, exclusão de já avaliados, efeito de nota negativa e atributos da explicação. **Concluído em 02/11/2026:** bônus de listas somados, motivos só por gênero e tema com a reserva "Porque você gostou de", desempate por sorteio fixo por usuário; de 4 a 15 ms por recomendação no catálogo local (`docs/recomendacao.md`) | G |
-| B-33 | `GenerateRecommendationsUseCase` e `GET /recommendations` com os três modos e casos-limite (F-11, F-12) | P0 | B-32, B-27, B-17 | Resposta inclui motivo; sem perfil indica onboarding; com o índice de conteúdo indisponível (`loading` ou `failed`), responde 503 com mensagem clara, nunca lista vazia (decidido no B-31); tempo de resposta medido com o catálogo real (**marco M2**) | M |
+| B-33 | `GenerateRecommendationsUseCase` e `GET /recommendations` com os três modos e casos-limite (F-11, F-12) | P0 | B-32, B-27, B-17 | Resposta inclui motivo; sem perfil indica onboarding; com o índice de conteúdo indisponível (`loading` ou `failed`), responde 503 com mensagem clara, nunca lista vazia (decidido no B-31); tempo de resposta medido com o catálogo real (**marco M2**). **Concluído em 03/11/2026:** modo opcional na consulta, com o salvo como padrão; motivo com os nomes em português; o jogo da biblioteca fora do catálogo continua no perfil, com o vetor montado a partir do banco; 15 ms de mediana no servidor com o catálogo local (`docs/recomendacao.md`); a medição em produção entra depois do deploy | M |
 | B-34 | Fluxo de partida a frio: escolha de gêneros e temas e avaliação opcional de até 4 jogos (F-10) | P0 | B-33, B-28 | Novo usuário sai do onboarding com recomendações, mesmo pulando as avaliações | M |
 | B-35 | Página de recomendações com cartões, motivo e seletor de modo (F-11, F-12) | P0 | B-33, B-40 | Trocar o modo atualiza a lista e persiste a escolha | M |
 | B-36 | E2e de recomendação e teste de determinismo | P0 | B-33 | Avaliar um jogo muda a lista seguinte; mesmo estado gera mesma lista; modos produzem listas diferentes | P |
@@ -1089,6 +1089,7 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | B-66 | Vínculo da conta Steam (F-31) | P1 | B-17, B-64 | `User.steamId` opcional e único; retorno da Steam validado com `check_authentication` antes de gravar; URL do avatar público gravada em `User.avatarUrl` e exibida no lugar das iniciais; desvincular apaga o Steam ID e o avatar vindo da Steam; botão na página de perfil | M |
 | B-67 | Importação da wishlist da Steam (F-30) | P1 | B-27, B-65, B-66 | Chamada da Web API da Steam testada com servidor simulado, inclusive a resposta vazia de perfil privado; resumo com importados e ignorados; aviso de wishlist possivelmente privada; reimportar não duplica; antes de começar, conferir os termos de uso da Web API e o endpoint vigente da wishlist | M |
 | B-68 | Login com Google (F-32) | P1 | B-17, B-64 | Fluxo OpenID Connect com `state` e PKCE; `passwordHash` opcional para contas sem senha; vínculo pelo e-mail verificado; URL da foto da conta Google gravada em `User.avatarUrl`; botão nas páginas de entrar e cadastrar; e2e com provedor simulado | M |
+| B-70 | `popularityNorm` calculado na carga do índice de conteúdo, como os pesos TF-IDF no B-31, e não gravado pela ingestão (decidido no B-33) | P1 | B-31 | O catálogo e as coleções ordenam por `popularityCount`, que dá a mesma ordem; a ingestão deixa de regravar quase todo `Game` quando a popularidade máxima muda (18.609 linhas mortas em 22.856 na primeira ingestão em produção depois do B-31); migration remove a coluna | P |
 
 ### Capacidade
 
