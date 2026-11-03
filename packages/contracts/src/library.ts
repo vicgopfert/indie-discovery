@@ -64,6 +64,14 @@ export const LibrarySchema = z.object({
 
 export type Library = z.infer<typeof LibrarySchema>;
 
+// A nota e as listas de um jogo só, para a ficha mostrar o estado sem pedir a biblioteca inteira.
+export const GameLibraryStateSchema = z.object({
+  rating: RatingSchema.nullable(),
+  lists: z.array(ListTypeSchema),
+});
+
+export type GameLibraryState = z.infer<typeof GameLibraryStateSchema>;
+
 export const PREFERENCES_MIN = 3;
 export const PREFERENCES_MAX_PER_TYPE = 50;
 

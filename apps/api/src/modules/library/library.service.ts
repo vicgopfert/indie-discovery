@@ -1,6 +1,7 @@
 import type {
   FeatureQuery,
   GameLists,
+  GameLibraryState,
   Library,
   LibraryGame,
   ListType,
@@ -78,6 +79,18 @@ export class LibraryService {
         COMPLETED: entriesOf('COMPLETED'),
         WANT_TO_PLAY: entriesOf('WANT_TO_PLAY'),
       },
+    };
+  }
+
+  // Vale também para o jogo que saiu do catálogo, que continua na biblioteca.
+  async findGameState(userId: string, slug: string): Promise<GameLibraryState> {
+    const { rating, lists } = await this.library.findGameState(
+      userId,
+      await this.storedGameId(slug),
+    );
+    return {
+      rating: rating && { score: rating.score, updatedAt: rating.updatedAt.toISOString() },
+      lists,
     };
   }
 

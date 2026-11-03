@@ -49,6 +49,7 @@ class FakeLibrary implements Pick<
   | 'addToList'
   | 'removeFromList'
   | 'findLibrary'
+  | 'findGameState'
   | 'findFeatureIds'
   | 'replacePreferences'
   | 'findPreferences'
@@ -105,6 +106,16 @@ class FakeLibrary implements Pick<
           game: gone!,
         },
       ],
+    });
+  }
+
+  findGameState(_userId: string, gameId: string) {
+    const score = this.ratings.get(gameId);
+    return Promise.resolve({
+      rating: score === undefined ? null : { score, updatedAt: new Date('2026-11-02T12:00:00Z') },
+      lists: [...this.lists]
+        .filter((key) => key.startsWith(`${gameId}:`))
+        .map((key) => key.split(':')[1] as ListType),
     });
   }
 
@@ -192,6 +203,31 @@ describe('LibraryService', () => {
       await service.removeFromList('u1', 'fora-do-catalogo', 'FAVORITE');
 
       expect(library.lists.size).toBe(0);
+    });
+  });
+
+  describe('estado de um jogo', () => {
+    it('traz a nota e as listas, ou nota nula e nenhuma lista', async () => {
+      expect(await service.findGameState('u1', 'celeste')).toEqual({ rating: null, lists: [] });
+
+      await service.rate('u1', 'celeste', 4);
+      await service.addToList('u1', 'celeste', 'FAVORITE');
+
+      expect(await service.findGameState('u1', 'celeste')).toEqual({
+        rating: { score: 4, updatedAt: '2026-11-02T12:00:00.000Z' },
+        lists: ['FAVORITE'],
+      });
+    });
+
+    it('vale para o jogo fora do catálogo, mas não para o inexistente', async () => {
+      library.ratings.set('id-fora-do-catalogo', 3);
+
+      expect(await service.findGameState('u1', 'fora-do-catalogo')).toMatchObject({
+        rating: { score: 3 },
+      });
+      await expect(service.findGameState('u1', 'nao-existe')).rejects.toThrow(
+        new NotFoundException('Jogo não encontrado.'),
+      );
     });
   });
 

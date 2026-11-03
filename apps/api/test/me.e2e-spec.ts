@@ -1,5 +1,6 @@
 import {
   ApiErrorSchema,
+  GameLibraryStateSchema,
   GameListsSchema,
   LibrarySchema,
   PreferencesSchema,
@@ -84,6 +85,7 @@ describe('Biblioteca, preferências e modo (/me)', () => {
       server().put('/api/me/lists/favorite/celeste').set('Origin', origin),
       server().delete('/api/me/lists/favorite/celeste').set('Origin', origin),
       server().get('/api/me/library'),
+      server().get('/api/me/library/celeste'),
       server().put('/api/me/preferences').set('Origin', origin).send({}),
       server().get('/api/me/preferences'),
       server().patch('/api/me').set('Origin', origin).send({ discoveryMode: 'DISCOVERY' }),
@@ -205,6 +207,26 @@ describe('Biblioteca, preferências e modo (/me)', () => {
       });
     });
 
+    it('traz o estado de um jogo só, também depois que ele sai do catálogo', async () => {
+      const state = async (slug: string) => {
+        const response = await as(jogadora).get(`/api/me/library/${slug}`);
+        expect(response.status).toBe(200);
+        return GameLibraryStateSchema.parse(response.body);
+      };
+      expect(await state('celeste')).toEqual({ rating: null, lists: [] });
+
+      await as(jogadora).put('/api/me/ratings/celeste', { score: 4 });
+      await as(jogadora).put('/api/me/lists/favorite/celeste');
+      await as(jogadora).put('/api/me/lists/completed/celeste');
+      await prisma.game.update({ where: { slug: 'celeste' }, data: { inCatalog: false } });
+
+      expect(await state('celeste')).toMatchObject({
+        rating: { score: 4 },
+        lists: ['FAVORITE', 'COMPLETED'],
+      });
+      expect((await as(jogadora).get('/api/me/library/nao-existe')).status).toBe(404);
+    });
+
     it('cada usuário vê e altera só os próprios dados', async () => {
       await as(jogadora).put('/api/me/ratings/celeste', { score: 2 });
       await as(outra).put('/api/me/ratings/celeste', { score: 5 });
@@ -213,6 +235,10 @@ describe('Biblioteca, preferências e modo (/me)', () => {
       await as(jogadora).delete('/api/me/lists/favorite/celeste');
 
       expect((await library(jogadora)).ratings).toMatchObject([{ score: 2 }]);
+      expect((await as(jogadora).get('/api/me/library/celeste')).body).toMatchObject({
+        rating: { score: 2 },
+        lists: [],
+      });
       expect(await library(outra)).toMatchObject({
         ratings: [{ score: 5 }],
         lists: { FAVORITE: [{ game: { slug: 'celeste' } }] },

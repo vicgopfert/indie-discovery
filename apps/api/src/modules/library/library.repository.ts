@@ -90,6 +90,20 @@ export class LibraryRepository {
     return { ratings, listEntries };
   }
 
+  async findGameState(
+    userId: string,
+    gameId: string,
+  ): Promise<{ rating: { score: number; updatedAt: Date } | null; lists: ListType[] }> {
+    const [rating, lists] = await Promise.all([
+      this.prisma.rating.findUnique({
+        where: { userId_gameId: { userId, gameId } },
+        select: { score: true, updatedAt: true },
+      }),
+      this.listsOf(userId, gameId),
+    ]);
+    return { rating, lists };
+  }
+
   async findFeatureIds(type: FeatureType, slugs: string[]): Promise<string[]> {
     if (slugs.length === 0) return [];
     const features = await this.prisma.feature.findMany({
