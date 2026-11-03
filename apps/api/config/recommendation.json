@@ -58,5 +58,21 @@
       "samsung gear vr support",
       "full controller support"
     ]
+  },
+  "scoring": {
+    "listBonus": {
+      "FAVORITE": 2,
+      "COMPLETED": 1,
+      "WANT_TO_PLAY": 0.5
+    },
+    "listBonusRationale": "Somado à nota (nota − 3) para formar o peso do jogo no perfil. Um jogo em duas listas (favorito com concluído ou com quero jogar) soma os dois bônus, porque cada lista é um sinal independente. Valores iniciais da proposta; a calibração é do B-37.",
+    "preferenceWeight": 1,
+    "preferenceWeightRationale": "β: peso de cada gênero ou tema escolhido na partida a frio, somado ao perfil como vetor unitário daquele atributo. Valor inicial da proposta; a calibração é do B-37.",
+    "popularityWeightByMode": {
+      "POPULAR": -0.2,
+      "BALANCED": 0,
+      "DISCOVERY": 0.3
+    },
+    "popularityWeightRationale": "λ do modo em score = cos(u, v) − λ · pop: negativo favorece os populares, positivo os pouco conhecidos, e o Equilibrado não usa a popularidade. Valores iniciais da proposta; a calibração é do B-37."
   }
 }
