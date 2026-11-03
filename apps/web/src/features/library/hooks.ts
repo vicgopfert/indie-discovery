@@ -2,11 +2,10 @@ import type { GameLibraryState } from '@indie/contracts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isUnauthorized } from '@/lib/api-client';
 import { clearAccount } from '@/features/auth/hooks';
+import { RECOMMENDATIONS_QUERY_KEY } from '@/features/recommendations/hooks';
 import { applyLibraryAction, getGameLibrary, type LibraryAction } from './api';
 
 export const LIBRARY_QUERY_KEY = ['library'] as const;
-// A página de recomendações (B-35) usa esta chave: o que o jogador muda aqui vale na próxima lista.
-export const RECOMMENDATIONS_QUERY_KEY = ['recommendations'] as const;
 
 const gameKey = (slug: string) => [...LIBRARY_QUERY_KEY, slug] as const;
 
