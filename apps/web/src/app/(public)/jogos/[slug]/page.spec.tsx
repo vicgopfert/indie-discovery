@@ -1,8 +1,9 @@
 import type { GameDetail } from '@indie/contracts';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { sampleGameDetail } from '@/test/catalog';
 import { apiError, stubFetch } from '@/test/fetch';
+import { renderWithQuery } from '@/test/render';
 import GamePage, { generateMetadata } from './page';
 
 const NOT_FOUND = 'NEXT_NOT_FOUND';
@@ -14,12 +15,16 @@ vi.mock('next/navigation', () => ({
 
 const props = (slug = 'celeste') => ({ params: Promise.resolve({ slug }) });
 
-const stubGame = (game: GameDetail) => stubFetch(() => Response.json(game));
+// Quem abre a ficha nestes testes não entrou: a sessão responde 401.
+const stubGame = (game: GameDetail) =>
+  stubFetch((path) =>
+    path === '/api/auth/me' ? apiError(401, 'Sessão ausente ou expirada') : Response.json(game),
+  );
 
 // O valor de um item da ficha, como "Português" ou "Publicação".
 const fact = (term: string) => screen.getByText(term, { selector: 'dt' }).nextElementSibling;
 
-const renderPage = async (slug?: string) => render(await GamePage(props(slug)));
+const renderPage = async (slug?: string) => renderWithQuery(await GamePage(props(slug)));
 
 describe('GamePage', () => {
   it('busca o jogo pelo slug e mostra a ficha', async () => {
@@ -34,6 +39,17 @@ describe('GamePage', () => {
     expect(fact('Publicação')).toHaveTextContent('Maddy Makes Games');
     expect(fact('País do estúdio')).toHaveTextContent('Canadá (fonte: IGDB)');
     expect(fact('Português')).toHaveTextContent('Português (Brasil): interface e legendas');
+  });
+
+  it('convida quem não entrou a entrar para avaliar, voltando para a ficha', async () => {
+    stubGame(sampleGameDetail());
+
+    await renderPage();
+
+    expect(await screen.findByRole('link', { name: 'Entre' })).toHaveAttribute(
+      'href',
+      '/entrar?next=%2Fjogos%2Fceleste',
+    );
   });
 
   it('a capa grande vem da CDN da IGDB, carregada logo', async () => {
