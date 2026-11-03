@@ -99,10 +99,10 @@ Entrega: avaliações e listas pela API; índice carregado com memória medida; 
 Entrega: **M2**.
 
 - [x] **B-32** (G, E5) Núcleo de pontuação em funções puras (perfil ponderado, cosseno, popularidade, seleção, desempate, explicação) — concluído em 02/11/2026: bônus de listas somados; motivos só por gênero e tema, com a reserva "Porque você gostou de"; desempate por sorteio fixo por usuário; "pouco conhecido" pelo contrafactual sem popularidade; de 4 a 15 ms por recomendação no catálogo local (`docs/recomendacao.md`)
-- [ ] **B-33** (M, E5) `GenerateRecommendationsUseCase` + `GET /recommendations` — **marco M2**
-  - Com o índice de conteúdo indisponível (`loading` ou `failed`), `GET /recommendations` responde 503 com mensagem clara, nunca lista vazia (decidido no B-31: a API sobe mesmo sem o índice)
-  - Jogo da biblioteca fora do catálogo não está no índice e fica fora do perfil: decidir se o vetor dele é montado a partir do banco, com o IDF do índice (levantado no B-32)
-  - Preferências são gravadas pelo id do atributo, que o índice não guarda: acrescentar o mapeamento para a posição no índice (levantado no B-32)
+- [x] **B-33** (M, E5) `GenerateRecommendationsUseCase` + `GET /recommendations` — **marco M2** — concluído em 03/11/2026: modo opcional na consulta, com o salvo como padrão; motivo com os nomes em português; `basis` `empty` pelo estado gravado; 15 ms de mediana no servidor, no catálogo local (`docs/recomendacao.md`); a medição em produção entra depois do deploy
+  - [x] Com o índice de conteúdo indisponível (`loading` ou `failed`), `GET /recommendations` responde 503 com mensagem clara, nunca lista vazia (decidido no B-31: a API sobe mesmo sem o índice); o filtro de erros passou a manter a mensagem de um 5xx lançado de propósito
+  - [x] Jogo da biblioteca fora do catálogo: o vetor é montado com os atributos do banco e o IDF do índice, e ele continua no perfil (levantado no B-32)
+  - [x] Preferências gravadas pelo id do atributo: o índice guarda o id e a posição de cada atributo (levantado no B-32)
 
 ## S9 — Recomendação e coleções na interface (semanas 17–18)
 
@@ -149,7 +149,6 @@ Entrega: dois ensaios realizados, texto entregue, slides revisados.
 
 - [ ] A ficha de um jogo fora do catálogo deveria abrir para quem já o tem na biblioteca? Decidir no B-28 ou no B-29, com a interface pronta (levantada no B-27)
 - [ ] Estar na biblioteca de algum usuário da plataforma deveria contar como sinal de interesse no critério indie? (levantada no B-27)
-- [ ] O `popularityNorm` deveria sair do banco e ser calculado na carga do índice, como os pesos TF-IDF no B-31? Hoje, quando a popularidade máxima muda, toda carga regrava quase todo `Game`: 18.609 linhas mortas em 22.856 na primeira ingestão em produção depois do B-31. O catálogo ordena por `popularityNorm`, mas a ordem é a mesma de `popularityCount`, porque a normalização, `log(1 + p) / log(1 + p_max)`, só cresce com a contagem. Decidir no B-33 (levantada no B-31)
 
 ---
 
@@ -166,6 +165,7 @@ Entrega: dois ensaios realizados, texto entregue, slides revisados.
 - [ ] **B-66** (M) Vínculo da conta Steam à conta do usuário, com o avatar público da Steam no lugar das iniciais
 - [ ] **B-67** (M) Importação da wishlist da Steam para a lista "quero jogar", com resumo de importados e aviso de wishlist privada
 - [ ] **B-68** (M) Login com Google, com a foto da conta Google como avatar
+- [ ] **B-70** (P) `popularityNorm` calculado na carga do índice, e não gravado pela ingestão (decidido no B-33)
 
 ## P2 — pós-defesa
 

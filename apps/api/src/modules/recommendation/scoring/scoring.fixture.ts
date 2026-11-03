@@ -6,15 +6,45 @@ import { readScoringConfig, type ScoringConfig } from './scoring-config';
 
 const { GENRE, THEME, KEYWORD } = FeatureType;
 
+export const featureId = (slug: string) => `f-${slug}`;
+
 // Na mesma ordem do repositório: tipo e igdbId.
 const FEATURES = [
-  { type: GENRE, igdbId: 1, slug: 'roguelike', name: 'Roguelike', idf: 1.5 },
-  { type: GENRE, igdbId: 2, slug: 'platform', name: 'Platform', idf: 1.2 },
-  { type: GENRE, igdbId: 3, slug: 'puzzle', name: 'Puzzle', idf: 1.4 },
-  { type: THEME, igdbId: 1, slug: 'fantasy', name: 'Fantasy', idf: 1 },
-  { type: THEME, igdbId: 2, slug: 'horror', name: 'Horror', idf: 1.6 },
-  { type: KEYWORD, igdbId: 1, slug: 'pixel-art', name: 'pixel art', idf: 1.1 },
-  { type: KEYWORD, igdbId: 2, slug: 'rock-climbing', name: 'rock climbing', idf: 3 },
+  {
+    id: featureId('roguelike'),
+    type: GENRE,
+    igdbId: 1,
+    slug: 'roguelike',
+    name: 'Roguelike',
+    idf: 1.5,
+  },
+  {
+    id: featureId('platform'),
+    type: GENRE,
+    igdbId: 2,
+    slug: 'platform',
+    name: 'Platform',
+    idf: 1.2,
+  },
+  { id: featureId('puzzle'), type: GENRE, igdbId: 3, slug: 'puzzle', name: 'Puzzle', idf: 1.4 },
+  { id: featureId('fantasy'), type: THEME, igdbId: 1, slug: 'fantasy', name: 'Fantasy', idf: 1 },
+  { id: featureId('horror'), type: THEME, igdbId: 2, slug: 'horror', name: 'Horror', idf: 1.6 },
+  {
+    id: featureId('pixel-art'),
+    type: KEYWORD,
+    igdbId: 1,
+    slug: 'pixel-art',
+    name: 'pixel art',
+    idf: 1.1,
+  },
+  {
+    id: featureId('rock-climbing'),
+    type: KEYWORD,
+    igdbId: 2,
+    slug: 'rock-climbing',
+    name: 'rock climbing',
+    idf: 3,
+  },
 ];
 
 // [atributos, popularidade normalizada]
@@ -35,24 +65,35 @@ const GAMES: Record<string, [string[], number]> = {
 
 export const scoringConfig: ScoringConfig = readScoringConfig();
 
-export function scoringIndex(): ContentIndex {
+// Sem alguns jogos, para simular os que saíram do catálogo: o IDF dos atributos não muda.
+export function scoringIndex({ without = [] }: { without?: string[] } = {}): ContentIndex {
   const position = new Map(FEATURES.map((f, i) => [f.slug, i]));
   return buildContentIndex(
     {
       features: FEATURES,
-      games: Object.entries(GAMES).map(([slug, [features, popularityNorm]]) => ({
-        id: gameId(slug),
-        slug,
-        releaseStatus: ReleaseStatus.RELEASED,
-        popularityNorm,
-        featurePositions: features.map((f) => position.get(f)!),
-      })),
+      games: Object.entries(GAMES)
+        .filter(([slug]) => !without.includes(slug))
+        .map(([slug, [features, popularityNorm]]) => ({
+          id: gameId(slug),
+          slug,
+          releaseStatus: ReleaseStatus.RELEASED,
+          popularityNorm,
+          featurePositions: features.map((f) => position.get(f)!),
+        })),
     },
     readTfidfConfig(),
   );
 }
 
 export const gameId = (slug: string) => `g-${slug}`;
+
+// Os atributos do jogo como o banco os guarda, para montar o vetor de quem está fora do índice.
+export function featuresOf(slug: string): { type: FeatureType; igdbId: number }[] {
+  return GAMES[slug]![0].map((feature) => {
+    const { type, igdbId } = FEATURES.find((f) => f.slug === feature)!;
+    return { type, igdbId };
+  });
+}
 
 export function gameOf(index: ContentIndex, slug: string): IndexedGame {
   return index.games[index.positionByGameId.get(gameId(slug))!]!;

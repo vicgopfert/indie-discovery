@@ -15,8 +15,14 @@ describe('recommend', () => {
   });
   const slugs = (result: ReturnType<typeof recommend>) => result.items.map(({ game }) => game.slug);
 
-  it('sem avaliações, listas nem preferências, não recomenda e indica a partida a frio', () => {
-    expect(recommend(index, input({}), scoringConfig)).toEqual({ basis: 'empty', items: [] });
+  // O caso de uso manda para a partida a frio antes; aqui chega quem só tem preferências que
+  // saíram do índice.
+  it('com o perfil vazio, recorre aos populares do catálogo inteiro, sem motivo', () => {
+    const result = recommend(index, input({ limit: 2 }), scoringConfig);
+
+    expect(result.basis).toBe('popular');
+    expect(slugs(result)).toEqual(['popular-rogue', 'hades']);
+    expect(result.items.map(({ reason }) => reason)).toEqual([null, null]);
   });
 
   it('recomenda pelo perfil, com motivo em cada item', () => {

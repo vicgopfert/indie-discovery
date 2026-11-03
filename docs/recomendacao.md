@@ -1,10 +1,11 @@
-# Núcleo de pontuação da recomendação (B-32)
+# Recomendação: núcleo de pontuação (B-32) e rota (B-33)
 
-Funções puras em `apps/api/src/modules/recommendation/scoring/`; pesos na seção `scoring`
-de `apps/api/config/recommendation.json`. O núcleo recebe o índice de conteúdo (B-31) e o
-estado do usuário já carregado (avaliações, listas, preferências e modo) e devolve a
-lista ordenada, com o motivo de cada jogo. Ler o banco, montar a resposta da API e traduzir
-os nomes é do B-33.
+O núcleo são funções puras em `apps/api/src/modules/recommendation/scoring/`, com os pesos
+na seção `scoring` de `apps/api/config/recommendation.json`. Ele recebe o índice de
+conteúdo (B-31) e o estado do usuário já carregado (avaliações, listas, preferências e modo)
+e devolve a lista ordenada, com o motivo de cada jogo. O `GenerateRecommendationsUseCase`
+lê o estado no banco, chama o núcleo e monta a resposta de `GET /api/recommendations`
+(seção "A rota").
 
 ## Como funciona
 
@@ -32,8 +33,9 @@ os nomes é do B-33.
    candidato tiver um deles, ou do catálogo inteiro. O modo não muda essa lista, e o motivo
    são os preferidos que o jogo tem; no catálogo inteiro, não há motivo.
 
-A resposta indica a base da lista: `profile` (pelo perfil), `popular` (o caso 8) ou
-`empty` (sem avaliações, listas nem preferências: o jogador vai para a partida a frio).
+O núcleo indica a base da lista: `profile` (pelo perfil) ou `popular` (o caso 8, que
+inclui o perfil vazio). A rota acrescenta `empty`, decidido antes do núcleo (seção "A
+rota").
 
 ## Desempate: por que o sorteio não contradiz o B-12
 
@@ -116,12 +118,60 @@ mais jogos). Os blocos do B-62 e do B-63 diminuem esses empates, e o B-37 mede o
   λ = 0,3, a popularidade muda a maior parte da lista. A calibração do λ é do B-37, e a
   forma de exibir a marca é do B-35.
 
-## Limitações e pendências para o B-33
+## A rota (B-33)
 
-- **Jogo da biblioteca fora do catálogo:** o índice só tem os jogos do catálogo, e o
-  núcleo só usa no perfil os jogos que chegam com vetor. Sem vetor, o jogo só sai dos
-  candidatos. Pela decisão do B-27, ele continua na biblioteca; o B-33 decide se monta
-  esse vetor a partir do banco, com o IDF do índice.
-- **Preferências:** chegam ao núcleo como posições no índice. As preferências são gravadas
-  pelo id do atributo, que o índice ainda não guarda; o B-33 acrescenta o mapeamento.
+`GET /api/recommendations?mode=&limit=`, autenticada. O contrato está em
+`packages/contracts/src/recommendation.ts` e no Swagger.
+
+1. **Índice indisponível:** com o índice carregando ou com falha, responde 503 com "As
+   recomendações ainda não estão disponíveis; tente novamente em alguns instantes.", nunca
+   lista vazia, que o jogador leria como falta de jogos para o gosto dele. O filtro de erros
+   mantém a mensagem de um 5xx lançado de propósito e o registra como aviso; erro inesperado
+   e 500 continuam com a mensagem genérica.
+2. **Modo e limite:** `mode` em minúsculas e opcional; sem ele, vale o salvo no usuário. A
+   consulta não grava a escolha: quem grava é o `PATCH /api/me`. `limit` de 1 a 50, padrão
+   20.
+3. **Estado do usuário:** avaliações, listas e preferências numa só transação. Nota e listas
+   do mesmo jogo viram uma interação só.
+4. **Partida a frio (`empty`):** decidida pelo que está gravado, e não pelo que o índice
+   reconhece. Uma preferência sem posição no índice (um gênero que caiu abaixo do mínimo de
+   jogos, com IDF zero) é ignorada; se só sobrar ela, o perfil fica vazio e a lista é a de
+   populares, em vez de mandar de volta para a partida a frio quem acabou de fazê-la.
+5. **Jogo da biblioteca fora do catálogo:** o índice só tem os jogos do catálogo, mas o jogo
+   que saiu dele continua na biblioteca (B-27) e no perfil. Os atributos dele vêm do banco, e
+   o vetor é montado com o mesmo `tfidfVector` e o IDF do índice: atributo fora do índice fica
+   de fora, como nos outros jogos. O índice e os filtros de candidatos do B-32 não mudam.
+   - **Por que importa:** pelas medições do B-61 e do B-13, entram cerca de 65 jogos por dia
+     na carência, e de 84% a 89% deles saem 180 dias depois, a partir de abril de 2027. São
+     os jogos que mais vão estar nas bibliotecas; deixá-los fora do perfil o pioraria aos
+     poucos, sem erro visível.
+   - **No motivo:** "Porque você gostou de" pode citar esse jogo. Ele vem com
+     `inCatalog: false`, e a interface o mostra sem link, como na biblioteca.
+6. **Resposta:** o resumo de cada jogo, como no catálogo, numa consulta só para os itens e os
+   jogos citados nos motivos. Os gêneros e temas do motivo vêm com o nome em português, na
+   ordem da contribuição, e os escondidos dos filtros ficam de fora. Um jogo que saiu do
+   catálogo depois da última carga do índice sai da lista, que fica menor até a recarga.
+7. **Pontuação:** não sai na resposta. Não é informação para o jogador, e o B-37 chama as
+   funções puras direto.
+
+### Tempo de resposta no catálogo local (03/11/2026)
+
+Os mesmos perfis da medição do B-32 (semente fixa), gravados como contas de teste no banco
+local e apagados depois: 200 por avaliações e 200 só por preferências, 20 itens, os três
+modos. A API rodou com o build de produção (`node dist/main.js`), e o tempo inclui o banco,
+a pontuação e a montagem da resposta.
+
+| Perfis | Populares | Equilibrado | Descobertas |
+| --- | --- | --- | --- |
+| Por avaliações, mediana (p95) | 17,5 ms (20,8) | 16,8 ms (20,1) | 21,0 ms (25,6) |
+| Só por preferências, mediana (p95) | 11,3 ms (14,6) | 11,1 ms (14,9) | 12,5 ms (17,8) |
+
+A tabela traz o tempo medido pelo cliente, na mesma máquina. No log da API, as 1.200 requisições ficaram
+em 15 ms de mediana, 21 ms no p95 e 54 ms no máximo. O tempo em produção é medido depois do
+deploy (RNF-03).
+
+## Limitações
+
 - **Lista de populares:** não respeita o modo, como previsto na proposta.
+- **Filtros:** a rota não recebe filtros (por exemplo, só "em breve"), porque nenhuma tela do
+  P0 os usa (decidido no B-33).
