@@ -1,3 +1,4 @@
+import { RECOMMENDATION_REASONS_MAX } from '@indie/contracts';
 import { FeatureType } from '../../../generated/prisma/client';
 import type { IndexedFeature, IndexedGame } from '../content-index';
 import type { Profile, SparseVector } from './profile';
@@ -5,7 +6,6 @@ import type { Profile, SparseVector } from './profile';
 // Palavras-chave nunca viram motivo: não têm tradução e, raras, pesam mais justamente nos jogos
 // com poucas etiquetas, com motivos como "anxiety" ou "rock climbing" (B-12).
 const REASON_TYPES: ReadonlySet<FeatureType> = new Set([FeatureType.GENRE, FeatureType.THEME]);
-const MAX_REASONS = 3;
 
 export type RecommendationReason =
   { kind: 'features'; features: IndexedFeature[] } | { kind: 'liked-game'; gameId: string };
@@ -30,7 +30,7 @@ export function explain(
       kind: 'features',
       features: contributions
         .sort((a, b) => b.value - a.value || a.position - b.position)
-        .slice(0, MAX_REASONS)
+        .slice(0, RECOMMENDATION_REASONS_MAX)
         .map(({ position }) => features[position]!),
     };
   }

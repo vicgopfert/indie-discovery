@@ -25,10 +25,10 @@ export interface Recommendation {
   lowKnown: boolean;
 }
 
-// profile: pelo perfil; popular: perfil sem componente positiva; empty: nada a partir do que
-// recomendar, o jogador vai para a partida a frio.
+// profile: pelo perfil; popular: perfil sem componente positiva, inclusive o vazio. Quem não tem
+// avaliações, listas nem preferências gravadas vai antes para a partida a frio, no caso de uso.
 export interface RecommendationResult {
-  basis: 'profile' | 'popular' | 'empty';
+  basis: 'profile' | 'popular';
   items: Recommendation[];
 }
 
@@ -38,10 +38,6 @@ export function recommend(
   config: ScoringConfig,
 ): RecommendationResult {
   const { interactions, preferencePositions, limit } = input;
-  if (interactions.length === 0 && preferencePositions.length === 0) {
-    return { basis: 'empty', items: [] };
-  }
-
   const excludedGameIds = new Set(interactions.map(({ gameId }) => gameId));
   const tieBreak = userTieBreak(input.userId);
   const profile = buildProfile(interactions, preferencePositions, index.features.length, config);

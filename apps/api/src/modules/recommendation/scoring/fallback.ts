@@ -1,3 +1,4 @@
+import { RECOMMENDATION_REASONS_MAX } from '@indie/contracts';
 import type { ContentIndex, IndexedGame } from '../content-index';
 import type { RecommendationReason } from './explain';
 import { type TieBreak, topBy } from './tie-break';
@@ -13,8 +14,6 @@ export interface PopularGame {
   game: IndexedGame;
   reason: RecommendationReason | null;
 }
-
-const MAX_REASONS = 3;
 
 // Perfil sem componente positiva (só notas negativas ou neutras): os mais populares dos gêneros
 // e temas preferidos, se algum candidato tiver um deles, ou do catálogo inteiro. O modo não muda
@@ -46,7 +45,7 @@ function preferredReason(
     .map((position, i) => ({ position, weight: game.weights[i]! }))
     .filter(({ position }) => preferred.has(position))
     .sort((a, b) => b.weight - a.weight || a.position - b.position)
-    .slice(0, MAX_REASONS);
+    .slice(0, RECOMMENDATION_REASONS_MAX);
   return entries.length > 0
     ? { kind: 'features', features: entries.map(({ position }) => index.features[position]!) }
     : null;
