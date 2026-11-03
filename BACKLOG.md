@@ -92,16 +92,17 @@ Entrega: avaliações e listas pela API; índice carregado com memória medida; 
   - [x] Resolver as dependências entre pastas deixadas pela reorganização da ingestão: `recommendation/tfidf.ts` importa `MappedFeature` do mapeador da IGDB; `igdb/igdb-catalog.source.ts` importa tipos de `review-flags/`; `persistence/` importa `StoredGame` e `ReviewFlag` de `review-flags/`; `criteria/`, `review-flags/` e `persistence/` dependem de `MappedGame`, definido no mapeador da IGDB; `igdb/` importa `ingestion-config.ts` da raiz do módulo — feito no B-31: os tipos compartilhados foram para `ingestion/model/`, a fonte da IGDB declara só o filtro que usa e o TF-IDF tem o próprio tipo de atributo
 - [x] **B-57** (M, E3) Coleções culturais curadas: modelo, arquivo de curadoria, sugestão de candidatos, endpoints — concluído em 01/11/2026: 10 coleções publicadas (Brasil com 29 jogos, de 22 a 131 nas outras) e Povos indígenas em rascunho (`docs/colecoes.md`)
 - [x] **B-69** (M, E1) "Want to Play" com contagem de 5 pessoas ou mais como sinal de interesse na ingestão; medir entre duas ingestões quantos jogos ficaram abaixo do limite depois de estarem acima. **Precede o B-37 e as medições do B-62:** o catálogo cresce cerca de 13%, o que muda IDF, vetores, popularidade máxima e a cobertura de etiquetas do 8.9 — concluído em 01/11/2026: 22.805 jogos em produção; nenhum saiu por cair abaixo do mínimo entre as cargas locais de 30/10 e 01/11 (`docs/ingestao.md`)
-- [ ] **B-62** (M, E5) Modo de jogo e perspectiva como quarto bloco do vetor (fatia em config, fora da explicação ao jogador); a fatia só fica acima de zero se melhorar o acerto@10 no B-37; medir depois do B-69
 - [ ] **B-63** (M, E5) Palavras do resumo como bloco do vetor, em TF-IDF com pesos em memória na API (fora da explicação por enquanto); a fatia só fica acima de zero se melhorar o acerto@10 no B-37; primeiro corte depois dos P1
 
 ## S8 — Núcleo da recomendação (semanas 15–16)
 
 Entrega: **M2**.
 
-- [ ] **B-32** (G, E5) Núcleo de pontuação em funções puras (perfil ponderado, cosseno, popularidade, seleção, desempate, explicação)
+- [x] **B-32** (G, E5) Núcleo de pontuação em funções puras (perfil ponderado, cosseno, popularidade, seleção, desempate, explicação) — concluído em 02/11/2026: bônus de listas somados; motivos só por gênero e tema, com a reserva "Porque você gostou de"; desempate por sorteio fixo por usuário; "pouco conhecido" pelo contrafactual sem popularidade; de 4 a 15 ms por recomendação no catálogo local (`docs/recomendacao.md`)
 - [ ] **B-33** (M, E5) `GenerateRecommendationsUseCase` + `GET /recommendations` — **marco M2**
   - Com o índice de conteúdo indisponível (`loading` ou `failed`), `GET /recommendations` responde 503 com mensagem clara, nunca lista vazia (decidido no B-31: a API sobe mesmo sem o índice)
+  - Jogo da biblioteca fora do catálogo não está no índice e fica fora do perfil: decidir se o vetor dele é montado a partir do banco, com o IDF do índice (levantado no B-32)
+  - Preferências são gravadas pelo id do atributo, que o índice não guarda: acrescentar o mapeamento para a posição no índice (levantado no B-32)
 
 ## S9 — Recomendação e coleções na interface (semanas 17–18)
 
@@ -120,6 +121,7 @@ Entrega: todos os P0 prontos; pesos calibrados; **congelamento**.
 - [ ] **B-34** (M, E5) Partida a frio (gêneros/temas + avaliação opcional de até 4 jogos)
 - [ ] **B-29** (P, E4) Página de perfil (avaliações e listas) e avatar com as iniciais do nome no perfil e no cabeçalho
 - [ ] **B-37** (M, E5) Script de avaliação offline + calibração dos pesos (depois do B-69)
+- [ ] **B-62** (M, E5) Modo de jogo e perspectiva como quarto bloco do vetor (fatia em config, fora da explicação ao jogador); a fatia só fica acima de zero se melhorar o acerto@10 no B-37; medir depois do B-69 — movido da S7 para a S10 no B-32, para ficar ao lado do B-37 que decide a fatia
 - [ ] **B-25** (P, E3) Página "Como funciona" (lista grandes empresas, estúdios controlados e exceções manuais com motivo e fonte)
 
 ## S11 — Avaliação com usuários e acabamento (semanas 21–22)
@@ -147,6 +149,7 @@ Entrega: dois ensaios realizados, texto entregue, slides revisados.
 
 - [ ] A ficha de um jogo fora do catálogo deveria abrir para quem já o tem na biblioteca? Decidir no B-28 ou no B-29, com a interface pronta (levantada no B-27)
 - [ ] Estar na biblioteca de algum usuário da plataforma deveria contar como sinal de interesse no critério indie? (levantada no B-27)
+- [ ] O `popularityNorm` deveria sair do banco e ser calculado na carga do índice, como os pesos TF-IDF no B-31? Hoje, quando a popularidade máxima muda, toda carga regrava quase todo `Game`: 18.609 linhas mortas em 22.856 na primeira ingestão em produção depois do B-31. O catálogo ordena por `popularityNorm`, mas a ordem é a mesma de `popularityCount`, porque a normalização, `log(1 + p) / log(1 + p_max)`, só cresce com a contagem. Decidir no B-33 (levantada no B-31)
 
 ---
 

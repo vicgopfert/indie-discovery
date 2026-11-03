@@ -6,6 +6,7 @@
 | `proposta-tecnica.md` | Plano técnico e de execução. Referência oficial durante a implementação |
 | `vetorizacao-tfidf.md` | Vetorização TF-IDF (B-12): descarte, normalização por bloco, medição das configurações, empates, cobertura de etiquetas e jogos da BGS |
 | `criterio-indie-casos.md` | Critério indie (B-11, B-59 e B-60): a regra de controle do estúdio, o teste de entrada das grandes empresas, os casos reais conferidos, as medições dos falsos negativos e da regra de controle, as limítrofes recusadas, o levantamento dos estúdios controlados, as exceções e as limitações |
+| `recomendacao.md` | Núcleo de pontuação da recomendação (B-32): perfil, pontuação, desempate, motivos, "pouco conhecido", lista de populares e as medições de tempo e de empates |
 | `ingestao.md` | Ingestão do catálogo (B-13): como rodar, o fluxo de uma execução, a política de falhas, os alertas de revisão, a popularidade reconstruída e as medições da primeira carga |
 | `colecoes.md` | Coleções culturais (B-57): o fluxo da curadoria, a regra de curadoria e de ambientação, as coleções iniciais, as fontes da sugestão e as limitações |
 | `m0-relatorio-igdb.md` | Relatório do marco M0 (B-07): termos da IGDB, cobertura dos campos, recortes do catálogo e decisões de dados |

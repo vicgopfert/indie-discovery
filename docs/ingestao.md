@@ -365,6 +365,12 @@ Observação, sem mudança neste item: a mesma carga atualizou 19.519 linhas de 
 a popularidade máxima do catálogo passou de 766 para 768 pessoas e o `popularityNorm` de
 todos os jogos é dividido por ela.
 
+**Primeira ingestão em produção sem os pesos (02/11/2026).** No resumo da execução,
+`GameFeature` ficou com 2 linhas mortas em 211.877. `Game` ficou com 18.609 linhas mortas
+em 22.856, pela regravação do `popularityNorm` descrita acima. `Feature` ficou com 2.637
+mortas, porque o IDF depende do número de jogos e muda a cada carga; a tabela tem 1 MB. O
+banco tem 108 MB.
+
 ## Medições do B-61 (24/10/2026)
 
 **Quanto da carência se resolve sozinha.** O destino dos 3.151 jogos "por lançar" com data

@@ -56,6 +56,19 @@ atributos, em inteiros. Boa parte do RSS é o custo de abrir a conexão e das pr
 consultas, que existe sem o índice. Em produção, cada carga registra no log a linha
 "Índice de conteúdo carregado", com jogos, atributos, tempo, heap e RSS.
 
+**Em produção (02/11/2026)**, no Render, com o banco no Neon:
+
+| | |
+| --- | --- |
+| Carga na inicialização | 9,9 s, para 22.806 jogos e 2.690 atributos |
+| Memória depois da carga | heap de 60,8 MB (+28,3 MB) e RSS de 188,5 MB (+86,3 MB) |
+| Recarga pelo workflow "Ingestão" | 4,8 s, para 22.834 jogos |
+
+A carga é cerca de dez vezes mais lenta que a local, pela distância até o banco e pela CPU
+compartilhada do plano gratuito. Isso não afeta o health check do Render, porque a carga
+roda depois que a API já está no ar. Nesses segundos, o `/api/health` responde 200 com
+`degraded` e o índice em `loading`.
+
 Se a carga falha na inicialização, a API sobe mesmo assim, com o índice em `failed` em
 `GET /api/health`, que continua respondendo 200 em `degraded`, porque o health check do
 Render aceita qualquer 2xx ou 3xx. Uma recarga que falha mantém o índice anterior.
@@ -124,7 +137,8 @@ normalização, e sim os jogos com poucas etiquetas (seção seguinte).
 
 Desempate decidido: pelo identificador, determinístico. Não pela popularidade, que já
 entra pelo λ dos modos Populares/Equilibrado/Descobertas; no desempate, ela contaria duas
-vezes, uma delas invisível. A solução dos empates é do B-32.
+vezes, uma delas invisível. **Resolvido no B-32:** os empatados são ordenados por um sorteio
+fixo por usuário, sem a popularidade (`docs/recomendacao.md`).
 
 ## Cobertura — escalada ao M0
 
