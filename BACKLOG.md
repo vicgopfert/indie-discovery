@@ -172,7 +172,7 @@ Entrega: dois ensaios realizados, texto entregue, slides revisados.
 - [ ] **B-50** (P) Jogos parecidos na ficha
 - [ ] **B-51** (P) Sitemap e robots
 - [ ] **B-52** (P) Exclusão da própria conta
-  - [ ] Apagar as contas de teste criadas em produção: `medicao-m2-preferencias@example.com` e `medicao-m2-avaliacoes@example.com` (medição do M2, B-33) e `b35-producao-2026-11-03@example.com` (conferência do B-35)
+  - [ ] Apagar as contas de teste criadas em produção: `medicao-m2-preferencias@example.com` e `medicao-m2-avaliacoes@example.com` (medição do M2, B-33) , `b35-producao-2026-11-03@example.com` (conferência do B-35) e `b71-producao-2026-11-03@example.com` (conferência do B-71)
 - [ ] **B-53** (M) Edição de nome e troca de senha
 - [ ] **B-54** (P) Ingestão agendada (GitHub Actions)
 - [ ] **B-55** (M) E2e no navegador (Playwright) do roteiro de demonstração
