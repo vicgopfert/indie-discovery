@@ -23,7 +23,9 @@ export function useLibraryAction(slug: string) {
     onSuccess: (state) => {
       queryClient.setQueryData(gameKey(slug), state);
       void queryClient.invalidateQueries({ queryKey: LIBRARY_QUERY_KEY, exact: true });
-      void queryClient.invalidateQueries({ queryKey: RECOMMENDATIONS_QUERY_KEY });
+      // Descartada, e não só invalidada: a lista guardada apareceria até a nova chegar, ainda com o
+      // jogo que acabou de ser avaliado.
+      void queryClient.resetQueries({ queryKey: RECOMMENDATIONS_QUERY_KEY });
     },
     onError: (error) => {
       if (isUnauthorized(error)) clearAccount(queryClient);
