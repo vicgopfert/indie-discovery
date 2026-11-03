@@ -167,8 +167,66 @@ a pontuação e a montagem da resposta.
 | Só por preferências, mediana (p95) | 11,3 ms (14,6) | 11,1 ms (14,9) | 12,5 ms (17,8) |
 
 A tabela traz o tempo medido pelo cliente, na mesma máquina. No log da API, as 1.200 requisições ficaram
-em 15 ms de mediana, 21 ms no p95 e 54 ms no máximo. O tempo em produção é medido depois do
-deploy (RNF-03).
+em 15 ms de mediana, 21 ms no p95 e 54 ms no máximo.
+
+### Tempo de resposta em produção (03/11/2026)
+
+Medido logo depois do deploy do B-33, das 15:05 às 15:07 UTC, com o Render já acordado:
+instância gratuita (0,1 CPU e 512 MB) e catálogo com 22.834 jogos. Duas contas de teste foram
+criadas pela própria API, porque não há acesso direto ao banco de produção, e ficam lá até
+existir a exclusão de conta (B-52): `medicao-m2-preferencias@example.com` e
+`medicao-m2-avaliacoes@example.com`.
+
+- **Só por preferências:** Quebra-cabeça, Plataforma e Terror.
+- **Por avaliações:** quatro jogos sorteados do catálogo com semente fixa, com notas 5, 5, 4
+  e 1, como na medição local: `time-for-bed`, `lavaloop`, `foundlings` e `banebush`.
+
+Foram 30 chamadas por modo e por caminho, 20 itens, depois de 5 de aquecimento. O cliente
+estava no Brasil e chamou a API direto no Render e pela Vercel, que é o caminho do navegador.
+Todas as respostas vieram com `basis: profile` e 20 itens.
+
+**Tempo medido pelo cliente, mediana (p95):**
+
+| Perfil | Modo | Direto no Render | Pela Vercel |
+| --- | --- | --- | --- |
+| Por avaliações | Populares | 206 ms (795) | 293 ms (803) |
+| Por avaliações | Equilibrado | 204 ms (701) | 218 ms (603) |
+| Por avaliações | Descobertas | 202 ms (685) | 284 ms (694) |
+| Só por preferências | Populares | 179 ms (209) | 205 ms (482) |
+| Só por preferências | Equilibrado | 175 ms (313) | 205 ms (328) |
+| Só por preferências | Descobertas | 177 ms (574) | 213 ms (790) |
+| `GET /api/health`, para comparar | — | 139 ms (162) | 181 ms (274) |
+
+**Tempo no servidor** (`durationMs` do log do Render), nas 180 requisições do perfil por
+avaliações:
+
+| Modo | Direto no Render, mediana (p90) | Pela Vercel, mediana (p90) |
+| --- | --- | --- |
+| Populares | 64 ms (167) | 65 ms (150) |
+| Equilibrado | 59 ms (415) | 32 ms (227) |
+| Descobertas | 64 ms (148) | 96 ms (209) |
+
+No conjunto, a mediana ficou em 60 ms e o p95 em 646 ms. Do perfil só por preferências, o
+log trouxe 19 das 30 chamadas do modo Populares direto no Render: 38 ms de mediana.
+
+**Leitura:**
+
+- **Rede:** a maior parte do tempo. A rota de saúde, que só faz um `SELECT 1`, já leva
+  139 ms daqui até o Render, e a Vercel acrescenta de 10 a 90 ms.
+- **Servidor:** de 3 a 4 vezes o tempo local (15 ms), coerente com a carga do índice no Render,
+  que também foi muito mais lenta que na máquina local (B-31).
+- **Picos:**
+  - **o que se vê:** cerca de 1 requisição em 10 levou de 415 a 816 ms no servidor (18 das
+    180). Aparecem em todos os modos e nos dois caminhos, em intervalos regulares de cerca
+    de 3 s, e a rota de saúde não teve nenhum;
+  - **causa provável:** a falta de CPU da instância gratuita, que fica limitada depois de um
+    pico de uso, ou a coleta de lixo do Node. Não foi isolada.
+- **Conclusão (RNF-03):** sem espera perceptível na demonstração. Fim a fim, a mediana ficou
+  em cerca de 200 ms direto e de 205 a 293 ms pela Vercel. O pior caso fica abaixo de 1,1 s, e
+  o jogador abre a lista uma vez por visita, não em sequência.
+- **Se o pico aparecer no teste de usabilidade:** medir a coleta de lixo com `perf_hooks` e o
+  limite de CPU, e reduzir a alocação por candidato no `rankCandidates`, que cria um objeto
+  para cada um dos cerca de 22 mil jogos a cada requisição.
 
 ## Limitações
 

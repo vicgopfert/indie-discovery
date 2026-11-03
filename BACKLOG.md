@@ -99,7 +99,7 @@ Entrega: avaliações e listas pela API; índice carregado com memória medida; 
 Entrega: **M2**.
 
 - [x] **B-32** (G, E5) Núcleo de pontuação em funções puras (perfil ponderado, cosseno, popularidade, seleção, desempate, explicação) — concluído em 02/11/2026: bônus de listas somados; motivos só por gênero e tema, com a reserva "Porque você gostou de"; desempate por sorteio fixo por usuário; "pouco conhecido" pelo contrafactual sem popularidade; de 4 a 15 ms por recomendação no catálogo local (`docs/recomendacao.md`)
-- [x] **B-33** (M, E5) `GenerateRecommendationsUseCase` + `GET /recommendations` — **marco M2** — concluído em 03/11/2026: modo opcional na consulta, com o salvo como padrão; motivo com os nomes em português; `basis` `empty` pelo estado gravado; 15 ms de mediana no servidor, no catálogo local (`docs/recomendacao.md`); a medição em produção entra depois do deploy
+- [x] **B-33** (M, E5) `GenerateRecommendationsUseCase` + `GET /recommendations` — **marco M2** — concluído em 03/11/2026: modo opcional na consulta, com o salvo como padrão; motivo com os nomes em português; `basis` `empty` pelo estado gravado; 15 ms de mediana no servidor, no catálogo local, e 60 ms em produção, com cerca de 200 ms fim a fim (`docs/recomendacao.md`)
   - [x] Com o índice de conteúdo indisponível (`loading` ou `failed`), `GET /recommendations` responde 503 com mensagem clara, nunca lista vazia (decidido no B-31: a API sobe mesmo sem o índice); o filtro de erros passou a manter a mensagem de um 5xx lançado de propósito
   - [x] Jogo da biblioteca fora do catálogo: o vetor é montado com os atributos do banco e o IDF do índice, e ele continua no perfil (levantado no B-32)
   - [x] Preferências gravadas pelo id do atributo: o índice guarda o id e a posição de cada atributo (levantado no B-32)
@@ -179,7 +179,7 @@ Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de en
   - [x] Reaberto no B-12: decidir a cobertura de etiquetas para a recomendação (relatório do M0, seção 8.9) — modo de jogo e perspectiva (B-62) e palavras do resumo (B-63) aprovados, os dois condicionados ao acerto@10 no B-37
   - [x] Reaberto no B-60: confirmar a falta de desenvolvedora creditada como limitação, sem regra de reserva (relatório do M0, seção 8.10) — aceita, sem regra de reserva; defesa pelo alerta `NO_DEVELOPER_VISIBLE` da ingestão
 - [x] **M1** (semana 12): catálogo real navegável + contas implantadas — atingido em 30/10/2026, na semana 2; tag `v0.1-M1`
-- [ ] **M2** (semana 16): recomendação ponta a ponta pela API, testada e implantada
+- [x] **M2** (semana 16): recomendação ponta a ponta pela API, testada e implantada — atingido em 03/11/2026, na semana 3; tag `v0.2-M2`
 - [ ] **Congelamento** (semana 20): todos os P0 implementados, nenhuma funcionalidade nova depois disso
 - [ ] **M3** (semana 22): critérios de prontidão da seção 16 atendidos, teste de usabilidade feito
 - [ ] **Banca** (semana 24)
