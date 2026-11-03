@@ -1,0 +1,84 @@
+import { ListType } from '../../../generated/prisma/client';
+import { buildProfile, hasPositiveComponent, interactionWeight, profileDot } from './profile';
+import { featurePosition, gameOf, rated, scoringConfig, scoringIndex } from './scoring.fixture';
+
+const { FAVORITE, COMPLETED, WANT_TO_PLAY } = ListType;
+
+describe('interactionWeight', () => {
+  const weight = (score: number | null, lists: ListType[] = []) =>
+    interactionWeight({ score, lists }, scoringConfig);
+
+  it('centra a nota em 3: notas 1 e 2 afastam, 3 é neutra, 4 e 5 aproximam', () => {
+    expect([1, 2, 3, 4, 5].map((score) => weight(score))).toEqual([-2, -1, 0, 1, 2]);
+  });
+
+  it('soma o bônus de cada lista, e o jogo sem nota fica só com os bônus', () => {
+    expect(weight(null, [FAVORITE])).toBe(2);
+    expect(weight(null, [WANT_TO_PLAY])).toBe(0.5);
+    expect(weight(4, [FAVORITE, COMPLETED])).toBe(4);
+    expect(weight(null, [FAVORITE, WANT_TO_PLAY])).toBe(2.5);
+  });
+});
+
+describe('buildProfile', () => {
+  const index = scoringIndex();
+  const featureCount = index.features.length;
+
+  it('soma os vetores dos jogos pelo peso de cada um', () => {
+    const profile = buildProfile(
+      [rated(index, 'hades', 5), rated(index, 'celeste', 2)],
+      [],
+      featureCount,
+      scoringConfig,
+    );
+
+    const hades = gameOf(index, 'hades');
+    const celeste = gameOf(index, 'celeste');
+    for (let position = 0; position < featureCount; position++) {
+      const weightIn = (game: typeof hades) => {
+        const i = game.featurePositions.indexOf(position);
+        return i < 0 ? 0 : game.weights[i]!;
+      };
+      expect(profile.vector[position]).toBeCloseTo(2 * weightIn(hades) - weightIn(celeste), 12);
+    }
+  });
+
+  it('acrescenta β na posição de cada gênero ou tema preferido, uma vez só', () => {
+    const horror = featurePosition(index, 'horror');
+    const profile = buildProfile([], [horror, horror], featureCount, scoringConfig);
+
+    expect(profile.vector[horror]).toBe(scoringConfig.preferenceWeight);
+    expect(profile.norm).toBe(scoringConfig.preferenceWeight);
+  });
+
+  it('guarda para o motivo só os jogos que moveram o perfil', () => {
+    const profile = buildProfile(
+      [
+        rated(index, 'hades', 5),
+        rated(index, 'spelunky', 3),
+        { gameId: 'g-fora-do-indice', score: 5, lists: [], vector: null },
+      ],
+      [],
+      featureCount,
+      scoringConfig,
+    );
+
+    expect(profile.games.map((g) => [g.gameId, g.weight])).toEqual([['g-hades', 2]]);
+  });
+
+  it('só tem componente positiva com algum jogo bem avaliado, em lista ou preferência', () => {
+    const positive = (interactions: ReturnType<typeof rated>[], preferences: number[] = []) =>
+      hasPositiveComponent(buildProfile(interactions, preferences, featureCount, scoringConfig));
+
+    expect(positive([rated(index, 'hades', 1), rated(index, 'celeste', 2)])).toBe(false);
+    expect(positive([rated(index, 'hades', 3)])).toBe(false);
+    expect(positive([rated(index, 'hades', null, [WANT_TO_PLAY])])).toBe(true);
+    expect(positive([], [featurePosition(index, 'horror')])).toBe(true);
+  });
+
+  it('dá cosseno 1 com o próprio jogo quando o perfil é um jogo só', () => {
+    const profile = buildProfile([rated(index, 'hades', 5)], [], featureCount, scoringConfig);
+
+    expect(profileDot(profile, gameOf(index, 'hades')) / profile.norm).toBeCloseTo(1, 12);
+  });
+});
