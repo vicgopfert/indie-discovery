@@ -1,13 +1,18 @@
-import { RecommendationListSchema, RecommendationQuerySchema } from '@indie/contracts';
+import {
+  RecommendationOverviewSchema,
+  RecommendationPageQuerySchema,
+  RecommendationPageSchema,
+  RecommendationQuerySchema,
+} from '@indie/contracts';
 
-const messages = (input: unknown) => {
-  const result = RecommendationQuerySchema.safeParse(input);
+const messages = (schema: typeof RecommendationPageQuerySchema, input: unknown) => {
+  const result = schema.safeParse(input);
   return result.success ? [] : result.error.issues.map((issue) => issue.message);
 };
 
 describe('RecommendationQuerySchema', () => {
-  it('sem parâmetros, pede 20 jogos no modo salvo do usuário', () => {
-    expect(RecommendationQuerySchema.parse({})).toEqual({ limit: 20 });
+  it('sem parâmetros, usa o modo salvo do usuário', () => {
+    expect(RecommendationQuerySchema.parse({})).toEqual({});
   });
 
   it('aceita o modo em minúsculas e devolve o valor do banco', () => {
@@ -16,23 +21,31 @@ describe('RecommendationQuerySchema', () => {
     expect(RecommendationQuerySchema.parse({ mode: 'discovery' }).mode).toBe('DISCOVERY');
   });
 
-  it('converte o limite vindo da URL como texto', () => {
-    expect(RecommendationQuerySchema.parse({ limit: '50' }).limit).toBe(50);
+  it('não aceita mais o limite: os tamanhos vêm da configuração', () => {
+    expect(RecommendationQuerySchema.parse({ limit: '50' })).toEqual({});
+  });
+});
+
+describe('RecommendationPageQuerySchema', () => {
+  it('começa na página 1 e converte a página vinda da URL como texto', () => {
+    expect(RecommendationPageQuerySchema.parse({})).toEqual({ page: 1 });
+    expect(RecommendationPageQuerySchema.parse({ page: '3', mode: 'discovery' })).toEqual({
+      page: 3,
+      mode: 'DISCOVERY',
+    });
   });
 
   it.each([
     [{ mode: 'DISCOVERY' }, 'Modo deve ser popular, balanced ou discovery.'],
-    [{ mode: 'novidades' }, 'Modo deve ser popular, balanced ou discovery.'],
-    [{ limit: '51' }, 'O limite vai até 50.'],
-    [{ limit: '0' }, 'O limite começa em 1.'],
-    [{ limit: 'vinte' }, 'O limite deve ser um número.'],
-    [{ limit: '2.5' }, 'O limite deve ser um número inteiro.'],
+    [{ page: '0' }, 'A página começa em 1.'],
+    [{ page: '1001' }, 'A página vai até 1000.'],
+    [{ page: '2.5' }, 'A página deve ser um número inteiro.'],
   ])('recusa %j', (input, message) => {
-    expect(messages(input)).toEqual([message]);
+    expect(messages(RecommendationPageQuerySchema, input)).toEqual([message]);
   });
 });
 
-describe('RecommendationListSchema', () => {
+describe('Respostas das recomendações', () => {
   const game = {
     slug: 'spelunky',
     name: 'Spelunky',
@@ -41,49 +54,68 @@ describe('RecommendationListSchema', () => {
     firstReleaseDate: '2013-07-03',
     genres: [{ slug: 'platform', name: 'Plataforma' }],
   };
+  const items = [
+    {
+      game,
+      reason: { kind: 'features', features: [{ slug: 'platform', name: 'Plataforma' }] },
+      lowKnown: true,
+    },
+    {
+      game,
+      reason: { kind: 'liked-game', game: { slug: 'celeste', name: 'Celeste', inCatalog: false } },
+      lowKnown: false,
+    },
+    { game, reason: null, lowKnown: false },
+  ];
+  const horror = { type: 'THEME', slug: 'horror', name: 'Terror' };
+  const overviewWith = (shelves: unknown[]) => ({
+    mode: 'DISCOVERY',
+    basis: 'profile',
+    main: { items, hasMore: true },
+    shelves,
+  });
 
-  it('aceita os dois tipos de motivo e o item sem motivo', () => {
-    const list = {
-      mode: 'DISCOVERY',
-      basis: 'profile',
-      items: [
-        {
-          game,
-          reason: { kind: 'features', features: [{ slug: 'platform', name: 'Plataforma' }] },
-          lowKnown: true,
-        },
-        {
-          game,
-          reason: {
-            kind: 'liked-game',
-            game: { slug: 'celeste', name: 'Celeste', inCatalog: false },
-          },
-          lowKnown: false,
-        },
-        { game, reason: null, lowKnown: false },
-      ],
-    };
+  it('a visão geral aceita os dois tipos de motivo, o item sem motivo e os dois tipos de prateleira', () => {
+    const overview = overviewWith([
+      { key: 'upcoming', kind: 'upcoming', feature: null, items, hasMore: false },
+      { key: 'theme:horror', kind: 'interest', feature: horror, items, hasMore: true },
+    ]);
 
-    expect(RecommendationListSchema.safeParse(list).success).toBe(true);
+    expect(RecommendationOverviewSchema.safeParse(overview).success).toBe(true);
+  });
+
+  it('recusa prateleira de interesse sem atributo ou com chave fora do formato', () => {
+    const shelf = { key: 'theme:horror', kind: 'interest', feature: horror, items, hasMore: true };
+    const valid = (changes: object) =>
+      RecommendationOverviewSchema.safeParse(overviewWith([{ ...shelf, ...changes }])).success;
+
+    expect(valid({ feature: null })).toBe(false);
+    expect(valid({ key: 'horror' })).toBe(false);
+    expect(valid({ feature: { ...horror, type: 'KEYWORD' } })).toBe(false);
   });
 
   it('recusa motivo sem atributos ou com mais de três', () => {
-    const withFeatures = (count: number) => ({
-      mode: 'BALANCED',
-      basis: 'profile',
-      items: [
-        {
-          game,
-          reason: {
-            kind: 'features',
-            features: Array.from({ length: count }, (_, i) => ({ slug: `g${i}`, name: `G${i}` })),
+    const withFeatures = (count: number) =>
+      RecommendationPageSchema.safeParse({
+        mode: 'BALANCED',
+        key: 'main',
+        feature: null,
+        page: 1,
+        hasMore: false,
+        items: [
+          {
+            game,
+            reason: {
+              kind: 'features',
+              features: Array.from({ length: count }, (_, i) => ({ slug: `g${i}`, name: `G${i}` })),
+            },
+            lowKnown: false,
           },
-          lowKnown: false,
-        },
-      ],
-    });
+        ],
+      }).success;
 
-    expect(RecommendationListSchema.safeParse(withFeatures(0)).success).toBe(false);
-    expect(RecommendationListSchema.safeParse(withFeatures(4)).success).toBe(false);
+    expect(withFeatures(1)).toBe(true);
+    expect(withFeatures(0)).toBe(false);
+    expect(withFeatures(4)).toBe(false);
   });
 });

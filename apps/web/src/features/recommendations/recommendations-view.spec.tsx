@@ -1,17 +1,17 @@
-import type { RecommendationList } from '@indie/contracts';
+import type { RecommendationOverview } from '@indie/contracts';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { sampleGame } from '@/test/catalog';
 import { apiError, sampleUser, stubFetch } from '@/test/fetch';
-import { sampleRecommendation, sampleRecommendationList } from '@/test/recommendations';
+import { sampleRecommendation, sampleRecommendationOverview } from '@/test/recommendations';
 import { renderWithQuery } from '@/test/render';
 import { RecommendationsView } from './recommendations-view';
 
 const BALANCED = '/api/recommendations?mode=balanced';
 const DISCOVERY = '/api/recommendations?mode=discovery';
 
-const discoveryList = sampleRecommendationList({
+const discoveryList = sampleRecommendationOverview({
   mode: 'DISCOVERY',
   items: [
     sampleRecommendation({
@@ -28,7 +28,7 @@ function stubRecommendations(reply: (path: string, method: string) => Response) 
   );
 }
 
-const stubList = (list: RecommendationList) => stubRecommendations(() => Response.json(list));
+const stubList = (list: RecommendationOverview) => stubRecommendations(() => Response.json(list));
 
 const modeButton = (name: string) => screen.findByRole('button', { name });
 
@@ -45,7 +45,7 @@ describe('RecommendationsView', () => {
   });
 
   it('mostra a lista do modo salvo, com o seletor nesse modo', async () => {
-    const fetchMock = stubList(sampleRecommendationList());
+    const fetchMock = stubList(sampleRecommendationOverview());
     renderWithQuery(<RecommendationsView />);
 
     expect(await screen.findByRole('link', { name: 'Celeste' })).toBeInTheDocument();
@@ -58,7 +58,7 @@ describe('RecommendationsView', () => {
   it('trocar o modo grava a escolha e depois traz a lista do modo novo', async () => {
     const fetchMock = stubRecommendations((path, method) => {
       if (method === 'PATCH') return Response.json({ ...sampleUser, discoveryMode: 'DISCOVERY' });
-      return Response.json(path === DISCOVERY ? discoveryList : sampleRecommendationList());
+      return Response.json(path === DISCOVERY ? discoveryList : sampleRecommendationOverview());
     });
     renderWithQuery(<RecommendationsView />);
 
@@ -83,7 +83,7 @@ describe('RecommendationsView', () => {
     const fetchMock = stubRecommendations((path, method) =>
       method === 'PATCH'
         ? apiError(500, 'Erro interno no servidor.')
-        : Response.json(sampleRecommendationList()),
+        : Response.json(sampleRecommendationOverview()),
     );
     renderWithQuery(<RecommendationsView />);
 
@@ -96,7 +96,7 @@ describe('RecommendationsView', () => {
   });
 
   it('sem avaliações, listas nem preferências, orienta a avaliar, sem o seletor', async () => {
-    stubList(sampleRecommendationList({ basis: 'empty', items: [] }));
+    stubList(sampleRecommendationOverview({ basis: 'empty', items: [] }));
     renderWithQuery(<RecommendationsView />);
 
     expect(
@@ -111,7 +111,7 @@ describe('RecommendationsView', () => {
 
   it('com a lista de populares, explica por quê, sem o seletor', async () => {
     stubList(
-      sampleRecommendationList({
+      sampleRecommendationOverview({
         basis: 'popular',
         items: [sampleRecommendation({ reason: null })],
       }),
@@ -133,7 +133,7 @@ describe('RecommendationsView', () => {
             503,
             'As recomendações ainda não estão disponíveis; tente novamente em alguns instantes.',
           )
-        : Response.json(sampleRecommendationList()),
+        : Response.json(sampleRecommendationOverview()),
     );
     renderWithQuery(<RecommendationsView />);
 
