@@ -411,8 +411,41 @@ requisições), contra 15, 23 e 180 ms da lista única; as páginas, em 23, 30 e
 requisições). O custo quase dobrou: cada lista é ordenada até o teto (até 200, contra 20 antes),
 e o modo Descobertas monta todas de novo com λ = 0. Nos 400 perfis, todos tiveram a prateleira
 "Em breve" na visão geral; as prateleiras de interesse visíveis foram 1 em 22 perfis, 2 em 166 e
-3 em 212, e a visão geral teve 60 cartões na mediana. O tempo em produção é medido depois do
-merge.
+3 em 212, e a visão geral teve 60 cartões na mediana.
+
+### Conferência e tempo em produção (03/11/2026)
+
+Depois do deploy, a mesma conferência do navegador rodou contra https://indie-discovery.vercel.app
+com uma conta nova (`b71-producao-2026-11-03@example.com`, registrada no B-52): seis jogos de RPG
+com fantasia e dois de tiro com terror, todos com nota 5. As 16 conferências passaram:
+- prateleiras de RPG e Quebra-cabeça, com o segundo interesse no começo da principal;
+- a visão geral sem repetição (50 cartões);
+- a página 1 do "ver mais" igual à principal;
+- os tetos de 100 e 200, a página vazia além do teto e o 404 da lista desconhecida;
+- a mesma visão geral para o mesmo estado;
+- a página `/recomendacoes` com a principal, inclusive ao trocar para Descobertas.
+
+Tempo medido pelo cliente, 30 requisições por linha depois de uma de aquecimento, mediana (p95):
+
+| Requisição | Direto no Render | Pela Vercel |
+| --- | --- | --- |
+| Visão geral, Populares | 389 ms (1.091) | 407 ms (1.095) |
+| Visão geral, Equilibrado | 368 ms (1.152) | 316 ms (1.103) |
+| Visão geral, Descobertas | 400 ms (1.188) | 435 ms (1.380) |
+| "Ver mais", principal, página 1 | 357 ms (987) | 410 ms (1.181) |
+| "Ver mais", prateleira, página 1 | 303 ms (1.087) | 375 ms (900) |
+| "Ver mais", prateleira, página 5 | 313 ms (902) | 383 ms (994) |
+| `GET /api/health`, para comparar | 145 ms (395) | 166 ms (409) |
+
+- **Servidor:** descontada a rede (o `health`), a visão geral leva de 200 a 250 ms no servidor,
+  contra 33 a 62 ms da lista única no B-33. A proporção bate com a local (26 ms contra 15 ms) e
+  com a diferença de cerca de dez vezes entre a máquina local e a instância gratuita do Render
+  (0,1 CPU). O log do Render (`durationMs`) confirma o tempo exato no servidor.
+- **Conclusão (RNF-03):** a mediana fim a fim fica perto de 400 ms, ainda sem espera
+  perceptível, mas o p95 passa de 1 s, contra 600 a 800 ms no B-33. Se incomodar na
+  demonstração, os candidatos a otimização são ordenar cada lista só até a profundidade pedida
+  (a visão geral usa 20 da principal e poucas dezenas de cada prateleira, e não os tetos de 100
+  e 200) e guardar as listas por usuário e modo até a próxima alteração da biblioteca.
 
 ## Limitações
 

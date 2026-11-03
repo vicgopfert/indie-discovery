@@ -25,13 +25,13 @@ export interface Candidate {
 const SNIPPET_RADIUS = 60;
 
 // Palavra inteira, sem diferenciar maiúsculas: "Brazil" não acha "Brazilian", que é outro termo.
-const wholeTerm = (term: string) =>
+export const wholeTerm = (term: string) =>
   new RegExp(
     `(?<![\\p{L}\\p{N}])${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\p{L}\\p{N}])`,
     'iu',
   );
 
-function snippet(summary: string, index: number, length: number) {
+export function snippet(summary: string, index: number, length: number) {
   const start = Math.max(0, index - SNIPPET_RADIUS);
   const end = Math.min(summary.length, index + length + SNIPPET_RADIUS);
   const text = summary.slice(start, end).replace(/\s+/g, ' ').trim();
