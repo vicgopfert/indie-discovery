@@ -10,9 +10,12 @@ export function SiteHeader() {
           <Link href="/" className="font-semibold">
             {siteConfig.name}
           </Link>
-          <nav aria-label="Principal">
+          <nav aria-label="Principal" className="flex gap-4">
             <Link href="/catalogo" className="text-sm hover:underline">
               Catálogo
+            </Link>
+            <Link href="/recomendacoes" className="text-sm hover:underline">
+              Recomendações
             </Link>
           </nav>
         </div>

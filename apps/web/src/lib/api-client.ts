@@ -26,6 +26,13 @@ export class ApiRequestError extends Error {
   }
 }
 
+export const isUnauthorized = (error: unknown) =>
+  error instanceof ApiRequestError && error.status === 401;
+
+export function errorMessage(error: unknown) {
+  return error instanceof Error && error.message ? error.message : UNEXPECTED_ERROR_MESSAGE;
+}
+
 type RequestOptions = { method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'; body?: unknown };
 
 export function apiFetch(path: string, options?: RequestOptions): Promise<void>;

@@ -6,10 +6,10 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { clearAccount, useSession } from '@/features/auth/hooks';
-import { UNEXPECTED_ERROR_MESSAGE } from '@/lib/api-client';
+import { errorMessage, isUnauthorized } from '@/lib/api-client';
 import { withRedirect } from '@/lib/safe-redirect';
 import type { LibraryAction } from './api';
-import { isUnauthorized, useGameLibrary, useLibraryAction } from './hooks';
+import { useGameLibrary, useLibraryAction } from './hooks';
 
 const SCORES = Array.from({ length: RATING_MAX - RATING_MIN + 1 }, (_, i) => RATING_MIN + i);
 
@@ -150,8 +150,4 @@ function LibraryForm({
       )}
     </section>
   );
-}
-
-function errorMessage(error: unknown) {
-  return error instanceof Error && error.message ? error.message : UNEXPECTED_ERROR_MESSAGE;
 }

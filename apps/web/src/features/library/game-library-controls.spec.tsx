@@ -3,10 +3,10 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { SESSION_QUERY_KEY } from '@/features/auth/hooks';
+import { RECOMMENDATIONS_QUERY_KEY } from '@/features/recommendations/hooks';
 import { apiError, sampleUser, stubFetch } from '@/test/fetch';
 import { renderWithQuery } from '@/test/render';
 import { GameLibraryControls } from './game-library-controls';
-import { RECOMMENDATIONS_QUERY_KEY } from './hooks';
 
 const RATED_AT = '2026-11-03T12:00:00.000Z';
 

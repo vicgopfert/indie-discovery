@@ -1,4 +1,4 @@
-# Recomendação: núcleo de pontuação (B-32) e rota (B-33)
+# Recomendação: núcleo de pontuação (B-32), rota (B-33) e página (B-35)
 
 O núcleo são funções puras em `apps/api/src/modules/recommendation/scoring/`, com os pesos
 na seção `scoring` de `apps/api/config/recommendation.json`. Ele recebe o índice de
@@ -231,6 +231,22 @@ preferências em 33 ms e 213 ms.
 - **Se o pico aparecer no teste de usabilidade:** medir a coleta de lixo com `perf_hooks` e o
   limite de CPU, e reduzir a alocação por candidato no `rankCandidates`, que cria um objeto
   para cada um dos cerca de 22 mil jogos a cada requisição.
+
+## Na interface (B-35)
+
+A página `/recomendacoes` está descrita na seção 5 da proposta técnica ("Frontend e mesma
+origem"). Sobre o que vem do núcleo:
+
+- **Motivo:** "Recomendado por: Roguelike, Fantasia", em texto, na ordem da contribuição. Os
+  gêneros e temas não viram links para o catálogo, porque o motivo não diz qual é gênero e
+  qual é tema. "Porque você gostou de <jogo>" tem link só se o jogo continua no catálogo.
+- **"Pouco conhecido":** um selo no cartão e, só no modo Descobertas, a frase "Pouco
+  conhecido: o jogo entrou na lista por ser menos popular." acima da lista. A frase existe
+  porque a marca é frequente: 62% dos itens nas medições do B-32. Na conferência local do
+  B-35, um perfil com três jogos avaliados (`time-for-bed` e `lavaloop` com 5, `foundlings`
+  com 4) teve os 20 itens marcados, e nenhum jogo em comum com a lista do Equilibrado. Se o
+  λ de 0,3 está dominando a afinidade é uma verificação do B-37.
+- **Listas `empty` e `popular`:** sem o seletor de modo, porque o modo não as muda.
 
 ## Limitações
 
