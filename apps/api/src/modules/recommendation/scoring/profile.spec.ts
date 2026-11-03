@@ -43,6 +43,32 @@ describe('buildProfile', () => {
     }
   });
 
+  it('dá o mesmo vetor em qualquer ordem das interações, até o último bit', () => {
+    // Nesta combinação, a soma em ponto flutuante muda com a ordem.
+    const interactions = [
+      rated(index, 'dead-cells', 5),
+      rated(index, 'hades', 4),
+      rated(index, 'popular-rogue', 2),
+    ];
+    const vectorOf = (order: number[]) =>
+      buildProfile(
+        order.map((i) => interactions[i]!),
+        [],
+        featureCount,
+        scoringConfig,
+      ).vector;
+    const orders = [
+      [0, 1, 2],
+      [0, 2, 1],
+      [1, 0, 2],
+      [1, 2, 0],
+      [2, 0, 1],
+      [2, 1, 0],
+    ];
+
+    for (const order of orders) expect(vectorOf(order)).toEqual(vectorOf([0, 1, 2]));
+  });
+
   it('acrescenta β na posição de cada gênero ou tema preferido, uma vez só', () => {
     const horror = featurePosition(index, 'horror');
     const profile = buildProfile([], [horror, horror], featureCount, scoringConfig);

@@ -35,7 +35,8 @@ export function interactionWeight(
   return (score === null ? 0 : score - 3) + bonus;
 }
 
-// u = Σ w_i · v_i + β · Σ e_f, com e_f o vetor unitário de cada gênero ou tema preferido.
+// u = Σ w_i · v_i + β · Σ e_f, com e_f o vetor unitário de cada gênero ou tema preferido. A soma
+// em ponto flutuante depende da ordem, e o banco não garante uma: soma na ordem do id do jogo.
 export function buildProfile(
   interactions: readonly Interaction[],
   preferencePositions: readonly number[],
@@ -44,7 +45,10 @@ export function buildProfile(
 ): Profile {
   const vector = new Float64Array(featureCount);
   const games: WeightedGame[] = [];
-  for (const interaction of interactions) {
+  const byGameId = [...interactions].sort((a, b) =>
+    a.gameId < b.gameId ? -1 : a.gameId > b.gameId ? 1 : 0,
+  );
+  for (const interaction of byGameId) {
     const weight = interactionWeight(interaction, config);
     if (weight === 0 || interaction.vector === null) continue;
     const { featurePositions, weights } = interaction.vector;
