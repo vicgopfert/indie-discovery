@@ -109,7 +109,7 @@ Entrega: **M2**.
 Entrega: jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de posse no CI.
 
 - [x] **B-28** (M, E4) Componentes de avaliação e listas na ficha do jogo — concluído em 03/11/2026: nota e listas na ficha, com `GET /api/me/library/:slug`; quem não entrou vai ao login e volta para a ficha; os mesmos controles para jogos "Em breve"
-- [ ] **B-35** (M, E5) Página de recomendações com motivo e seletor de modo
+- [x] **B-35** (M, E5) Página de recomendações com motivo e seletor de modo — concluído em 03/11/2026: `/recomendacoes` com o motivo de cada jogo e o selo "Pouco conhecido"; trocar o modo grava a escolha e depois traz a lista do modo novo; sem lista pelo perfil, o seletor some
 - [ ] **B-36** (P, E5) E2e de recomendação + teste de determinismo
 - [ ] **B-30** (P, E4) E2e de biblioteca e posse dos dados (um usuário não altera dados de outro)
 - [ ] **B-58** (M, E3) Interface das coleções: vitrine "Explore por cultura", página da coleção, indicação na ficha
@@ -119,8 +119,10 @@ Entrega: jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de
 Entrega: todos os P0 prontos; pesos calibrados; **congelamento**.
 
 - [ ] **B-34** (M, E5) Partida a frio (gêneros/temas + avaliação opcional de até 4 jogos)
+  - [ ] Na página de recomendações, o estado vazio (`basis: empty`) leva ao catálogo; trocar pelo link da partida a frio (levantado no B-35)
 - [ ] **B-29** (P, E4) Página de perfil (avaliações e listas) e avatar com as iniciais do nome no perfil e no cabeçalho
 - [ ] **B-37** (M, E5) Script de avaliação offline + calibração dos pesos (depois do B-69)
+  - [ ] No modo Descobertas, 62% dos itens recebem "Pouco conhecido" (medição do B-32); verificar na calibração se o λ de 0,3 está dominando a afinidade (levantado no B-35)
 - [ ] **B-62** (M, E5) Modo de jogo e perspectiva como quarto bloco do vetor (fatia em config, fora da explicação ao jogador); a fatia só fica acima de zero se melhorar o acerto@10 no B-37; medir depois do B-69 — movido da S7 para a S10 no B-32, para ficar ao lado do B-37 que decide a fatia
 - [ ] **B-25** (P, E3) Página "Como funciona" (lista grandes empresas, estúdios controlados e exceções manuais com motivo e fonte)
 
