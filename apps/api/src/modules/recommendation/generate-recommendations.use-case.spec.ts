@@ -1,4 +1,4 @@
-import { ServiceUnavailableException } from '@nestjs/common';
+import { NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { DiscoveryMode, ListType } from '../../generated/prisma/client';
 import type { CatalogRepository } from '../catalog/catalog.repository';
 import { CatalogService } from '../catalog/catalog.service';
@@ -8,6 +8,7 @@ import type { ContentIndexService } from './content-index.service';
 import {
   GenerateRecommendationsUseCase,
   INDEX_UNAVAILABLE,
+  LIST_NOT_FOUND,
 } from './generate-recommendations.use-case';
 import type {
   RecommendationRepository,
@@ -15,6 +16,7 @@ import type {
   UserState,
 } from './recommendation.repository';
 import { recommend } from './scoring/recommend';
+import type { ScoringConfig } from './scoring/scoring-config';
 import {
   featureId,
   featuresOf,
@@ -22,6 +24,8 @@ import {
   gameOf,
   scoringConfig,
   scoringIndex,
+  TASTE_LIBRARY,
+  tasteIndex,
 } from './scoring/scoring.fixture';
 
 const labels = new FeatureLabels(
@@ -31,7 +35,7 @@ const labels = new FeatureLabels(
       GENRE: { platform: 'Plataforma', puzzle: 'Quebra-cabeça' },
       THEME: { fantasy: 'Fantasia', horror: 'Terror' },
     },
-    hiddenFromFilters: { GENRE: [], THEME: [] },
+    hiddenFromFilters: { GENRE: ['indie'], THEME: [] },
     hiddenRationale: 'motivo',
   }),
 );
@@ -79,26 +83,34 @@ describe('GenerateRecommendationsUseCase', () => {
     repository = new FakeRepository();
   });
 
-  const useCase = (index: ContentIndex | null = scoringIndex()) =>
+  const useCase = (index: ContentIndex | null = scoringIndex(), config = scoringConfig) =>
     new GenerateRecommendationsUseCase(
       { index } as ContentIndexService,
       repository as unknown as RecommendationRepository,
       new CatalogService({} as CatalogRepository, labels, 20),
       labels,
-      scoringConfig,
+      config,
     );
+
+  const withLists = (lists: Partial<ScoringConfig['lists']>): ScoringConfig => ({
+    ...scoringConfig,
+    lists: { ...scoringConfig.lists, ...lists },
+  });
 
   const execute = (
     index?: ContentIndex | null,
     mode: DiscoveryMode = DiscoveryMode.BALANCED,
-    limit = 10,
-  ) => useCase(index).execute('u-1', mode, limit);
+    config?: ScoringConfig,
+  ) => useCase(index, config).overview('u-1', mode);
+
+  const pageOf = (key: string, page = 1, index?: ContentIndex, config?: ScoringConfig) =>
+    useCase(index, config).page('u-1', DiscoveryMode.BALANCED, key, page);
 
   const rate = (slug: string, score: number) =>
     repository.state.ratings.push({ gameId: gameId(slug), score });
 
   const slugs = (result: Awaited<ReturnType<typeof execute>>) =>
-    result.items.map(({ game }) => game.slug);
+    result.main.items.map(({ game }) => game.slug);
 
   it('com o índice carregando ou com falha, responde 503 em vez de lista vazia', async () => {
     rate('dead-cells', 5);
@@ -110,8 +122,21 @@ describe('GenerateRecommendationsUseCase', () => {
     expect(await execute(undefined, DiscoveryMode.DISCOVERY)).toEqual({
       mode: 'DISCOVERY',
       basis: 'empty',
-      items: [],
+      main: { items: [], hasMore: false },
+      shelves: [],
     });
+  });
+
+  it('sem perfil, o "ver mais" só tem a lista principal, vazia', async () => {
+    expect(await pageOf('main')).toEqual({
+      mode: 'BALANCED',
+      key: 'main',
+      feature: null,
+      page: 1,
+      items: [],
+      hasMore: false,
+    });
+    await expect(pageOf('upcoming')).rejects.toThrow(new NotFoundException(LIST_NOT_FOUND));
   });
 
   it('com preferências que saíram do índice, recorre aos populares em vez da partida a frio', async () => {
@@ -120,7 +145,10 @@ describe('GenerateRecommendationsUseCase', () => {
     const result = await execute();
 
     expect(result.basis).toBe('popular');
-    expect(result.items.length).toBeGreaterThan(0);
+    expect(result.main.items.length).toBeGreaterThan(0);
+    expect(result.shelves).toEqual([]);
+    await expect(pageOf('upcoming')).rejects.toThrow(new NotFoundException(LIST_NOT_FOUND));
+    expect((await pageOf('main')).items).toEqual(result.main.items);
   });
 
   it('acha as preferências pelo id do atributo e explica com o nome em português', async () => {
@@ -129,7 +157,7 @@ describe('GenerateRecommendationsUseCase', () => {
     const result = await execute();
 
     expect(result.basis).toBe('profile');
-    expect(result.items[0]).toMatchObject({
+    expect(result.main.items[0]).toMatchObject({
       game: { slug: 'horror-only' },
       reason: { kind: 'features', features: [{ slug: 'horror', name: 'Terror' }] },
     });
@@ -138,7 +166,7 @@ describe('GenerateRecommendationsUseCase', () => {
   it('traz os motivos na ordem da contribuição, não do nome', async () => {
     rate('dead-cells', 5);
 
-    const hades = (await execute()).items.find(({ game }) => game.slug === 'hades');
+    const hades = (await execute()).main.items.find(({ game }) => game.slug === 'hades');
 
     expect(hades?.reason).toEqual({
       kind: 'features',
@@ -161,7 +189,6 @@ describe('GenerateRecommendationsUseCase', () => {
       {
         userId: 'u-1',
         mode: DiscoveryMode.BALANCED,
-        limit: 10,
         interactions: [
           {
             gameId: gameId('celeste'),
@@ -177,11 +204,14 @@ describe('GenerateRecommendationsUseCase', () => {
           },
         ],
         preferencePositions: [],
+        hiddenPositions: new Set(),
       },
       scoringConfig,
     );
 
-    expect(slugs(result)).toEqual(expected.items.map(({ game }) => game.slug));
+    expect(slugs(result)).toEqual(
+      expected.lists[0]!.games.slice(0, scoringConfig.lists.overviewMainSize).map((g) => g.slug),
+    );
   });
 
   it('jogo da biblioteca fora do índice entra no perfil com o vetor que teria no índice', async () => {
@@ -199,7 +229,7 @@ describe('GenerateRecommendationsUseCase', () => {
     repository.outOfCatalog.add('celeste');
 
     const result = await execute(scoringIndex({ without: ['celeste'] }));
-    const climbOnly = result.items.find(({ game }) => game.slug === 'climb-only');
+    const climbOnly = result.main.items.find(({ game }) => game.slug === 'climb-only');
 
     expect(climbOnly?.reason).toEqual({
       kind: 'liked-game',
@@ -221,11 +251,62 @@ describe('GenerateRecommendationsUseCase', () => {
   it('usa o modo pedido e só marca "pouco conhecido" no modo Descobertas', async () => {
     rate('dead-cells', 5);
     const firstOf = async (mode: DiscoveryMode) => {
-      const result = await execute(undefined, mode, 1);
-      return [result.mode, result.items[0]?.game.slug, result.items[0]?.lowKnown];
+      const result = await execute(undefined, mode, withLists({ overviewMainSize: 1 }));
+      return [result.mode, result.main.items[0]?.game.slug, result.main.items[0]?.lowKnown];
     };
 
     expect(await firstOf(DiscoveryMode.DISCOVERY)).toEqual(['DISCOVERY', 'obscure-rogue', true]);
     expect(await firstOf(DiscoveryMode.BALANCED)).toEqual(['BALANCED', 'spelunky', false]);
+  });
+
+  describe('com um gosto dominante e um secundário', () => {
+    const index = tasteIndex();
+    const small = withLists({ overviewMainSize: 6, overviewShelfSize: 3, shelfMinItems: 1 });
+    const horror = { type: 'THEME', slug: 'horror', name: 'Terror' };
+    const horrorGames = ['saga-fright', 'fright-a', 'fright-b', 'fright-c', 'fright-soon'];
+
+    beforeEach(() => {
+      for (const slug of TASTE_LIBRARY) rate(slug, 5);
+    });
+
+    it('monta as prateleiras na ordem da página, com o atributo em português', async () => {
+      const { shelves } = await execute(index, DiscoveryMode.BALANCED, small);
+
+      expect(shelves.map(({ key, kind, feature }) => [key, kind, feature])).toEqual([
+        ['upcoming', 'upcoming', null],
+        ['genre:rpg', 'interest', { type: 'GENRE', slug: 'rpg', name: 'RPG' }],
+        ['theme:horror', 'interest', horror],
+      ]);
+    });
+
+    it('a lista principal traz o terror logo no começo, e a visão geral não repete jogos', async () => {
+      const result = await execute(index, DiscoveryMode.BALANCED, small);
+      const shown = [result.main, ...result.shelves].flatMap(({ items }) =>
+        items.map(({ game }) => game.slug),
+      );
+
+      // Cotas de 75% e 25%: o terror entra na 3ª posição (e na 7ª, fora da visão geral).
+      const isHorror = slugs(result).map((slug) => horrorGames.includes(slug));
+      expect(isHorror).toEqual([false, false, true, false, false, false]);
+      expect(new Set(shown).size).toBe(shown.length);
+    });
+
+    it('o "ver mais" de uma prateleira traz a lista completa, com repetição', async () => {
+      const { main } = await execute(index, DiscoveryMode.BALANCED, small);
+      const page = await pageOf('theme:horror', 1, index, small);
+      const horrorInMain = main.items
+        .map(({ game }) => game.slug)
+        .filter((slug) => horrorGames.includes(slug));
+
+      expect(page).toMatchObject({ key: 'theme:horror', feature: horror, page: 1, hasMore: false });
+      expect(horrorInMain.length).toBeGreaterThan(0);
+      expect(page.items.map(({ game }) => game.slug)).toEqual(expect.arrayContaining(horrorInMain));
+    });
+
+    it('responde 404 para a chave que não é uma lista atual do perfil', async () => {
+      for (const key of ['genre:shooter', 'theme:nada', 'horror', 'genre:indie', 'GENRE:rpg']) {
+        await expect(pageOf(key, 1, index)).rejects.toThrow(new NotFoundException(LIST_NOT_FOUND));
+      }
+    });
   });
 });

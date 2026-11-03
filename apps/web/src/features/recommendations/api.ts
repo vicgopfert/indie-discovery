@@ -1,7 +1,7 @@
 import {
   type DiscoveryMode,
   MODE_PARAMS,
-  RecommendationListSchema,
+  RecommendationOverviewSchema,
   UserSchema,
 } from '@indie/contracts';
 import { apiFetch } from '@/lib/api-client';
@@ -13,7 +13,7 @@ const MODE_QUERY = Object.fromEntries(
 
 // O modo vai sempre na consulta: sem ele, a API usaria o salvo, que pode ainda não ser o escolhido.
 export const getRecommendations = (mode: DiscoveryMode) =>
-  apiFetch(`/recommendations?mode=${MODE_QUERY[mode]}`, { schema: RecommendationListSchema });
+  apiFetch(`/recommendations?mode=${MODE_QUERY[mode]}`, { schema: RecommendationOverviewSchema });
 
 export const saveDiscoveryMode = (discoveryMode: DiscoveryMode) =>
   apiFetch('/me', { method: 'PATCH', body: { discoveryMode }, schema: UserSchema });

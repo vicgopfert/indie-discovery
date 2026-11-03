@@ -1,4 +1,4 @@
-# Recomendação: núcleo de pontuação (B-32), rota (B-33) e página (B-35)
+# Recomendação: núcleo de pontuação (B-32), rota (B-33), página (B-35) e listas por interesse (B-71)
 
 O núcleo são funções puras em `apps/api/src/modules/recommendation/scoring/`, com os pesos
 na seção `scoring` de `apps/api/config/recommendation.json`. Ele recebe o índice de
@@ -262,7 +262,157 @@ recebeu só RPG e aventura no top-20.
   jogador.
 - **Correção:** prateleiras por interesse, lista principal que intercala os interesses na
   proporção do peso de cada um e "ver mais" paginado, no B-71 (API) e no B-72 (interface). A
-  regra e o registro do desvio estão na seção 12 da proposta técnica, item 4.
+  regra e o registro do desvio estão na seção 12 da proposta técnica, item 4. No plano do
+  B-71, a escolha dos interesses passou a ser pela cobertura da biblioteca (seção abaixo).
+
+## Listas por interesse (B-71)
+
+O núcleo deixa de devolver uma lista só e passa a montar, a partir do mesmo conjunto de
+candidatos, a lista principal "Para você", a prateleira "Em breve no seu gosto" e uma
+prateleira "Porque você curte `<atributo>`" para cada interesse. As funções estão em
+`scoring/interests.ts` (interesses), `scoring/lists.ts` (prateleiras e intercalação) e
+`scoring/overview.ts` (visão geral e páginas); os tamanhos, no bloco `scoring.lists` de
+`config/recommendation.json`.
+
+### Interesses pela cobertura da biblioteca
+
+O registro da correção previa os interesses pelos maiores `u_k`. **Desvio decidido pelo autor
+no plano do B-71:** o gosto dominante aparece como um grupo de atributos que andam juntos nos
+mesmos jogos (RPG, Aventura, Fantasia e Ação). Pelos maiores `u_k`, com teto de 4, esse grupo
+pode ocupar todas as vagas, e o gosto secundário (o terror do caso de produção) fica sem
+prateleira; as cotas `u_k / Σ u` também dividiam o gosto dominante entre vários atributos e
+encolhiam o secundário. Isso manteria o problema que o B-71 existe para resolver.
+
+1. **Itens a cobrir:** cada jogo da biblioteca com peso `w > 0` e vetor, e cada preferência da
+   partida a frio, como um item de peso β que só tem o próprio atributo.
+2. **Candidatos:** os gêneros e temas com `u_k > 0`, sem os escondidos dos filtros (Indie) e
+   sem os presentes em mais de 40% do catálogo (`interestMaxDocumentRatio`). A condição
+   `u_k > 0` fica para que uma nota negativa possa anular um atributo. O limite de frequência
+   foi decidido pelo autor depois da conferência no navegador (seção "Atributos genéricos",
+   abaixo); a fração de cada atributo é contada na carga do índice, sem consulta nova, e vale
+   só para a escolha dos interesses: os atributos genéricos continuam na pontuação, no perfil e
+   no motivo.
+3. **Escolha gulosa:** a cada passo entra o candidato com a maior soma dos pesos dos itens
+   ainda não cobertos que o contêm; no empate, o de maior `u_k` e depois o de menor posição.
+   Para no máximo da configuração ou quando nenhum candidato cobre peso novo.
+4. **Cota de cada interesse:** o peso que ele cobriu ao entrar, dividido pelo total coberto.
+   No caso de produção (seis jogos de RPG, Aventura, Fantasia e Ação e dois de terror, todos
+   com nota 5), entram um atributo do grupo dominante e o terror, com cotas de 6w contra 2w
+   (75% e 25%); Aventura e Fantasia ficam de fora por não cobrirem nenhum jogo novo.
+
+Como a escolha gulosa só ganha menos a cada passo, a ordem de entrada já é a ordem das cotas,
+e é a ordem das prateleiras na página.
+
+### Listas
+
+- **Prateleira de um interesse:** os candidatos com o atributo, na ordem da pontuação do perfil
+  inteiro, com o mesmo desempate; sobem primeiro os que também batem com os outros gostos (no
+  caso de produção, o jogo de RPG e terror abre a prateleira de terror). "Em breve": os
+  candidatos não lançados, na mesma ordem.
+- **Lista principal:** posição a posição, entra o próximo jogo ainda não usado da prateleira
+  com o maior déficit em relação à cota (`cota · n − c_k`); no empate, a de maior cota.
+  Esgotadas as prateleiras, segue pelos candidatos restantes, na ordem da pontuação. Com cotas
+  de 75% e 25%, o gosto secundário entra na 3ª, na 7ª e na 11ª posições. Com menos de 2
+  interesses, é a ordem da pontuação, como antes.
+- **Cortes:** cada prateleira é cortada em 200 e a principal em 100. As prateleiras bastam para
+  preencher a principal: uma prateleira dá no máximo 100 jogos a ela, e no máximo 100 jogos já
+  foram usados pelas outras. A configuração recusa um teto da principal acima do das
+  prateleiras.
+- **Visão geral sem repetição:** a principal mostra 20; depois, "Em breve" e os interesses, na
+  ordem das cotas, cada um com até 10 jogos que ainda não apareceram. A prateleira com menos de
+  4 some, e os jogos dela continuam livres para as seguintes.
+- **"Ver mais":** páginas de 20 da lista completa, com repetição; além do teto, a página vem
+  vazia. A chave que não é uma lista atual do perfil (inclusive malformada) responde 404.
+- **"Pouco conhecido":** no modo Descobertas, cada lista é montada também com λ = 0 (a
+  principal, com as mesmas cotas). O jogo é marcado se não estaria entre os N primeiros dessa
+  versão, N a posição do último jogo mostrado na lista completa.
+- **Determinismo:** a soma do perfil passou a seguir a ordem do id do jogo. Antes, as
+  interações vinham do banco sem ordem garantida, e a soma em ponto flutuante dependia dela; o
+  teste usa uma combinação do fixture em que a ordem muda o último bit (subitem do B-36, trazido
+  para o B-71 por decisão do autor).
+
+### Valores iniciais
+
+| Valor | Inicial | Justificativa |
+| --- | --- | --- |
+| Interesses | 4 | Meio da faixa de 3 a 5 do registro; a partida a frio exige 3 preferências, e com 5 a visão geral passaria de 80 cartões |
+| Frequência máxima de um interesse no catálogo | 40% | Um atributo em quase metade do catálogo cobre a biblioteca inteira e impede a escolha dos outros interesses, e a prateleira dele não ajuda a descobrir nada; hoje tira só Aventura (54%) e o tema Ação (53%), e 30% daria o mesmo resultado |
+| Mínimo por prateleira | 4 | Com 1 a 3 jogos, a prateleira parece quebrada |
+| Visão geral | 20 na principal, 10 por prateleira | 20 é o corte das métricas do B-37 e o tamanho da primeira página do "ver mais" |
+| Página do "ver mais" | 20 | — |
+| Tetos | 100 na principal, 200 nas prateleiras | Nas páginas fundas a afinidade cai muito (registro da correção) |
+
+### Atributos genéricos
+
+A conferência no navegador reproduziu o caso de produção no catálogo local: seis jogos de RPG
+com fantasia e dois de tiro com terror, todos com nota 5. Saiu um interesse só, Aventura: ela
+estava nos oito jogos (os de terror eram 7 Days to Die e Amnesia: The Bunker) e cobriu a
+biblioteca inteira no primeiro passo. Com um interesse, a principal voltou a ser a ordem da
+pontuação, e o terror ficou sem prateleira, justamente o problema que o B-71 corrige.
+
+Aventura está em 54% do catálogo e o tema Ação em 53%; o próximo atributo, Simulação, em 26%.
+**Decidido pelo autor:** um gênero ou tema acima de 40% do catálogo não vira interesse. O fixture
+anterior não pegou o caso porque não tinha um atributo genérico comum aos dois gostos; o teste
+de regressão usa seis jogos de RPG, Fantasia e Aventura e dois de Tiro, Terror e Aventura, com
+Aventura em todo o catálogo: sem o limite sai só Aventura, e com ele o gosto secundário vira o
+segundo interesse e entra na 3ª posição da principal.
+
+Com o limite, a mesma conferência deu RPG e Quebra-cabeça como interesses, com as duas
+prateleiras e o segundo interesse no começo da principal. RPG cobriu sete dos oito jogos; o
+oitavo, Amnesia, tem Quebra-cabeça, Tiro, Terror, Mistério, Furtividade e Sobrevivência, que
+empatam na cobertura. O desempate pelo `u_k` escolheu Quebra-cabeça, que também está em Tunic e
+Undertale, à frente de Terror, que está em 7 Days to Die e Undertale; a fatia de gêneros (40%)
+contra a de temas (30%) também pesa. É o efeito anotado para a calibração do B-37.
+
+### Cobertura dos interesses (03/11/2026)
+
+Nos 200 perfis por avaliações (quatro jogos sorteados com semente fixa, notas 5, 5, 4 e 1;
+semente 71, porque a do B-32 não ficou registrada), com 4 interesses no máximo. As três linhas
+registram como a regra chegou aqui:
+
+| Regra | Jogos com peso positivo cobertos | Perfis com todos cobertos | Perfis com 1 / 2 / 3 interesses |
+| --- | --- | --- | --- |
+| Cobertura, sem atributos acima de 40% do catálogo (regra atual) | 556 de 600 (92,7%) | 159 de 200 | 22 / 129 / 49 |
+| Cobertura, sem o limite | 598 de 600 (99,7%) | 198 de 200 | 55 / 131 / 14 |
+| Maiores `u_k` (registro original) | 560 de 600 (93,3%) | 160 de 200 | — |
+
+- **Sem o limite:** a cobertura é quase total, mas porque Aventura (76 perfis) e Ação (54) cobrem
+  muito sozinhas: nos 55 perfis com um interesse só, Aventura é o único em 27 e Ação em 19.
+- **Com o limite:** os perfis com um interesse só caem de 55 para 22, e os com três sobem de 14
+  para 49. A cobertura cai para 92,7% porque há jogos cujo único gênero ou tema visível é
+  Aventura ou Ação. Com limite de 30%, os números são os mesmos.
+- **Maiores `u_k`:** 40 perfis ficam com um dos três jogos de que gostaram sem prateleira nem
+  cota.
+- Os dois jogos sem cobertura na regra sem limite têm todos os gêneros e temas anulados pela
+  nota 1.
+
+### Tempo de resposta no catálogo local (03/11/2026)
+
+Os mesmos 400 perfis (200 por avaliações e 200 só por preferências), gravados como contas de
+teste no banco local e apagados depois, com o build de produção (`node dist/main.js`). Para
+comparar, a mesma medição rodou na `main` de antes do B-71 (lista única de 20), com os mesmos
+perfis. A visão geral foi medida com a regra atual, já com o limite de frequência. Tempo medido
+pelo cliente, mediana (p95):
+
+| Perfis | Modo | Lista única | Visão geral (B-71) |
+| --- | --- | --- | --- |
+| Por avaliações | Populares | 17,4 ms (21,0) | 28,6 ms (35,3) |
+| Por avaliações | Equilibrado | 17,0 ms (21,3) | 29,4 ms (34,8) |
+| Por avaliações | Descobertas | 21,6 ms (27,1) | 37,7 ms (45,2) |
+| Só por preferências | Populares | 11,9 ms (14,8) | 21,6 ms (26,7) |
+| Só por preferências | Equilibrado | 11,6 ms (15,3) | 22,0 ms (28,0) |
+| Só por preferências | Descobertas | 13,1 ms (18,5) | 26,2 ms (35,1) |
+
+O "ver mais", no Equilibrado: 24,0 ms (31,2) na página 1 da principal, 23,6 ms (31,4) na página
+1 da primeira prateleira de interesse e 23,6 ms (32,2) na página 5 dela.
+
+No log da API, a visão geral ficou em 26 ms de mediana, 39 ms no p95 e 157 ms no máximo (1.210
+requisições), contra 15, 23 e 180 ms da lista única; as páginas, em 23, 30 e 43 ms (1.200
+requisições). O custo quase dobrou: cada lista é ordenada até o teto (até 200, contra 20 antes),
+e o modo Descobertas monta todas de novo com λ = 0. Nos 400 perfis, todos tiveram a prateleira
+"Em breve" na visão geral; as prateleiras de interesse visíveis foram 1 em 22 perfis, 2 em 166 e
+3 em 212, e a visão geral teve 60 cartões na mediana. O tempo em produção é medido depois do
+merge.
 
 ## Limitações
 

@@ -110,16 +110,17 @@ Entrega: jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de
 
 - [x] **B-28** (M, E4) Componentes de avaliação e listas na ficha do jogo — concluído em 03/11/2026: nota e listas na ficha, com `GET /api/me/library/:slug`; quem não entrou vai ao login e volta para a ficha; os mesmos controles para jogos "Em breve"
 - [x] **B-35** (M, E5) Página de recomendações com motivo e seletor de modo — concluído em 03/11/2026: `/recomendacoes` com o motivo de cada jogo e o selo "Pouco conhecido"; trocar o modo grava a escolha e depois traz a lista do modo novo; sem lista pelo perfil, o seletor some
-- [ ] **B-71** (M, E5) Prateleiras por interesse, lista principal intercalada e paginação na API — correção do F-11, registrada como desvio da seção 12 da proposta técnica em 03/11/2026: com um vetor de perfil único, o gosto dominante esconde os secundários (`docs/recomendacao.md`)
-  - [ ] Interesses: de 3 a 5 gêneros ou temas com maior componente positiva no perfil, sem os escondidos dos filtros; quantidade e mínimo de jogos por prateleira em `config/recommendation.json`, com justificativa
-  - [ ] Prateleiras "Porque você curte `<atributo>`" e "Em breve no seu gosto" como recortes do mesmo conjunto de candidatos, ordenados pela pontuação do perfil inteiro; cosseno calculado uma vez por requisição
-  - [ ] Lista principal "Para você" intercalada na proporção do peso de cada interesse, determinística; com menos de 2 interesses, a ordenação de antes; `popular` e `empty` sem prateleiras
-  - [ ] Visão geral sem repetição; rota paginada do "ver mais", com tetos em config (100 na principal e 200 nas prateleiras, valores iniciais)
-  - [ ] "Pouco conhecido" em todas as listas, pelo corte da própria lista com λ = 0
-  - [ ] Tempo de resposta medido de novo com o catálogo real
+- [x] **B-71** (M, E5) Prateleiras por interesse, lista principal intercalada e paginação na API — correção do F-11, registrada como desvio da seção 12 da proposta técnica em 03/11/2026: com um vetor de perfil único, o gosto dominante esconde os secundários (`docs/recomendacao.md`) — concluído em 03/11/2026: `GET /api/recommendations` responde a visão geral e `GET /api/recommendations/lists/:key` o "ver mais"; a página do B-35 lê a lista principal até o B-72
+  - [x] Interesses: de 3 a 5 gêneros ou temas, sem os escondidos dos filtros; quantidade e mínimo de jogos por prateleira em `config/recommendation.json`, com justificativa — escolhidos pela cobertura da biblioteca, e não pelos maiores `u_k` (desvio decidido no plano), sem os gêneros e temas presentes em mais de 40% do catálogo (Aventura e Ação, decidido depois da conferência no navegador); 4 interesses e mínimo de 4 jogos
+  - [x] Prateleiras "Porque você curte `<atributo>`" e "Em breve no seu gosto" como recortes do mesmo conjunto de candidatos, ordenados pela pontuação do perfil inteiro; cosseno calculado uma vez por requisição
+  - [x] Lista principal "Para você" intercalada na proporção da cobertura de cada interesse, determinística; com menos de 2 interesses, a ordenação de antes; `popular` e `empty` sem prateleiras
+  - [x] Visão geral sem repetição; rota paginada do "ver mais", com tetos em config (100 na principal e 200 nas prateleiras, valores iniciais)
+  - [x] "Pouco conhecido" em todas as listas, pelo corte da própria lista com λ = 0
+  - [x] Tempo de resposta medido de novo com o catálogo real — 26 ms de mediana no servidor com o catálogo local, contra 15 ms da lista única nos mesmos perfis; produção depois do merge
 - [ ] **B-72** (M, E5) Interface da visão geral de recomendações e "ver mais": lista principal no topo e prateleiras abaixo, sem repetição; "ver mais" com a lista completa paginada
+  - [ ] A rota do "ver mais" responde 404 quando a chave deixou de existir (o interesse pode mudar depois de o jogador avaliar jogos): a página da lista expandida trata esse 404 voltando para a visão geral, sem mostrar erro (levantado no B-71)
 - [ ] **B-36** (P, E5) E2e de recomendação + teste de determinismo — ampliado no B-71: cobre a visão geral sem repetição, as prateleiras, a paginação com os tetos e o determinismo de cada lista (a principal, cada prateleira e cada página)
-  - [ ] Fixar a ordem das interações lidas do banco antes de montar o perfil: hoje vêm sem `ORDER BY`, e a soma em ponto flutuante depende da ordem (levantado no plano do B-36)
+  - [x] Fixar a ordem das interações lidas do banco antes de montar o perfil: hoje vêm sem `ORDER BY`, e a soma em ponto flutuante depende da ordem (levantado no plano do B-36) — feito no B-71: a soma do perfil segue a ordem do id do jogo
 - [ ] **B-30** (P, E4) E2e de biblioteca e posse dos dados (um usuário não altera dados de outro)
 - [ ] **B-58** (M, E3) Interface das coleções: vitrine "Explore por cultura", página da coleção, indicação na ficha
 
@@ -133,6 +134,7 @@ Entrega: todos os P0 prontos; pesos calibrados; **congelamento**.
 - [ ] **B-37** (M, E5) Script de avaliação offline + calibração dos pesos (depois do B-69)
   - [ ] No modo Descobertas, 62% dos itens recebem "Pouco conhecido" (medição do B-32); verificar na calibração se o λ de 0,3 está dominando a afinidade (levantado no B-35). Na conferência em produção do B-35, 18 de 20 itens (90%) saíram com a marca, e só 2 jogos eram comuns às listas do Equilibrado e do Descobertas: indício de que o λ de 0,3 está dominando a afinidade
   - [ ] Métrica "cobertura dos interesses do perfil": fração dos gêneros e temas positivos do perfil presentes no top-20; comparar a lista única atual com a lista principal intercalada do B-71, em todas as métricas
+  - [ ] Preferências e fatias de bloco na escolha dos interesses (levantado no B-71): cada preferência da partida a frio soma β = 1 direto na componente dela, contra no máximo `w · 0,4` de um jogo, e as fatias 40/30/30 puxam os gêneros à frente dos temas no `u_k`. Com a regra de cobertura, o `u_k` só decide empates, e a relação que pesa é outra: a preferência entra como item de peso β contra o `w` de cada jogo (de 0,5 a 5), o que decide quanto ela vale nas cotas da lista principal; essa relação também é calibração do B-37
 - [ ] **B-62** (M, E5) Modo de jogo e perspectiva como quarto bloco do vetor (fatia em config, fora da explicação ao jogador); a fatia só fica acima de zero se melhorar o acerto@10 no B-37; medir depois do B-69 — movido da S7 para a S10 no B-32, para ficar ao lado do B-37 que decide a fatia
 - [ ] **B-25** (P, E3) Página "Como funciona" (lista grandes empresas, estúdios controlados e exceções manuais com motivo e fonte)
 

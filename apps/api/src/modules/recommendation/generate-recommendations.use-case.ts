@@ -1,5 +1,12 @@
-import type { RecommendationList, RecommendationReason } from '@indie/contracts';
-import { Inject, Injectable, ServiceUnavailableException } from '@nestjs/common';
+import type {
+  Recommendation,
+  RecommendationFeature,
+  RecommendationOverview,
+  RecommendationPage,
+  RecommendationReason,
+  RecommendationShelf,
+} from '@indie/contracts';
+import { Inject, Injectable, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { type DiscoveryMode, FeatureType, type ListType } from '../../generated/prisma/client';
 import { CatalogService } from '../catalog/catalog.service';
 import { FeatureLabels, type LabeledFeatureType } from '../catalog/feature-labels';
@@ -11,14 +18,20 @@ import {
   type UserState,
 } from './recommendation.repository';
 import type { RecommendationReason as ScoredReason } from './scoring/explain';
+import { MAIN_LIST_KEY, type RankedList } from './scoring/lists';
+import { listPage, overview, type ShownGame } from './scoring/overview';
 import type { Interaction } from './scoring/profile';
-import { recommend } from './scoring/recommend';
+import { recommend, type RecommendationLists } from './scoring/recommend';
 import type { ScoringConfig } from './scoring/scoring-config';
 
 export const SCORING_CONFIG = Symbol('SCORING_CONFIG');
 
 export const INDEX_UNAVAILABLE =
   'As recomendações ainda não estão disponíveis; tente novamente em alguns instantes.';
+
+export const LIST_NOT_FOUND = 'Lista não encontrada.';
+
+const NO_ITEMS = { items: [], hasMore: false };
 
 @Injectable()
 export class GenerateRecommendationsUseCase {
@@ -30,58 +43,130 @@ export class GenerateRecommendationsUseCase {
     @Inject(SCORING_CONFIG) private readonly config: ScoringConfig,
   ) {}
 
-  // Com o índice carregando ou com falha, 503, nunca lista vazia: o jogador a leria
-  // como falta de jogos para o gosto dele.
-  async execute(userId: string, mode: DiscoveryMode, limit: number): Promise<RecommendationList> {
+  async overview(userId: string, mode: DiscoveryMode): Promise<RecommendationOverview> {
+    const result = await this.recommend(userId, mode);
+    if (result === null) return { mode, basis: 'empty', main: NO_ITEMS, shelves: [] };
+
+    const [main, ...shelves] = overview(result.lists, this.config.lists);
+    const [mainItems, ...shelfItems] = await this.present(
+      result,
+      [main!, ...shelves].map(({ items }) => items),
+    );
+    return {
+      mode,
+      basis: result.basis,
+      main: { items: mainItems!, hasMore: main!.hasMore },
+      shelves: shelves.map(({ list, hasMore }, i) => this.shelf(list, shelfItems[i]!, hasMore)),
+    };
+  }
+
+  // Com a lista vazia (sem perfil), só a principal existe, e vazia. Uma chave que não está entre
+  // as listas atuais responde 404: o perfil pode ter mudado entre a visão geral e o "ver mais".
+  async page(
+    userId: string,
+    mode: DiscoveryMode,
+    key: string,
+    page: number,
+  ): Promise<RecommendationPage> {
+    const result = await this.recommend(userId, mode);
+    if (result === null && key === MAIN_LIST_KEY) {
+      return { mode, key, feature: null, page, ...NO_ITEMS };
+    }
+    const list = result?.lists.find((candidate) => candidate.key === key);
+    if (!result || !list) throw new NotFoundException(LIST_NOT_FOUND);
+
+    const { items, hasMore } = listPage(list, page, this.config.lists);
+    const [presented] = await this.present(result, [items]);
+    return { mode, key, feature: this.feature(list), page, items: presented!, hasMore };
+  }
+
+  // Com o índice carregando ou com falha, 503, nunca lista vazia: o jogador a leria como falta de
+  // jogos para o gosto dele. Sem avaliações, listas nem preferências gravadas, null: partida a
+  // frio. Pelo que está gravado, não pelo que o índice reconhece: quem já escolheu preferências
+  // não volta para a partida a frio se elas saírem do índice.
+  private async recommend(
+    userId: string,
+    mode: DiscoveryMode,
+  ): Promise<RecommendationLists | null> {
     const index = this.contentIndex.index;
     if (!index) throw new ServiceUnavailableException(INDEX_UNAVAILABLE);
 
     const state = await this.repository.findUserState(userId, (gameId) =>
       index.positionByGameId.has(gameId),
     );
-    // Pelo que está gravado, não pelo que o índice reconhece: quem já escolheu preferências não
-    // volta para a partida a frio se elas saírem do índice.
     if (
       state.ratings.length === 0 &&
       state.listEntries.length === 0 &&
       state.preferenceFeatureIds.length === 0
     ) {
-      return { mode, basis: 'empty', items: [] };
+      return null;
     }
 
-    const result = recommend(
+    return recommend(
       index,
       {
         userId,
         mode,
-        limit,
         interactions: interactionsOf(index, state),
         preferencePositions: state.preferenceFeatureIds.flatMap((id) => {
           const position = index.positionByFeatureId.get(id);
           return position === undefined ? [] : [position];
         }),
+        hiddenPositions: this.hiddenPositions(index),
       },
       this.config,
     );
+  }
 
-    const gameIds = result.items.flatMap(({ game, reason }) =>
-      reason?.kind === 'liked-game' ? [game.id, reason.gameId] : [game.id],
+  private hiddenPositions(index: ContentIndex): Set<number> {
+    const hidden = new Set<number>();
+    index.features.forEach((feature, position) => {
+      if (isLabeled(feature) && this.labels.isHidden(feature.type, feature.slug)) {
+        hidden.add(position);
+      }
+    });
+    return hidden;
+  }
+
+  // Uma consulta ao banco para todas as listas. Um jogo pode ter saído do catálogo depois da
+  // última carga do índice: fica de fora.
+  private async present(
+    result: RecommendationLists,
+    lists: readonly (readonly ShownGame[])[],
+  ): Promise<Recommendation[][]> {
+    const explained = lists.map((items) =>
+      items.map(({ game, lowKnown }) => ({ game, lowKnown, reason: result.reasonOf(game) })),
     );
+    const gameIds = explained
+      .flat()
+      .flatMap(({ game, reason }) =>
+        reason?.kind === 'liked-game' ? [game.id, reason.gameId] : [game.id],
+      );
     const games = new Map(
       (await this.repository.findGames([...new Set(gameIds)])).map((game) => [game.id, game]),
     );
-    // Um jogo pode ter saído do catálogo depois da última carga do índice: fica de fora.
-    return {
-      mode,
-      basis: result.basis,
-      items: result.items.flatMap(({ game, reason, lowKnown }) => {
+    return explained.map((items) =>
+      items.flatMap(({ game, reason, lowKnown }) => {
         const row = games.get(game.id);
         if (!row?.inCatalog) return [];
         return [
           { game: this.catalog.toSummary(row), reason: this.reason(reason, games), lowKnown },
         ];
       }),
-    };
+    );
+  }
+
+  private shelf(list: RankedList, items: Recommendation[], hasMore: boolean): RecommendationShelf {
+    const feature = this.feature(list);
+    return feature === null
+      ? { key: 'upcoming', kind: 'upcoming', feature, items, hasMore }
+      : { key: list.key, kind: 'interest', feature, items, hasMore };
+  }
+
+  private feature({ feature }: RankedList): RecommendationFeature | null {
+    if (feature === null || !isLabeled(feature)) return null;
+    const { type, slug, name } = feature;
+    return { type, slug, name: this.labels.name(type, slug, name) };
   }
 
   private reason(

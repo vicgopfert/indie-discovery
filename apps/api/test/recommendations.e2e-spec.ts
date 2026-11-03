@@ -1,4 +1,9 @@
-import { ApiErrorSchema, RecommendationListSchema, UserSchema } from '@indie/contracts';
+import {
+  ApiErrorSchema,
+  RecommendationOverviewSchema,
+  RecommendationPageSchema,
+  UserSchema,
+} from '@indie/contracts';
 import { type INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
@@ -84,18 +89,30 @@ describe('Recomendações (GET /recommendations)', () => {
   const recommendations = async (query = '') => {
     const response = await helpers.as(jogadora).get(`/api/recommendations${query}`);
     expect(response.status).toBe(200);
-    return RecommendationListSchema.parse(response.body);
+    return RecommendationOverviewSchema.parse(response.body);
   };
-  const slugs = async (query = '') => (await recommendations(query)).items.map((i) => i.game.slug);
+  const slugs = async (query = '') =>
+    (await recommendations(query)).main.items.map((i) => i.game.slug);
+  const listPage = async (key: string, query = '') => {
+    const response = await helpers.as(jogadora).get(`/api/recommendations/lists/${key}${query}`);
+    expect(response.status).toBe(200);
+    return RecommendationPageSchema.parse(response.body);
+  };
   const rate = (slug: string, score: number) =>
     helpers.as(jogadora).put(`/api/me/ratings/${slug}`, { score });
 
   it('exige sessão', async () => {
     expect((await helpers.server().get('/api/recommendations')).status).toBe(401);
+    expect((await helpers.server().get('/api/recommendations/lists/main')).status).toBe(401);
   });
 
   it('sem avaliações, listas nem preferências, indica a partida a frio', async () => {
-    expect(await recommendations()).toEqual({ mode: 'BALANCED', basis: 'empty', items: [] });
+    expect(await recommendations()).toEqual({
+      mode: 'BALANCED',
+      basis: 'empty',
+      main: { items: [], hasMore: false },
+      shelves: [],
+    });
   });
 
   it('só com as preferências, recomenda com o motivo em português', async () => {
@@ -106,7 +123,7 @@ describe('Recomendações (GET /recommendations)', () => {
     const list = await recommendations();
 
     expect(list.basis).toBe('profile');
-    expect(list.items[0]).toMatchObject({
+    expect(list.main.items[0]).toMatchObject({
       game: { slug: 'inside', name: 'Inside' },
       reason: {
         kind: 'features',
@@ -136,7 +153,8 @@ describe('Recomendações (GET /recommendations)', () => {
     const list = await recommendations();
 
     expect(list.basis).toBe('popular');
-    expect(list.items.map(({ game }) => game.slug)).toEqual([
+    expect(list.shelves).toEqual([]);
+    expect(list.main.items.map(({ game }) => game.slug)).toEqual([
       'hollow-knight',
       'ori',
       'celeste',
@@ -155,16 +173,50 @@ describe('Recomendações (GET /recommendations)', () => {
     expect(me.discoveryMode).toBe('DISCOVERY');
   });
 
-  it('respeita o limite e recusa modo ou limite fora das opções', async () => {
+  it('recusa modo ou página fora das opções', async () => {
     await rate('celeste', 5);
 
-    expect(await slugs('?limit=2')).toHaveLength(2);
-    const invalid = await helpers.as(jogadora).get('/api/recommendations?mode=novidades&limit=51');
+    const invalid = await helpers.as(jogadora).get('/api/recommendations?mode=novidades');
     expect(invalid.status).toBe(400);
     expect(ApiErrorSchema.parse(invalid.body).message).toEqual([
       'mode: Modo deve ser popular, balanced ou discovery.',
-      'limit: O limite vai até 50.',
     ]);
+    const page = await helpers.as(jogadora).get('/api/recommendations/lists/main?page=0');
+    expect(page.status).toBe(400);
+    expect(ApiErrorSchema.parse(page.body).message).toEqual(['page: A página começa em 1.']);
+  });
+
+  it('mostra uma prateleira por interesse, sem repetir jogos, e o "ver mais" de cada lista', async () => {
+    await helpers
+      .as(jogadora)
+      .put('/api/me/preferences', { genres: ['puzzle', 'shooter'], themes: ['horror'] });
+
+    const overview = await recommendations();
+    const shown = [overview.main, ...overview.shelves].flatMap(({ items }) =>
+      items.map(({ game }) => game.slug),
+    );
+    expect(new Set(shown).size).toBe(shown.length);
+
+    const horror = await listPage('theme:horror');
+    expect(horror).toMatchObject({
+      mode: 'BALANCED',
+      key: 'theme:horror',
+      feature: { type: 'THEME', slug: 'horror', name: 'Terror' },
+      page: 1,
+      hasMore: false,
+    });
+    expect(horror.items.map(({ game }) => game.slug).sort()).toEqual(['darkwood', 'inside']);
+    expect((await listPage('main', '?page=2')).items).toEqual([]);
+  });
+
+  it('responde 404 para a lista que não é do perfil', async () => {
+    await rate('celeste', 5);
+
+    for (const key of ['theme:horror', 'nada', 'genre:']) {
+      const response = await helpers.as(jogadora).get(`/api/recommendations/lists/${key}`);
+      expect(response.status).toBe(404);
+      expect(ApiErrorSchema.parse(response.body).message).toBe('Lista não encontrada.');
+    }
   });
 
   it('o jogo da biblioteca que sai do catálogo continua no perfil', async () => {

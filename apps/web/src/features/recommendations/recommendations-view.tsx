@@ -1,6 +1,6 @@
 'use client';
 
-import type { DiscoveryMode, RecommendationList } from '@indie/contracts';
+import type { DiscoveryMode, RecommendationOverview } from '@indie/contracts';
 import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useEffect } from 'react';
@@ -92,10 +92,14 @@ function Recommendations({ mode }: { mode: DiscoveryMode }) {
 }
 
 function RecommendedGames({
-  list: { mode, basis, items },
+  list: {
+    mode,
+    basis,
+    main: { items },
+  },
   updating,
 }: {
-  list: RecommendationList;
+  list: RecommendationOverview;
   updating: boolean;
 }) {
   if (basis === 'empty') {

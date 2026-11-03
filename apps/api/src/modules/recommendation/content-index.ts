@@ -32,6 +32,8 @@ export interface IndexedFeature {
   type: FeatureType;
   slug: string;
   name: string;
+  // Fração dos jogos do índice que têm o atributo.
+  documentRatio: number;
 }
 
 // Vetor esparso com as posições em ordem crescente, para o produto escalar andar em paralelo.
@@ -82,9 +84,20 @@ export function buildContentIndex(rows: ContentIndexRows, config: TfidfConfig): 
     ...vectorOf(featurePositions.map((position) => rows.features[position]!)),
   }));
 
+  const documentCount = new Array<number>(rows.features.length).fill(0);
+  for (const { featurePositions } of rows.games) {
+    for (const position of featurePositions) documentCount[position]!++;
+  }
+
   return {
     games,
-    features: rows.features.map(({ id, type, slug, name }) => ({ id, type, slug, name })),
+    features: rows.features.map(({ id, type, slug, name }, position) => ({
+      id,
+      type,
+      slug,
+      name,
+      documentRatio: rows.games.length === 0 ? 0 : documentCount[position]! / rows.games.length,
+    })),
     positionByGameId: new Map(games.map(({ id }, position) => [id, position])),
     positionByFeatureId: new Map(rows.features.map(({ id }, position) => [id, position])),
     vectorOf,
