@@ -8,7 +8,7 @@ import {
   InvalidFilters,
   NoGamesFound,
 } from '@/features/catalog/catalog-states';
-import { GameCard } from '@/features/catalog/game-card';
+import { GameCard } from '@/features/games/game-card';
 import {
   type CatalogSearchParams,
   catalogHref,

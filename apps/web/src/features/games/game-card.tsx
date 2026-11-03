@@ -1,10 +1,11 @@
 import type { GameSummary } from '@indie/contracts';
 import Link from 'next/link';
-import { GameCover } from '@/features/games/game-cover';
-import { releaseLabel } from '@/features/games/release-label';
-import { UpcomingBadge } from '@/features/games/upcoming-badge';
+import type { ReactNode } from 'react';
+import { GameCover } from './game-cover';
+import { releaseLabel } from './release-label';
+import { UpcomingBadge } from './upcoming-badge';
 
-export function GameCard({ game }: { game: GameSummary }) {
+export function GameCard({ game, children }: { game: GameSummary; children?: ReactNode }) {
   return (
     <article className="flex gap-4">
       <GameCover name={game.name} coverImageId={game.coverImageId} size="small" />
@@ -19,6 +20,7 @@ export function GameCard({ game }: { game: GameSummary }) {
         {game.genres.length > 0 && (
           <p className="text-sm">{game.genres.map(({ name }) => name).join(' · ')}</p>
         )}
+        {children}
       </div>
     </article>
   );
