@@ -150,15 +150,14 @@ describe('GameLibraryControls', () => {
     expect(queryClient.getQueryData(SESSION_QUERY_KEY)).toBeNull();
   });
 
-  it('a mudança invalida as recomendações, para a próxima lista já sair com ela', async () => {
+  it('a mudança descarta as recomendações guardadas, que já não valem', async () => {
     stubLibrary({ rating: null, lists: [] }, () => Response.json({ lists: ['FAVORITE'] }));
     const { queryClient } = renderControls();
-    queryClient.setQueryData(RECOMMENDATIONS_QUERY_KEY, { items: [] });
+    const recommendationsKey = [...RECOMMENDATIONS_QUERY_KEY, 'BALANCED'];
+    queryClient.setQueryData(recommendationsKey, { items: [] });
 
     await userEvent.click(await listButton('Favorito'));
 
-    await waitFor(() =>
-      expect(queryClient.getQueryState(RECOMMENDATIONS_QUERY_KEY)?.isInvalidated).toBe(true),
-    );
+    await waitFor(() => expect(queryClient.getQueryData(recommendationsKey)).toBeUndefined());
   });
 });

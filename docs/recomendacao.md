@@ -244,8 +244,9 @@ origem"). Sobre o que vem do núcleo:
   conhecido: o jogo entrou na lista por ser menos popular." acima da lista. A frase existe
   porque a marca é frequente: 62% dos itens nas medições do B-32. Na conferência local do
   B-35, um perfil com três jogos avaliados (`time-for-bed` e `lavaloop` com 5, `foundlings`
-  com 4) teve os 20 itens marcados, e nenhum jogo em comum com a lista do Equilibrado. Se o
-  λ de 0,3 está dominando a afinidade é uma verificação do B-37.
+  com 4) teve os 20 itens marcados, e nenhum jogo em comum com a lista do Equilibrado. Em
+  produção, o mesmo perfil teve 18 de 20 itens marcados (90%) e só 2 jogos em comum com o
+  Equilibrado. É um indício de que o λ de 0,3 está dominando a afinidade, a verificar no B-37.
 - **Listas `empty` e `popular`:** sem o seletor de modo, porque o modo não as muda.
 
 ## Limitações

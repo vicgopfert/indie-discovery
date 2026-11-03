@@ -122,7 +122,7 @@ Entrega: todos os P0 prontos; pesos calibrados; **congelamento**.
   - [ ] Na página de recomendações, o estado vazio (`basis: empty`) leva ao catálogo; trocar pelo link da partida a frio (levantado no B-35)
 - [ ] **B-29** (P, E4) Página de perfil (avaliações e listas) e avatar com as iniciais do nome no perfil e no cabeçalho
 - [ ] **B-37** (M, E5) Script de avaliação offline + calibração dos pesos (depois do B-69)
-  - [ ] No modo Descobertas, 62% dos itens recebem "Pouco conhecido" (medição do B-32); verificar na calibração se o λ de 0,3 está dominando a afinidade (levantado no B-35)
+  - [ ] No modo Descobertas, 62% dos itens recebem "Pouco conhecido" (medição do B-32); verificar na calibração se o λ de 0,3 está dominando a afinidade (levantado no B-35). Na conferência em produção do B-35, 18 de 20 itens (90%) saíram com a marca, e só 2 jogos eram comuns às listas do Equilibrado e do Descobertas: indício de que o λ de 0,3 está dominando a afinidade
 - [ ] **B-62** (M, E5) Modo de jogo e perspectiva como quarto bloco do vetor (fatia em config, fora da explicação ao jogador); a fatia só fica acima de zero se melhorar o acerto@10 no B-37; medir depois do B-69 — movido da S7 para a S10 no B-32, para ficar ao lado do B-37 que decide a fatia
 - [ ] **B-25** (P, E3) Página "Como funciona" (lista grandes empresas, estúdios controlados e exceções manuais com motivo e fonte)
 
@@ -160,6 +160,7 @@ Entrega: dois ensaios realizados, texto entregue, slides revisados.
 - [ ] **B-50** (P) Jogos parecidos na ficha
 - [ ] **B-51** (P) Sitemap e robots
 - [ ] **B-52** (P) Exclusão da própria conta
+  - [ ] Apagar as contas de teste criadas em produção: `medicao-m2-preferencias@example.com` e `medicao-m2-avaliacoes@example.com` (medição do M2, B-33) e `b35-producao-2026-11-03@example.com` (conferência do B-35)
 - [ ] **B-53** (M) Edição de nome e troca de senha
 - [ ] **B-54** (P) Ingestão agendada (GitHub Actions)
 - [ ] **B-55** (M) E2e no navegador (Playwright) do roteiro de demonstração
