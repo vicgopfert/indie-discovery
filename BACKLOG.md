@@ -120,6 +120,13 @@ Entrega: jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de
 - [ ] **B-72** (M, E5) Interface da visão geral de recomendações e "ver mais": lista principal no topo e prateleiras abaixo, sem repetição; "ver mais" com a lista completa paginada
   - [ ] A rota do "ver mais" responde 404 quando a chave deixou de existir (o interesse pode mudar depois de o jogador avaliar jogos): a página da lista expandida trata esse 404 voltando para a visão geral, sem mostrar erro (levantado no B-71)
 - [x] **B-73** (P, E5) Medição de uma camada curada de "estilos" a partir das palavras-chave da IGDB e de termos do resumo, só medição (`docs/estilos.md`) — concluído em 03/11/2026: rascunho com 50 estilos em `config/styles.draft.json` e `pnpm --filter api styles:measure`; com palavras-chave e resumo, 58,4% do catálogo tem ao menos um estilo, e 17 de 20 casos da amostra do resumo estão corretos; a implementação é decisão do autor
+- [ ] **B-74** (M, E5) Estilos como camada de exibição (caminho a do B-73), antes do B-36 (`docs/estilos.md`)
+  - [ ] Atribuição de estilos na carga do índice, a partir de `config/styles.json` (o rascunho revisado), pelas palavras-chave e pelos termos do resumo; sem consulta nova por requisição e sem nova ingestão
+  - [ ] Estilos como candidatos a interesse no B-71, ao lado de gêneros e temas, com o mesmo limite de 40%; prateleiras "Porque você curte `<estilo>`"
+  - [ ] Desempate da cobertura pelo peso na biblioteca e depois pelo atributo menos frequente, para gêneros, temas e estilos
+  - [ ] Motivo: o estilo só aparece se as palavras-chave dele contribuíram positivamente para a pontuação do jogo, e a contribuição dele é a soma das delas; o estilo atribuído só pelo resumo serve para interesses e prateleiras, mas não entra no motivo (seção 12 da proposta técnica)
+  - [ ] Testes de regressão do caso de produção (RPG com terror) e do caso Amnesia; interesses e cobertura medidos de novo nos 200 perfis da semente 71; tempo local medido
+  - [ ] Separar "Sobrenatural" em fantasmas, demônios e vampiros: rever depois do teste de usabilidade (B-44)
 - [ ] **B-36** (P, E5) E2e de recomendação + teste de determinismo — ampliado no B-71: cobre a visão geral sem repetição, as prateleiras, a paginação com os tetos e o determinismo de cada lista (a principal, cada prateleira e cada página)
   - [x] Fixar a ordem das interações lidas do banco antes de montar o perfil: hoje vêm sem `ORDER BY`, e a soma em ponto flutuante depende da ordem (levantado no plano do B-36) — feito no B-71: a soma do perfil segue a ordem do id do jogo
 - [ ] **B-30** (P, E4) E2e de biblioteca e posse dos dados (um usuário não altera dados de outro)
@@ -136,8 +143,11 @@ Entrega: todos os P0 prontos; pesos calibrados; **congelamento**.
   - [ ] No modo Descobertas, 62% dos itens recebem "Pouco conhecido" (medição do B-32); verificar na calibração se o λ de 0,3 está dominando a afinidade (levantado no B-35). Na conferência em produção do B-35, 18 de 20 itens (90%) saíram com a marca, e só 2 jogos eram comuns às listas do Equilibrado e do Descobertas: indício de que o λ de 0,3 está dominando a afinidade
   - [ ] Métrica "cobertura dos interesses do perfil": fração dos gêneros e temas positivos do perfil presentes no top-20; comparar a lista única atual com a lista principal intercalada do B-71, em todas as métricas
   - [ ] Preferências e fatias de bloco na escolha dos interesses (levantado no B-71): cada preferência da partida a frio soma β = 1 direto na componente dela, contra no máximo `w · 0,4` de um jogo, e as fatias 40/30/30 puxam os gêneros à frente dos temas no `u_k`. Com a regra de cobertura, o `u_k` só decide empates, e a relação que pesa é outra: a preferência entra como item de peso β contra o `w` de cada jogo (de 0,5 a 5), o que decide quanto ela vale nas cotas da lista principal; essa relação também é calibração do B-37
+  - [ ] Variante "estilos no vetor" (caminho b do B-73): os estilos no lugar das palavras-chave agrupadas, com o IDF recalculado; entra só se melhorar o acerto@10, o mesmo critério do B-62 e do B-63 (registrado no B-74)
 - [ ] **B-62** (M, E5) Modo de jogo e perspectiva como quarto bloco do vetor (fatia em config, fora da explicação ao jogador); a fatia só fica acima de zero se melhorar o acerto@10 no B-37; medir depois do B-69 — movido da S7 para a S10 no B-32, para ficar ao lado do B-37 que decide a fatia
+- [ ] **B-76** (P, E5) Tempo da visão geral de recomendações em produção, antes do B-44: aplicar a otimização registrada em `docs/recomendacao.md` que der mais ganho pelo menor custo; medir de novo em produção com a metodologia do B-33; critério: p95 fim a fim abaixo de 1 s, registrado
 - [ ] **B-25** (P, E3) Página "Como funciona" (lista grandes empresas, estúdios controlados e exceções manuais com motivo e fonte)
+  - [ ] Se o B-75 (P1) entrar: listar também os estilos e as palavras-chave de cada um
 
 ## S11 — Avaliação com usuários e acabamento (semanas 21–22)
 
@@ -182,6 +192,7 @@ Entrega: dois ensaios realizados, texto entregue, slides revisados.
 - [ ] **B-67** (M) Importação da wishlist da Steam para a lista "quero jogar", com resumo de importados e aviso de wishlist privada
 - [ ] **B-68** (M) Login com Google, com a foto da conta Google como avatar
 - [ ] **B-70** (P) `popularityNorm` calculado na carga do índice, e não gravado pela ingestão (decidido no B-33)
+- [ ] **B-75** (M) Filtro de estilo no catálogo: parâmetro `style` em `GET /api/games` (repetível, como gênero e tema), opções numa rota de estilos com contagem e o filtro na página de catálogo; a página "Como funciona" (B-25) passa a listar os estilos e as palavras-chave de cada um — P1 por decisão do autor em 03/11/2026: é filtro de navegação, fora do núcleo da tese
 
 ## P2 — pós-defesa
 
