@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { CATALOG_PATH } from '@/features/catalog/search-params';
+import { GameLibraryControls } from '@/features/library/game-library-controls';
 import { GameCover } from './game-cover';
 import {
   companyNames,
@@ -39,6 +40,8 @@ export function GameDetails({ game }: { game: GameDetail }) {
         ) : (
           <p className="text-sm text-muted-foreground">Link oficial não informado</p>
         )}
+
+        <GameLibraryControls slug={game.slug} />
 
         <section aria-labelledby="game-summary" className="space-y-2">
           <h2 id="game-summary" className="font-medium">

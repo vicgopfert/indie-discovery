@@ -141,6 +141,23 @@ export class LibraryController {
     return this.library.findLibrary(user.id);
   }
 
+  @Get('library/:slug')
+  @ApiParam(SLUG_PARAM)
+  @ApiOkResponse({
+    description:
+      'Nota e listas do usuário para um jogo, para a ficha; sem nota, rating é null. Vale para jogo fora do catálogo',
+    schema: {
+      example: {
+        rating: { score: 4, updatedAt: '2026-11-02T12:00:00.000Z' },
+        lists: ['FAVORITE', 'COMPLETED'],
+      },
+    },
+  })
+  @ApiNotFoundResponse({ description: 'Jogo inexistente' })
+  findGameState(@CurrentUser() user: User, @Param('slug') slug: string) {
+    return this.library.findGameState(user.id, slug);
+  }
+
   @Put('preferences')
   @ApiBody({ schema: { example: { genres: ['platform', 'puzzle'], themes: ['horror'] } } })
   @ApiOkResponse({

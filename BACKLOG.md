@@ -108,7 +108,7 @@ Entrega: **M2**.
 
 Entrega: jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de posse no CI.
 
-- [ ] **B-28** (M, E4) Componentes de avaliação e listas na ficha do jogo
+- [x] **B-28** (M, E4) Componentes de avaliação e listas na ficha do jogo — concluído em 03/11/2026: nota e listas na ficha, com `GET /api/me/library/:slug`; quem não entrou vai ao login e volta para a ficha; os mesmos controles para jogos "Em breve"
 - [ ] **B-35** (M, E5) Página de recomendações com motivo e seletor de modo
 - [ ] **B-36** (P, E5) E2e de recomendação + teste de determinismo
 - [ ] **B-30** (P, E4) E2e de biblioteca e posse dos dados (um usuário não altera dados de outro)
@@ -147,7 +147,7 @@ Entrega: dois ensaios realizados, texto entregue, slides revisados.
 
 ## Perguntas em aberto
 
-- [ ] A ficha de um jogo fora do catálogo deveria abrir para quem já o tem na biblioteca? Decidir no B-28 ou no B-29, com a interface pronta (levantada no B-27)
+- [ ] A ficha de um jogo fora do catálogo deveria abrir para quem já o tem na biblioteca? Decidir no B-29, com a página de perfil, onde o jogo aparece (levantada no B-27; adiada no B-28)
 - [ ] Estar na biblioteca de algum usuário da plataforma deveria contar como sinal de interesse no critério indie? (levantada no B-27)
 
 ---

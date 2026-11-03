@@ -1,5 +1,5 @@
 import type { User } from '@indie/contracts';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getSession, login, logout, register } from './api';
 
 export const SESSION_QUERY_KEY = ['session'] as const;
@@ -20,16 +20,13 @@ function useSignIn<TInput>(mutationFn: (input: TInput) => Promise<User>) {
   });
 }
 
-// O que estiver no cache pertence à conta que saiu.
 export function useLogout() {
   const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: logout,
-    onSuccess: () => {
-      queryClient.removeQueries({
-        predicate: (query) => query.queryKey[0] !== SESSION_QUERY_KEY[0],
-      });
-      queryClient.setQueryData(SESSION_QUERY_KEY, null);
-    },
-  });
+  return useMutation({ mutationFn: logout, onSuccess: () => clearAccount(queryClient) });
+}
+
+// Ao sair, ou quando a sessão vence: o que estiver no cache pertence à conta que saiu.
+export function clearAccount(queryClient: QueryClient) {
+  queryClient.removeQueries({ predicate: (query) => query.queryKey[0] !== SESSION_QUERY_KEY[0] });
+  queryClient.setQueryData(SESSION_QUERY_KEY, null);
 }
