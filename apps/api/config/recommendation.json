@@ -73,6 +73,19 @@
       "BALANCED": 0,
       "DISCOVERY": 0.3
     },
-    "popularityWeightRationale": "λ do modo em score = cos(u, v) − λ · pop: negativo favorece os populares, positivo os pouco conhecidos, e o Equilibrado não usa a popularidade. Valores iniciais da proposta; a calibração é do B-37."
+    "popularityWeightRationale": "λ do modo em score = cos(u, v) − λ · pop: negativo favorece os populares, positivo os pouco conhecidos, e o Equilibrado não usa a popularidade. Valores iniciais da proposta; a calibração é do B-37.",
+    "lists": {
+      "maxInterests": 4,
+      "maxInterestsRationale": "Quantos gêneros ou temas viram interesse, cada um com uma prateleira e uma cota na lista principal (B-71). O registro da correção do F-11 fixou de 3 a 5; 4 fica no meio: a partida a frio exige ao menos 3 preferências, então quase todo perfil tem 3 interesses ou mais, e com 5 a visão geral passaria de 80 cartões. A escolha é gulosa pela cobertura da biblioteca e para antes se nenhum atributo cobrir peso novo.",
+      "shelfMinItems": 4,
+      "shelfMinItemsRationale": "Na visão geral, a prateleira que fica com menos jogos que isso, já sem os que apareceram antes, não aparece: com 1 a 3 jogos ela parece quebrada. O interesse continua contando nas cotas da lista principal, e o \"ver mais\" dele continua existindo.",
+      "overviewMainSize": 20,
+      "overviewShelfSize": 10,
+      "overviewSizesRationale": "Na visão geral, a lista principal mostra 20 jogos, o mesmo corte das métricas do B-37 (@20) e o mesmo tamanho da primeira página do \"ver mais\"; cada prateleira mostra até 10.",
+      "pageSize": 20,
+      "mainCap": 100,
+      "shelfCap": 200,
+      "pagingRationale": "O \"ver mais\" pagina cada lista de 20 em 20 até o teto: menor na principal (100) e maior nas prateleiras (200), porque nas páginas fundas a afinidade cai muito. Valores iniciais do registro da correção do F-11; o teto da principal não pode passar o das prateleiras, que são a fonte dela."
+    }
   }
 }

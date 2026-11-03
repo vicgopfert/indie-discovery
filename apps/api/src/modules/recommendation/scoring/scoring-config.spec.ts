@@ -6,7 +6,29 @@ describe('readScoringConfig', () => {
       listBonus: { FAVORITE: 2, COMPLETED: 1, WANT_TO_PLAY: 0.5 },
       preferenceWeight: 1,
       popularityWeightByMode: { POPULAR: -0.2, BALANCED: 0, DISCOVERY: 0.3 },
+      lists: {
+        maxInterests: 4,
+        shelfMinItems: 4,
+        overviewMainSize: 20,
+        overviewShelfSize: 10,
+        pageSize: 20,
+        mainCap: 100,
+        shelfCap: 200,
+      },
     });
+  });
+
+  it('recusa tamanhos de lista incoerentes', () => {
+    const config = readScoringConfig();
+    const withLists = (lists: Partial<typeof config.lists>) =>
+      scoringConfigSchema.safeParse({ ...config, lists: { ...config.lists, ...lists } }).success;
+
+    expect(withLists({})).toBe(true);
+    expect(withLists({ mainCap: 201 })).toBe(false);
+    expect(withLists({ overviewMainSize: 101 })).toBe(false);
+    expect(withLists({ shelfMinItems: 11 })).toBe(false);
+    expect(withLists({ maxInterests: 0 })).toBe(false);
+    expect(withLists({ pageSize: 2.5 })).toBe(false);
   });
 
   it('recusa bônus de lista negativo e modo sem λ', () => {
