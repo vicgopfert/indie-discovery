@@ -120,8 +120,6 @@
       "category": "gameplay",
       "keywords": ["automation", "factory", "factory-simulation", "conveyor-belt"],
       "summaryTerms": [
-        "automation",
-        "automate",
         "conveyor belt",
         "conveyor belts",
         "production lines",
@@ -139,7 +137,6 @@
         "management-sim",
         "store-management",
         "shop-management",
-        "restaurant-management",
         "shop-keeper",
         "sports-manager"
       ],
@@ -149,8 +146,7 @@
         "business simulation",
         "management sim",
         "shopkeeper",
-        "run your own shop",
-        "run your own restaurant"
+        "run your own shop"
       ]
     },
     {
@@ -166,7 +162,6 @@
         "life-sim"
       ],
       "summaryTerms": [
-        "farming",
         "farm sim",
         "farming sim",
         "farming simulator",
@@ -174,28 +169,23 @@
         "life simulation",
         "life simulator",
         "grow crops",
-        "harvest crops"
+        "harvest crops",
+        "farm life",
+        "farming game"
       ]
     },
     {
       "slug": "crafting",
       "name": "Coleta e construção",
       "category": "gameplay",
-      "keywords": [
-        "crafting",
-        "base-building",
-        "resource-gathering",
-        "open-world-survival-craft",
-        "crafting-survival"
-      ],
+      "keywords": ["base-building", "open-world-survival-craft", "crafting-survival"],
       "summaryTerms": [
-        "crafting",
         "survival crafting",
         "survival-crafting",
+        "crafting survival",
+        "survival craft",
         "base building",
-        "base-building",
-        "gather resources",
-        "gathering resources"
+        "base-building"
       ]
     },
     {
@@ -212,14 +202,7 @@
         "clicker-game",
         "semi-active-idle"
       ],
-      "summaryTerms": [
-        "idle game",
-        "incremental game",
-        "clicker game",
-        "idle clicker",
-        "incremental",
-        "idler"
-      ]
+      "summaryTerms": ["idle game", "incremental game", "clicker game", "idle clicker", "idler"]
     },
     {
       "slug": "precision-platformer",
@@ -367,14 +350,8 @@
       "slug": "boomer-shooter",
       "name": "Tiro retrô em primeira pessoa",
       "category": "gameplay",
-      "keywords": ["boomer-shooter", "arena-shooter", "movement-shooter"],
-      "summaryTerms": [
-        "boomer shooter",
-        "retro fps",
-        "retro shooter",
-        "old-school fps",
-        "arena shooter"
-      ]
+      "keywords": ["boomer-shooter", "movement-shooter"],
+      "summaryTerms": ["boomer shooter", "retro fps", "retro shooter", "old-school fps"]
     },
     {
       "slug": "dating-sim",
@@ -387,8 +364,15 @@
       "slug": "cooking",
       "name": "Culinária",
       "category": "gameplay",
-      "keywords": ["cooking", "cooking-simulation", "restaurant"],
-      "summaryTerms": ["cooking", "cooking game", "cooking sim"]
+      "keywords": ["cooking-simulation", "restaurant-management"],
+      "summaryTerms": [
+        "cooking game",
+        "cooking sim",
+        "cooking simulator",
+        "restaurant sim",
+        "restaurant management",
+        "run your own restaurant"
+      ]
     },
     {
       "slug": "time-loop",
@@ -409,7 +393,7 @@
       "name": "Aconchegante",
       "category": "tone",
       "keywords": ["cozy", "cozy-adventure", "wholesome", "relaxing", "relaxed"],
-      "summaryTerms": ["cozy", "cosy", "wholesome", "relaxing"]
+      "summaryTerms": ["cozy", "cosy", "wholesome"]
     },
     {
       "slug": "psychological-horror",
@@ -440,7 +424,13 @@
       "name": "Terror cósmico",
       "category": "tone",
       "keywords": ["lovecraftian", "h-p-lovecraft", "cosmic-horror", "eldritch-horror"],
-      "summaryTerms": ["lovecraftian", "lovecraft", "eldritch", "cosmic horror"]
+      "summaryTerms": [
+        "lovecraftian",
+        "lovecraft",
+        "eldritch horror",
+        "eldritch horrors",
+        "cosmic horror"
+      ]
     },
     {
       "slug": "liminal-horror",
@@ -454,7 +444,14 @@
         "creepypasta",
         "mascot-horror"
       ],
-      "summaryTerms": ["analog horror", "liminal", "found footage", "backrooms", "creepypasta"]
+      "summaryTerms": [
+        "analog horror",
+        "liminal space",
+        "liminal spaces",
+        "found footage",
+        "backrooms",
+        "creepypasta"
+      ]
     },
     {
       "slug": "surreal",
@@ -472,11 +469,12 @@
     },
     {
       "slug": "emotional",
-      "name": "Emocionante",
+      "name": "Emotivo",
       "category": "tone",
       "keywords": ["emotional", "emotional-narrative", "emotional-story"],
       "summaryTerms": [
-        "heartfelt",
+        "heartfelt story",
+        "heartfelt narrative",
         "heartwarming",
         "heart-warming",
         "emotional",
@@ -519,13 +517,7 @@
         "postapocalyptic",
         "zombie-apocalypse"
       ],
-      "summaryTerms": [
-        "post-apocalyptic",
-        "postapocalyptic",
-        "post apocalyptic",
-        "apocalypse",
-        "wasteland"
-      ]
+      "summaryTerms": ["post-apocalyptic", "postapocalyptic", "post apocalyptic"]
     },
     {
       "slug": "zombies",
@@ -568,9 +560,11 @@
       "name": "Espaço e naves",
       "category": "setting",
       "keywords": [
-        "space",
         "spaceship",
         "spaceships",
+        "space-ship",
+        "space-ships",
+        "starship",
         "space-simulation",
         "space-combat",
         "space-battle",
@@ -580,7 +574,9 @@
         "spaceship-customization",
         "space-adventure",
         "space-shooter",
-        "space-station"
+        "space-station",
+        "space-travel",
+        "astronaut"
       ],
       "summaryTerms": [
         "spaceship",
@@ -589,15 +585,18 @@
         "starships",
         "space station",
         "outer space",
-        "space exploration"
+        "space exploration",
+        "space travel",
+        "astronaut",
+        "astronauts"
       ]
     },
     {
       "slug": "medieval",
       "name": "Medieval",
       "category": "setting",
-      "keywords": ["medieval", "medieval-fantasy", "knights"],
-      "summaryTerms": ["medieval", "knights"]
+      "keywords": ["medieval", "medieval-fantasy"],
+      "summaryTerms": ["medieval"]
     },
     {
       "slug": "dark-fantasy",
@@ -618,25 +617,34 @@
       "name": "Magia e bruxaria",
       "category": "setting",
       "keywords": [
-        "magic",
-        "wizards",
         "witches",
         "witch",
-        "magician",
+        "witch-hunter",
+        "wizards",
+        "wizardry",
         "spellcaster",
+        "spell-caster",
+        "spells",
         "magic-school",
-        "alchemy"
+        "necromancy",
+        "sword-sorcery",
+        "battle-mage",
+        "mages"
       ],
       "summaryTerms": [
-        "wizard",
-        "wizards",
+        "witchcraft",
         "witch",
         "witches",
+        "wizard",
+        "wizards",
         "sorcery",
         "sorcerer",
+        "sorceress",
         "spellcasting",
-        "alchemy",
-        "alchemist"
+        "spellcaster",
+        "necromancer",
+        "necromancy",
+        "warlock"
       ]
     },
     {
@@ -661,13 +669,11 @@
         "cult"
       ],
       "summaryTerms": [
-        "haunted",
+        "haunted house",
+        "haunted mansion",
         "paranormal",
         "occult",
-        "supernatural",
         "ghosts",
-        "demonic",
-        "vampire",
         "vampires",
         "dracula"
       ]
@@ -676,16 +682,8 @@
       "slug": "robots",
       "name": "Robôs e mechas",
       "category": "setting",
-      "keywords": [
-        "robots",
-        "robot",
-        "robot-protagonist",
-        "robot-combat",
-        "mech",
-        "mecha",
-        "mechs"
-      ],
-      "summaryTerms": ["robot", "robots", "mech", "mechs", "mecha"]
+      "keywords": ["robot-protagonist", "robot-combat", "mech", "mecha", "mechs"],
+      "summaryTerms": ["mech", "mechs", "mecha", "giant robot", "giant robots", "play as a robot"]
     },
     {
       "slug": "aliens",
@@ -713,47 +711,20 @@
       "slug": "crime-noir",
       "name": "Crime e noir",
       "category": "setting",
-      "keywords": ["crime", "organized-crime", "mafia", "heist", "noir", "film-noir", "neo-noir"],
+      "keywords": ["organized-crime", "mafia", "heist", "noir", "film-noir", "neo-noir"],
       "summaryTerms": ["noir", "heist", "mafia", "gangster", "gangsters"]
     },
     {
       "slug": "underwater",
       "name": "Fundo do mar",
       "category": "setting",
-      "keywords": [
-        "underwater",
-        "underwater-gameplay",
-        "ocean",
-        "ocean-exploration",
-        "deep-sea",
-        "sea-monster"
-      ],
-      "summaryTerms": ["underwater", "deep sea", "ocean floor", "ocean depths"]
-    },
-    {
-      "slug": "animal-protagonist",
-      "name": "Protagonista animal",
-      "category": "setting",
-      "keywords": [
-        "animal-protagonist",
-        "animal-protagonists",
-        "anthropomorphism",
-        "talking-animals",
-        "cat",
-        "cats",
-        "dog",
-        "dogs"
-      ],
+      "keywords": ["underwater", "ocean-exploration", "deep-sea", "sea-monster"],
       "summaryTerms": [
-        "play as a cat",
-        "play as a dog",
-        "play as a fox",
-        "play as a frog",
-        "play as a bird",
-        "play as a duck",
-        "play as a raccoon",
-        "play as a rabbit",
-        "play as a bunny"
+        "underwater world",
+        "underwater exploration",
+        "deep sea",
+        "ocean floor",
+        "ocean depths"
       ]
     }
   ]
