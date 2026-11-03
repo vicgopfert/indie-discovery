@@ -1,6 +1,6 @@
 import type { GameLibraryState } from '@indie/contracts';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { ApiRequestError } from '@/lib/api-client';
+import { isUnauthorized } from '@/lib/api-client';
 import { clearAccount } from '@/features/auth/hooks';
 import { applyLibraryAction, getGameLibrary, type LibraryAction } from './api';
 
@@ -9,9 +9,6 @@ export const LIBRARY_QUERY_KEY = ['library'] as const;
 export const RECOMMENDATIONS_QUERY_KEY = ['recommendations'] as const;
 
 const gameKey = (slug: string) => [...LIBRARY_QUERY_KEY, slug] as const;
-
-export const isUnauthorized = (error: unknown) =>
-  error instanceof ApiRequestError && error.status === 401;
 
 export function useGameLibrary(slug: string) {
   return useQuery({ queryKey: gameKey(slug), queryFn: () => getGameLibrary(slug) });

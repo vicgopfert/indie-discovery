@@ -1,7 +1,5 @@
 import { type LoginInput, type RegisterInput, type User, UserSchema } from '@indie/contracts';
-import { ApiRequestError, apiFetch } from '@/lib/api-client';
-
-const isUnauthorized = (error: unknown) => error instanceof ApiRequestError && error.status === 401;
+import { apiFetch, isUnauthorized } from '@/lib/api-client';
 
 // Sem sessão não é erro: o visitante só não entrou.
 export async function getSession(): Promise<User | null> {
