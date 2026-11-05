@@ -1,4 +1,5 @@
 import { FeatureType, type ReleaseStatus } from '../../generated/prisma/client';
+import type { LabeledFeatureType } from '../catalog/feature-labels';
 import { type CuratedStyle, styleAssigner, type StyleSource } from '../styles/styles';
 import {
   type ContentFeature,
@@ -49,6 +50,19 @@ export interface IndexedStyle {
   keywordPositions: readonly number[];
 }
 
+// Gêneros e temas têm nome traduzido e viram interesse e motivo; as palavras-chave, raras e sem
+// tradução, só entram agrupadas nos estilos (B-12, B-74).
+export function isLabeledFeatureType(type: FeatureType): type is LabeledFeatureType {
+  return type === FeatureType.GENRE || type === FeatureType.THEME;
+}
+
+// O atributo de uma prateleira ou de um motivo: um atributo do vetor ou um estilo curado.
+export interface DisplayedAttribute {
+  type: FeatureType | 'STYLE';
+  slug: string;
+  name: string;
+}
+
 // Vetor esparso com as posições em ordem crescente, para o produto escalar andar em paralelo.
 export interface ContentVector {
   featurePositions: Int32Array;
@@ -76,6 +90,9 @@ export interface ContentIndex {
   // Os estilos desse mesmo jogo, pela mesma regra da carga.
   stylesOf(source: StyleSource): number[];
 }
+
+// A parte do índice que dá nome aos atributos: os do vetor e os estilos.
+export type AttributeCatalog = Pick<ContentIndex, 'features' | 'styles'>;
 
 // Os pesos são refeitos a partir do IDF gravado na ingestão, com a mesma conta dela (tfidfVector).
 // Os estilos são atribuídos aqui, na carga, pelas palavras-chave e pelo resumo (B-74).

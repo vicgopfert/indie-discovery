@@ -1,11 +1,11 @@
 import type { DiscoveryMode } from '../../../generated/prisma/client';
 import type { ContentIndex, IndexedGame } from '../content-index';
-import { explainer, type RecommendationReason } from './explain';
+import { explainer, type ScoredReason } from './explain';
 import { popularFallback } from './fallback';
 import { pickInterests } from './interests';
 import { buildLists, MAIN_LIST_KEY, type RankedList } from './lists';
 import { buildProfile, hasPositiveComponent, type Interaction } from './profile';
-import { scoreCandidates } from './rank';
+import { scoreCandidates } from './score';
 import type { ScoringConfig } from './scoring-config';
 import { userTieBreak } from './tie-break';
 
@@ -28,7 +28,7 @@ export interface RecommendationLists {
   // Na ordem da página, a principal primeiro.
   lists: readonly RankedList[];
   // Calculado só para os jogos mostrados.
-  reasonOf(game: IndexedGame): RecommendationReason | null;
+  reasonOf(game: IndexedGame): ScoredReason | null;
 }
 
 export function recommend(

@@ -9,15 +9,15 @@ import type {
 import { Inject, Injectable, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { type DiscoveryMode, FeatureType, type ListType } from '../../generated/prisma/client';
 import { CatalogService } from '../catalog/catalog.service';
-import { FeatureLabels, type LabeledFeatureType } from '../catalog/feature-labels';
-import type { ContentIndex, IndexedFeature } from './content-index';
+import { FeatureLabels } from '../catalog/feature-labels';
+import { type ContentIndex, type DisplayedAttribute, isLabeledFeatureType } from './content-index';
 import { ContentIndexService } from './content-index.service';
 import {
   type RecommendedGameRow,
   RecommendationRepository,
   type UserState,
 } from './recommendation.repository';
-import type { RecommendationReason as ScoredReason } from './scoring/explain';
+import type { ScoredReason } from './scoring/explain';
 import { MAIN_LIST_KEY, type RankedList } from './scoring/lists';
 import { listPage, overview, type ShownGame } from './scoring/overview';
 import type { Interaction } from './scoring/profile';
@@ -77,7 +77,7 @@ export class GenerateRecommendationsUseCase {
 
     const { items, hasMore } = listPage(list, page, this.config.lists);
     const [presented] = await this.present(result, [items]);
-    return { mode, key, feature: this.feature(list), page, items: presented!, hasMore };
+    return { mode, key, feature: this.feature(list.attribute), page, items: presented!, hasMore };
   }
 
   // Com o índice carregando ou com falha, 503, nunca lista vazia: o jogador a leria como falta de
@@ -121,7 +121,7 @@ export class GenerateRecommendationsUseCase {
   private hiddenPositions(index: ContentIndex): Set<number> {
     const hidden = new Set<number>();
     index.features.forEach((feature, position) => {
-      if (isLabeled(feature) && this.labels.isHidden(feature.type, feature.slug)) {
+      if (isLabeledFeatureType(feature.type) && this.labels.isHidden(feature.type, feature.slug)) {
         hidden.add(position);
       }
     });
@@ -156,19 +156,19 @@ export class GenerateRecommendationsUseCase {
     );
   }
 
+  // Os interesses são só gêneros, temas e estilos (pickInterests): toda prateleira deles tem nome.
   private shelf(list: RankedList, items: Recommendation[], hasMore: boolean): RecommendationShelf {
-    const feature = this.feature(list);
-    return feature === null
-      ? { key: 'upcoming', kind: 'upcoming', feature, items, hasMore }
-      : { key: list.key, kind: 'interest', feature, items, hasMore };
+    return list.kind === 'upcoming'
+      ? { key: 'upcoming', kind: 'upcoming', feature: null, items, hasMore }
+      : { key: list.key, kind: 'interest', feature: this.feature(list.attribute)!, items, hasMore };
   }
 
-  // O nome do estilo já está em português no arquivo de estilos.
-  private feature({ attribute }: RankedList): RecommendationFeature | null {
+  // O nome do estilo já está em português no arquivo de estilos; palavra-chave não tem nome exibido.
+  private feature(attribute: DisplayedAttribute | null): RecommendationFeature | null {
     if (attribute === null) return null;
     const { type, slug, name } = attribute;
     if (type === 'STYLE') return { type, slug, name };
-    if (type === FeatureType.KEYWORD) return null;
+    if (!isLabeledFeatureType(type)) return null;
     return { type, slug, name: this.labels.name(type, slug, name) };
   }
 
@@ -185,11 +185,12 @@ export class GenerateRecommendationsUseCase {
         game: { slug: game.slug, name: game.name, inCatalog: game.inCatalog },
       };
     }
-    // O nome do estilo já está em português no arquivo de estilos.
-    const features = reason.features.flatMap(({ type, slug, name }) => {
-      if (type === 'STYLE') return [{ slug, name }];
-      if (type === FeatureType.KEYWORD || this.labels.isHidden(type, slug)) return [];
-      return [{ slug, name: this.labels.name(type, slug, name) }];
+    // O motivo não mostra os gêneros e temas escondidos dos filtros.
+    const features = reason.features.flatMap((attribute) => {
+      const feature = this.feature(attribute);
+      if (feature === null) return [];
+      if (feature.type !== 'STYLE' && this.labels.isHidden(feature.type, feature.slug)) return [];
+      return [{ slug: feature.slug, name: feature.name }];
     });
     return features.length > 0 ? { kind: 'features', features } : null;
   }
@@ -223,10 +224,4 @@ function interactionsOf(index: ContentIndex, state: UserState): Interaction[] {
       styles: index.stylesOf({ keywords: keywords.map(({ slug }) => slug), summary }),
     };
   });
-}
-
-function isLabeled(feature: IndexedFeature): feature is IndexedFeature & {
-  type: LabeledFeatureType;
-} {
-  return feature.type !== FeatureType.KEYWORD;
 }

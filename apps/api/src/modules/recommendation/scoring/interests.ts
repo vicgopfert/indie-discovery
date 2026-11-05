@@ -1,9 +1,6 @@
-import { FeatureType } from '../../../generated/prisma/client';
-import type { ContentIndex } from '../content-index';
+import { type AttributeCatalog, isLabeledFeatureType } from '../content-index';
 import type { Profile } from './profile';
 import type { ScoringConfig } from './scoring-config';
-
-const INTEREST_TYPES: ReadonlySet<FeatureType> = new Set([FeatureType.GENRE, FeatureType.THEME]);
 
 export type InterestAttribute =
   { kind: 'feature'; position: number } | { kind: 'style'; style: number };
@@ -15,8 +12,6 @@ export interface Interest {
   // A cota dele na lista principal: coverage dividido pelo total coberto.
   share: number;
 }
-
-export type InterestCatalog = Pick<ContentIndex, 'features' | 'styles'>;
 
 interface CoverableItem {
   weight: number;
@@ -39,7 +34,7 @@ interface CoverableItem {
 export function pickInterests(
   profile: Profile,
   preferencePositions: readonly number[],
-  { features, styles }: InterestCatalog,
+  { features, styles }: AttributeCatalog,
   hiddenPositions: ReadonlySet<number>,
   config: ScoringConfig,
 ): Interest[] {
@@ -53,7 +48,7 @@ export function pickInterests(
   const candidates = new Set<number>();
   profile.vector.forEach((value, position) => {
     const { type, documentRatio: ratio } = features[position]!;
-    if (value <= 0 || !INTEREST_TYPES.has(type) || hiddenPositions.has(position)) return;
+    if (value <= 0 || !isLabeledFeatureType(type) || hiddenPositions.has(position)) return;
     if (ratio <= limit) candidates.add(position);
   });
   const styleWeight = new Map<number, number>();

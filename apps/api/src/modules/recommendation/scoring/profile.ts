@@ -1,15 +1,13 @@
 import type { ListType } from '../../../generated/prisma/client';
-import type { IndexedGame } from '../content-index';
+import type { ContentVector } from '../content-index';
 import type { ScoringConfig } from './scoring-config';
-
-export type SparseVector = Pick<IndexedGame, 'featurePositions' | 'weights'>;
 
 export interface Interaction {
   gameId: string;
   score: number | null;
   lists: readonly ListType[];
   // Sem vetor, o jogo só sai dos candidatos.
-  vector: SparseVector | null;
+  vector: ContentVector | null;
   // Índices em ContentIndex.styles.
   styles: readonly number[];
 }
@@ -17,7 +15,7 @@ export interface Interaction {
 export interface WeightedGame {
   gameId: string;
   weight: number;
-  vector: SparseVector;
+  vector: ContentVector;
   styles: readonly number[];
 }
 
@@ -80,7 +78,7 @@ export function hasPositiveComponent(profile: Profile): boolean {
 }
 
 // Os vetores dos jogos têm norma 1 e só pesos positivos.
-export function profileDot(profile: Profile, game: SparseVector): number {
+export function profileDot(profile: Profile, game: ContentVector): number {
   let dot = 0;
   for (let i = 0; i < game.featurePositions.length; i++) {
     dot += profile.vector[game.featurePositions[i]!]! * game.weights[i]!;

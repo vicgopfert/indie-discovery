@@ -1,6 +1,6 @@
 import { RECOMMENDATION_REASONS_MAX } from '@indie/contracts';
 import type { ContentIndex, IndexedGame } from '../content-index';
-import type { RecommendationReason } from './explain';
+import type { ScoredReason } from './explain';
 import { type TieBreak, topBy } from './tie-break';
 
 export interface FallbackOptions {
@@ -12,7 +12,7 @@ export interface FallbackOptions {
 
 export interface PopularGame {
   game: IndexedGame;
-  reason: RecommendationReason | null;
+  reason: ScoredReason | null;
 }
 
 // Perfil sem componente positiva (só notas negativas ou neutras): os mais populares dos gêneros
@@ -40,7 +40,7 @@ function preferredReason(
   index: ContentIndex,
   game: IndexedGame,
   preferred: ReadonlySet<number>,
-): RecommendationReason | null {
+): ScoredReason | null {
   const entries = [...game.featurePositions]
     .map((position, i) => ({ position, weight: game.weights[i]! }))
     .filter(({ position }) => preferred.has(position))

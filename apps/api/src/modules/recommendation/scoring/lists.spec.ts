@@ -3,7 +3,7 @@ import type { IndexedGame } from '../content-index';
 import { pickInterests } from './interests';
 import { buildLists, interleave, type RankedList } from './lists';
 import { buildProfile } from './profile';
-import { scoreCandidates } from './rank';
+import { scoreCandidates } from './score';
 import type { ListsConfig } from './scoring-config';
 import {
   featurePosition,

@@ -1,26 +1,20 @@
-import { DiscoveryMode, type FeatureType, ReleaseStatus } from '../../../generated/prisma/client';
-import type { IndexedGame } from '../content-index';
-import type { Interest, InterestAttribute, InterestCatalog } from './interests';
-import type { ScoredCandidate } from './rank';
+import { DiscoveryMode, ReleaseStatus } from '../../../generated/prisma/client';
+import type { AttributeCatalog, DisplayedAttribute, IndexedGame } from '../content-index';
+import type { Interest, InterestAttribute } from './interests';
+import type { ScoredCandidate } from './score';
 import type { ListsConfig } from './scoring-config';
 import { type TieBreak, topBy } from './tie-break';
 
 export const MAIN_LIST_KEY = 'main';
 export const UPCOMING_LIST_KEY = 'upcoming';
 
-// O atributo de uma prateleira de interesse: gênero, tema ou estilo.
-export interface ListAttribute {
-  type: FeatureType | 'STYLE';
-  slug: string;
-  name: string;
-}
-
-export const interestListKey = ({ type, slug }: ListAttribute) => `${type.toLowerCase()}:${slug}`;
+export const interestListKey = ({ type, slug }: DisplayedAttribute) =>
+  `${type.toLowerCase()}:${slug}`;
 
 export function listAttribute(
   attribute: InterestAttribute,
-  { features, styles }: InterestCatalog,
-): ListAttribute {
+  { features, styles }: AttributeCatalog,
+): DisplayedAttribute {
   if (attribute.kind === 'style') {
     const { slug, name } = styles[attribute.style]!;
     return { type: 'STYLE', slug, name };
@@ -32,7 +26,7 @@ export function listAttribute(
 export interface RankedList {
   key: string;
   kind: 'main' | 'upcoming' | 'interest';
-  attribute: ListAttribute | null;
+  attribute: DisplayedAttribute | null;
   // A lista completa, até o teto da configuração.
   games: readonly IndexedGame[];
   // Só no modo Descobertas: a mesma lista montada com λ = 0, para o "pouco conhecido".
@@ -62,7 +56,7 @@ interface OrderedLists {
 // perfil inteiro: sobem primeiro os jogos que também batem com os outros gostos.
 export function buildLists(
   candidates: readonly ScoredCandidate[],
-  catalog: InterestCatalog,
+  catalog: AttributeCatalog,
   { mode, interests, tieBreak }: ListOptions,
   config: ListsConfig,
 ): RankedList[] {

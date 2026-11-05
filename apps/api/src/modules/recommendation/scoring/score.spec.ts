@@ -1,6 +1,6 @@
 import { DiscoveryMode } from '../../../generated/prisma/client';
 import { buildProfile, type Interaction } from './profile';
-import { scoreCandidates } from './rank';
+import { scoreCandidates } from './score';
 import { rated, scoringConfig, scoringIndex } from './scoring.fixture';
 
 const { POPULAR, BALANCED, DISCOVERY } = DiscoveryMode;
