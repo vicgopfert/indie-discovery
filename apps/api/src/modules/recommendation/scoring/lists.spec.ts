@@ -6,6 +6,7 @@ import { buildProfile } from './profile';
 import { scoreCandidates } from './score';
 import type { ListsConfig } from './scoring-config';
 import {
+  candidateList,
   featurePosition,
   rated,
   scoringConfig,
@@ -83,15 +84,15 @@ describe('buildLists', () => {
     const profile = buildProfile(interactions, [], index.features.length, scoringConfig);
     const interests = pickInterests(profile, [], index, hidden, scoringConfig);
     const excludedGameIds = new Set(interactions.map(({ gameId }) => gameId));
-    const candidates = scoreCandidates(index, profile, { mode, excludedGameIds }, scoringConfig);
+    const scored = scoreCandidates(index, profile, { mode, excludedGameIds }, scoringConfig);
     const built = buildLists(
-      candidates,
+      scored,
       index,
       { mode, interests, tieBreak: userTieBreak('u-1') },
       { ...scoringConfig.lists, ...lists },
     );
     const byKey = new Map(built.map((list) => [list.key, list]));
-    return { built, byKey, candidates };
+    return { built, byKey, candidates: candidateList(index, scored) };
   }
   const slugs = (list: RankedList | undefined) => list!.games.map(({ slug }) => slug);
 

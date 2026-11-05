@@ -1,7 +1,7 @@
 import { DiscoveryMode } from '../../../generated/prisma/client';
 import { buildProfile, type Interaction } from './profile';
 import { scoreCandidates } from './score';
-import { rated, scoringConfig, scoringIndex } from './scoring.fixture';
+import { candidateList, rated, scoringConfig, scoringIndex } from './scoring.fixture';
 
 const { POPULAR, BALANCED, DISCOVERY } = DiscoveryMode;
 
@@ -11,7 +11,10 @@ describe('scoreCandidates', () => {
   function score(interactions: Interaction[], mode: DiscoveryMode = BALANCED) {
     const profile = buildProfile(interactions, [], index.features.length, scoringConfig);
     const excludedGameIds = new Set(interactions.map((i) => i.gameId));
-    return scoreCandidates(index, profile, { mode, excludedGameIds }, scoringConfig);
+    return candidateList(
+      index,
+      scoreCandidates(index, profile, { mode, excludedGameIds }, scoringConfig),
+    );
   }
   const slugs = (scored: ReturnType<typeof score>) => scored.map(({ game }) => game.slug);
 

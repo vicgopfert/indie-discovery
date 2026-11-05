@@ -1,7 +1,8 @@
 import { RECOMMENDATION_REASONS_MAX } from '@indie/contracts';
 import type { ContentIndex, IndexedGame } from '../content-index';
 import type { ScoredReason } from './explain';
-import { type TieBreak, topBy } from './tie-break';
+import type { TieBreak } from './tie-break';
+import { topBy } from './top';
 
 export interface FallbackOptions {
   limit: number;
