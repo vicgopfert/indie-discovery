@@ -2,10 +2,16 @@ import type { Recommendation, RecommendationReason } from '@indie/contracts';
 import Link from 'next/link';
 import { GameCard } from '@/features/games/game-card';
 
-export function RecommendationCard({ recommendation }: { recommendation: Recommendation }) {
+export function RecommendationCard({
+  recommendation,
+  headingLevel = 'h2',
+}: {
+  recommendation: Recommendation;
+  headingLevel?: 'h2' | 'h3';
+}) {
   const { game, reason, lowKnown } = recommendation;
   return (
-    <GameCard game={game}>
+    <GameCard game={game} headingLevel={headingLevel}>
       {lowKnown && (
         <span className="inline-block rounded-md border px-2 py-0.5 text-xs font-medium">
           Pouco conhecido

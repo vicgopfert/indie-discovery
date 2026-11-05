@@ -12,7 +12,7 @@ const MODE_QUERY = Object.fromEntries(
 ) as Record<DiscoveryMode, keyof typeof MODE_PARAMS>;
 
 // O modo vai sempre na consulta: sem ele, a API usaria o salvo, que pode ainda não ser o escolhido.
-export const getRecommendations = (mode: DiscoveryMode) =>
+export const getRecommendationOverview = (mode: DiscoveryMode) =>
   apiFetch(`/recommendations?mode=${MODE_QUERY[mode]}`, { schema: RecommendationOverviewSchema });
 
 export const saveDiscoveryMode = (discoveryMode: DiscoveryMode) =>
