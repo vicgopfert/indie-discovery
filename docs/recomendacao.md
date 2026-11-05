@@ -511,6 +511,47 @@ O custo a mais vem das prateleiras de estilo e da soma das palavras-chave no mot
 - **Resultado:** a carga fica cerca de 0,8 s mais longa no local. Em produção, onde a carga foi cerca de dez vezes mais lenta que a local no B-31, isso pode somar alguns segundos ao tempo em que a rota responde 503 depois de um deploy ou de a instância acordar. Vale medir no B-76.
 - **Memória:** o índice retém 4,4 MB a mais, as listas de estilos de cada jogo. Os resumos só passam pela carga. As medidas de heap e RSS do log da carga são fotos antes da coleta de lixo e crescem a cada recarga, nas duas versões.
 
+### Conferência e tempo em produção (05/11/2026)
+
+Depois do deploy, a conferência rodou contra https://indie-discovery.vercel.app com uma conta nova
+(`b74-producao-2026-11-05@example.com`, registrada no B-52): seis roguelikes com nota 5 (Hades,
+Dead Cells, Slay the Spire, Enter the Gungeon, Spelunky 2 e Risk of Rain 2). As 10 conferências
+passaram:
+- a prateleira `style:roguelike` "Roguelike" na visão geral, com o atributo do tipo `STYLE`;
+- o "ver mais" dela até o teto de 200, com os jogos da visão geral na lista;
+- o motivo com estilo em 5 cartões, também na página `/recomendacoes` (Dwarf Journey: Fantasia,
+  Plataforma, Roguelike);
+- a visão geral sem repetição (40 cartões), o 404 do estilo desconhecido e a mesma visão geral
+  para o mesmo estado.
+
+Tempo medido pelo cliente, das 14:40 às 14:43 UTC, 30 requisições por linha depois de uma de
+aquecimento, mediana (p95):
+
+| Requisição | Direto no Render | Pela Vercel | B-71 (direto / Vercel) |
+| --- | --- | --- | --- |
+| Visão geral, Populares | 411 ms (1.317) | 335 ms (1.081) | 389 / 407 ms |
+| Visão geral, Equilibrado | 397 ms (1.188) | 372 ms (1.126) | 368 / 316 ms |
+| Visão geral, Descobertas | 408 ms (1.197) | 396 ms (1.200) | 400 / 435 ms |
+| "Ver mais", principal, página 1 | 374 ms (890) | 301 ms (990) | 357 / 410 ms |
+| "Ver mais", `style:roguelike`, página 1 | 390 ms (1.098) | 378 ms (1.002) | 303 / 375 ms (prateleira de gênero) |
+| `GET /api/health`, para comparar | 217 ms (232) | 170 ms (195) | 145 / 166 ms |
+
+A mediana ficou na faixa do B-71, perto de 400 ms, e o p95 continua acima de 1 s (B-76). A rede
+estava mais lenta que no B-71 (o `health` direto foi de 145 para 217 ms).
+
+**Carga do índice em produção**, pelo log do Render, a do B-71 e a do B-74 no mesmo deploy:
+
+| | B-71 (sem estilos) | B-74 | Diferença |
+| --- | --- | --- | --- |
+| Tempo | 11.300 ms | 12.905 ms | +1,6 s (+14%) |
+| Heap depois da carga | 68,9 MB (+35,8) | 73,6 MB (+40,3) | +4,7 MB |
+| RSS depois da carga | 194,8 MB (+90,6) | 201,2 MB (+94,4) | +6,4 MB |
+
+Os estilos somam 1,6 s à carga em produção, o dobro do local (0,8 s), e não as dez vezes da
+estimativa acima: parte da carga é espera pelo banco, que não depende da CPU da instância. A rota
+responde 503 por cerca de 13 s depois de um deploy ou de a instância acordar. O RSS fica em
+201 MB dos 512 MB da instância gratuita.
+
 ## Limitações
 
 - **Lista de populares:** não respeita o modo, como previsto na proposta.
