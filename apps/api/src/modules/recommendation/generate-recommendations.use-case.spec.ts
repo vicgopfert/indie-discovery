@@ -33,7 +33,7 @@ const labels = new FeatureLabels(
     labelsRationale: 'motivo',
     labels: {
       GENRE: { platform: 'Plataforma', puzzle: 'Quebra-cabeça' },
-      THEME: { fantasy: 'Fantasia', horror: 'Terror' },
+      THEME: { fantasy: 'Fantasia', horror: 'Terror', action: 'Ação' },
     },
     hiddenFromFilters: { GENRE: ['indie'], THEME: [] },
     hiddenRationale: 'motivo',
@@ -274,7 +274,7 @@ describe('GenerateRecommendationsUseCase', () => {
 
       expect(shelves.map(({ key, kind, feature }) => [key, kind, feature])).toEqual([
         ['upcoming', 'upcoming', null],
-        ['genre:rpg', 'interest', { type: 'GENRE', slug: 'rpg', name: 'RPG' }],
+        ['theme:action', 'interest', { type: 'THEME', slug: 'action', name: 'Ação' }],
         ['theme:horror', 'interest', horror],
       ]);
     });

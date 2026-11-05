@@ -20,11 +20,15 @@ interface CoverableItem {
 
 // Escolha gulosa pela cobertura da biblioteca, não pelo maior u_k: o gosto dominante é um grupo
 // de atributos que andam juntos nos mesmos jogos e, pelos maiores u_k, ocuparia todas as vagas.
-// A cada passo entra o gênero ou tema que cobre mais peso ainda não coberto; no empate, o de
-// maior u_k e depois o de menor posição. Só concorre quem tem u_k > 0, para que notas negativas
-// possam anular um atributo, e quem não passa do limite de frequência no catálogo: um atributo
-// em quase metade dos jogos (Aventura, Ação) cobre a biblioteca inteira sozinho. Ele continua na
-// pontuação e no motivo.
+// A cada passo entra o gênero ou tema que cobre mais peso ainda não coberto. Só concorre quem tem
+// u_k > 0, para que notas negativas possam anular um atributo, e quem não passa do limite de
+// frequência no catálogo: um atributo em quase metade dos jogos (Aventura, Ação) cobre a
+// biblioteca inteira sozinho. Ele continua na pontuação e no motivo.
+//
+// Mais da metade das escolhas empata na cobertura (B-73). No empate, entra o de maior peso na
+// biblioteca, contando os itens já cobertos: o atributo presente em mais jogos de que o jogador
+// gostou. Depois, o menos frequente no catálogo, e por fim a posição. O u_k ficou de fora: pela
+// fatia de 40% do vetor, ele favorecia os gêneros sobre os temas.
 export function pickInterests(
   profile: Profile,
   preferencePositions: readonly number[],
@@ -49,6 +53,13 @@ export function pickInterests(
       positions: [position],
     })),
   ].filter(({ weight }) => weight > 0);
+
+  const libraryWeight = new Map<number, number>();
+  for (const { weight, positions } of uncovered) {
+    for (const position of positions) {
+      libraryWeight.set(position, (libraryWeight.get(position) ?? 0) + weight);
+    }
+  }
 
   const picked: Omit<Interest, 'share'>[] = [];
   while (picked.length < config.lists.maxInterests) {
@@ -76,7 +87,12 @@ export function pickInterests(
 
   function isBetter(position: number, coverage: number, best: Omit<Interest, 'share'>) {
     if (coverage !== best.coverage) return coverage > best.coverage;
-    if (u[position] !== u[best.position]) return u[position]! > u[best.position]!;
+    const weight = libraryWeight.get(position)!;
+    const bestWeight = libraryWeight.get(best.position)!;
+    if (weight !== bestWeight) return weight > bestWeight;
+    const ratio = features[position]!.documentRatio;
+    const bestRatio = features[best.position]!.documentRatio;
+    if (ratio !== bestRatio) return ratio < bestRatio;
     return position < best.position;
   }
 }

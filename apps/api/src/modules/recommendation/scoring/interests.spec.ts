@@ -1,6 +1,8 @@
 import { pickInterests } from './interests';
 import { buildProfile, type Interaction } from './profile';
 import {
+  AMNESIA_LIBRARY,
+  amnesiaIndex,
   featurePosition,
   GENERIC_LIBRARY,
   genericIndex,
@@ -58,16 +60,16 @@ describe('pickInterests', () => {
   });
 
   it('só um atributo dominante entra: os outros não cobrem nenhum jogo novo', () => {
-    const { profile, slugs } = interestsOf(library());
+    const { slugs } = interestsOf(library());
+    const ratio = (slug: string) => index.features[position(slug)]!.documentRatio;
 
     const [first] = slugs;
     expect(dominant).toContain(first);
     for (const other of dominant.filter((slug) => slug !== first)) {
       expect(slugs).not.toContain(other);
-      // No empate da cobertura (os seis jogos), entra o de maior u_k.
-      expect(profile.vector[position(first!)]!).toBeGreaterThanOrEqual(
-        profile.vector[position(other)]!,
-      );
+      // Os quatro empatam na cobertura e no peso na biblioteca (os seis jogos): entra o menos
+      // frequente no catálogo.
+      expect(ratio(first!)).toBeLessThan(ratio(other));
     }
   });
 
@@ -83,19 +85,21 @@ describe('pickInterests', () => {
     expect(interestsOf(library(), [], new Set()).slugs).toEqual(['indie']);
   });
 
-  it('só com preferências, cada uma vira interesse, com cotas iguais, na ordem da posição', () => {
-    const { interests, slugs } = interestsOf([], ['sci-fi', 'puzzle', 'horror']);
+  it('só com preferências, cada uma vira interesse, com cotas iguais, do menos frequente ao mais', () => {
+    const { interests, slugs } = interestsOf([], ['horror', 'sci-fi', 'puzzle']);
 
-    expect(slugs).toEqual(['puzzle', 'horror', 'sci-fi']);
+    // Quebra-cabeça e ficção científica estão em 2 jogos do catálogo, e o terror em 7; no empate
+    // da frequência, vale a posição.
+    expect(slugs).toEqual(['puzzle', 'sci-fi', 'horror']);
     expect(interests.map(({ share }) => share)).toEqual([1 / 3, 1 / 3, 1 / 3]);
   });
 
   it('a preferência entra como item de peso β, que só tem o próprio atributo', () => {
     const { interests, slugs } = interestsOf([rated(index, 'fright-c', 5)], ['puzzle']);
 
-    // fright-c (w = 2) cobre o terror, que tem u_k maior que a ficção científica do mesmo jogo;
-    // a preferência (β = 1), o quebra-cabeça.
-    expect(slugs).toEqual(['horror', 'puzzle']);
+    // fright-c (w = 2) cobre o terror e a ficção científica; empatados, entra a ficção científica,
+    // menos frequente. A preferência (β = 1) cobre o quebra-cabeça.
+    expect(slugs).toEqual(['sci-fi', 'puzzle']);
     expect(interests.map(({ coverage }) => coverage)).toEqual([2, scoringConfig.preferenceWeight]);
   });
 
@@ -114,7 +118,9 @@ describe('pickInterests', () => {
   it('para no máximo da configuração', () => {
     const { slugs } = interestsOf([], ['rpg', 'shooter', 'puzzle', 'horror', 'survival', 'sci-fi']);
 
-    expect(slugs).toEqual(['rpg', 'shooter', 'puzzle', 'horror']);
+    // Todas valem β: entram as quatro menos frequentes (Tiro, Quebra-cabeça e Ficção científica em
+    // 2 jogos, Sobrevivência em 3); RPG (17) e Terror (7) ficam de fora.
+    expect(slugs).toEqual(['shooter', 'puzzle', 'sci-fi', 'survival']);
   });
 
   it('o mesmo estado dá os mesmos interesses, em qualquer ordem das interações', () => {
@@ -122,6 +128,33 @@ describe('pickInterests', () => {
     const backward = interestsOf(library().reverse(), ['sci-fi']).interests;
 
     expect(backward).toEqual(forward);
+  });
+});
+
+describe('pickInterests: desempate da cobertura (caso Amnesia)', () => {
+  const index = amnesiaIndex();
+  const slugsOf = (library: string[]) => {
+    const interactions = library.map((slug) => rated(index, slug, 5));
+    const profile = buildProfile(interactions, [], index.features.length, scoringConfig);
+    return pickInterests(profile, [], index.features, new Set(), scoringConfig).map(
+      ({ position }) => index.features[position]!.slug,
+    );
+  };
+
+  it('entre os atributos de Amnesia, entra o de maior peso na biblioteca: Terror, em três jogos', () => {
+    // Pelo u_k entraria um gênero (Quebra-cabeça ou Tiro); pelo menos frequente, Furtividade,
+    // que só Amnesia tem.
+    expect(slugsOf(AMNESIA_LIBRARY)).toEqual(['rpg', 'horror']);
+  });
+
+  it('com o mesmo peso na biblioteca, entra o menos frequente no catálogo', () => {
+    // Sem Undertale, Tiro e Terror estão em Amnesia e 7 Days to Die; Tiro está em mais jogos do
+    // catálogo.
+    const library = AMNESIA_LIBRARY.filter((slug) => slug !== 'undertale');
+    const ratio = (slug: string) => index.features[featurePosition(index, slug)]!.documentRatio;
+
+    expect(ratio('horror')).toBeLessThan(ratio('shooter'));
+    expect(slugsOf(library)).toEqual(['rpg', 'horror']);
   });
 });
 

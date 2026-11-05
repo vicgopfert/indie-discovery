@@ -230,6 +230,42 @@ export function genericIndex(): ContentIndex {
   return fixtureIndex(GENERIC_FEATURES, GENERIC_GAMES, []);
 }
 
+// O caso da conferência em produção do B-71: depois de RPG, só Amnesia fica sem cobertura, e os
+// atributos dele empatam. Terror está em três jogos da biblioteca; Furtividade e Mistério, só em
+// Amnesia; Tiro é o mais frequente no catálogo.
+const AMNESIA_FEATURES: FixtureFeature[] = [
+  { id: featureId('rpg'), type: GENRE, igdbId: 1, slug: 'rpg', name: 'RPG', idf: 1 },
+  { id: featureId('puzzle'), type: GENRE, igdbId: 2, slug: 'puzzle', name: 'Puzzle', idf: 1.4 },
+  { id: featureId('shooter'), type: GENRE, igdbId: 3, slug: 'shooter', name: 'Shooter', idf: 1.3 },
+  { id: featureId('fantasy'), type: THEME, igdbId: 1, slug: 'fantasy', name: 'Fantasy', idf: 1 },
+  { id: featureId('horror'), type: THEME, igdbId: 2, slug: 'horror', name: 'Horror', idf: 1.6 },
+  { id: featureId('stealth'), type: THEME, igdbId: 3, slug: 'stealth', name: 'Stealth', idf: 2 },
+  { id: featureId('mystery'), type: THEME, igdbId: 4, slug: 'mystery', name: 'Mystery', idf: 1.8 },
+  FILLER_FEATURE,
+];
+
+const AMNESIA_GAMES: FixtureGames = {
+  ...Object.fromEntries(
+    [0.5, 0.6, 0.7, 0.8, 0.9].map((pop, i) => [`quest-${i + 1}`, [['rpg', 'fantasy'], pop]]),
+  ),
+  amnesia: [['puzzle', 'shooter', 'horror', 'stealth', 'mystery'], 0.6],
+  'seven-days': [['rpg', 'shooter', 'horror'], 0.8],
+  undertale: [['rpg', 'puzzle', 'horror'], 0.9],
+  ...fillers('gun', 6, ['shooter']),
+  ...fillers('filler', 20, ['filler']),
+};
+
+export const AMNESIA_LIBRARY = [
+  ...Array.from({ length: 5 }, (_, i) => `quest-${i + 1}`),
+  'amnesia',
+  'seven-days',
+  'undertale',
+];
+
+export function amnesiaIndex(): ContentIndex {
+  return fixtureIndex(AMNESIA_FEATURES, AMNESIA_GAMES, []);
+}
+
 export const gameId = (slug: string) => `g-${slug}`;
 
 // Os atributos do jogo como o banco os guarda, para montar o vetor de quem está fora do índice.

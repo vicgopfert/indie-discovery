@@ -344,9 +344,13 @@ function greedy(
 }
 
 const SCENARIOS = {
-  A: { styles: false, tieBreak: 'u', name: 'A. Gêneros e temas, desempate por u_k (atual)' },
+  A: { styles: false, tieBreak: 'u', name: 'A. Gêneros e temas, desempate por u_k (B-71)' },
   B: { styles: false, tieBreak: 'frequency', name: 'B. Gêneros e temas, pelo menos frequente' },
-  E: { styles: false, tieBreak: 'library', name: 'E. Gêneros e temas, pelo peso na biblioteca' },
+  E: {
+    styles: false,
+    tieBreak: 'library',
+    name: 'E. Gêneros e temas, pelo peso na biblioteca (atual)',
+  },
   C: { styles: true, tieBreak: 'u', name: 'C. Com estilos, desempate por u_k' },
   D: { styles: true, tieBreak: 'frequency', name: 'D. Com estilos, pelo menos frequente' },
   F: { styles: true, tieBreak: 'library', name: 'F. Com estilos, pelo peso na biblioteca' },
@@ -467,7 +471,7 @@ function tieBreaks(
       ).length;
     }
     if (
-      runs.A.at(-1)!
+      runs.E.at(-1)!
         .map(({ key }) => key)
         .join() !== reference.join()
     )

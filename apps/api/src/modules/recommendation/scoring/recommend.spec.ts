@@ -111,7 +111,7 @@ describe('recommend', () => {
       scoringConfig,
     );
 
-    expect(result.lists.map(({ key }) => key)).toEqual(['main', 'upcoming', 'genre:roguelike']);
+    expect(result.lists.map(({ key }) => key)).toEqual(['main', 'upcoming', 'theme:fantasy']);
     // Os dois primeiros têm o vetor de Hades e empatam no cosseno 1: o sorteio decide.
     expect(slugs(result).slice(0, 2).sort()).toEqual(['obscure-rogue', 'popular-rogue']);
     expect(slugs(result).slice(2)).toEqual(['dead-cells', 'spelunky']);
@@ -160,7 +160,7 @@ describe('recommend', () => {
     expect(result.lists.map(({ key }) => key)).toEqual([
       'main',
       'upcoming',
-      'genre:rpg',
+      'theme:action',
       'theme:horror',
     ]);
   });
