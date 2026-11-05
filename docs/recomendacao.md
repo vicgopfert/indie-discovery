@@ -697,10 +697,77 @@ dos resumos de 4,8 para 2,9 ms.
 (transação 1.188 ms, montagem 768 ms). Nas cinco recargas seguintes, de 1.273 a 1.429 ms na `main`
 e de 1.257 a 1.338 ms no B-76 (transação de 664 a 751 ms, montagem de 571 a 633 ms).
 
-**Produção:** a medição com a metodologia do B-33 vem depois do merge e decide o critério do item
-(p95 fim a fim abaixo de 1 s). Pela hipótese da cota de CPU, a visão geral cai de cerca de três
-janelas de 100 ms para duas; se o p95 continuar acima de 1 s, o cache das listas por usuário e
-modo vira decisão separada.
+**Produção:** pela hipótese da cota de CPU, a visão geral cairia de cerca de três janelas de
+100 ms para duas. A medição está na seção seguinte.
+
+### Conferência e tempo em produção (05/11/2026)
+
+Depois do deploy (índice carregado às 18:29:50 UTC), duas rodadas com a metodologia do B-33,
+direto no Render e pela Vercel. O perfil é o da conferência do B-74: seis roguelikes com nota 5.
+As contas `b76-producao-2026-11-05@example.com` e `b76-producao-2-2026-11-05@example.com` estão
+registradas no B-52. Nas duas rodadas, as 7 conferências passaram:
+- a visão geral vem pelo perfil nos três modos, com a prateleira `style:roguelike`;
+- o mesmo estado dá a mesma visão geral.
+
+**Regra de decisão**, fixada pelo autor antes da segunda rodada:
+1. todas as linhas de recomendação com p95 abaixo de 1 s: critério atingido;
+2. alguma acima de 1 s, com cauda parecida na rota de saúde da mesma rodada: limitação da instância gratuita, e o item fecha como atingido no que depende do código;
+3. alguma acima de 1 s sem essa cauda: parar e levar os números ao autor.
+
+Mediana (p95), por linha:
+
+| Requisição | 30 amostras, 18:31–18:34 UTC: direto | 30 amostras: Vercel | 100 amostras, 18:39–18:48 UTC: direto | 100 amostras: Vercel |
+| --- | --- | --- | --- | --- |
+| Visão geral, Populares | 205 ms (900) | 306 ms (1.082) | 201 ms (708) | 210 ms (786) |
+| Visão geral, Equilibrado | 200 ms (889) | 214 ms (585) | 200 ms (788) | 206 ms (696) |
+| Visão geral, Descobertas | 205 ms (811) | 224 ms (1.086) | 201 ms (698) | 288 ms (687) |
+| "Ver mais", principal p. 1, Populares | 201 ms (723) | 221 ms (545) | 201 ms (791) | 207 ms (686) |
+| "Ver mais", principal p. 1, Equilibrado | 202 ms (716) | 200 ms (608) | 200 ms (618) | 204 ms (675) |
+| "Ver mais", principal p. 1, Descobertas | 202 ms (724) | 208 ms (610) | 203 ms (905) | 243 ms (711) |
+| "Ver mais", `style:roguelike` p. 1, Populares | 202 ms (599) | 205 ms (806) | 201 ms (689) | 205 ms (515) |
+| "Ver mais", `style:roguelike` p. 1, Equilibrado | 200 ms (904) | 207 ms (815) | 201 ms (708) | 209 ms (893) |
+| "Ver mais", `style:roguelike` p. 1, Descobertas | 200 ms (811) | 206 ms (724) | 202 ms (807) | 213 ms (724) |
+| Todas as de recomendação juntas | 201 ms (809) | 208 ms (806) | 201 ms (709) | 209 ms (696) |
+| `GET /api/health` | 143 ms (344) | 168 ms (237) | 146 ms (152) | 164 ms (190) |
+
+- **Resultado (regra 1):** nas 100 amostras, todas as 18 linhas de recomendação ficaram com p95
+  abaixo de 1 s; a maior foi 905 ms. **Critério do B-76 atingido.**
+- **Mediana:** cerca de 200 ms em todas as linhas, contra cerca de 400 ms no B-74 (seção
+  "Conferência e tempo em produção" dos estilos). Ficou perto da rota de saúde (cerca de 145 ms):
+  o servidor passou de cerca de 200 ms para cerca de 60 ms, como a hipótese da cota de CPU previa.
+- **Primeira rodada:** com 30 amostras, o p95 é o segundo maior valor. Duas linhas passaram de 1 s
+  por 82 e 86 ms, ambas pela Vercel, numa rodada em que a rota de saúde também teve cauda (p95 de
+  344 ms).
+
+**Carga do índice em produção**, pelo log do Render, com a divisão nova:
+
+| | Local (inicialização) | Produção |
+| --- | --- | --- |
+| Total | 1.956 ms | 13.304 ms |
+| Transação | 1.188 ms | 7.097 ms |
+| Montagem | 768 ms | 6.207 ms |
+| Heap depois da carga | — | 74,6 MB (+41,4) |
+| RSS depois da carga | — | 184,3 MB (+78,0) |
+
+- **Folga até o tempo-limite:** a transação usou 7,1 s dos 60 s (12%), com cerca de 53 s de
+  folga, oito vezes a duração dela.
+- **Proporção:** em produção, as duas etapas ficam perto de dez vezes as recargas locais
+  (transação cerca de 0,7 s, montagem cerca de 0,6 s). A montagem é só CPU, o que reforça a
+  hipótese da cota de CPU.
+
+### Fora do B-76
+
+Aprovado no plano:
+- **Cache das listas por usuário e modo.** Na primeira rodada, a cauda apareceu também na rota de
+  saúde, que quase não usa CPU, e o cache só acelera repetições: a primeira visão geral depois de
+  uma avaliação continuaria igual. Na segunda rodada, o critério foi atingido sem ele.
+- **Hash mais barato no desempate:** muda a ordem dos empatados.
+- **Tetos e tamanhos menores:** mudam o config e o "ver mais".
+- **Índice invertido de atributo para jogos:** cerca de 2 MB a mais no índice, por uns 3 ms.
+- **Vetores da carga sem chave de texto:** risco de mudar o último bit dos pesos.
+- **Estilos gravados na ingestão:** mudam a ingestão e o schema.
+- **Consulta de sessão do guard:** é de outro módulo.
+- **Plano pago do Render:** tem custo.
 
 - **Lista de populares:** não respeita o modo, como previsto na proposta.
 - **Filtros:** a rota não recebe filtros (por exemplo, só "em breve"), porque nenhuma tela do
