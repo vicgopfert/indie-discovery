@@ -5,6 +5,14 @@ import type { ScoringConfig } from './scoring-config';
 export type InterestAttribute =
   { kind: 'feature'; position: number } | { kind: 'style'; style: number };
 
+// A ordem dos atributos nos desempates: os do vetor pela posição e, depois deles, os estilos.
+export function attributeKey(
+  attribute: InterestAttribute,
+  { features }: Pick<AttributeCatalog, 'features'>,
+): number {
+  return attribute.kind === 'feature' ? attribute.position : features.length + attribute.style;
+}
+
 export interface Interest {
   attribute: InterestAttribute;
   // O peso dos jogos da biblioteca e das preferências que o interesse cobriu ao entrar.
@@ -39,7 +47,7 @@ export function pickInterests(
   config: ScoringConfig,
 ): Interest[] {
   const limit = config.lists.interestMaxDocumentRatio;
-  const styleKey = (style: number) => features.length + style;
+  const styleKey = (style: number) => attributeKey({ kind: 'style', style }, { features });
   const documentRatio = (key: number) =>
     key < features.length
       ? features[key]!.documentRatio

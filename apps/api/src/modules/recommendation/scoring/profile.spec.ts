@@ -1,6 +1,20 @@
 import { ListType } from '../../../generated/prisma/client';
-import { buildProfile, hasPositiveComponent, interactionWeight, profileDot } from './profile';
-import { featurePosition, gameOf, rated, scoringConfig, scoringIndex } from './scoring.fixture';
+import {
+  buildProfile,
+  hasPositiveComponent,
+  interactionsOf,
+  interactionWeight,
+  profileDot,
+} from './profile';
+import {
+  FEATURES,
+  featurePosition,
+  gameId,
+  gameOf,
+  rated,
+  scoringConfig,
+  scoringIndex,
+} from './scoring.fixture';
 
 const { FAVORITE, COMPLETED, WANT_TO_PLAY } = ListType;
 
@@ -106,5 +120,45 @@ describe('buildProfile', () => {
     const profile = buildProfile([rated(index, 'hades', 5)], [], featureCount, scoringConfig);
 
     expect(profileDot(profile, gameOf(index, 'hades')) / profile.norm).toBeCloseTo(1, 12);
+  });
+});
+
+describe('interactionsOf', () => {
+  const index = scoringIndex({ without: ['celeste'] });
+
+  it('junta a nota e as listas do mesmo jogo numa interação só', () => {
+    const [hades, ...rest] = interactionsOf(index, {
+      ratings: [{ gameId: gameId('hades'), score: 5 }],
+      listEntries: [
+        { gameId: gameId('hades'), listType: FAVORITE },
+        { gameId: gameId('hades'), listType: COMPLETED },
+      ],
+      unindexedGames: new Map(),
+    });
+
+    expect(rest).toEqual([]);
+    expect(hades).toMatchObject({
+      gameId: gameId('hades'),
+      score: 5,
+      lists: [FAVORITE, COMPLETED],
+    });
+    expect(hades!.vector).toBe(gameOf(index, 'hades'));
+  });
+
+  it('monta o vetor do jogo fora do índice com os atributos gravados no banco', () => {
+    const full = scoringIndex();
+    const celeste = gameOf(full, 'celeste');
+    const features = [...celeste.featurePositions].map((p) => {
+      const { type, igdbId, slug } = FEATURES.find((f) => f.slug === full.features[p]!.slug)!;
+      return { type, igdbId, slug };
+    });
+    const [interaction] = interactionsOf(index, {
+      ratings: [{ gameId: gameId('celeste'), score: 4 }],
+      listEntries: [],
+      unindexedGames: new Map([[gameId('celeste'), { features, summary: '' }]]),
+    });
+
+    expect(interaction).toMatchObject({ gameId: gameId('celeste'), score: 4, lists: [] });
+    expect([...interaction!.vector!.weights]).toEqual([...celeste.weights]);
   });
 });

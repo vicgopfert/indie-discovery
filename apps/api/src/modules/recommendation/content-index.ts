@@ -27,8 +27,8 @@ export interface ContentIndexRows {
     releaseStatus: ReleaseStatus;
     popularityNorm: number;
     featurePositions: number[];
-    summary?: string;
-    styleKeywords?: string[];
+    summary: string;
+    styleKeywords: string[];
   }[];
 }
 
@@ -84,6 +84,8 @@ export interface ContentIndex {
   styles: readonly IndexedStyle[];
   positionByGameId: ReadonlyMap<string, number>;
   positionByFeatureId: ReadonlyMap<string, number>;
+  // O estilo de cada palavra-chave de estilo que está no vetor, pela posição dela, para o motivo.
+  styleByKeywordPosition: ReadonlyMap<number, number>;
   // O vetor de um jogo fora do índice (o que saiu do catálogo e continua na biblioteca), com o
   // mesmo IDF e as mesmas posições: atributo fora do índice fica de fora, como nos outros jogos.
   vectorOf(features: readonly Pick<ContentFeature, 'type' | 'igdbId'>[]): ContentVector;
@@ -99,7 +101,7 @@ export type AttributeCatalog = Pick<ContentIndex, 'features' | 'styles'>;
 export function buildContentIndex(
   rows: ContentIndexRows,
   config: TfidfConfig,
-  styles: readonly CuratedStyle[] = [],
+  styles: readonly CuratedStyle[],
 ): ContentIndex {
   const idf = new Map<FeatureKey, number>();
   const positionByKey = new Map<FeatureKey, number>();
@@ -120,13 +122,11 @@ export function buildContentIndex(
   };
   const stylesOf = styleAssigner(styles);
 
-  const games = rows.games.map(
-    ({ featurePositions, summary = '', styleKeywords = [], ...game }) => ({
-      ...game,
-      ...vectorOf(featurePositions.map((position) => rows.features[position]!)),
-      styles: stylesOf({ keywords: styleKeywords, summary }),
-    }),
-  );
+  const games = rows.games.map(({ featurePositions, summary, styleKeywords, ...game }) => ({
+    ...game,
+    ...vectorOf(featurePositions.map((position) => rows.features[position]!)),
+    styles: stylesOf({ keywords: styleKeywords, summary }),
+  }));
 
   const ratio = (count: number) => (rows.games.length === 0 ? 0 : count / rows.games.length);
   const documentCount = new Array<number>(rows.features.length).fill(0);
@@ -135,6 +135,20 @@ export function buildContentIndex(
   }
   const styleCount = new Array<number>(styles.length).fill(0);
   for (const game of games) for (const style of game.styles) styleCount[style]!++;
+
+  const indexedStyles = styles.map(({ slug, name, keywords }, i) => {
+    const own = new Set(keywords.map((k) => k.toLowerCase()));
+    return {
+      slug,
+      name,
+      documentRatio: ratio(styleCount[i]!),
+      keywordPositions: rows.features.flatMap((feature, position) =>
+        feature.type === FeatureType.KEYWORD && own.has(feature.slug.toLowerCase())
+          ? [position]
+          : [],
+      ),
+    };
+  });
 
   return {
     games,
@@ -145,19 +159,12 @@ export function buildContentIndex(
       name,
       documentRatio: ratio(documentCount[position]!),
     })),
-    styles: styles.map(({ slug, name, keywords }, i) => {
-      const own = new Set(keywords.map((k) => k.toLowerCase()));
-      return {
-        slug,
-        name,
-        documentRatio: ratio(styleCount[i]!),
-        keywordPositions: rows.features.flatMap((feature, position) =>
-          feature.type === FeatureType.KEYWORD && own.has(feature.slug.toLowerCase())
-            ? [position]
-            : [],
-        ),
-      };
-    }),
+    styles: indexedStyles,
+    styleByKeywordPosition: new Map(
+      indexedStyles.flatMap(({ keywordPositions }, style) =>
+        keywordPositions.map((position) => [position, style] as const),
+      ),
+    ),
     positionByGameId: new Map(games.map(({ id }, position) => [id, position])),
     positionByFeatureId: new Map(rows.features.map(({ id }, position) => [id, position])),
     vectorOf,

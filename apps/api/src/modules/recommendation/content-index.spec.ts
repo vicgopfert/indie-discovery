@@ -50,13 +50,15 @@ function rowsFor(games: Record<string, ContentFeature[]>): ContentIndexRows {
       featurePositions: list
         .map((f) => position.get(featureKey(f)))
         .filter((p): p is number => p !== undefined),
+      summary: '',
+      styleKeywords: [],
     })),
   };
 }
 
 describe('buildContentIndex', () => {
   const rows = rowsFor(catalog);
-  const index = buildContentIndex(rows, config);
+  const index = buildContentIndex(rows, config, []);
 
   it('refaz para cada jogo o mesmo vetor que a ingestão calcula', () => {
     const idf = computeIdf(Object.values(catalog), config);
@@ -92,6 +94,7 @@ describe('buildContentIndex', () => {
     const withoutCeleste = buildContentIndex(
       { ...rows, games: rows.games.filter((game) => game.slug !== 'celeste') },
       config,
+      [],
     );
     const celeste = index.games[index.positionByGameId.get('g-celeste')!]!;
 
@@ -174,6 +177,7 @@ describe('buildContentIndex: estilos', () => {
       'KEYWORD-1',
     ]);
     expect(index.styles[1]!.keywordPositions).toEqual([]);
+    expect([...index.styleByKeywordPosition]).toEqual([[index.styles[0]!.keywordPositions[0], 0]]);
   });
 
   it('atribui os estilos de um jogo fora do índice pela mesma regra', () => {
@@ -181,9 +185,9 @@ describe('buildContentIndex: estilos', () => {
   });
 
   it('sem estilos configurados, nenhum jogo tem estilo', () => {
-    expect(buildContentIndex(rows, config).games.every((game) => game.styles.length === 0)).toBe(
-      true,
-    );
+    expect(
+      buildContentIndex(rows, config, []).games.every((game) => game.styles.length === 0),
+    ).toBe(true);
   });
 });
 

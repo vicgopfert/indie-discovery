@@ -19,7 +19,7 @@ const FILLER_FEATURE = {
 };
 
 // Na mesma ordem do repositório: tipo e igdbId.
-const FEATURES = [
+export const FEATURES = [
   {
     id: featureId('roguelike'),
     type: GENRE,
@@ -215,7 +215,7 @@ function fixtureIndex(
             releaseStatus,
             popularityNorm,
             featurePositions: slugs.map((f) => position.get(f)!),
-            ...(summary === undefined ? {} : { summary }),
+            summary: summary ?? '',
             styleKeywords: slugs.filter((f) => isKeyword.has(f)),
           }),
         ),

@@ -1,5 +1,5 @@
-import type { ListType } from '../../../generated/prisma/client';
-import type { ContentVector } from '../content-index';
+import { FeatureType, type ListType } from '../../../generated/prisma/client';
+import type { ContentIndex, ContentVector } from '../content-index';
 import type { ScoringConfig } from './scoring-config';
 
 export interface Interaction {
@@ -10,6 +10,50 @@ export interface Interaction {
   vector: ContentVector | null;
   // Índices em ContentIndex.styles.
   styles: readonly number[];
+}
+
+// O que está gravado na biblioteca do jogador. O jogo que saiu do catálogo continua nela, com os
+// atributos e o resumo lidos do banco.
+export interface LibraryState {
+  ratings: readonly { gameId: string; score: number }[];
+  listEntries: readonly { gameId: string; listType: ListType }[];
+  unindexedGames: ReadonlyMap<
+    string,
+    { features: readonly { type: FeatureType; igdbId: number; slug: string }[]; summary: string }
+  >;
+}
+
+// Nota e listas do mesmo jogo viram uma interação só. O jogo fora do índice tem o vetor e os
+// estilos montados com os atributos e o resumo gravados no banco.
+export function interactionsOf(
+  index: Pick<ContentIndex, 'games' | 'positionByGameId' | 'vectorOf' | 'stylesOf'>,
+  { ratings, listEntries, unindexedGames }: LibraryState,
+): Interaction[] {
+  const byGame = new Map<string, { score: number | null; lists: ListType[] }>();
+  const entryOf = (gameId: string) => {
+    const entry = byGame.get(gameId) ?? { score: null, lists: [] };
+    byGame.set(gameId, entry);
+    return entry;
+  };
+  for (const { gameId, score } of ratings) entryOf(gameId).score = score;
+  for (const { gameId, listType } of listEntries) entryOf(gameId).lists.push(listType);
+
+  return [...byGame].map(([gameId, { score, lists }]) => {
+    const position = index.positionByGameId.get(gameId);
+    if (position !== undefined) {
+      const game = index.games[position]!;
+      return { gameId, score, lists, vector: game, styles: game.styles };
+    }
+    const { features = [], summary = '' } = unindexedGames.get(gameId) ?? {};
+    const keywords = features.filter(({ type }) => type === FeatureType.KEYWORD);
+    return {
+      gameId,
+      score,
+      lists,
+      vector: index.vectorOf(features),
+      styles: index.stylesOf({ keywords: keywords.map(({ slug }) => slug), summary }),
+    };
+  });
 }
 
 export interface WeightedGame {
