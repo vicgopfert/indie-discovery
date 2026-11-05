@@ -162,6 +162,7 @@ describe('Recomendações (GET /recommendations)', () => {
       'inside',
       'baba-is-you',
     ]);
+    expect(await listPage('main')).toMatchObject({ basis: 'popular', items: list.main.items });
   });
 
   it('sem modo na consulta, usa o salvo; com modo, usa o pedido sem gravá-lo', async () => {
@@ -201,6 +202,7 @@ describe('Recomendações (GET /recommendations)', () => {
     const horror = await listPage('theme:horror');
     expect(horror).toMatchObject({
       mode: 'BALANCED',
+      basis: 'profile',
       key: 'theme:horror',
       feature: { type: 'THEME', slug: 'horror', name: 'Terror' },
       page: 1,

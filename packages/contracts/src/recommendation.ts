@@ -104,9 +104,10 @@ export const RecommendationOverviewSchema = z.object({
 export type RecommendationOverview = z.infer<typeof RecommendationOverviewSchema>;
 
 // Uma página de uma lista só, para o "ver mais": main, upcoming, genre:<slug>, theme:<slug> ou
-// style:<slug>.
+// style:<slug>. A base vem como na visão geral, para a página tratar populares e vazia (B-72).
 export const RecommendationPageSchema = z.object({
   mode: z.enum(DISCOVERY_MODES),
+  basis: z.enum(RECOMMENDATION_BASES),
   key: z.string(),
   feature: RecommendationFeatureSchema.nullable(),
   page: z.number().int().min(1),

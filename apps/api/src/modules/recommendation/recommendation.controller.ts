@@ -125,10 +125,11 @@ export class RecommendationController {
   })
   @ApiOkResponse({
     description:
-      'Uma página da lista completa, para o "ver mais", até o teto da configuração; a repetição com as outras listas é permitida. Os itens vêm no formato da visão geral',
+      'Uma página da lista completa, para o "ver mais", até o teto da configuração; a repetição com as outras listas é permitida. basis e os itens vêm como na visão geral; com basis popular, só a lista main existe',
     schema: {
       example: {
         mode: 'DISCOVERY',
+        basis: 'profile',
         key: 'theme:horror',
         feature: HORROR,
         page: 1,

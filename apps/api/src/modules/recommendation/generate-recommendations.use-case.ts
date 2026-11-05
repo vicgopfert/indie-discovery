@@ -68,14 +68,22 @@ export class GenerateRecommendationsUseCase {
   ): Promise<RecommendationPage> {
     const result = await this.recommend(userId, mode);
     if (result === null && key === MAIN_LIST_KEY) {
-      return { mode, key, feature: null, page, ...NO_ITEMS };
+      return { mode, basis: 'empty', key, feature: null, page, ...NO_ITEMS };
     }
     const list = result?.lists.find((candidate) => candidate.key === key);
     if (!result || !list) throw new NotFoundException(LIST_NOT_FOUND);
 
     const { items, hasMore } = listPage(list, page, this.config.lists);
     const [presented] = await this.present(result, [items]);
-    return { mode, key, feature: this.feature(list.attribute), page, items: presented!, hasMore };
+    return {
+      mode,
+      basis: result.basis,
+      key,
+      feature: this.feature(list.attribute),
+      page,
+      items: presented!,
+      hasMore,
+    };
   }
 
   // Com o índice carregando ou com falha, 503, nunca lista vazia: o jogador a leria como falta de
