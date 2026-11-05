@@ -185,13 +185,12 @@ export class GenerateRecommendationsUseCase {
         game: { slug: game.slug, name: game.name, inCatalog: game.inCatalog },
       };
     }
-    const features = reason.features
-      .filter(isLabeled)
-      .flatMap(({ type, slug, name }) =>
-        this.labels.isHidden(type, slug)
-          ? []
-          : [{ slug, name: this.labels.name(type, slug, name) }],
-      );
+    // O nome do estilo já está em português no arquivo de estilos.
+    const features = reason.features.flatMap(({ type, slug, name }) => {
+      if (type === 'STYLE') return [{ slug, name }];
+      if (type === FeatureType.KEYWORD || this.labels.isHidden(type, slug)) return [];
+      return [{ slug, name: this.labels.name(type, slug, name) }];
+    });
     return features.length > 0 ? { kind: 'features', features } : null;
   }
 }

@@ -1,6 +1,6 @@
 import type { DiscoveryMode } from '../../../generated/prisma/client';
 import type { ContentIndex, IndexedGame } from '../content-index';
-import { explain, type RecommendationReason } from './explain';
+import { explainer, type RecommendationReason } from './explain';
 import { popularFallback } from './fallback';
 import { pickInterests } from './interests';
 import { buildLists, MAIN_LIST_KEY, type RankedList } from './lists';
@@ -75,6 +75,6 @@ export function recommend(
   return {
     basis: 'profile',
     lists: buildLists(candidates, index, { mode, interests, tieBreak }, config.lists),
-    reasonOf: (game) => explain(profile, game, index.features),
+    reasonOf: explainer(profile, index),
   };
 }
