@@ -4,19 +4,19 @@ import { FeatureType } from './generated/prisma/client';
 import { FeatureLabels } from './modules/catalog/feature-labels';
 import { buildContentIndex, type ContentIndex } from './modules/recommendation/content-index';
 import { ContentIndexRepository } from './modules/recommendation/content-index.repository';
-import { pickInterests } from './modules/recommendation/scoring/interests';
+import { type Interest, pickInterests } from './modules/recommendation/scoring/interests';
 import { buildProfile, type Profile } from './modules/recommendation/scoring/profile';
 import { readScoringConfig } from './modules/recommendation/scoring/scoring-config';
 import { excludedKeywordMatcher, readTfidfConfig } from './modules/recommendation/tfidf';
 import {
-  type DraftStyle,
-  readStylesDraft,
+  type CuratedStyle,
+  readStylesConfig,
   type StyleMatch,
   styleMatcher,
-} from './modules/styles/styles-draft';
+} from './modules/styles/styles';
 import { PrismaService } from './prisma/prisma.service';
 
-// Medição do B-73: cobertura do rascunho de estilos (config/styles.draft.json) no catálogo e nos
+// Medição do B-73: cobertura do rascunho de estilos (config/styles.json) no catálogo e nos
 // perfis de teste, amostra de precisão dos termos do resumo e efeito do desempate na escolha dos
 // interesses. Só lê o banco. Uso: pnpm --filter api styles:measure > relatorio.md
 const TOP_KEYWORDS = 300;
@@ -41,7 +41,7 @@ interface CatalogGame {
 async function main() {
   if (existsSync(rootEnvFile)) process.loadEnvFile(rootEnvFile);
   const { DATABASE_URL } = parseEnv(apiEnvSchema.pick({ DATABASE_URL: true }), process.env);
-  const draft = readStylesDraft();
+  const draft = readStylesConfig();
   const tfidf = readTfidfConfig();
   const scoring = readScoringConfig();
   const labels = FeatureLabels.fromFile();
@@ -60,7 +60,9 @@ async function main() {
         },
       },
     });
-    const index = buildContentIndex(await new ContentIndexRepository(prisma).loadRows(), tfidf);
+    const styleKeywords = draft.styles.flatMap(({ keywords }) => keywords);
+    const indexRows = await new ContentIndexRepository(prisma).loadRows(styleKeywords);
+    const index = buildContentIndex(indexRows, tfidf, draft.styles);
     const match = styleMatcher(draft.styles);
     const games: CatalogGame[] = rows.map(({ id, name, summary, features }) => {
       const keywords = features
@@ -153,7 +155,7 @@ function coverage(games: readonly CatalogGame[]) {
 
 function styleTable(
   games: readonly CatalogGame[],
-  styles: readonly DraftStyle[],
+  styles: readonly CuratedStyle[],
   maxRatio: number,
 ) {
   const count = (slug: string, version: Version) =>
@@ -254,7 +256,7 @@ function profileCoverage(
   ];
 }
 
-function precisionSample(games: readonly CatalogGame[], styles: readonly DraftStyle[]) {
+function precisionSample(games: readonly CatalogGame[], styles: readonly CuratedStyle[]) {
   const names = new Map(styles.map(({ slug, name }) => [slug, name]));
   const summaryOnly = games.flatMap((game) => {
     const only = game.matches.filter(
@@ -344,12 +346,16 @@ function greedy(
 }
 
 const SCENARIOS = {
-  A: { styles: false, tieBreak: 'u', name: 'A. Gêneros e temas, desempate por u_k (atual)' },
+  A: { styles: false, tieBreak: 'u', name: 'A. Gêneros e temas, desempate por u_k (B-71)' },
   B: { styles: false, tieBreak: 'frequency', name: 'B. Gêneros e temas, pelo menos frequente' },
-  E: { styles: false, tieBreak: 'library', name: 'E. Gêneros e temas, pelo peso na biblioteca' },
+  E: {
+    styles: false,
+    tieBreak: 'library',
+    name: 'E. Gêneros e temas, pelo peso na biblioteca (atual)',
+  },
   C: { styles: true, tieBreak: 'u', name: 'C. Com estilos, desempate por u_k' },
   D: { styles: true, tieBreak: 'frequency', name: 'D. Com estilos, pelo menos frequente' },
-  F: { styles: true, tieBreak: 'library', name: 'F. Com estilos, pelo peso na biblioteca' },
+  F: { styles: true, tieBreak: 'library', name: 'F. Com estilos, pelo peso na biblioteca (B-74)' },
 } as const satisfies Record<string, { styles: boolean; tieBreak: TieBreak; name: string }>;
 
 type Scenario = keyof typeof SCENARIOS;
@@ -358,7 +364,7 @@ function tieBreaks(
   profiles: readonly RatingProfile[],
   index: ContentIndex,
   byId: ReadonlyMap<string, CatalogGame>,
-  styles: readonly DraftStyle[],
+  styles: readonly CuratedStyle[],
   catalogSize: number,
   labels: FeatureLabels,
   scoring: ReturnType<typeof readScoringConfig>,
@@ -390,18 +396,32 @@ function tieBreaks(
   >;
   const covered = Object.fromEntries(scenarioNames.map((s) => [s, 0])) as Record<Scenario, number>;
   let mismatches = 0;
+  let mismatchesWithoutStyles = 0;
 
   for (const { ratings } of profiles) {
-    const interactions = ratings.map(({ gameId, score }) => ({
-      gameId,
-      score,
-      lists: [],
-      vector: index.games[index.positionByGameId.get(gameId)!]!,
-    }));
+    const interactions = ratings.map(({ gameId, score }) => {
+      const game = index.games[index.positionByGameId.get(gameId)!]!;
+      return { gameId, score, lists: [], vector: game, styles: game.styles };
+    });
     const profile: Profile = buildProfile(interactions, [], index.features.length, scoring);
-    const reference = pickInterests(profile, [], index.features, hidden, scoring).map(
-      ({ position }) => `f${position}`,
+    const keyOf = ({ attribute }: Interest) =>
+      attribute.kind === 'feature'
+        ? `f${attribute.position}`
+        : `s${index.styles[attribute.style]!.slug}`;
+    const reference = pickInterests(profile, [], index, hidden, scoring).map(keyOf);
+    const withoutStyles = buildProfile(
+      interactions.map((interaction) => ({ ...interaction, styles: [] })),
+      [],
+      index.features.length,
+      scoring,
     );
+    const referenceWithoutStyles = pickInterests(
+      withoutStyles,
+      [],
+      { features: index.features, styles: [] },
+      hidden,
+      scoring,
+    ).map(keyOf);
 
     const items = (withStyles: boolean) =>
       profile.games
@@ -466,12 +486,13 @@ function tieBreaks(
         run.some(({ key }) => keys.has(key)),
       ).length;
     }
-    if (
-      runs.A.at(-1)!
+    const keys = (scenario: Scenario) =>
+      runs[scenario]
+        .at(-1)!
         .map(({ key }) => key)
-        .join() !== reference.join()
-    )
-      mismatches++;
+        .join();
+    if (keys('F') !== reference.join()) mismatches++;
+    if (keys('E') !== referenceWithoutStyles.join()) mismatchesWithoutStyles++;
   }
 
   const totalLiked = profiles.length * 3;
@@ -511,7 +532,7 @@ function tieBreaks(
   return [
     `## 5. Desempate na escolha dos interesses (perfis da semente ${PROFILE_SEED})`,
     '',
-    `Conferência: a escolha gulosa deste script deu o mesmo que pickInterests em ${profiles.length - mismatches} de ${profiles.length} perfis.`,
+    `Conferência: pickInterests, com os estilos do índice, deu o mesmo que o cenário F em ${profiles.length - mismatches} de ${profiles.length} perfis; sem estilos, o mesmo que o cenário E em ${profiles.length - mismatchesWithoutStyles}.`,
     '',
     '| Cenário | Perfis com 0 / 1 / 2 / 3 / 4 interesses | Interesses | Escolhas com empate na cobertura | Interesses que são estilos | Jogos com peso positivo cobertos |',
     '| --- | --- | --- | --- | --- | --- |',

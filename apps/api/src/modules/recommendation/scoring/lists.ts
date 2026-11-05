@@ -1,6 +1,6 @@
-import { DiscoveryMode, ReleaseStatus } from '../../../generated/prisma/client';
-import type { IndexedFeature, IndexedGame } from '../content-index';
-import type { Interest } from './interests';
+import { DiscoveryMode, type FeatureType, ReleaseStatus } from '../../../generated/prisma/client';
+import type { IndexedGame } from '../content-index';
+import type { Interest, InterestAttribute, InterestCatalog } from './interests';
 import type { ScoredCandidate } from './rank';
 import type { ListsConfig } from './scoring-config';
 import { type TieBreak, topBy } from './tie-break';
@@ -8,12 +8,31 @@ import { type TieBreak, topBy } from './tie-break';
 export const MAIN_LIST_KEY = 'main';
 export const UPCOMING_LIST_KEY = 'upcoming';
 
-export const interestListKey = ({ type, slug }: IndexedFeature) => `${type.toLowerCase()}:${slug}`;
+// O atributo de uma prateleira de interesse: gênero, tema ou estilo.
+export interface ListAttribute {
+  type: FeatureType | 'STYLE';
+  slug: string;
+  name: string;
+}
+
+export const interestListKey = ({ type, slug }: ListAttribute) => `${type.toLowerCase()}:${slug}`;
+
+export function listAttribute(
+  attribute: InterestAttribute,
+  { features, styles }: InterestCatalog,
+): ListAttribute {
+  if (attribute.kind === 'style') {
+    const { slug, name } = styles[attribute.style]!;
+    return { type: 'STYLE', slug, name };
+  }
+  const { type, slug, name } = features[attribute.position]!;
+  return { type, slug, name };
+}
 
 export interface RankedList {
   key: string;
   kind: 'main' | 'upcoming' | 'interest';
-  feature: IndexedFeature | null;
+  attribute: ListAttribute | null;
   // A lista completa, até o teto da configuração.
   games: readonly IndexedGame[];
   // Só no modo Descobertas: a mesma lista montada com λ = 0, para o "pouco conhecido".
@@ -43,16 +62,25 @@ interface OrderedLists {
 // perfil inteiro: sobem primeiro os jogos que também batem com os outros gostos.
 export function buildLists(
   candidates: readonly ScoredCandidate[],
-  features: readonly IndexedFeature[],
+  catalog: InterestCatalog,
   { mode, interests, tieBreak }: ListOptions,
   config: ListsConfig,
 ): RankedList[] {
-  const slotByPosition = new Map(interests.map(({ position }, slot) => [position, slot]));
+  const featureSlot = new Map<number, number>();
+  const styleSlot = new Map<number, number>();
+  interests.forEach(({ attribute }, slot) => {
+    if (attribute.kind === 'feature') featureSlot.set(attribute.position, slot);
+    else styleSlot.set(attribute.style, slot);
+  });
   const byInterest = interests.map((): ScoredCandidate[] => []);
   const upcoming: ScoredCandidate[] = [];
   for (const candidate of candidates) {
     for (const position of candidate.game.featurePositions) {
-      const slot = slotByPosition.get(position);
+      const slot = featureSlot.get(position);
+      if (slot !== undefined) byInterest[slot]!.push(candidate);
+    }
+    for (const style of candidate.game.styles) {
+      const slot = styleSlot.get(style);
       if (slot !== undefined) byInterest[slot]!.push(candidate);
     }
     if (candidate.game.releaseStatus === ReleaseStatus.UPCOMING) upcoming.push(candidate);
@@ -70,23 +98,23 @@ export function buildLists(
     {
       key: MAIN_LIST_KEY,
       kind: 'main',
-      feature: null,
+      attribute: null,
       games: byScore.main,
       bySimilarity: bySimilarity?.main ?? null,
     },
     {
       key: UPCOMING_LIST_KEY,
       kind: 'upcoming',
-      feature: null,
+      attribute: null,
       games: byScore.upcoming,
       bySimilarity: bySimilarity?.upcoming ?? null,
     },
-    ...interests.map(({ position }, slot): RankedList => {
-      const feature = features[position]!;
+    ...interests.map(({ attribute }, slot): RankedList => {
+      const label = listAttribute(attribute, catalog);
       return {
-        key: interestListKey(feature),
+        key: interestListKey(label),
         kind: 'interest',
-        feature,
+        attribute: label,
         games: byScore.shelves[slot]!,
         bySimilarity: bySimilarity?.shelves[slot] ?? null,
       };

@@ -6,7 +6,7 @@ medição: os estilos não foram implementados e a pontuação não mudou.
 **Atualizado em 03/11/2026, depois da revisão do autor:**
 - A taxonomia foi revista (seção 2, "Revisão do autor") e a medição rodou de novo. Os números deste documento são os da taxonomia revisada; os da primeira rodada ficam registrados onde mudaram.
 - O autor aprovou o caminho só de exibição como **B-74**, antes do B-36, e o filtro do catálogo como **B-75**, um item P1. O caminho no vetor virou variante do B-37.
-- Na implementação do B-74, o rascunho `config/styles.draft.json` passa a ser `config/styles.json`.
+- **Implementado no B-74 (04/11/2026):** o rascunho virou `config/styles.json`, e uma palavra-chave passou a pertencer a um estilo só (`zombie-apocalypse` ficou em Zumbis e `surreal-comedy` em Humor ácido). O `styles:measure` lê esse arquivo e confere que a escolha de interesses da API dá o mesmo que o cenário F da seção 5. Os números da recomendação com estilos estão em `docs/recomendacao.md`.
 
 ## Por que medir
 
@@ -44,8 +44,8 @@ transparente do critério indie e das coleções.
 
 ## Método e reprodução
 
-- **Rascunho:** `apps/api/config/styles.draft.json`, com 49 estilos depois da revisão. Cada estilo tem o slug, o nome em português, a categoria, as palavras-chave da IGDB (pelo slug, como nas coleções) e os termos do resumo. A API não lê este arquivo.
-- **Regra de casamento:** em `apps/api/src/modules/styles/styles-draft.ts`.
+- **Rascunho:** `apps/api/config/styles.draft.json`, com 49 estilos depois da revisão. Cada estilo tem o slug, o nome em português, a categoria, as palavras-chave da IGDB (pelo slug, como nas coleções) e os termos do resumo. Desde o B-74, é `apps/api/config/styles.json`, lido pela API.
+- **Regra de casamento:** em `apps/api/src/modules/styles/styles.ts` (era `styles-draft.ts` até o B-74).
   - A palavra-chave casa pelo slug.
   - O termo do resumo casa como palavra inteira, sem diferenciar maiúsculas. A busca e o recorte do trecho são as mesmas funções do `collections:suggest`.
 - **Script:** `pnpm --filter api styles:measure > relatorio.md` (`apps/api/src/measure-styles.ts`). Só lê o banco. Serve à curadoria: depois de mudar o rascunho, rodar de novo mostra a cobertura, a frequência de cada estilo e uma amostra nova do resumo.

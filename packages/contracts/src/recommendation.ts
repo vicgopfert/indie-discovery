@@ -62,10 +62,10 @@ export type Recommendation = z.infer<typeof RecommendationSchema>;
 // populares; empty: sem avaliações, listas nem preferências, o jogador vai para a partida a frio.
 export const RECOMMENDATION_BASES = ['profile', 'popular', 'empty'] as const;
 
-// O atributo de uma prateleira de interesse, com o nome em português; type com os valores do
-// banco, como o modo.
+// O atributo de uma prateleira de interesse, com o nome em português: gênero ou tema, com os
+// valores do banco, como o modo, ou um estilo curado (B-74).
 export const RecommendationFeatureSchema = FeatureLabelSchema.extend({
-  type: z.enum(['GENRE', 'THEME']),
+  type: z.enum(['GENRE', 'THEME', 'STYLE']),
 });
 
 export type RecommendationFeature = z.infer<typeof RecommendationFeatureSchema>;
@@ -85,7 +85,7 @@ export const RecommendationShelfSchema = z.discriminatedUnion('kind', [
     ...listItems,
   }),
   z.object({
-    key: z.string().regex(/^(genre|theme):/),
+    key: z.string().regex(/^(genre|theme|style):/),
     kind: z.literal('interest'),
     feature: RecommendationFeatureSchema,
     ...listItems,
@@ -103,7 +103,8 @@ export const RecommendationOverviewSchema = z.object({
 
 export type RecommendationOverview = z.infer<typeof RecommendationOverviewSchema>;
 
-// Uma página de uma lista só, para o "ver mais": main, upcoming, genre:<slug> ou theme:<slug>.
+// Uma página de uma lista só, para o "ver mais": main, upcoming, genre:<slug>, theme:<slug> ou
+// style:<slug>.
 export const RecommendationPageSchema = z.object({
   mode: z.enum(DISCOVERY_MODES),
   key: z.string(),

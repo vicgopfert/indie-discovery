@@ -5,11 +5,13 @@ import {
   type OnApplicationBootstrap,
   type OnModuleDestroy,
 } from '@nestjs/common';
+import type { StylesConfig } from '../styles/styles';
 import { buildContentIndex, type ContentIndex } from './content-index';
 import { ContentIndexRepository } from './content-index.repository';
 import type { TfidfConfig } from './tfidf';
 
 export const TFIDF_CONFIG = Symbol('TFIDF_CONFIG');
+export const STYLES_CONFIG = Symbol('STYLES_CONFIG');
 
 export interface LoadedIndex {
   index: ContentIndex;
@@ -32,6 +34,7 @@ export class ContentIndexService implements OnApplicationBootstrap, OnModuleDest
   constructor(
     private readonly repository: ContentIndexRepository,
     @Inject(TFIDF_CONFIG) private readonly config: TfidfConfig,
+    @Inject(STYLES_CONFIG) private readonly stylesConfig: StylesConfig,
   ) {}
 
   // A carga roda depois que a API começa a escutar: o health check do Render responde em até
@@ -77,13 +80,16 @@ export class ContentIndexService implements OnApplicationBootstrap, OnModuleDest
     const start = Date.now();
     const before = process.memoryUsage();
     try {
-      const index = buildContentIndex(await this.repository.loadRows(), this.config);
+      const { styles } = this.stylesConfig;
+      const rows = await this.repository.loadRows(styles.flatMap(({ keywords }) => keywords));
+      const index = buildContentIndex(rows, this.config, styles);
       const after = process.memoryUsage();
       this.current = { index, loadedAt: new Date(), durationMs: Date.now() - start };
       this.failed = false;
       this.logger.log(
         `Índice de conteúdo carregado: ${index.games.length} jogos, ` +
-          `${index.features.length} atributos, ${this.current.durationMs} ms; ` +
+          `${index.features.length} atributos, ${index.styles.length} estilos, ` +
+          `${this.current.durationMs} ms; ` +
           `heap ${(after.heapUsed / MB).toFixed(1)} MB (${signedMb(after.heapUsed - before.heapUsed)}), ` +
           `RSS ${(after.rss / MB).toFixed(1)} MB (${signedMb(after.rss - before.rss)})`,
       );

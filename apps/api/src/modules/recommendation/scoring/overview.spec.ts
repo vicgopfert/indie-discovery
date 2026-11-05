@@ -12,7 +12,7 @@ const list = (key: string, ids: string[], bySimilarity: string[] | null = null):
   return {
     key,
     kind: key === 'main' ? 'main' : key === 'upcoming' ? 'upcoming' : 'interest',
-    feature: null,
+    attribute: null,
     games: listed,
     bySimilarity:
       bySimilarity && (bySimilarity.map((id) => byId.get(id) ?? { id }) as IndexedGame[]),

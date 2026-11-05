@@ -76,7 +76,7 @@ export class RecommendationController {
   @ApiQuery(MODE_QUERY)
   @ApiOkResponse({
     description:
-      'Visão geral: a lista principal "Para você", que intercala os interesses do perfil na proporção da cobertura de cada um, e as prateleiras "Em breve no seu gosto" (kind upcoming) e "Porque você curte <atributo>" (kind interest), nessa ordem. Um jogo aparece uma vez só: cada prateleira vem sem os jogos mostrados antes, e a que fica abaixo do mínimo não vem. hasMore diz se a lista completa tem mais jogos que os mostrados. Nenhum jogo já avaliado ou em lista; cada um com o motivo: os gêneros e temas que mais contribuíram, ou o jogo da biblioteca que mais pesou. basis é profile (pelo perfil), popular (perfil sem atributo a favor: os mais populares, sem prateleiras) ou empty (sem avaliações, listas nem preferências: levar à partida a frio). lowKnown só é true no modo Descobertas',
+      'Visão geral: a lista principal "Para você", que intercala os interesses do perfil na proporção da cobertura de cada um, e as prateleiras "Em breve no seu gosto" (kind upcoming) e "Porque você curte <atributo>" (kind interest; o atributo é um gênero, um tema ou um estilo curado), nessa ordem. Um jogo aparece uma vez só: cada prateleira vem sem os jogos mostrados antes, e a que fica abaixo do mínimo não vem. hasMore diz se a lista completa tem mais jogos que os mostrados. Nenhum jogo já avaliado ou em lista; cada um com o motivo: os gêneros e temas que mais contribuíram, ou o jogo da biblioteca que mais pesou. basis é profile (pelo perfil), popular (perfil sem atributo a favor: os mais populares, sem prateleiras) ou empty (sem avaliações, listas nem preferências: levar à partida a frio). lowKnown só é true no modo Descobertas',
     schema: {
       example: {
         mode: 'DISCOVERY',
@@ -114,7 +114,7 @@ export class RecommendationController {
   @Get('lists/:key')
   @ApiParam({
     name: 'key',
-    description: 'main, upcoming, genre:<slug> ou theme:<slug>, como na visão geral',
+    description: 'main, upcoming, genre:<slug>, theme:<slug> ou style:<slug>, como na visão geral',
     example: 'theme:horror',
   })
   @ApiQuery(MODE_QUERY)

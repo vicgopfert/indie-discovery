@@ -10,12 +10,15 @@ export interface Interaction {
   lists: readonly ListType[];
   // Sem vetor, o jogo só sai dos candidatos.
   vector: SparseVector | null;
+  // Índices em ContentIndex.styles.
+  styles: readonly number[];
 }
 
 export interface WeightedGame {
   gameId: string;
   weight: number;
   vector: SparseVector;
+  styles: readonly number[];
 }
 
 export interface Profile {
@@ -55,7 +58,12 @@ export function buildProfile(
     for (let i = 0; i < featurePositions.length; i++) {
       vector[featurePositions[i]!]! += weight * weights[i]!;
     }
-    games.push({ gameId: interaction.gameId, weight, vector: interaction.vector });
+    games.push({
+      gameId: interaction.gameId,
+      weight,
+      vector: interaction.vector,
+      styles: interaction.styles,
+    });
   }
   for (const position of new Set(preferencePositions)) {
     vector[position]! += config.preferenceWeight;

@@ -9,6 +9,8 @@ import {
   featurePosition,
   rated,
   scoringConfig,
+  STYLED_LIBRARY,
+  styledIndex,
   TASTE_LIBRARY,
   tasteIndex,
 } from './scoring.fixture';
@@ -79,12 +81,12 @@ describe('buildLists', () => {
     interactions = library,
   ) {
     const profile = buildProfile(interactions, [], index.features.length, scoringConfig);
-    const interests = pickInterests(profile, [], index.features, hidden, scoringConfig);
+    const interests = pickInterests(profile, [], index, hidden, scoringConfig);
     const excludedGameIds = new Set(interactions.map(({ gameId }) => gameId));
     const candidates = scoreCandidates(index, profile, { mode, excludedGameIds }, scoringConfig);
     const built = buildLists(
       candidates,
-      index.features,
+      index,
       { mode, interests, tieBreak: userTieBreak('u-1') },
       { ...scoringConfig.lists, ...lists },
     );
@@ -97,7 +99,7 @@ describe('buildLists', () => {
     expect(listsOf().built.map(({ key, kind }) => [key, kind])).toEqual([
       ['main', 'main'],
       ['upcoming', 'upcoming'],
-      ['genre:rpg', 'interest'],
+      ['theme:action', 'interest'],
       ['theme:horror', 'interest'],
     ]);
   });
@@ -133,7 +135,7 @@ describe('buildLists', () => {
     const { byKey } = listsOf();
     const main = slugs(byKey.get('main'));
     const interleaved = interleave(
-      [byKey.get('genre:rpg')!.games, byKey.get('theme:horror')!.games],
+      [byKey.get('theme:action')!.games, byKey.get('theme:horror')!.games],
       [0.75, 0.25],
       [],
       100,
@@ -141,9 +143,11 @@ describe('buildLists', () => {
 
     expect(main.slice(0, interleaved.length)).toEqual(interleaved);
     expect(main[2]).toBe(slugs(byKey.get('theme:horror'))[0]);
-    expect(main.slice(0, 2)).toEqual(slugs(byKey.get('genre:rpg')).slice(0, 2));
-    // space-only não tem nenhum interesse: entra pelo resto, no fim.
-    expect(main.slice(interleaved.length)).toEqual(['space-only']);
+    expect(main.slice(0, 2)).toEqual(slugs(byKey.get('theme:action')).slice(0, 2));
+    // Os candidatos sem nenhum dos interesses, como space-only, entram pelo resto, no fim.
+    const rest = main.slice(interleaved.length);
+    expect(rest).toContain('space-only');
+    expect(rest.some((slug) => interleaved.includes(slug))).toBe(false);
   });
 
   it('com menos de 2 interesses, a principal é a ordem da pontuação', () => {
@@ -161,7 +165,7 @@ describe('buildLists', () => {
     const { byKey } = listsOf(DiscoveryMode.BALANCED, { mainCap: 5, shelfCap: 6 });
 
     expect(byKey.get('main')!.games).toHaveLength(5);
-    expect(byKey.get('genre:rpg')!.games).toHaveLength(6);
+    expect(byKey.get('theme:action')!.games).toHaveLength(6);
   });
 
   it('só no modo Descobertas monta cada lista também com λ = 0, com as mesmas cotas', () => {
@@ -180,5 +184,44 @@ describe('buildLists', () => {
     expect(listsOf(DiscoveryMode.DISCOVERY, {}, [...library].reverse()).built).toEqual(
       listsOf(DiscoveryMode.DISCOVERY).built,
     );
+  });
+});
+
+describe('buildLists com estilos', () => {
+  const index = styledIndex();
+  const profile = buildProfile(
+    STYLED_LIBRARY.map((slug) => rated(index, slug, 5)),
+    [],
+    index.features.length,
+    scoringConfig,
+  );
+  const mode = DiscoveryMode.BALANCED;
+  const excludedGameIds = new Set(STYLED_LIBRARY.map((slug) => `g-${slug}`));
+  const built = buildLists(
+    scoreCandidates(index, profile, { mode, excludedGameIds }, scoringConfig),
+    index,
+    {
+      mode,
+      interests: pickInterests(profile, [], index, new Set(), scoringConfig),
+      tieBreak: userTieBreak('u-1'),
+    },
+    scoringConfig.lists,
+  );
+  const shelf = built.find(({ key }) => key === 'style:survival-horror')!;
+
+  it('a prateleira do estilo traz o atributo e os candidatos que têm o estilo, também pelo resumo', () => {
+    expect(shelf.attribute).toEqual({
+      type: 'STYLE',
+      slug: 'survival-horror',
+      name: 'Terror de sobrevivência',
+    });
+    // scare-a tem a palavra-chave; scare-b, só o termo no resumo.
+    expect(shelf.games.map(({ slug }) => slug).sort()).toEqual(['scare-a', 'scare-b']);
+  });
+
+  it('a principal intercala o estilo pela cota dele', () => {
+    const main = built.find(({ key }) => key === 'main')!.games.map(({ slug }) => slug);
+
+    expect(main[2]).toBe(shelf.games[0]!.slug);
   });
 });

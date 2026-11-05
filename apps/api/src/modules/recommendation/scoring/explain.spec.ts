@@ -1,7 +1,15 @@
 import { FeatureType, ListType } from '../../../generated/prisma/client';
-import { explain, type RecommendationReason } from './explain';
+import { explainer, type RecommendationReason } from './explain';
 import { buildProfile, type Interaction } from './profile';
-import { featurePosition, gameOf, rated, scoringConfig, scoringIndex } from './scoring.fixture';
+import {
+  featurePosition,
+  gameOf,
+  rated,
+  scoringConfig,
+  scoringIndex,
+  STYLED_LIBRARY,
+  styledIndex,
+} from './scoring.fixture';
 
 describe('explain', () => {
   const index = scoringIndex();
@@ -13,7 +21,7 @@ describe('explain', () => {
       index.features.length,
       scoringConfig,
     );
-    return explain(profile, gameOf(index, slug), index.features);
+    return explainer(profile, index)(gameOf(index, slug));
   }
   const featureSlugs = (reason: RecommendationReason | null) =>
     reason?.kind === 'features' ? reason.features.map((f) => f.slug) : reason;
@@ -70,5 +78,43 @@ describe('explain', () => {
         expect(reason.features.length).toBeLessThanOrEqual(3);
       }
     }
+  });
+});
+
+describe('explain com estilos', () => {
+  const index = styledIndex();
+  const reasonFor = (slug: string, interactions: Interaction[]) => {
+    const profile = buildProfile(interactions, [], index.features.length, scoringConfig);
+    const reason = explainer(profile, index)(gameOf(index, slug));
+    return reason?.kind === 'features' ? reason.features : reason;
+  };
+  const library = () => STYLED_LIBRARY.map((slug) => rated(index, slug, 5));
+  const style = { type: 'STYLE', slug: 'survival-horror', name: 'Terror de sobrevivência' };
+
+  it('o estilo entra no motivo pela contribuição das palavras-chave dele', () => {
+    // scare-a tem a palavra-chave survival-horror, que scare-1, da biblioteca, também tem. Com
+    // scare-1 sozinho no perfil, ela fica entre as três maiores contribuições.
+    expect(reasonFor('scare-a', [rated(index, 'scare-1', 5)])).toContainEqual(style);
+  });
+
+  it('o estilo que veio só do resumo não entra no motivo: não contribuiu para a pontuação', () => {
+    const reason = reasonFor('scare-b', library());
+
+    expect(reason).not.toContainEqual(style);
+    expect(reason).toEqual(expect.arrayContaining([expect.objectContaining({ slug: 'horror' })]));
+  });
+
+  it('sem gênero ou tema a favor, o estilo pode ser o único motivo', () => {
+    // rogue-1 só tem a palavra-chave roguelite, que rogue-a também tem.
+    expect(reasonFor('rogue-1', [rated(index, 'rogue-a', 5)])).toEqual([
+      { type: 'STYLE', slug: 'roguelike', name: 'Roguelike' },
+    ]);
+  });
+
+  it('a contribuição negativa das palavras-chave tira o estilo do motivo', () => {
+    // A nota 1 em rogue-1 deixa a palavra-chave roguelite negativa no perfil.
+    const reason = reasonFor('rogue-a', [rated(index, 'quest-1', 5), rated(index, 'rogue-1', 1)]);
+
+    expect(reason).not.toContainEqual({ type: 'STYLE', slug: 'roguelike', name: 'Roguelike' });
   });
 });

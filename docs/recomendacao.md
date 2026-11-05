@@ -1,4 +1,4 @@
-# Recomendação: núcleo de pontuação (B-32), rota (B-33), página (B-35) e listas por interesse (B-71)
+# Recomendação: núcleo de pontuação (B-32), rota (B-33), página (B-35), listas por interesse (B-71) e estilos (B-74)
 
 O núcleo são funções puras em `apps/api/src/modules/recommendation/scoring/`, com os pesos
 na seção `scoring` de `apps/api/config/recommendation.json`. Ele recebe o índice de
@@ -294,6 +294,8 @@ encolhiam o secundário. Isso manteria o problema que o B-71 existe para resolve
    no motivo.
 3. **Escolha gulosa:** a cada passo entra o candidato com a maior soma dos pesos dos itens
    ainda não cobertos que o contêm; no empate, o de maior `u_k` e depois o de menor posição.
+   **Alterado no B-74:** o empate passou a ser decidido pelo peso na biblioteca e depois pelo
+   atributo menos frequente (seção "Estilos na recomendação").
    Para no máximo da configuração ou quando nenhum candidato cobre peso novo.
 4. **Cota de cada interesse:** o peso que ele cobriu ao entrar, dividido pelo total coberto.
    No caso de produção (seis jogos de RPG, Aventura, Fantasia e Ação e dois de terror, todos
@@ -446,6 +448,68 @@ Tempo medido pelo cliente, 30 requisições por linha depois de uma de aquecimen
   demonstração, os candidatos a otimização são ordenar cada lista só até a profundidade pedida
   (a visão geral usa 20 da principal e poucas dezenas de cada prateleira, e não os tetos de 100
   e 200) e guardar as listas por usuário e modo até a próxima alteração da biblioteca.
+
+## Estilos na recomendação (B-74)
+
+Os 49 estilos curados de `config/styles.json` (`docs/estilos.md`) entram nos interesses, nas
+prateleiras e no motivo. O vetor não muda.
+
+- **Atribuição:**
+  - Na carga do índice, um estilo vai para o jogo por uma das palavras-chave dele (pelo slug, inclusive as descartadas pelo TF-IDF) ou por um termo exato do resumo, como palavra inteira.
+  - A consulta da carga traz o resumo e, numa consulta à parte na mesma transação, só as palavras-chave que pertencem a algum estilo.
+  - O jogo da biblioteca que saiu do catálogo recebe os estilos pela mesma regra, com as palavras-chave e o resumo lidos do banco.
+- **Interesses:**
+  - Os estilos concorrem ao lado dos gêneros e temas, com o limite de 40% do catálogo.
+  - Um estilo só concorre se a soma dos pesos dos jogos da biblioteca que o têm for positiva, o equivalente ao `u_k > 0`.
+  - As preferências da partida a frio continuam só com gêneros e temas; oferecer estilos nelas fica para o B-34.
+- **Desempate da cobertura**, para todos os atributos: pelo peso na biblioteca, contando os jogos já cobertos; depois, pelo menos frequente no catálogo; e por fim pela posição, com os estilos depois dos gêneros e temas. O `u_k` saiu do desempate.
+- **Prateleira:** "Porque você curte `<estilo>`", com a chave `style:<slug>` e os candidatos que têm o estilo, também os que só o têm pelo resumo.
+- **Motivo:**
+  - A contribuição do estilo é a soma das contribuições das palavras-chave dele no vetor do jogo, e só conta se for positiva.
+  - O estilo que veio só do resumo não entra, porque não contribuiu para a pontuação.
+  - Uma palavra-chave pertence a um estilo só, para a mesma contribuição não contar duas vezes.
+
+### Interesses e cobertura (04/11/2026)
+
+Nos 200 perfis por avaliações da semente 71, a escolha de interesses da API dá exatamente o
+cenário F do B-73 (`docs/estilos.md`, seção 5): o `styles:measure` confere os 200 perfis.
+
+| | B-71 | B-74 |
+| --- | --- | --- |
+| Perfis com 1 / 2 / 3 interesses | 22 / 129 / 49 | 19 / 129 / 52 |
+| Interesses que são estilos | — | 143 de 433 (33%) |
+| Jogos com peso positivo cobertos por algum interesse | 556 de 600 (92,7%) | 567 de 600 (94,5%) |
+
+Na visão geral, 105 dos 200 perfis por avaliações veem ao menos uma prateleira de estilo; as
+mais frequentes são Roguelike, Aconchegante, Incremental e idle e Alienígenas. Os perfis só por
+preferências não têm estilos, porque as preferências são só gêneros e temas.
+
+### Tempo de resposta no catálogo local (04/11/2026)
+
+As duas versões foram medidas na mesma sessão, com os mesmos 400 perfis e o build de produção.
+O B-71 foi medido a partir da `main` do mesmo dia. Mediana no log da API (p95):
+
+| Requisição | B-71 | B-74 |
+| --- | --- | --- |
+| Visão geral | 27 ms (41) | 33 ms (50) |
+| "Ver mais" | 24 ms (32) | 29 ms (40) |
+
+Pelo cliente, a visão geral por avaliações no Equilibrado foi de 30,4 ms para 37,2 ms de mediana.
+O custo a mais vem das prateleiras de estilo e da soma das palavras-chave no motivo.
+
+### Carga do índice (04/11/2026)
+
+| | B-71 | B-74 |
+| --- | --- | --- |
+| Carga na inicialização | 1.253 ms | 2.086 ms |
+| Recargas seguintes (5) | de 677 a 1.438 ms | de 1.499 a 1.743 ms |
+| Memória retida pelo índice, com coleta de lixo forçada | 13,5 MB | 17,9 MB |
+
+- **Duas otimizações, antes da medição:**
+  - A atribuição pelo resumo, com uma expressão por estilo, levava cerca de 1 s nos 22.825 resumos. Passou a uma passada por resumo, com todos os termos numa expressão do mais longo ao mais curto, e cai para cerca de 0,3 s. Os termos que começam no mesmo ponto ou dentro de outro são conferidos à parte; a atribuição saiu igual à da regra com evidência nos 22.825 jogos.
+  - As palavras-chave de estilo, como subconsulta por jogo, custavam cerca de 400 ms a mais. Viraram uma consulta à parte e ficam no tempo da consulta sem estilos.
+- **Resultado:** a carga fica cerca de 0,8 s mais longa no local. Em produção, onde a carga foi cerca de dez vezes mais lenta que a local no B-31, isso pode somar alguns segundos ao tempo em que a rota responde 503 depois de um deploy ou de a instância acordar. Vale medir no B-76.
+- **Memória:** o índice retém 4,4 MB a mais, as listas de estilos de cada jogo. Os resumos só passam pela carga. As medidas de heap e RSS do log da carga são fotos antes da coleta de lixo e crescem a cada recarga, nas duas versões.
 
 ## Limitações
 

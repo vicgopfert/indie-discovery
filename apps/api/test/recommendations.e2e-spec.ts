@@ -59,6 +59,7 @@ describe('Recomendações (GET /recommendations)', () => {
   let prisma: PrismaService;
   let helpers: ReturnType<typeof sessionHelpers>;
   let jogadora: string;
+  let catalog: CatalogBuilder;
 
   beforeAll(async () => {
     app = await createApp();
@@ -69,7 +70,7 @@ describe('Recomendações (GET /recommendations)', () => {
   // O IDF vem da ingestão; aqui todo atributo vale 1, e o índice é recarregado com o catálogo novo.
   beforeEach(async () => {
     await prisma.$executeRaw`TRUNCATE "User", "Game", "Feature", "Company" CASCADE`;
-    const catalog = new CatalogBuilder(prisma);
+    catalog = new CatalogBuilder(prisma);
     const games = [
       { name: 'Hollow Knight', genres: ['Platform', 'Adventure'], themes: ['Fantasy'], pop: 0.9 },
       { name: 'Ori', genres: ['Platform', 'Adventure'], themes: ['Fantasy'], pop: 0.8 },
@@ -207,6 +208,30 @@ describe('Recomendações (GET /recommendations)', () => {
     });
     expect(horror.items.map(({ game }) => game.slug).sort()).toEqual(['darkwood', 'inside']);
     expect((await listPage('main', '?page=2')).items).toEqual([]);
+  });
+
+  it('o estilo curado vira interesse e tem "ver mais", pela palavra-chave e pelo resumo', async () => {
+    await catalog.game({ name: 'Dead Cells', genres: ['Platform'], keywords: ['roguelite'] });
+    await catalog.game({
+      name: 'Rogue Legacy',
+      genres: ['Platform'],
+      summary: 'A roguelike platformer.',
+    });
+    await catalog.game({ name: 'Spelunky', genres: ['Platform'], keywords: ['roguelite'] });
+    await prisma.feature.updateMany({ data: { idf: 1 } });
+    await app.get(ContentIndexService).reload();
+    await rate('dead-cells', 5);
+    await rate('rogue-legacy', 5);
+
+    // Plataforma, nos dois jogos, está em mais de 40% deste catálogo pequeno e não concorre.
+    const roguelike = await listPage('style:roguelike');
+    expect(roguelike.feature).toEqual({ type: 'STYLE', slug: 'roguelike', name: 'Roguelike' });
+    expect(roguelike.items.map(({ game }) => game.slug)).toEqual(['spelunky']);
+    // A palavra-chave roguelite, que Dead Cells também tem, contribuiu: o estilo entra no motivo.
+    expect(roguelike.items[0]!.reason).toMatchObject({
+      kind: 'features',
+      features: expect.arrayContaining([{ slug: 'roguelike', name: 'Roguelike' }]) as unknown,
+    });
   });
 
   it('responde 404 para a lista que não é do perfil', async () => {

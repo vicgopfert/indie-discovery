@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { CatalogModule } from '../catalog/catalog.module';
 import { ContentIndexRepository } from './content-index.repository';
-import { ContentIndexService, TFIDF_CONFIG } from './content-index.service';
+import { readStylesConfig } from '../styles/styles';
+import { ContentIndexService, STYLES_CONFIG, TFIDF_CONFIG } from './content-index.service';
 import {
   GenerateRecommendationsUseCase,
   SCORING_CONFIG,
@@ -21,6 +22,7 @@ import { readTfidfConfig } from './tfidf';
     RecommendationRepository,
     GenerateRecommendationsUseCase,
     { provide: TFIDF_CONFIG, useFactory: () => readTfidfConfig() },
+    { provide: STYLES_CONFIG, useFactory: () => readStylesConfig() },
     { provide: SCORING_CONFIG, useFactory: () => readScoringConfig() },
   ],
   exports: [ContentIndexService],
