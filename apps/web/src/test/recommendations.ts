@@ -14,11 +14,11 @@ export const sampleRecommendation = (overrides: Partial<Recommendation> = {}): R
   ...overrides,
 });
 
-// items vira a lista principal.
+// items vira a lista principal, sem "ver mais"; main a substitui inteira.
 export const sampleRecommendationOverview = ({
   items = [sampleRecommendation()],
   ...overrides
-}: Partial<Omit<RecommendationOverview, 'main'>> & {
+}: Partial<RecommendationOverview> & {
   items?: Recommendation[];
 } = {}): RecommendationOverview => ({
   mode: 'BALANCED',
