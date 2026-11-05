@@ -9,6 +9,8 @@ import {
   featurePosition,
   rated,
   scoringConfig,
+  STYLED_LIBRARY,
+  styledIndex,
   TASTE_LIBRARY,
   tasteIndex,
 } from './scoring.fixture';
@@ -79,12 +81,12 @@ describe('buildLists', () => {
     interactions = library,
   ) {
     const profile = buildProfile(interactions, [], index.features.length, scoringConfig);
-    const interests = pickInterests(profile, [], index.features, hidden, scoringConfig);
+    const interests = pickInterests(profile, [], index, hidden, scoringConfig);
     const excludedGameIds = new Set(interactions.map(({ gameId }) => gameId));
     const candidates = scoreCandidates(index, profile, { mode, excludedGameIds }, scoringConfig);
     const built = buildLists(
       candidates,
-      index.features,
+      index,
       { mode, interests, tieBreak: userTieBreak('u-1') },
       { ...scoringConfig.lists, ...lists },
     );
@@ -182,5 +184,44 @@ describe('buildLists', () => {
     expect(listsOf(DiscoveryMode.DISCOVERY, {}, [...library].reverse()).built).toEqual(
       listsOf(DiscoveryMode.DISCOVERY).built,
     );
+  });
+});
+
+describe('buildLists com estilos', () => {
+  const index = styledIndex();
+  const profile = buildProfile(
+    STYLED_LIBRARY.map((slug) => rated(index, slug, 5)),
+    [],
+    index.features.length,
+    scoringConfig,
+  );
+  const mode = DiscoveryMode.BALANCED;
+  const excludedGameIds = new Set(STYLED_LIBRARY.map((slug) => `g-${slug}`));
+  const built = buildLists(
+    scoreCandidates(index, profile, { mode, excludedGameIds }, scoringConfig),
+    index,
+    {
+      mode,
+      interests: pickInterests(profile, [], index, new Set(), scoringConfig),
+      tieBreak: userTieBreak('u-1'),
+    },
+    scoringConfig.lists,
+  );
+  const shelf = built.find(({ key }) => key === 'style:survival-horror')!;
+
+  it('a prateleira do estilo traz o atributo e os candidatos que têm o estilo, também pelo resumo', () => {
+    expect(shelf.attribute).toEqual({
+      type: 'STYLE',
+      slug: 'survival-horror',
+      name: 'Terror de sobrevivência',
+    });
+    // scare-a tem a palavra-chave; scare-b, só o termo no resumo.
+    expect(shelf.games.map(({ slug }) => slug).sort()).toEqual(['scare-a', 'scare-b']);
+  });
+
+  it('a principal intercala o estilo pela cota dele', () => {
+    const main = built.find(({ key }) => key === 'main')!.games.map(({ slug }) => slug);
+
+    expect(main[2]).toBe(shelf.games[0]!.slug);
   });
 });

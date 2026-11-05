@@ -13,6 +13,7 @@ import {
 import type {
   RecommendationRepository,
   RecommendedGameRow,
+  UnindexedGame,
   UserState,
 } from './recommendation.repository';
 import { recommend } from './scoring/recommend';
@@ -24,6 +25,9 @@ import {
   gameOf,
   scoringConfig,
   scoringIndex,
+  STYLED_LIBRARY,
+  styledGameOf,
+  styledIndex,
   TASTE_LIBRARY,
   tasteIndex,
 } from './scoring/scoring.fixture';
@@ -44,19 +48,26 @@ const slugOf = (id: string) => id.replace(/^g-/, '');
 
 // O banco: o estado do usuário e os jogos, com os atributos de cada um.
 class FakeRepository implements Pick<RecommendationRepository, 'findUserState' | 'findGames'> {
-  state: Omit<UserState, 'unindexedFeatures'> = {
+  state: Omit<UserState, 'unindexedGames'> = {
     ratings: [],
     listEntries: [],
     preferenceFeatureIds: [],
   };
   outOfCatalog = new Set<string>();
+  // O que o banco guarda dos jogos que saíram do índice; sem entrada, os do catálogo de pontuação.
+  unindexedSources = new Map<string, UnindexedGame>();
 
   findUserState(_userId: string, isIndexed: (gameId: string) => boolean): Promise<UserState> {
     const gameIds = [...this.state.ratings, ...this.state.listEntries].map(({ gameId }) => gameId);
     const unindexed = gameIds.filter((id) => !isIndexed(id));
     return Promise.resolve({
       ...this.state,
-      unindexedFeatures: new Map(unindexed.map((id) => [id, featuresOf(slugOf(id))])),
+      unindexedGames: new Map(
+        unindexed.map((id) => [
+          id,
+          this.unindexedSources.get(id) ?? { features: featuresOf(slugOf(id)), summary: '' },
+        ]),
+      ),
     });
   }
 
@@ -195,12 +206,14 @@ describe('GenerateRecommendationsUseCase', () => {
             score: 4,
             lists: [ListType.FAVORITE],
             vector: gameOf(index, 'celeste'),
+            styles: [],
           },
           {
             gameId: gameId('hades'),
             score: null,
             lists: [ListType.WANT_TO_PLAY],
             vector: gameOf(index, 'hades'),
+            styles: [],
           },
         ],
         preferencePositions: [],
@@ -307,6 +320,37 @@ describe('GenerateRecommendationsUseCase', () => {
       for (const key of ['genre:shooter', 'theme:nada', 'horror', 'genre:indie', 'GENRE:rpg']) {
         await expect(pageOf(key, 1, index)).rejects.toThrow(new NotFoundException(LIST_NOT_FOUND));
       }
+    });
+  });
+
+  describe('com estilos', () => {
+    const style = { type: 'STYLE', slug: 'survival-horror', name: 'Terror de sobrevivência' };
+
+    beforeEach(() => {
+      for (const slug of STYLED_LIBRARY) rate(slug, 5);
+    });
+
+    it('a prateleira do estilo traz o nome do arquivo de estilos, e o "ver mais" também', async () => {
+      const page = await pageOf('style:survival-horror', 1, styledIndex());
+
+      expect(page).toMatchObject({ key: 'style:survival-horror', feature: style });
+      expect(page.items.map(({ game }) => game.slug).sort()).toEqual(['scare-a', 'scare-b']);
+    });
+
+    it('o jogo da biblioteca fora do catálogo também recebe estilos, pelas palavras-chave e pelo resumo', async () => {
+      // scare-2 só tem o estilo pelo resumo; sem ele, o estilo cobriria só scare-1 e perderia
+      // para Terror, que também está em scare-2.
+      repository.unindexedSources.set(gameId('scare-2'), styledGameOf('scare-2'));
+      const index = styledIndex({ without: ['scare-2'] });
+
+      expect((await pageOf('style:survival-horror', 1, index)).feature).toEqual(style);
+      repository.unindexedSources.set(gameId('scare-2'), {
+        ...styledGameOf('scare-2'),
+        summary: '',
+      });
+      await expect(pageOf('style:survival-horror', 1, index)).rejects.toThrow(
+        new NotFoundException(LIST_NOT_FOUND),
+      );
     });
   });
 });

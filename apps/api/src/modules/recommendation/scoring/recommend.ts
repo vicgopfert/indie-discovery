@@ -55,7 +55,7 @@ export function recommend(
         {
           key: MAIN_LIST_KEY,
           kind: 'main',
-          feature: null,
+          attribute: null,
           games: popular.map(({ game }) => game),
           bySimilarity: null,
         },
@@ -67,14 +67,14 @@ export function recommend(
   const interests = pickInterests(
     profile,
     preferencePositions,
-    index.features,
+    index,
     input.hiddenPositions,
     config,
   );
   const candidates = scoreCandidates(index, profile, { mode, excludedGameIds }, config);
   return {
     basis: 'profile',
-    lists: buildLists(candidates, index.features, { mode, interests, tieBreak }, config.lists),
+    lists: buildLists(candidates, index, { mode, interests, tieBreak }, config.lists),
     reasonOf: (game) => explain(profile, game, index.features),
   };
 }

@@ -163,9 +163,12 @@ export class GenerateRecommendationsUseCase {
       : { key: list.key, kind: 'interest', feature, items, hasMore };
   }
 
-  private feature({ feature }: RankedList): RecommendationFeature | null {
-    if (feature === null || !isLabeled(feature)) return null;
-    const { type, slug, name } = feature;
+  // O nome do estilo já está em português no arquivo de estilos.
+  private feature({ attribute }: RankedList): RecommendationFeature | null {
+    if (attribute === null) return null;
+    const { type, slug, name } = attribute;
+    if (type === 'STYLE') return { type, slug, name };
+    if (type === FeatureType.KEYWORD) return null;
     return { type, slug, name: this.labels.name(type, slug, name) };
   }
 
@@ -193,8 +196,8 @@ export class GenerateRecommendationsUseCase {
   }
 }
 
-// Nota e listas do mesmo jogo viram uma interação só. O jogo fora do índice tem o vetor montado
-// com os atributos gravados no banco.
+// Nota e listas do mesmo jogo viram uma interação só. O jogo fora do índice tem o vetor e os
+// estilos montados com os atributos e o resumo gravados no banco.
 function interactionsOf(index: ContentIndex, state: UserState): Interaction[] {
   const byGame = new Map<string, { score: number | null; lists: ListType[] }>();
   const entryOf = (gameId: string) => {
@@ -207,11 +210,19 @@ function interactionsOf(index: ContentIndex, state: UserState): Interaction[] {
 
   return [...byGame].map(([gameId, { score, lists }]) => {
     const position = index.positionByGameId.get(gameId);
-    const vector =
-      position === undefined
-        ? index.vectorOf(state.unindexedFeatures.get(gameId) ?? [])
-        : index.games[position]!;
-    return { gameId, score, lists, vector };
+    if (position !== undefined) {
+      const game = index.games[position]!;
+      return { gameId, score, lists, vector: game, styles: game.styles };
+    }
+    const { features = [], summary = '' } = state.unindexedGames.get(gameId) ?? {};
+    const keywords = features.filter(({ type }) => type === FeatureType.KEYWORD);
+    return {
+      gameId,
+      score,
+      lists,
+      vector: index.vectorOf(features),
+      styles: index.stylesOf({ keywords: keywords.map(({ slug }) => slug), summary }),
+    };
   });
 }
 

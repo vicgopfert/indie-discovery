@@ -14,14 +14,21 @@ export type RecommendedGameRow = Prisma.GameGetPayload<{ select: typeof recommen
 export interface StoredFeature {
   type: FeatureType;
   igdbId: number;
+  slug: string;
+}
+
+// O jogo da biblioteca que não está no índice: os atributos montam o vetor, e as palavras-chave e
+// o resumo, os estilos.
+export interface UnindexedGame {
+  features: StoredFeature[];
+  summary: string;
 }
 
 export interface UserState {
   ratings: { gameId: string; score: number }[];
   listEntries: { gameId: string; listType: ListType }[];
   preferenceFeatureIds: string[];
-  // Atributos dos jogos da biblioteca que não estão no índice, para montar o vetor deles.
-  unindexedFeatures: ReadonlyMap<string, StoredFeature[]>;
+  unindexedGames: ReadonlyMap<string, UnindexedGame>;
 }
 
 // O usuário vem sempre da sessão: toda consulta daqui é filtrada pelo userId.
@@ -30,7 +37,7 @@ export class RecommendationRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   // O índice só tem os jogos do catálogo, mas o jogo que saiu dele continua na biblioteca e no
-  // perfil: os atributos dele vêm do banco.
+  // perfil: os atributos e o resumo dele vêm do banco.
   async findUserState(userId: string, isIndexed: (gameId: string) => boolean): Promise<UserState> {
     const [ratings, listEntries, preferences] = await this.prisma.$transaction([
       this.prisma.rating.findMany({ where: { userId }, select: { gameId: true, score: true } }),
@@ -44,21 +51,31 @@ export class RecommendationRepository {
     const unindexed = [...new Set([...ratings, ...listEntries].map(({ gameId }) => gameId))].filter(
       (gameId) => !isIndexed(gameId),
     );
-    const links =
+    const games =
       unindexed.length === 0
         ? []
-        : await this.prisma.gameFeature.findMany({
-            where: { gameId: { in: unindexed } },
-            select: { gameId: true, feature: { select: { type: true, igdbId: true } } },
+        : await this.prisma.game.findMany({
+            where: { id: { in: unindexed } },
+            select: {
+              id: true,
+              summary: true,
+              features: {
+                select: { feature: { select: { type: true, igdbId: true, slug: true } } },
+              },
+            },
           });
-    const unindexedFeatures = new Map<string, StoredFeature[]>(unindexed.map((id) => [id, []]));
-    for (const { gameId, feature } of links) unindexedFeatures.get(gameId)!.push(feature);
+    const unindexedGames = new Map(
+      games.map(({ id, summary, features }) => [
+        id,
+        { summary, features: features.map(({ feature }) => feature) },
+      ]),
+    );
 
     return {
       ratings,
       listEntries,
       preferenceFeatureIds: preferences.map(({ featureId }) => featureId),
-      unindexedFeatures,
+      unindexedGames,
     };
   }
 

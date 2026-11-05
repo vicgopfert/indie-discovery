@@ -84,6 +84,15 @@ describe('Respostas das recomendações', () => {
     expect(RecommendationOverviewSchema.safeParse(overview).success).toBe(true);
   });
 
+  it('aceita a prateleira de um estilo curado', () => {
+    const style = { type: 'STYLE', slug: 'roguelike', name: 'Roguelike' };
+    const overview = overviewWith([
+      { key: 'style:roguelike', kind: 'interest', feature: style, items, hasMore: false },
+    ]);
+
+    expect(RecommendationOverviewSchema.safeParse(overview).success).toBe(true);
+  });
+
   it('recusa prateleira de interesse sem atributo ou com chave fora do formato', () => {
     const shelf = { key: 'theme:horror', kind: 'interest', feature: horror, items, hasMore: true };
     const valid = (changes: object) =>

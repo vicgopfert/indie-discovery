@@ -82,7 +82,7 @@ describe('buildProfile', () => {
       [
         rated(index, 'hades', 5),
         rated(index, 'spelunky', 3),
-        { gameId: 'g-fora-do-indice', score: 5, lists: [], vector: null },
+        { gameId: 'g-fora-do-indice', score: 5, lists: [], vector: null, styles: [] },
       ],
       [],
       featureCount,

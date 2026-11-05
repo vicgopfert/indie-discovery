@@ -1,3 +1,4 @@
+import { listAttribute } from './lists';
 import { pickInterests } from './interests';
 import { buildProfile, type Interaction } from './profile';
 import {
@@ -8,6 +9,8 @@ import {
   genericIndex,
   rated,
   scoringConfig,
+  STYLED_LIBRARY,
+  styledIndex,
   TASTE_LIBRARY,
   tasteIndex,
 } from './scoring.fixture';
@@ -33,11 +36,15 @@ describe('pickInterests', () => {
     const interests = pickInterests(
       profile,
       preferencePositions,
-      index.features,
+      index,
       hiddenPositions,
       scoringConfig,
     );
-    return { profile, interests, slugs: interests.map((i) => index.features[i.position]!.slug) };
+    return {
+      profile,
+      interests,
+      slugs: interests.map((i) => listAttribute(i.attribute, index).slug),
+    };
   }
 
   // Seis jogos de RPG, Aventura, Fantasia e Ação e dois de terror sem nenhum desses atributos,
@@ -131,13 +138,49 @@ describe('pickInterests', () => {
   });
 });
 
+describe('pickInterests com estilos', () => {
+  const index = styledIndex();
+  const slugsOf = (interactions: Interaction[], lists = scoringConfig.lists) => {
+    const profile = buildProfile(interactions, [], index.features.length, scoringConfig);
+    return pickInterests(profile, [], index, new Set(), { ...scoringConfig, lists }).map(
+      ({ attribute, coverage }) => [listAttribute(attribute, index).slug, coverage],
+    );
+  };
+  const library = STYLED_LIBRARY.map((slug) => rated(index, slug, 5));
+
+  it('o estilo concorre ao lado dos gêneros e temas e cobre também o jogo que só o tem no resumo', () => {
+    // scare-1 tem a palavra-chave; scare-2, só o termo no resumo. O estilo empata com Terror e
+    // Tiro na cobertura e no peso na biblioteca e entra por ser o menos frequente.
+    expect(slugsOf(library)).toEqual([
+      ['fantasy', 12],
+      ['survival-horror', 4],
+    ]);
+  });
+
+  it('o estilo menos frequente vence o gênero no empate', () => {
+    expect(slugsOf([rated(index, 'rogue-a', 5)])).toEqual([['roguelike', 2]]);
+  });
+
+  it('o estilo com soma de pesos negativa na biblioteca não concorre, como o u_k ≤ 0', () => {
+    // rogue-1 só tem a palavra-chave do estilo: a nota 1 (w = −2) anula a nota 5 de rogue-a.
+    expect(slugsOf([rated(index, 'rogue-a', 5), rated(index, 'rogue-1', 1)])).toEqual([['rpg', 2]]);
+  });
+
+  it('o limite de frequência no catálogo vale para os estilos', () => {
+    const ratio = index.styles.find(({ slug }) => slug === 'survival-horror')!.documentRatio;
+    const below = { ...scoringConfig.lists, interestMaxDocumentRatio: ratio - 0.001 };
+
+    expect(slugsOf(library, below).map(([slug]) => slug)).not.toContain('survival-horror');
+  });
+});
+
 describe('pickInterests: desempate da cobertura (caso Amnesia)', () => {
   const index = amnesiaIndex();
   const slugsOf = (library: string[]) => {
     const interactions = library.map((slug) => rated(index, slug, 5));
     const profile = buildProfile(interactions, [], index.features.length, scoringConfig);
-    return pickInterests(profile, [], index.features, new Set(), scoringConfig).map(
-      ({ position }) => index.features[position]!.slug,
+    return pickInterests(profile, [], index, new Set(), scoringConfig).map(
+      ({ attribute }) => listAttribute(attribute, index).slug,
     );
   };
 
@@ -165,10 +208,10 @@ describe('pickInterests com um atributo genérico nos dois gostos', () => {
   const interactions = GENERIC_LIBRARY.map((slug) => rated(index, slug, 5));
   const profile = buildProfile(interactions, [], index.features.length, scoringConfig);
   const slugsWith = (interestMaxDocumentRatio: number) =>
-    pickInterests(profile, [], index.features, new Set(), {
+    pickInterests(profile, [], index, new Set(), {
       ...scoringConfig,
       lists: { ...scoringConfig.lists, interestMaxDocumentRatio },
-    }).map(({ position }) => index.features[position]!.slug);
+    }).map(({ attribute }) => listAttribute(attribute, index).slug);
 
   it('sem o limite de frequência, Aventura cobre a biblioteca inteira e vira o único interesse', () => {
     expect(slugsWith(1)).toEqual(['adventure']);
