@@ -124,7 +124,7 @@ Entrega: jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de
   - [x] Limpeza e otimizações aprovadas no plano, sem camadas novas além das da seção 7 da proposta técnica; regras de pontuação como funções puras; contrato da API e `config/recommendation.json` sem mudança, salvo motivo forte registrado antes do B-72
   - [x] Critério: medir de novo em produção com a metodologia do B-33; p95 fim a fim abaixo de 1 s, registrado — com 100 amostras por linha, o maior p95 foi 905 ms (`docs/recomendacao.md`)
 - [x] **B-72** (M, E5) Interface da visão geral de recomendações e "ver mais": lista principal no topo e prateleiras abaixo, sem repetição; "ver mais" com a lista completa paginada — concluído em 05/11/2026: `/recomendacoes` em seções, com grade de duas colunas; `/recomendacoes/<lista>` com "Anterior" e "Próxima" pela URL e o mesmo seletor de modo; `basis` na resposta do "ver mais", exceção ao "contrato sem mudança" do B-76 (`docs/proposta-tecnica.md`, seção 5)
-  - [ ] Ajuste de design (decidido em 05/11/2026): na visão geral, cada prateleira vira uma fileira horizontal só com as capas de 5 jogos (`overviewShelfSize` de 10 para 5) e "Ver mais"; "Para você" e a página do "ver mais" continuam como estão
+  - [x] Ajuste de design (decidido em 05/11/2026): na visão geral, "Para você" e cada prateleira viram uma fileira horizontal só com as capas de 5 jogos (`overviewMainSize` de 20 para 5, `overviewShelfSize` de 10 para 5) e "Ver mais"; a página do "ver mais" continua como está, com os cartões e a frase do "Pouco conhecido"
   - [x] A rota do "ver mais" responde 404 quando a chave deixou de existir (o interesse pode mudar depois de o jogador avaliar jogos): a página da lista expandida trata esse 404 voltando para a visão geral, sem mostrar erro (levantado no B-71)
 - [x] **B-73** (P, E5) Medição de uma camada curada de "estilos" a partir das palavras-chave da IGDB e de termos do resumo, só medição (`docs/estilos.md`) — concluído em 03/11/2026: rascunho com 50 estilos em `config/styles.draft.json` e `pnpm --filter api styles:measure`; com palavras-chave e resumo, 58,4% do catálogo tem ao menos um estilo, e 17 de 20 casos da amostra do resumo estão corretos; a implementação é decisão do autor
 - [x] **B-74** (M, E5) Estilos como camada de exibição (caminho a do B-73), antes do B-36 (`docs/estilos.md`) — concluído em 04/11/2026: 49 estilos atribuídos na carga do índice; 105 dos 200 perfis de teste veem ao menos uma prateleira de estilo; visão geral em 33 ms de mediana no servidor (27 ms no B-71)
@@ -175,6 +175,8 @@ Entrega: todos os P0 prontos; pesos calibrados; **congelamento**.
 Entrega: **M3**: critérios de prontidão atendidos.
 
 - [ ] **B-44** (G, E8) Teste de usabilidade com 8–12 jogadores
+  - [ ] Observar se os jogadores reconhecem os jogos só pela capa nas fileiras da visão geral no celular, onde não há o `title` ao passar o mouse (ajuste de design do B-72, 05/11/2026)
+  - [ ] Observar se sentem falta dos selos "Em breve" e "Pouco conhecido" e do motivo nas fileiras de capas; a página do "ver mais" continua com os cartões completos, os selos e o motivo
 - [ ] **B-45** (M, E7) Correções priorizadas a partir do teste de usabilidade
 - [ ] **B-41** (P, E6) Contingência local: dump do banco + restauração no PostgreSQL embutido
 - [ ] **B-42** (P, E7) Revisão final do Swagger (exemplos e erros em todos os endpoints P0)

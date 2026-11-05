@@ -322,7 +322,8 @@ e é a ordem das prateleiras na página.
   prateleiras.
 - **Visão geral sem repetição:** a principal mostra 20; depois, "Em breve" e os interesses, na
   ordem das cotas, cada um com até 10 jogos que ainda não apareceram. A prateleira com menos de
-  4 some, e os jogos dela continuam livres para as seguintes.
+  4 some, e os jogos dela continuam livres para as seguintes. **Alterado em 05/11/2026 (ajuste
+  de design do B-72):** a principal mostra 5, e cada prateleira até 5.
 - **"Ver mais":** páginas de 20 da lista completa, com repetição; além do teto, a página vem
   vazia. A chave que não é uma lista atual do perfil (inclusive malformada) responde 404.
 - **"Pouco conhecido":** no modo Descobertas, cada lista é montada também com λ = 0 (a
@@ -340,7 +341,7 @@ e é a ordem das prateleiras na página.
 | Interesses | 4 | Meio da faixa de 3 a 5 do registro; a partida a frio exige 3 preferências, e com 5 a visão geral passaria de 80 cartões |
 | Frequência máxima de um interesse no catálogo | 40% | Um atributo em quase metade do catálogo cobre a biblioteca inteira e impede a escolha dos outros interesses, e a prateleira dele não ajuda a descobrir nada; hoje tira só Aventura (54%) e o tema Ação (53%), e 30% daria o mesmo resultado |
 | Mínimo por prateleira | 4 | Com 1 a 3 jogos, a prateleira parece quebrada |
-| Visão geral | 20 na principal, 10 por prateleira | 20 é o corte das métricas do B-37 e o tamanho da primeira página do "ver mais" |
+| Visão geral | 5 na principal e 5 por prateleira (eram 20 e 10 até o ajuste de design do B-72, em 05/11/2026) | Com 5, cada lista vira uma fileira de capas e várias cabem na primeira tela; o corte das métricas do B-37 (@20) é a primeira página do "ver mais" da principal |
 | Página do "ver mais" | 20 | — |
 | Tetos | 100 na principal, 200 nas prateleiras | Nas páginas fundas a afinidade cai muito (registro da correção) |
 
@@ -794,3 +795,27 @@ cópia da foto, só no ambiente de desenvolvimento, gravou também o hash de cad
 
 A única diferença é o campo novo. A foto completa de depois do B-72 (47.541 respostas, hash
 `118524c3…`) é a linha de base vigente para as próximas mudanças no módulo.
+
+### Ajuste de design: listas em fileira de capas (05/11/2026)
+
+Na visão geral, "Para você" e cada prateleira viraram uma fileira com as capas de 5 jogos
+(`overviewMainSize` de 20 para 5 e `overviewShelfSize` de 10 para 5). A foto completa foi
+comparada com a linha de base acima:
+
+| Comparação com a linha de base do B-72 (hash `118524c3…`) | Respostas iguais |
+| --- | --- |
+| Visão geral (400 perfis, três modos) | 0 de 1.200 |
+| Páginas do "ver mais" | 46.341 de 46.341 |
+
+Só a visão geral mudou, como previsto: o "ver mais" não depende dos tamanhos da visão geral. A
+mesma execução montou cada visão geral também com os tamanhos antigos (20 e 10):
+
+| Perfis (visões gerais nos três modos) | Jogos na principal | Prateleiras por visão geral | Jogos nas prateleiras |
+| --- | --- | --- | --- |
+| 200 por avaliações (600) | de 20 para 5 | 3,17 antes e depois | de 31,6 para 15,8 |
+| 200 por preferências (600) | de 20 para 5 | 3,81 antes e depois | de 38,1 para 19,1 |
+
+Nenhuma visão geral ganhou ou perdeu prateleira. Com a principal mostrando 5, os outros 15 jogos
+que ela mostrava ficam livres para as prateleiras abaixo, que continuam cheias, com 5 cada; o que
+muda é quais jogos entram nelas. A foto nova (47.541 respostas, hash `8dc8b107…`) é a linha de
+base vigente.
