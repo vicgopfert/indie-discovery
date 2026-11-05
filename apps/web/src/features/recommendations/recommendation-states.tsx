@@ -127,7 +127,16 @@ export function EmptyProfile() {
   );
 }
 
-export function BasisNote({ basis, mode }: { basis: Basis; mode: DiscoveryMode }) {
+// A frase do "Pouco conhecido" explica o selo dos cartões, então só vai onde há cartões.
+export function BasisNote({
+  basis,
+  mode,
+  withBadges,
+}: {
+  basis: Basis;
+  mode: DiscoveryMode;
+  withBadges: boolean;
+}) {
   if (basis === 'popular') {
     return (
       <p>
@@ -136,7 +145,7 @@ export function BasisNote({ basis, mode }: { basis: Basis; mode: DiscoveryMode }
       </p>
     );
   }
-  if (basis === 'profile' && mode === 'DISCOVERY') {
+  if (withBadges && basis === 'profile' && mode === 'DISCOVERY') {
     return (
       <p className="text-sm">Pouco conhecido: o jogo entrou na lista por ser menos popular.</p>
     );

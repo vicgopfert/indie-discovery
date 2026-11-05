@@ -1,11 +1,11 @@
 'use client';
 
-import type { DiscoveryMode, Recommendation, RecommendationOverview } from '@indie/contracts';
+import type { DiscoveryMode, RecommendationOverview } from '@indie/contracts';
 import Link from 'next/link';
-import { useId } from 'react';
+import { type ReactNode, useId } from 'react';
+import { CoverRow } from './cover-row';
 import { useRecommendationOverview } from './hooks';
 import { listHref, listTitle, RECOMMENDATIONS_PATH } from './lists';
-import { RecommendationGrid } from './recommendation-grid';
 import {
   BasisNote,
   EmptyProfile,
@@ -47,7 +47,8 @@ function Recommendations({ mode }: { mode: DiscoveryMode }) {
   );
 }
 
-// A principal no topo e as prateleiras na ordem da API; a API já tirou as repetições.
+// A principal no topo e as prateleiras na ordem da API; a API já tirou as repetições. Todas são
+// fileiras de capas; os cartões completos, com o motivo e os selos, ficam no "ver mais".
 function RecommendedGames({
   overview: { mode, basis, main, shelves },
   updating,
@@ -59,15 +60,23 @@ function RecommendedGames({
 
   return (
     <div aria-busy={updating} className="space-y-10">
-      <BasisNote basis={basis} mode={mode} />
-      <ListSection listKey="main" title={listTitle('main', null)} list={main} />
+      <BasisNote basis={basis} mode={mode} withBadges={false} />
+      <ListSection listKey="main" title={listTitle('main', null)} hasMore={main.hasMore}>
+        {main.items.length > 0 ? (
+          <CoverRow items={main.items} />
+        ) : (
+          <p>Não há jogos novos para recomendar com o seu perfil.</p>
+        )}
+      </ListSection>
       {shelves.map((shelf) => (
         <ListSection
           key={shelf.key}
           listKey={shelf.key}
           title={listTitle(shelf.key, shelf.feature)}
-          list={shelf}
-        />
+          hasMore={shelf.hasMore}
+        >
+          <CoverRow items={shelf.items} />
+        </ListSection>
       ))}
     </div>
   );
@@ -76,11 +85,13 @@ function RecommendedGames({
 function ListSection({
   listKey,
   title,
-  list: { items, hasMore },
+  hasMore,
+  children,
 }: {
   listKey: string;
   title: string;
-  list: { items: readonly Recommendation[]; hasMore: boolean };
+  hasMore: boolean;
+  children: ReactNode;
 }) {
   const headingId = useId();
   return (
@@ -95,11 +106,7 @@ function ListSection({
           </Link>
         )}
       </div>
-      {items.length > 0 ? (
-        <RecommendationGrid items={items} headingLevel="h3" />
-      ) : (
-        <p>Não há jogos novos para recomendar com o seu perfil.</p>
-      )}
+      {children}
     </section>
   );
 }

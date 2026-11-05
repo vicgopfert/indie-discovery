@@ -97,9 +97,9 @@ function ListGames({ list, updating }: { list: RecommendationPage; updating: boo
 
   return (
     <section aria-label="Jogos recomendados" aria-busy={updating} className="space-y-6">
-      <BasisNote basis={basis} mode={mode} />
+      <BasisNote basis={basis} mode={mode} withBadges />
       {items.length > 0 ? (
-        <RecommendationGrid items={items} headingLevel="h2" />
+        <RecommendationGrid items={items} />
       ) : page > 1 ? (
         <p>
           Esta lista não tem mais jogos.{' '}

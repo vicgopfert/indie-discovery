@@ -1,5 +1,5 @@
 import type { RecommendationOverview } from '@indie/contracts';
-import { screen, waitFor } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { sampleGame } from '@/test/catalog';
@@ -96,8 +96,14 @@ describe('RecommendationsView', () => {
       'Porque você curte Roguelike',
     ]);
     const section = (name: string) => screen.getByRole('region', { name });
-    expect(section('Em breve no seu gosto')).toHaveTextContent('Lavaloop');
-    expect(screen.getByRole('heading', { level: 3, name: 'Darkwood' })).toBeInTheDocument();
+    expect(
+      within(section('Em breve no seu gosto')).getByRole('link', { name: 'Lavaloop' }),
+    ).toHaveAttribute('href', '/jogos/lavaloop');
+    expect(within(section('Para você')).getByRole('link', { name: 'Celeste' })).toHaveAttribute(
+      'title',
+      'Celeste',
+    );
+    expect(screen.queryByRole('heading', { level: 3 })).not.toBeInTheDocument();
 
     expect(
       screen.getAllByRole('link', { name: /^Ver mais/ }).map((a) => a.getAttribute('href')),
@@ -107,6 +113,47 @@ describe('RecommendationsView', () => {
       '/recomendacoes/estilo-roguelike',
     ]);
     expect(screen.getByRole('link', { name: 'Ver mais: Porque você curte Terror' })).toBeVisible();
+  });
+
+  it('nas prateleiras, mostra só as capas, com o nome no link e no title', async () => {
+    const covers = ['Darkwood', 'Inside', 'Limbo', 'Signalis', 'Sem Capa'].map((name, i) =>
+      sampleRecommendation({
+        game: sampleGame({
+          slug: name.toLowerCase().replace(' ', '-'),
+          name,
+          coverImageId: i === 4 ? '' : `co${i}`,
+        }),
+        lowKnown: true,
+      }),
+    );
+    stubList(
+      sampleRecommendationOverview({
+        shelves: [
+          {
+            key: 'theme:horror',
+            kind: 'interest',
+            feature: { type: 'THEME', slug: 'horror', name: 'Terror' },
+            items: covers,
+            hasMore: true,
+          },
+        ],
+      }),
+    );
+    renderWithQuery(<RecommendationsView />);
+
+    const shelf = await screen.findByRole('region', { name: 'Porque você curte Terror' });
+    const links = within(shelf).getAllByRole('link', { name: /^(?!Ver mais)/ });
+    expect(links.map((a) => a.getAttribute('title'))).toEqual([
+      'Darkwood',
+      'Inside',
+      'Limbo',
+      'Signalis',
+      'Sem Capa',
+    ]);
+    expect(within(shelf).queryByRole('heading', { level: 3 })).not.toBeInTheDocument();
+    expect(within(shelf).queryByText('Pouco conhecido')).not.toBeInTheDocument();
+    expect(within(shelf).queryByText(/Recomendado por/)).not.toBeInTheDocument();
+    expect(links[4]).toHaveTextContent('Sem Capa');
   });
 
   it('trocar o modo grava a escolha e depois traz a lista do modo novo', async () => {
@@ -121,9 +168,8 @@ describe('RecommendationsView', () => {
     expect(await screen.findByRole('link', { name: 'Lavaloop' })).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Celeste' })).not.toBeInTheDocument();
     expect(await modeButton('Descobertas')).toHaveAttribute('aria-pressed', 'true');
-    expect(
-      screen.getByText('Pouco conhecido: o jogo entrou na lista por ser menos popular.'),
-    ).toBeInTheDocument();
+    // Sem cartões na visão geral, não há selo a explicar: a frase fica no "ver mais".
+    expect(screen.queryByText(/o jogo entrou na lista por ser menos popular/)).toBeNull();
 
     const calls = fetchMock.mock.calls.map(([path, init]) => `${init?.method ?? 'GET'} ${path}`);
     const patch = calls.indexOf('PATCH /api/me');

@@ -1,19 +1,13 @@
 import type { Recommendation } from '@indie/contracts';
 import { RecommendationCard } from './recommendation-card';
 
-// Duas colunas a partir das telas médias, uma no celular: a visão geral tem até 70 cartões.
-export function RecommendationGrid({
-  items,
-  headingLevel,
-}: {
-  items: readonly Recommendation[];
-  headingLevel: 'h2' | 'h3';
-}) {
+// No "ver mais": duas colunas a partir das telas médias, uma no celular, para as 20 da página.
+export function RecommendationGrid({ items }: { items: readonly Recommendation[] }) {
   return (
     <ul className="grid gap-6 md:grid-cols-2">
       {items.map((recommendation) => (
         <li key={recommendation.game.slug}>
-          <RecommendationCard recommendation={recommendation} headingLevel={headingLevel} />
+          <RecommendationCard recommendation={recommendation} />
         </li>
       ))}
     </ul>
