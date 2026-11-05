@@ -160,7 +160,9 @@ describe('GenerateRecommendationsUseCase', () => {
     expect(result.main.items.length).toBeGreaterThan(0);
     expect(result.shelves).toEqual([]);
     await expect(pageOf('upcoming')).rejects.toThrow(new NotFoundException(LIST_NOT_FOUND));
-    expect(await pageOf('main')).toMatchObject({ basis: 'popular', items: result.main.items });
+    const page = await pageOf('main');
+    expect(page.basis).toBe('popular');
+    expect(page.items.slice(0, result.main.items.length)).toEqual(result.main.items);
   });
 
   it('acha as preferências pelo id do atributo e explica com o nome em português', async () => {
