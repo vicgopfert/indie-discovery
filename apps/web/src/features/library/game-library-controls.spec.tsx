@@ -154,10 +154,13 @@ describe('GameLibraryControls', () => {
     stubLibrary({ rating: null, lists: [] }, () => Response.json({ lists: ['FAVORITE'] }));
     const { queryClient } = renderControls();
     const overviewKey = [...RECOMMENDATIONS_QUERY_KEY, 'overview', 'BALANCED'];
+    const pageKey = [...RECOMMENDATIONS_QUERY_KEY, 'list', 'theme:horror', 'BALANCED', 2];
     queryClient.setQueryData(overviewKey, { items: [] });
+    queryClient.setQueryData(pageKey, { items: [] });
 
     await userEvent.click(await listButton('Favorito'));
 
     await waitFor(() => expect(queryClient.getQueryData(overviewKey)).toBeUndefined());
+    expect(queryClient.getQueryData(pageKey)).toBeUndefined();
   });
 });

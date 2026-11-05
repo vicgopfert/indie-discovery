@@ -2,6 +2,7 @@
 
 import type { DiscoveryMode, RecommendationOverview } from '@indie/contracts';
 import { useRecommendationOverview } from './hooks';
+import { RECOMMENDATIONS_PATH } from './lists';
 import { RecommendationCard } from './recommendation-card';
 import {
   BasisNote,
@@ -12,8 +13,6 @@ import {
   SessionGate,
   useClearAccountWhenUnauthorized,
 } from './recommendation-states';
-
-export const RECOMMENDATIONS_PATH = '/recomendacoes';
 
 export function RecommendationsView() {
   return (

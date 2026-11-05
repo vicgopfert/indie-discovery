@@ -15,12 +15,15 @@ import { ModeSelector } from './mode-selector';
 
 type Basis = RecommendationOverview['basis'];
 
-// Quem não entrou vê o convite, com volta para a página pedida.
+// Quem não entrou vê o convite, com volta para a página pedida. O título vai junto quando a
+// página não tem um fixo.
 export function SessionGate({
   next,
+  heading,
   children,
 }: {
   next: string;
+  heading?: ReactNode;
   children: (user: User) => ReactNode;
 }) {
   const { data: user, isPending } = useSession();
@@ -30,12 +33,15 @@ export function SessionGate({
 
   if (!user) {
     return (
-      <p>
-        <Link href={withRedirect('/entrar', next)} className="underline">
-          Entre
-        </Link>{' '}
-        para ver suas recomendações.
-      </p>
+      <>
+        {heading}
+        <p>
+          <Link href={withRedirect('/entrar', next)} className="underline">
+            Entre
+          </Link>{' '}
+          para ver suas recomendações.
+        </p>
+      </>
     );
   }
 
@@ -81,10 +87,12 @@ export function ModeControls({
   mode,
   basis,
   updating,
+  onSaved,
 }: {
   mode: DiscoveryMode;
   basis: Basis;
   updating: boolean;
+  onSaved?: () => void;
 }) {
   const saveMode = useSaveDiscoveryMode();
   return (
@@ -93,7 +101,7 @@ export function ModeControls({
         <ModeSelector
           mode={mode}
           saving={saveMode.isPending}
-          onSelect={(next) => saveMode.mutate(next)}
+          onSelect={(next) => saveMode.mutate(next, { onSuccess: () => onSaved?.() })}
         />
       )}
       <p aria-live="polite" className="text-sm text-muted-foreground">
