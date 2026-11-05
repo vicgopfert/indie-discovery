@@ -10,8 +10,8 @@ describe('readScoringConfig', () => {
         maxInterests: 4,
         interestMaxDocumentRatio: 0.4,
         shelfMinItems: 4,
-        overviewMainSize: 20,
-        overviewShelfSize: 10,
+        overviewMainSize: 5,
+        overviewShelfSize: 5,
         pageSize: 20,
         mainCap: 100,
         shelfCap: 200,
@@ -27,7 +27,7 @@ describe('readScoringConfig', () => {
     expect(withLists({})).toBe(true);
     expect(withLists({ mainCap: 201 })).toBe(false);
     expect(withLists({ overviewMainSize: 101 })).toBe(false);
-    expect(withLists({ shelfMinItems: 11 })).toBe(false);
+    expect(withLists({ shelfMinItems: 6 })).toBe(false);
     expect(withLists({ maxInterests: 0 })).toBe(false);
     expect(withLists({ pageSize: 2.5 })).toBe(false);
     expect(withLists({ interestMaxDocumentRatio: 0 })).toBe(false);

@@ -124,6 +124,7 @@ Entrega: jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de
   - [x] Limpeza e otimizações aprovadas no plano, sem camadas novas além das da seção 7 da proposta técnica; regras de pontuação como funções puras; contrato da API e `config/recommendation.json` sem mudança, salvo motivo forte registrado antes do B-72
   - [x] Critério: medir de novo em produção com a metodologia do B-33; p95 fim a fim abaixo de 1 s, registrado — com 100 amostras por linha, o maior p95 foi 905 ms (`docs/recomendacao.md`)
 - [x] **B-72** (M, E5) Interface da visão geral de recomendações e "ver mais": lista principal no topo e prateleiras abaixo, sem repetição; "ver mais" com a lista completa paginada — concluído em 05/11/2026: `/recomendacoes` em seções, com grade de duas colunas; `/recomendacoes/<lista>` com "Anterior" e "Próxima" pela URL e o mesmo seletor de modo; `basis` na resposta do "ver mais", exceção ao "contrato sem mudança" do B-76 (`docs/proposta-tecnica.md`, seção 5)
+  - [x] Ajuste de design (decidido em 05/11/2026): na visão geral, "Para você" e cada prateleira viram uma fileira horizontal só com as capas de 5 jogos (`overviewMainSize` de 20 para 5, `overviewShelfSize` de 10 para 5) e "Ver mais"; a página do "ver mais" continua como está, com os cartões e a frase do "Pouco conhecido"
   - [x] A rota do "ver mais" responde 404 quando a chave deixou de existir (o interesse pode mudar depois de o jogador avaliar jogos): a página da lista expandida trata esse 404 voltando para a visão geral, sem mostrar erro (levantado no B-71)
 - [x] **B-73** (P, E5) Medição de uma camada curada de "estilos" a partir das palavras-chave da IGDB e de termos do resumo, só medição (`docs/estilos.md`) — concluído em 03/11/2026: rascunho com 50 estilos em `config/styles.draft.json` e `pnpm --filter api styles:measure`; com palavras-chave e resumo, 58,4% do catálogo tem ao menos um estilo, e 17 de 20 casos da amostra do resumo estão corretos; a implementação é decisão do autor
 - [x] **B-74** (M, E5) Estilos como camada de exibição (caminho a do B-73), antes do B-36 (`docs/estilos.md`) — concluído em 04/11/2026: 49 estilos atribuídos na carga do índice; 105 dos 200 perfis de teste veem ao menos uma prateleira de estilo; visão geral em 33 ms de mediana no servidor (27 ms no B-71)
@@ -133,6 +134,20 @@ Entrega: jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de
   - [x] Motivo: o estilo só aparece se as palavras-chave dele contribuíram positivamente para a pontuação do jogo, e a contribuição dele é a soma das delas; o estilo atribuído só pelo resumo serve para interesses e prateleiras, mas não entra no motivo (seção 12 da proposta técnica)
   - [x] Testes de regressão do caso de produção (RPG com terror) e do caso Amnesia; interesses e cobertura medidos de novo nos 200 perfis da semente 71; tempo local medido
   - [ ] Separar "Sobrenatural" em fantasmas, demônios e vampiros: rever depois do teste de usabilidade (B-44)
+- [ ] **B-77** (P, E5) Medição das etiquetas da comunidade Steam, só medição, com as regras de decisão escritas no plano antes de medir — acrescentado em 05/11/2026
+  - [ ] Cobertura no catálogo inteiro, por quartil de popularidade; peso mínimo relativo à etiqueta mais votada do próprio jogo
+  - [ ] Vocabulário único: etiquetas aceitas com nome em português, por grupo, para revisão do autor; os 49 estilos mapeados para elas; palavras-chave e termos do resumo da IGDB como evidência de reserva para os jogos sem Steam; falsos positivos corrigidos (`shop-keeper`, `creature-compendium` e os que a medição apontar)
+  - [ ] Protótipo do vetor com as etiquetas e da regra nova de interesses (suporte mínimo, sobreposição), comparados com os atuais nos perfis de teste e nos quatro perfis realistas; decisão sobre as etiquetas no vetor
+  - [ ] Riscos e desvio registrados: a Steam como terceira fonte externa, a rota sem documentação pública, os termos de uso e a atribuição sem sugerir endosso da Valve
+- [ ] **B-78** (G, E5) Etiquetas da comunidade na plataforma: ingestão com o id da Steam e as etiquetas (absorve o B-65), ficha, filtro do catálogo (substitui o B-75) e, se o B-77 aprovar, o vetor — acrescentado em 05/11/2026
+  - [ ] Se a rota da Steam falhar, a ingestão não falha e mantém as etiquetas gravadas
+  - [ ] Vocabulário único na ficha, no filtro, nas prateleiras e no motivo; atribuição à comunidade Steam sem sugerir endosso da Valve
+- [ ] **B-79** (M, E5) Recomendações específicas — acrescentado em 05/11/2026
+  - [ ] Interesses só específicos (até 10% do catálogo, valor final pelo B-77), com suporte mínimo na biblioteca e até 4 prateleiras sem sobreposição; regressão do caso RPG com terror e do caso Amnesia
+  - [ ] Duas prateleiras "Porque você gostou de `<jogo>`", pelo peso e, no empate, pela avaliação mais recente, só se as etiquetas entrarem no vetor (senão ficam de fora, registrado)
+  - [ ] Ordem na página: principal, por jogo, por interesse, em breve; o motivo só cita etiquetas se elas entrarem no vetor
+  - [ ] Vizinhos por requisição com os vetores tipados do B-76; p95 fim a fim abaixo de 1 s em produção
+- [ ] **Congelamento do modelo de recomendação** (depois do B-79): nenhuma fonte de dados nova e nenhuma regra nova de prateleira até a defesa; o que surgir vira calibração do B-37 ou Fase B — decidido em 05/11/2026
 - [ ] **B-36** (P, E5) E2e de recomendação + teste de determinismo — ampliado no B-71: cobre a visão geral sem repetição, as prateleiras, a paginação com os tetos e o determinismo de cada lista (a principal, cada prateleira e cada página)
   - [x] Fixar a ordem das interações lidas do banco antes de montar o perfil: hoje vêm sem `ORDER BY`, e a soma em ponto flutuante depende da ordem (levantado no plano do B-36) — feito no B-71: a soma do perfil segue a ordem do id do jogo
 - [ ] **B-30** (P, E4) E2e de biblioteca e posse dos dados (um usuário não altera dados de outro)
@@ -160,6 +175,8 @@ Entrega: todos os P0 prontos; pesos calibrados; **congelamento**.
 Entrega: **M3**: critérios de prontidão atendidos.
 
 - [ ] **B-44** (G, E8) Teste de usabilidade com 8–12 jogadores
+  - [ ] Observar se os jogadores reconhecem os jogos só pela capa nas fileiras da visão geral no celular, onde não há o `title` ao passar o mouse (ajuste de design do B-72, 05/11/2026)
+  - [ ] Observar se sentem falta dos selos "Em breve" e "Pouco conhecido" e do motivo nas fileiras de capas; a página do "ver mais" continua com os cartões completos, os selos e o motivo
 - [ ] **B-45** (M, E7) Correções priorizadas a partir do teste de usabilidade
 - [ ] **B-41** (P, E6) Contingência local: dump do banco + restauração no PostgreSQL embutido
 - [ ] **B-42** (P, E7) Revisão final do Swagger (exemplos e erros em todos os endpoints P0)
@@ -193,12 +210,12 @@ Entrega: dois ensaios realizados, texto entregue, slides revisados.
 - [ ] **B-53** (M) Edição de nome e troca de senha
 - [ ] **B-54** (P) Ingestão agendada (GitHub Actions)
 - [ ] **B-55** (M) E2e no navegador (Playwright) do roteiro de demonstração
-- [ ] **B-65** (P) ID dos jogos na Steam gravado pela ingestão
+- [ ] **B-65** (P) ID dos jogos na Steam gravado pela ingestão — absorvido pelo B-78 (P0) em 05/11/2026
 - [ ] **B-66** (M) Vínculo da conta Steam à conta do usuário, com o avatar público da Steam no lugar das iniciais
 - [ ] **B-67** (M) Importação da wishlist da Steam para a lista "quero jogar", com resumo de importados e aviso de wishlist privada
 - [ ] **B-68** (M) Login com Google, com a foto da conta Google como avatar
 - [ ] **B-70** (P) `popularityNorm` calculado na carga do índice, e não gravado pela ingestão (decidido no B-33)
-- [ ] **B-75** (M) Filtro de estilo no catálogo: parâmetro `style` em `GET /api/games` (repetível, como gênero e tema), opções numa rota de estilos com contagem e o filtro na página de catálogo; a página "Como funciona" (B-25) passa a listar os estilos e as palavras-chave de cada um — P1 por decisão do autor em 03/11/2026: é filtro de navegação, fora do núcleo da tese
+- [ ] **B-75** (M) Filtro de estilo no catálogo: parâmetro `style` em `GET /api/games` (repetível, como gênero e tema), opções numa rota de estilos com contagem e o filtro na página de catálogo; a página "Como funciona" (B-25) passa a listar os estilos e as palavras-chave de cada um — P1 por decisão do autor em 03/11/2026: é filtro de navegação, fora do núcleo da tese — substituído pelo filtro de etiquetas do B-78 em 05/11/2026
 
 ## P2 — pós-defesa
 

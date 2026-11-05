@@ -162,7 +162,9 @@ describe('Recomendações (GET /recommendations)', () => {
       'inside',
       'baba-is-you',
     ]);
-    expect(await listPage('main')).toMatchObject({ basis: 'popular', items: list.main.items });
+    const page = await listPage('main');
+    expect(page.basis).toBe('popular');
+    expect(page.items.slice(0, list.main.items.length)).toEqual(list.main.items);
   });
 
   it('sem modo na consulta, usa o salvo; com modo, usa o pedido sem gravá-lo', async () => {
