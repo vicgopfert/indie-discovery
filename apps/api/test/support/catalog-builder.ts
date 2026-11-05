@@ -6,6 +6,8 @@ export interface GameSpec {
   name: string;
   genres?: string[];
   themes?: string[];
+  keywords?: string[];
+  summary?: string;
   status?: ReleaseStatus;
   popularity?: number;
   releasedOn?: string | null;
@@ -38,6 +40,8 @@ export class CatalogBuilder {
     name,
     genres = [],
     themes = [],
+    keywords = [],
+    summary,
     status = ReleaseStatus.RELEASED,
     popularity = 0,
     releasedOn = null,
@@ -51,6 +55,7 @@ export class CatalogBuilder {
     const featureIds = [
       ...(await Promise.all(genres.map((genre) => this.feature(FeatureType.GENRE, genre)))),
       ...(await Promise.all(themes.map((theme) => this.feature(FeatureType.THEME, theme)))),
+      ...(await Promise.all(keywords.map((keyword) => this.feature(FeatureType.KEYWORD, keyword)))),
     ];
     const companies = await Promise.all(
       [...new Set([...developers, ...publishers])].map(async (company) => ({
@@ -73,7 +78,7 @@ export class CatalogBuilder {
         igdbId: this.nextIgdbId++,
         slug: slugify(name),
         name,
-        summary: `Resumo de ${name}`,
+        summary: summary ?? `Resumo de ${name}`,
         coverImageId: `cover-${slugify(name)}`,
         firstReleaseDate: releasedOn ? new Date(`${releasedOn}T00:00:00Z`) : null,
         releaseStatus: status,

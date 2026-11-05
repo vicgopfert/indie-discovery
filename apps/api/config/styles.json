@@ -1,6 +1,5 @@
 {
-  "status": "Rascunho do B-73 para revisão do autor: só a medição de styles:measure lê este arquivo; a API não o usa.",
-  "rule": "Cada estilo junta palavras-chave da IGDB (pelo slug) e termos do resumo em inglês, procurados como palavra inteira e sem diferenciar maiúsculas, como nas sugestões das coleções. Cultura e lugar ficam de fora: são das coleções. Estilos que repetiriam um gênero ou tema da IGDB (Visual Novel, Music, Tactical, Comedy, Warfare, Stealth, Mystery, Romance, Survival, Sandbox) também.",
+  "rule": "Estilos curados (B-73, B-74): cada estilo junta palavras-chave da IGDB, pelo slug, e termos exatos do resumo em inglês, procurados como palavra inteira e sem diferenciar maiúsculas, como nas sugestões das coleções. Uma palavra-chave pertence a um estilo só. Palavras-chave e termos de presença (o elemento aparece, mas o jogo não é sobre ele) não valem como evidência. Cultura e lugar ficam de fora, porque são das coleções, e também os estilos que repetiriam um gênero ou tema da IGDB. Revisão e medições em docs/estilos.md; para medir de novo depois de mudar este arquivo: pnpm --filter api styles:measure.",
   "styles": [
     {
       "slug": "roguelike",
@@ -457,14 +456,7 @@
       "slug": "surreal",
       "name": "Surreal e psicodélico",
       "category": "tone",
-      "keywords": [
-        "surreal",
-        "surrealism",
-        "surreal-horror",
-        "surreal-comedy",
-        "psychedelic",
-        "dreams"
-      ],
+      "keywords": ["surreal", "surrealism", "surreal-horror", "psychedelic", "dreams"],
       "summaryTerms": ["surreal", "surrealist", "psychedelic", "dreamlike", "dream-like"]
     },
     {
@@ -510,13 +502,7 @@
       "slug": "post-apocalyptic",
       "name": "Pós-apocalíptico",
       "category": "setting",
-      "keywords": [
-        "post-apocalyptic",
-        "apocalypse",
-        "apocalyptic",
-        "postapocalyptic",
-        "zombie-apocalypse"
-      ],
+      "keywords": ["post-apocalyptic", "apocalypse", "apocalyptic", "postapocalyptic"],
       "summaryTerms": ["post-apocalyptic", "postapocalyptic", "post apocalyptic"]
     },
     {

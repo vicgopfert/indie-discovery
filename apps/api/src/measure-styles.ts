@@ -9,14 +9,14 @@ import { buildProfile, type Profile } from './modules/recommendation/scoring/pro
 import { readScoringConfig } from './modules/recommendation/scoring/scoring-config';
 import { excludedKeywordMatcher, readTfidfConfig } from './modules/recommendation/tfidf';
 import {
-  type DraftStyle,
-  readStylesDraft,
+  type CuratedStyle,
+  readStylesConfig,
   type StyleMatch,
   styleMatcher,
-} from './modules/styles/styles-draft';
+} from './modules/styles/styles';
 import { PrismaService } from './prisma/prisma.service';
 
-// Medição do B-73: cobertura do rascunho de estilos (config/styles.draft.json) no catálogo e nos
+// Medição do B-73: cobertura do rascunho de estilos (config/styles.json) no catálogo e nos
 // perfis de teste, amostra de precisão dos termos do resumo e efeito do desempate na escolha dos
 // interesses. Só lê o banco. Uso: pnpm --filter api styles:measure > relatorio.md
 const TOP_KEYWORDS = 300;
@@ -41,7 +41,7 @@ interface CatalogGame {
 async function main() {
   if (existsSync(rootEnvFile)) process.loadEnvFile(rootEnvFile);
   const { DATABASE_URL } = parseEnv(apiEnvSchema.pick({ DATABASE_URL: true }), process.env);
-  const draft = readStylesDraft();
+  const draft = readStylesConfig();
   const tfidf = readTfidfConfig();
   const scoring = readScoringConfig();
   const labels = FeatureLabels.fromFile();
@@ -60,7 +60,7 @@ async function main() {
         },
       },
     });
-    const index = buildContentIndex(await new ContentIndexRepository(prisma).loadRows(), tfidf);
+    const index = buildContentIndex(await new ContentIndexRepository(prisma).loadRows([]), tfidf);
     const match = styleMatcher(draft.styles);
     const games: CatalogGame[] = rows.map(({ id, name, summary, features }) => {
       const keywords = features
@@ -153,7 +153,7 @@ function coverage(games: readonly CatalogGame[]) {
 
 function styleTable(
   games: readonly CatalogGame[],
-  styles: readonly DraftStyle[],
+  styles: readonly CuratedStyle[],
   maxRatio: number,
 ) {
   const count = (slug: string, version: Version) =>
@@ -254,7 +254,7 @@ function profileCoverage(
   ];
 }
 
-function precisionSample(games: readonly CatalogGame[], styles: readonly DraftStyle[]) {
+function precisionSample(games: readonly CatalogGame[], styles: readonly CuratedStyle[]) {
   const names = new Map(styles.map(({ slug, name }) => [slug, name]));
   const summaryOnly = games.flatMap((game) => {
     const only = game.matches.filter(
@@ -362,7 +362,7 @@ function tieBreaks(
   profiles: readonly RatingProfile[],
   index: ContentIndex,
   byId: ReadonlyMap<string, CatalogGame>,
-  styles: readonly DraftStyle[],
+  styles: readonly CuratedStyle[],
   catalogSize: number,
   labels: FeatureLabels,
   scoring: ReturnType<typeof readScoringConfig>,

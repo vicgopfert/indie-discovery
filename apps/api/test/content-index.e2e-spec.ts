@@ -58,6 +58,21 @@ describe('Índice de conteúdo', () => {
     expect(contentIndex.index!.games.map((game) => game.slug)).toContain('tunic');
   });
 
+  it('atribui os estilos pela palavra-chave e pelo resumo na carga', async () => {
+    await catalog.game({ name: 'Dead Cells', genres: ['Platform'], keywords: ['roguelite'] });
+    await catalog.game({ name: 'Unpacking', genres: ['Puzzle'], summary: 'A cozy, zen game.' });
+    await contentIndex.reload();
+
+    const index = contentIndex.index!;
+    const stylesOf = (slug: string) =>
+      index.games
+        .find((game) => game.slug === slug)!
+        .styles.map((style) => index.styles[style]!.slug);
+    expect(stylesOf('dead-cells')).toEqual(['roguelike']);
+    expect(stylesOf('unpacking')).toEqual(['cozy']);
+    expect(stylesOf('celeste')).toEqual([]);
+  });
+
   it('recusa a recarga sem o segredo ou com o segredo errado', async () => {
     const without = await reload();
     const wrong = await reload().set('Authorization', 'Bearer segredo-errado');
