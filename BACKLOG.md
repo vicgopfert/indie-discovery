@@ -117,12 +117,12 @@ Entrega: jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de
   - [x] Visão geral sem repetição; rota paginada do "ver mais", com tetos em config (100 na principal e 200 nas prateleiras, valores iniciais)
   - [x] "Pouco conhecido" em todas as listas, pelo corte da própria lista com λ = 0
   - [x] Tempo de resposta medido de novo com o catálogo real — 26 ms de mediana no servidor com o catálogo local, contra 15 ms da lista única nos mesmos perfis; produção depois do merge
-- [ ] **B-76** (G, E5) Revisão do módulo de recomendação, antes do B-72: limpeza do código e tempo da visão geral em produção — ampliado e movido da S10 em 05/11/2026: o B-71, o limite de 40% e o B-74 mudaram a mesma lógica em sequência, e a visão geral leva de 200 a 250 ms no servidor em produção, com p95 fim a fim acima de 1 s
+- [x] **B-76** (G, E5) Revisão do módulo de recomendação, antes do B-72: limpeza do código e tempo da visão geral em produção — concluído em 05/11/2026: respostas idênticas à `main` em todos os commits; em produção, mediana de cerca de 200 ms (eram 400) e p95 abaixo de 1 s em todas as linhas, com 100 amostras — ampliado e movido da S10 em 05/11/2026: o B-71, o limite de 40% e o B-74 mudaram a mesma lógica em sequência, e a visão geral leva de 200 a 250 ms no servidor em produção, com p95 fim a fim acima de 1 s
   - [x] Mapa do módulo: fluxo da requisição, arquivos com responsabilidade, tamanho e dependências, diagrama do fluxo e valores do config usados em cada etapa
   - [x] Diagnóstico do código (duplicações, caminhos que sobraram, funções com mais de uma tarefa, nomes e tipos) e da performance, medido por etapa, com alocações, carga do índice e a diferença para a produção
   - [x] Script versionado que compara o JSON da visão geral e do "ver mais", nos três modos, nos 400 perfis da semente 71, antes e depois: resposta idêntica; o que mudar o resultado sai do item e vira decisão separada
   - [x] Limpeza e otimizações aprovadas no plano, sem camadas novas além das da seção 7 da proposta técnica; regras de pontuação como funções puras; contrato da API e `config/recommendation.json` sem mudança, salvo motivo forte registrado antes do B-72
-  - [ ] Critério: medir de novo em produção com a metodologia do B-33; p95 fim a fim abaixo de 1 s, registrado
+  - [x] Critério: medir de novo em produção com a metodologia do B-33; p95 fim a fim abaixo de 1 s, registrado — com 100 amostras por linha, o maior p95 foi 905 ms (`docs/recomendacao.md`)
 - [ ] **B-72** (M, E5) Interface da visão geral de recomendações e "ver mais": lista principal no topo e prateleiras abaixo, sem repetição; "ver mais" com a lista completa paginada
   - [ ] A rota do "ver mais" responde 404 quando a chave deixou de existir (o interesse pode mudar depois de o jogador avaliar jogos): a página da lista expandida trata esse 404 voltando para a visão geral, sem mostrar erro (levantado no B-71)
 - [x] **B-73** (P, E5) Medição de uma camada curada de "estilos" a partir das palavras-chave da IGDB e de termos do resumo, só medição (`docs/estilos.md`) — concluído em 03/11/2026: rascunho com 50 estilos em `config/styles.draft.json` e `pnpm --filter api styles:measure`; com palavras-chave e resumo, 58,4% do catálogo tem ao menos um estilo, e 17 de 20 casos da amostra do resumo estão corretos; a implementação é decisão do autor
@@ -189,7 +189,7 @@ Entrega: dois ensaios realizados, texto entregue, slides revisados.
 - [ ] **B-50** (P) Jogos parecidos na ficha
 - [ ] **B-51** (P) Sitemap e robots
 - [ ] **B-52** (P) Exclusão da própria conta
-  - [ ] Apagar as contas de teste criadas em produção: `medicao-m2-preferencias@example.com` e `medicao-m2-avaliacoes@example.com` (medição do M2, B-33) , `b35-producao-2026-11-03@example.com` (conferência do B-35) , `b71-producao-2026-11-03@example.com` (conferência do B-71) e `b74-producao-2026-11-05@example.com` (conferência do B-74)
+  - [ ] Apagar as contas de teste criadas em produção: `medicao-m2-preferencias@example.com` e `medicao-m2-avaliacoes@example.com` (medição do M2, B-33), `b35-producao-2026-11-03@example.com` (conferência do B-35), `b71-producao-2026-11-03@example.com` (conferência do B-71), `b74-producao-2026-11-05@example.com` (conferência do B-74), `b76-producao-2026-11-05@example.com` e `b76-producao-2-2026-11-05@example.com` (medições do B-76)
 - [ ] **B-53** (M) Edição de nome e troca de senha
 - [ ] **B-54** (P) Ingestão agendada (GitHub Actions)
 - [ ] **B-55** (M) E2e no navegador (Playwright) do roteiro de demonstração
