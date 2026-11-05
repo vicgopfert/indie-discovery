@@ -4,6 +4,7 @@ import type { CuratedStyle } from '../../styles/styles';
 import { readTfidfConfig } from '../tfidf';
 import type { Interaction } from './profile';
 import { readScoringConfig, type ScoringConfig } from './scoring-config';
+import type { ScoredCandidates } from './score';
 
 const { GENRE, THEME, KEYWORD } = FeatureType;
 
@@ -19,7 +20,7 @@ const FILLER_FEATURE = {
 };
 
 // Na mesma ordem do repositório: tipo e igdbId.
-const FEATURES = [
+export const FEATURES = [
   {
     id: featureId('roguelike'),
     type: GENRE,
@@ -215,7 +216,7 @@ function fixtureIndex(
             releaseStatus,
             popularityNorm,
             featurePositions: slugs.map((f) => position.get(f)!),
-            ...(summary === undefined ? {} : { summary }),
+            summary: summary ?? '',
             styleKeywords: slugs.filter((f) => isKeyword.has(f)),
           }),
         ),
@@ -282,6 +283,15 @@ export function featuresOf(slug: string): { type: FeatureType; igdbId: number; s
     const { type, igdbId } = FEATURES.find((f) => f.slug === feature)!;
     return { type, igdbId, slug: feature };
   });
+}
+
+// Os candidatos de scoreCandidates como objetos, para os testes lerem.
+export function candidateList(index: ContentIndex, candidates: ScoredCandidates) {
+  return Array.from({ length: candidates.count }, (_, k) => ({
+    game: index.games[candidates.gamePositions[k]!]!,
+    similarity: candidates.similarity[k]!,
+    score: candidates.score[k]!,
+  }));
 }
 
 export function gameOf(index: ContentIndex, slug: string): IndexedGame {

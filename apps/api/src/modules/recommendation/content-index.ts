@@ -1,4 +1,5 @@
 import { FeatureType, type ReleaseStatus } from '../../generated/prisma/client';
+import type { LabeledFeatureType } from '../catalog/feature-labels';
 import { type CuratedStyle, styleAssigner, type StyleSource } from '../styles/styles';
 import {
   type ContentFeature,
@@ -26,8 +27,8 @@ export interface ContentIndexRows {
     releaseStatus: ReleaseStatus;
     popularityNorm: number;
     featurePositions: number[];
-    summary?: string;
-    styleKeywords?: string[];
+    summary: string;
+    styleKeywords: string[];
   }[];
 }
 
@@ -47,6 +48,19 @@ export interface IndexedStyle {
   documentRatio: number;
   // As palavras-chave do estilo que estão no vetor: a contribuição delas é a do estilo no motivo.
   keywordPositions: readonly number[];
+}
+
+// Gêneros e temas têm nome traduzido e viram interesse e motivo; as palavras-chave, raras e sem
+// tradução, só entram agrupadas nos estilos (B-12, B-74).
+export function isLabeledFeatureType(type: FeatureType): type is LabeledFeatureType {
+  return type === FeatureType.GENRE || type === FeatureType.THEME;
+}
+
+// O atributo de uma prateleira ou de um motivo: um atributo do vetor ou um estilo curado.
+export interface DisplayedAttribute {
+  type: FeatureType | 'STYLE';
+  slug: string;
+  name: string;
 }
 
 // Vetor esparso com as posições em ordem crescente, para o produto escalar andar em paralelo.
@@ -70,6 +84,8 @@ export interface ContentIndex {
   styles: readonly IndexedStyle[];
   positionByGameId: ReadonlyMap<string, number>;
   positionByFeatureId: ReadonlyMap<string, number>;
+  // O estilo de cada palavra-chave de estilo que está no vetor, pela posição dela, para o motivo.
+  styleByKeywordPosition: ReadonlyMap<number, number>;
   // O vetor de um jogo fora do índice (o que saiu do catálogo e continua na biblioteca), com o
   // mesmo IDF e as mesmas posições: atributo fora do índice fica de fora, como nos outros jogos.
   vectorOf(features: readonly Pick<ContentFeature, 'type' | 'igdbId'>[]): ContentVector;
@@ -77,12 +93,15 @@ export interface ContentIndex {
   stylesOf(source: StyleSource): number[];
 }
 
+// A parte do índice que dá nome aos atributos: os do vetor e os estilos.
+export type AttributeCatalog = Pick<ContentIndex, 'features' | 'styles'>;
+
 // Os pesos são refeitos a partir do IDF gravado na ingestão, com a mesma conta dela (tfidfVector).
 // Os estilos são atribuídos aqui, na carga, pelas palavras-chave e pelo resumo (B-74).
 export function buildContentIndex(
   rows: ContentIndexRows,
   config: TfidfConfig,
-  styles: readonly CuratedStyle[] = [],
+  styles: readonly CuratedStyle[],
 ): ContentIndex {
   const idf = new Map<FeatureKey, number>();
   const positionByKey = new Map<FeatureKey, number>();
@@ -103,13 +122,11 @@ export function buildContentIndex(
   };
   const stylesOf = styleAssigner(styles);
 
-  const games = rows.games.map(
-    ({ featurePositions, summary = '', styleKeywords = [], ...game }) => ({
-      ...game,
-      ...vectorOf(featurePositions.map((position) => rows.features[position]!)),
-      styles: stylesOf({ keywords: styleKeywords, summary }),
-    }),
-  );
+  const games = rows.games.map(({ featurePositions, summary, styleKeywords, ...game }) => ({
+    ...game,
+    ...vectorOf(featurePositions.map((position) => rows.features[position]!)),
+    styles: stylesOf({ keywords: styleKeywords, summary }),
+  }));
 
   const ratio = (count: number) => (rows.games.length === 0 ? 0 : count / rows.games.length);
   const documentCount = new Array<number>(rows.features.length).fill(0);
@@ -118,6 +135,20 @@ export function buildContentIndex(
   }
   const styleCount = new Array<number>(styles.length).fill(0);
   for (const game of games) for (const style of game.styles) styleCount[style]!++;
+
+  const indexedStyles = styles.map(({ slug, name, keywords }, i) => {
+    const own = new Set(keywords.map((k) => k.toLowerCase()));
+    return {
+      slug,
+      name,
+      documentRatio: ratio(styleCount[i]!),
+      keywordPositions: rows.features.flatMap((feature, position) =>
+        feature.type === FeatureType.KEYWORD && own.has(feature.slug.toLowerCase())
+          ? [position]
+          : [],
+      ),
+    };
+  });
 
   return {
     games,
@@ -128,19 +159,12 @@ export function buildContentIndex(
       name,
       documentRatio: ratio(documentCount[position]!),
     })),
-    styles: styles.map(({ slug, name, keywords }, i) => {
-      const own = new Set(keywords.map((k) => k.toLowerCase()));
-      return {
-        slug,
-        name,
-        documentRatio: ratio(styleCount[i]!),
-        keywordPositions: rows.features.flatMap((feature, position) =>
-          feature.type === FeatureType.KEYWORD && own.has(feature.slug.toLowerCase())
-            ? [position]
-            : [],
-        ),
-      };
-    }),
+    styles: indexedStyles,
+    styleByKeywordPosition: new Map(
+      indexedStyles.flatMap(({ keywordPositions }, style) =>
+        keywordPositions.map((position) => [position, style] as const),
+      ),
+    ),
     positionByGameId: new Map(games.map(({ id }, position) => [id, position])),
     positionByFeatureId: new Map(rows.features.map(({ id }, position) => [id, position])),
     vectorOf,

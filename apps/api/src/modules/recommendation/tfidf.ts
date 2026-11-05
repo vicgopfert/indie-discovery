@@ -1,7 +1,6 @@
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { z } from 'zod';
 import { FeatureType } from '../../generated/prisma/client';
+import { RECOMMENDATION_CONFIG_FILE, readRecommendationConfig } from './recommendation-config';
 
 const FEATURE_TYPES = [FeatureType.GENRE, FeatureType.THEME, FeatureType.KEYWORD] as const;
 
@@ -30,13 +29,8 @@ export const tfidfConfigSchema = z.object({
 
 export type TfidfConfig = z.infer<typeof tfidfConfigSchema>;
 
-export const RECOMMENDATION_CONFIG_FILE = resolve(process.cwd(), 'config/recommendation.json');
-
 export function readTfidfConfig(file = RECOMMENDATION_CONFIG_FILE): TfidfConfig {
-  const { tfidf } = z
-    .object({ tfidf: tfidfConfigSchema })
-    .parse(JSON.parse(readFileSync(file, 'utf8')));
-  return tfidf;
+  return readRecommendationConfig('tfidf', tfidfConfigSchema, file);
 }
 
 export type FeatureKey = `${FeatureType}:${number}`;

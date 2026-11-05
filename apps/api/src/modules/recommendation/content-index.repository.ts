@@ -3,6 +3,12 @@ import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import type { ContentIndexRows } from './content-index';
 
+// A transação da carga lê os 22 mil jogos com os resumos: cerca de 0,7 s no local, mas a carga
+// inteira leva cerca de 13 s em produção, com 0,1 núcleo de CPU, e passou dos 5 s padrão do Prisma
+// com a CPU limitada a 0,1 núcleo no local (B-76). 60 s dá folga de várias vezes a carga inteira de
+// produção e ainda encerra uma transação presa.
+export const LOAD_TRANSACTION_TIMEOUT_MS = 60_000;
+
 @Injectable()
 export class ContentIndexRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -42,7 +48,10 @@ export class ContentIndexRepository {
           JOIN "Feature" f ON f."id" = gf."featureId"
           WHERE f."type" = 'KEYWORD' AND f."slug" = ANY(${[...styleKeywords]}::text[])`,
       ],
-      { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead },
+      {
+        isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead,
+        timeout: LOAD_TRANSACTION_TIMEOUT_MS,
+      },
     );
 
     const styleKeywordsByGame = new Map<string, string[]>();

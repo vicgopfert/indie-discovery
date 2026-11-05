@@ -12,6 +12,7 @@
     "ingest:dev": "tsx src/ingest.ts",
     "collections:suggest": "tsx src/suggest-collections.ts",
     "styles:measure": "tsx src/measure-styles.ts",
+    "recommendations:snapshot": "node dist/snapshot-recommendations.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:e2e": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.e2e.config.js --runInBand"
   },

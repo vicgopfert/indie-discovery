@@ -1,6 +1,6 @@
 import { FeatureType, ReleaseStatus } from '../../generated/prisma/client';
 import { buildContentIndex, type ContentIndexRows } from './content-index';
-import { ContentIndexService } from './content-index.service';
+import { BOOT_RETRY_DELAYS_MS, ContentIndexService } from './content-index.service';
 import type { ContentIndexRepository } from './content-index.repository';
 import {
   computeIdf,
@@ -50,13 +50,15 @@ function rowsFor(games: Record<string, ContentFeature[]>): ContentIndexRows {
       featurePositions: list
         .map((f) => position.get(featureKey(f)))
         .filter((p): p is number => p !== undefined),
+      summary: '',
+      styleKeywords: [],
     })),
   };
 }
 
 describe('buildContentIndex', () => {
   const rows = rowsFor(catalog);
-  const index = buildContentIndex(rows, config);
+  const index = buildContentIndex(rows, config, []);
 
   it('refaz para cada jogo o mesmo vetor que a ingestão calcula', () => {
     const idf = computeIdf(Object.values(catalog), config);
@@ -92,6 +94,7 @@ describe('buildContentIndex', () => {
     const withoutCeleste = buildContentIndex(
       { ...rows, games: rows.games.filter((game) => game.slug !== 'celeste') },
       config,
+      [],
     );
     const celeste = index.games[index.positionByGameId.get('g-celeste')!]!;
 
@@ -174,6 +177,7 @@ describe('buildContentIndex: estilos', () => {
       'KEYWORD-1',
     ]);
     expect(index.styles[1]!.keywordPositions).toEqual([]);
+    expect([...index.styleByKeywordPosition]).toEqual([[index.styles[0]!.keywordPositions[0], 0]]);
   });
 
   it('atribui os estilos de um jogo fora do índice pela mesma regra', () => {
@@ -181,9 +185,9 @@ describe('buildContentIndex: estilos', () => {
   });
 
   it('sem estilos configurados, nenhum jogo tem estilo', () => {
-    expect(buildContentIndex(rows, config).games.every((game) => game.styles.length === 0)).toBe(
-      true,
-    );
+    expect(
+      buildContentIndex(rows, config, []).games.every((game) => game.styles.length === 0),
+    ).toBe(true);
   });
 });
 
@@ -253,5 +257,64 @@ describe('ContentIndexService', () => {
 
     expect(service.index).toBe(previous);
     expect(service.status()).toMatchObject({ status: 'ready' });
+  });
+
+  describe('carga da inicialização', () => {
+    const [firstDelay, secondDelay] = BOOT_RETRY_DELAYS_MS as [number, number];
+    const failing = () => Promise.reject(new Error('banco fora do ar'));
+
+    beforeEach(() => jest.useFakeTimers());
+    afterEach(() => jest.useRealTimers());
+
+    it('tenta de novo depois de cada espera, com o status em failed enquanto não há índice', async () => {
+      let calls = 0;
+      const { service, repository } = serviceWith(() =>
+        ++calls < 3 ? failing() : Promise.resolve(rows),
+      );
+
+      service.onApplicationBootstrap();
+      await jest.advanceTimersByTimeAsync(0);
+      expect(service.status()).toEqual({ status: 'failed' });
+
+      await jest.advanceTimersByTimeAsync(firstDelay - 1);
+      expect(repository.loadRows).toHaveBeenCalledTimes(1);
+      await jest.advanceTimersByTimeAsync(1);
+      expect(repository.loadRows).toHaveBeenCalledTimes(2);
+      expect(service.status()).toEqual({ status: 'failed' });
+
+      await jest.advanceTimersByTimeAsync(secondDelay);
+      expect(repository.loadRows).toHaveBeenCalledTimes(3);
+      expect(service.status()).toMatchObject({ status: 'ready', games: 5 });
+    });
+
+    it('desiste depois da última tentativa, sem índice e com o status em failed', async () => {
+      const { service, repository } = serviceWith(failing);
+
+      service.onApplicationBootstrap();
+      await jest.advanceTimersByTimeAsync(firstDelay + secondDelay + 60_000);
+
+      expect(repository.loadRows).toHaveBeenCalledTimes(BOOT_RETRY_DELAYS_MS.length + 1);
+      expect(service.status()).toEqual({ status: 'failed' });
+    });
+
+    it('a carga que dá certo na primeira tentativa não agenda outra', async () => {
+      const { service, repository } = serviceWith(() => Promise.resolve(rows));
+
+      service.onApplicationBootstrap();
+      await jest.advanceTimersByTimeAsync(firstDelay + secondDelay);
+
+      expect(repository.loadRows).toHaveBeenCalledTimes(1);
+    });
+
+    it('desligar a API cancela a espera da próxima tentativa', async () => {
+      const { service, repository } = serviceWith(failing);
+      service.onApplicationBootstrap();
+      await jest.advanceTimersByTimeAsync(0);
+
+      await service.onModuleDestroy();
+      await jest.advanceTimersByTimeAsync(firstDelay + secondDelay);
+
+      expect(repository.loadRows).toHaveBeenCalledTimes(1);
+    });
   });
 });

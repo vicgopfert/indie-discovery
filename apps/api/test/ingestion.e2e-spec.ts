@@ -254,7 +254,11 @@ describe('Ingestão', () => {
       tfidf,
     );
 
-    const index = buildContentIndex(await new ContentIndexRepository(prisma).loadRows([]), tfidf);
+    const index = buildContentIndex(
+      await new ContentIndexRepository(prisma).loadRows([]),
+      tfidf,
+      [],
+    );
 
     expect(index.games).toHaveLength(mapped.length);
     for (const game of mapped) {

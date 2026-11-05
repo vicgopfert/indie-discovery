@@ -1,7 +1,6 @@
-import { readFileSync } from 'node:fs';
 import { z } from 'zod';
 import { DiscoveryMode, ListType } from '../../../generated/prisma/client';
-import { RECOMMENDATION_CONFIG_FILE } from '../tfidf';
+import { RECOMMENDATION_CONFIG_FILE, readRecommendationConfig } from '../recommendation-config';
 
 const size = z.number().int().positive();
 
@@ -58,8 +57,5 @@ export type ScoringConfig = z.infer<typeof scoringConfigSchema>;
 export type ListsConfig = ScoringConfig['lists'];
 
 export function readScoringConfig(file = RECOMMENDATION_CONFIG_FILE): ScoringConfig {
-  const { scoring } = z
-    .object({ scoring: scoringConfigSchema })
-    .parse(JSON.parse(readFileSync(file, 'utf8')));
-  return scoring;
+  return readRecommendationConfig('scoring', scoringConfigSchema, file);
 }

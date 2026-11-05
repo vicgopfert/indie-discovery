@@ -1,12 +1,17 @@
-import { FeatureType } from '../../../generated/prisma/client';
-import type { ContentIndex } from '../content-index';
+import { type AttributeCatalog, isLabeledFeatureType } from '../content-index';
 import type { Profile } from './profile';
 import type { ScoringConfig } from './scoring-config';
 
-const INTEREST_TYPES: ReadonlySet<FeatureType> = new Set([FeatureType.GENRE, FeatureType.THEME]);
-
 export type InterestAttribute =
   { kind: 'feature'; position: number } | { kind: 'style'; style: number };
+
+// A ordem dos atributos nos desempates: os do vetor pela posição e, depois deles, os estilos.
+export function attributeKey(
+  attribute: InterestAttribute,
+  { features }: Pick<AttributeCatalog, 'features'>,
+): number {
+  return attribute.kind === 'feature' ? attribute.position : features.length + attribute.style;
+}
 
 export interface Interest {
   attribute: InterestAttribute;
@@ -15,8 +20,6 @@ export interface Interest {
   // A cota dele na lista principal: coverage dividido pelo total coberto.
   share: number;
 }
-
-export type InterestCatalog = Pick<ContentIndex, 'features' | 'styles'>;
 
 interface CoverableItem {
   weight: number;
@@ -39,12 +42,12 @@ interface CoverableItem {
 export function pickInterests(
   profile: Profile,
   preferencePositions: readonly number[],
-  { features, styles }: InterestCatalog,
+  { features, styles }: AttributeCatalog,
   hiddenPositions: ReadonlySet<number>,
   config: ScoringConfig,
 ): Interest[] {
   const limit = config.lists.interestMaxDocumentRatio;
-  const styleKey = (style: number) => features.length + style;
+  const styleKey = (style: number) => attributeKey({ kind: 'style', style }, { features });
   const documentRatio = (key: number) =>
     key < features.length
       ? features[key]!.documentRatio
@@ -53,7 +56,7 @@ export function pickInterests(
   const candidates = new Set<number>();
   profile.vector.forEach((value, position) => {
     const { type, documentRatio: ratio } = features[position]!;
-    if (value <= 0 || !INTEREST_TYPES.has(type) || hiddenPositions.has(position)) return;
+    if (value <= 0 || !isLabeledFeatureType(type) || hiddenPositions.has(position)) return;
     if (ratio <= limit) candidates.add(position);
   });
   const styleWeight = new Map<number, number>();

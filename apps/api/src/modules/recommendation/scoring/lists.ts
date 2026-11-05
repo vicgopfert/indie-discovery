@@ -1,26 +1,26 @@
-import { DiscoveryMode, type FeatureType, ReleaseStatus } from '../../../generated/prisma/client';
-import type { IndexedGame } from '../content-index';
-import type { Interest, InterestAttribute, InterestCatalog } from './interests';
-import type { ScoredCandidate } from './rank';
+import { DiscoveryMode, ReleaseStatus } from '../../../generated/prisma/client';
+import type {
+  AttributeCatalog,
+  ContentIndex,
+  DisplayedAttribute,
+  IndexedGame,
+} from '../content-index';
+import type { Interest, InterestAttribute } from './interests';
+import type { ScoredCandidates } from './score';
 import type { ListsConfig } from './scoring-config';
-import { type TieBreak, topBy } from './tie-break';
+import type { TieBreak } from './tie-break';
+import { topBy } from './top';
 
 export const MAIN_LIST_KEY = 'main';
 export const UPCOMING_LIST_KEY = 'upcoming';
 
-// O atributo de uma prateleira de interesse: gênero, tema ou estilo.
-export interface ListAttribute {
-  type: FeatureType | 'STYLE';
-  slug: string;
-  name: string;
-}
-
-export const interestListKey = ({ type, slug }: ListAttribute) => `${type.toLowerCase()}:${slug}`;
+export const interestListKey = ({ type, slug }: DisplayedAttribute) =>
+  `${type.toLowerCase()}:${slug}`;
 
 export function listAttribute(
   attribute: InterestAttribute,
-  { features, styles }: InterestCatalog,
-): ListAttribute {
+  { features, styles }: AttributeCatalog,
+): DisplayedAttribute {
   if (attribute.kind === 'style') {
     const { slug, name } = styles[attribute.style]!;
     return { type: 'STYLE', slug, name };
@@ -32,7 +32,7 @@ export function listAttribute(
 export interface RankedList {
   key: string;
   kind: 'main' | 'upcoming' | 'interest';
-  attribute: ListAttribute | null;
+  attribute: DisplayedAttribute | null;
   // A lista completa, até o teto da configuração.
   games: readonly IndexedGame[];
   // Só no modo Descobertas: a mesma lista montada com λ = 0, para o "pouco conhecido".
@@ -45,10 +45,11 @@ export interface ListOptions {
   tieBreak: TieBreak;
 }
 
+// Cada lista é um conjunto de candidatos, pelos índices k de ScoredCandidates.
 interface Pools {
-  all: readonly ScoredCandidate[];
-  upcoming: readonly ScoredCandidate[];
-  byInterest: readonly (readonly ScoredCandidate[])[];
+  all: readonly number[];
+  upcoming: readonly number[];
+  byInterest: readonly (readonly number[])[];
 }
 
 interface OrderedLists {
@@ -61,38 +62,17 @@ interface OrderedLists {
 // prateleiras são recortes do mesmo conjunto de candidatos, todas ordenadas pela pontuação do
 // perfil inteiro: sobem primeiro os jogos que também batem com os outros gostos.
 export function buildLists(
-  candidates: readonly ScoredCandidate[],
-  catalog: InterestCatalog,
+  candidates: ScoredCandidates,
+  catalog: Pick<ContentIndex, 'games' | 'features' | 'styles'>,
   { mode, interests, tieBreak }: ListOptions,
   config: ListsConfig,
 ): RankedList[] {
-  const featureSlot = new Map<number, number>();
-  const styleSlot = new Map<number, number>();
-  interests.forEach(({ attribute }, slot) => {
-    if (attribute.kind === 'feature') featureSlot.set(attribute.position, slot);
-    else styleSlot.set(attribute.style, slot);
-  });
-  const byInterest = interests.map((): ScoredCandidate[] => []);
-  const upcoming: ScoredCandidate[] = [];
-  for (const candidate of candidates) {
-    for (const position of candidate.game.featurePositions) {
-      const slot = featureSlot.get(position);
-      if (slot !== undefined) byInterest[slot]!.push(candidate);
-    }
-    for (const style of candidate.game.styles) {
-      const slot = styleSlot.get(style);
-      if (slot !== undefined) byInterest[slot]!.push(candidate);
-    }
-    if (candidate.game.releaseStatus === ReleaseStatus.UPCOMING) upcoming.push(candidate);
-  }
-
-  const pools = { all: candidates, upcoming, byInterest };
+  const pools = poolsOf(candidates, catalog, interests);
   const shares = interests.map(({ share }) => share);
-  const byScore = orderLists(pools, shares, (c) => c.score, tieBreak, config);
-  const bySimilarity =
-    mode === DiscoveryMode.DISCOVERY
-      ? orderLists(pools, shares, (c) => c.similarity, tieBreak, config)
-      : null;
+  const order = (value: Float64Array) =>
+    orderLists(pools, shares, value, candidates, catalog.games, tieBreak, config);
+  const byScore = order(candidates.score);
+  const bySimilarity = mode === DiscoveryMode.DISCOVERY ? order(candidates.similarity) : null;
 
   return [
     {
@@ -122,18 +102,61 @@ export function buildLists(
   ];
 }
 
+// Uma passada pelos candidatos, com a prateleira de cada atributo numa tabela pela posição dele
+// (-1 fora dos interesses): um Map consultado para cada atributo de cada candidato custava cerca
+// de um terço da montagem das listas (B-76).
+function poolsOf(
+  { count, gamePositions }: ScoredCandidates,
+  { games, features, styles }: Pick<ContentIndex, 'games' | 'features' | 'styles'>,
+  interests: readonly Interest[],
+): Pools {
+  const featureSlot = new Int16Array(features.length).fill(-1);
+  const styleSlot = new Int16Array(styles.length).fill(-1);
+  interests.forEach(({ attribute }, slot) => {
+    if (attribute.kind === 'feature') featureSlot[attribute.position] = slot;
+    else styleSlot[attribute.style] = slot;
+  });
+
+  const all: number[] = [];
+  const upcoming: number[] = [];
+  const byInterest = interests.map((): number[] => []);
+  for (let k = 0; k < count; k++) {
+    const game = games[gamePositions[k]!]!;
+    all.push(k);
+    for (let i = 0; i < game.featurePositions.length; i++) {
+      const slot = featureSlot[game.featurePositions[i]!]!;
+      if (slot >= 0) byInterest[slot]!.push(k);
+    }
+    for (const style of game.styles) {
+      const slot = styleSlot[style]!;
+      if (slot >= 0) byInterest[slot]!.push(k);
+    }
+    if (game.releaseStatus === ReleaseStatus.UPCOMING) upcoming.push(k);
+  }
+  return { all, upcoming, byInterest };
+}
+
 // Com menos de 2 interesses não há o que intercalar: a principal é a ordem da pontuação. As
 // prateleiras bastam para preencher a principal porque o teto dela não passa o delas, e a lista
 // geral até o teto da principal sempre tem jogos não usados para completá-la.
 function orderLists(
   { all, upcoming, byInterest }: Pools,
   shares: readonly number[],
-  value: (candidate: ScoredCandidate) => number,
+  value: Float64Array,
+  { gamePositions }: ScoredCandidates,
+  games: readonly IndexedGame[],
   tieBreak: TieBreak,
   config: ListsConfig,
 ): OrderedLists {
-  const top = (pool: readonly ScoredCandidate[], cap: number) =>
-    topBy(pool, value, (c) => c.game.id, cap, tieBreak).map(({ game }) => game);
+  const gameOf = (k: number) => games[gamePositions[k]!]!;
+  const top = (pool: readonly number[], cap: number) =>
+    topBy(
+      pool,
+      (k) => value[k]!,
+      (k) => gameOf(k).id,
+      cap,
+      tieBreak,
+    ).map(gameOf);
   const ranked = top(all, config.mainCap);
   const shelves = byInterest.map((pool) => top(pool, config.shelfCap));
   return {

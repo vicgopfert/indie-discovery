@@ -24,12 +24,18 @@ export type ContentIndexStatus =
 
 const MB = 1024 * 1024;
 
+// Na inicialização, a carga que falha (o Neon acordando, a CPU de 0,1 núcleo da instância gratuita)
+// é tentada de novo depois de 10 s e de 30 s. Sem índice, o health continua em failed.
+export const BOOT_RETRY_DELAYS_MS = [10_000, 30_000];
+
 @Injectable()
 export class ContentIndexService implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly logger = new Logger(ContentIndexService.name);
   private current: LoadedIndex | null = null;
   private pending: Promise<LoadedIndex> | null = null;
   private failed = false;
+  private closing = false;
+  private cancelRetry: (() => void) | null = null;
 
   constructor(
     private readonly repository: ContentIndexRepository,
@@ -40,10 +46,12 @@ export class ContentIndexService implements OnApplicationBootstrap, OnModuleDest
   // A carga roda depois que a API começa a escutar: o health check do Render responde em até
   // 5 s mesmo com o banco lento, e uma falha deixa a API no ar com o índice em "failed".
   onApplicationBootstrap() {
-    this.reload().catch(() => undefined);
+    void this.loadAtBoot();
   }
 
   onModuleDestroy() {
+    this.closing = true;
+    this.cancelRetry?.();
     return this.settled();
   }
 
@@ -76,12 +84,48 @@ export class ContentIndexService implements OnApplicationBootstrap, OnModuleDest
     return this.pending;
   }
 
+  private async loadAtBoot() {
+    const attempts = BOOT_RETRY_DELAYS_MS.length + 1;
+    for (let attempt = 1; attempt <= attempts && !this.closing; attempt++) {
+      try {
+        await this.reload();
+        if (attempt > 1) this.logger.log(`Índice carregado na tentativa ${attempt} de ${attempts}`);
+        return;
+      } catch {
+        const delay = BOOT_RETRY_DELAYS_MS[attempt - 1];
+        if (delay === undefined) {
+          this.logger.error(
+            `As ${attempts} tentativas de carga falharam; sem índice até a próxima recarga`,
+          );
+          return;
+        }
+        this.logger.warn(
+          `Tentativa ${attempt} de ${attempts} da carga falhou; nova tentativa em ${delay / 1000} s`,
+        );
+        await this.wait(delay);
+      }
+    }
+  }
+
+  private wait(ms: number) {
+    return new Promise<void>((resolve) => {
+      const timer = setTimeout(resolve, ms);
+      this.cancelRetry = () => {
+        clearTimeout(timer);
+        resolve();
+      };
+    }).finally(() => {
+      this.cancelRetry = null;
+    });
+  }
+
   private async load(): Promise<LoadedIndex> {
     const start = Date.now();
     const before = process.memoryUsage();
     try {
       const { styles } = this.stylesConfig;
       const rows = await this.repository.loadRows(styles.flatMap(({ keywords }) => keywords));
+      const transactionMs = Date.now() - start;
       const index = buildContentIndex(rows, this.config, styles);
       const after = process.memoryUsage();
       this.current = { index, loadedAt: new Date(), durationMs: Date.now() - start };
@@ -89,7 +133,8 @@ export class ContentIndexService implements OnApplicationBootstrap, OnModuleDest
       this.logger.log(
         `Índice de conteúdo carregado: ${index.games.length} jogos, ` +
           `${index.features.length} atributos, ${index.styles.length} estilos, ` +
-          `${this.current.durationMs} ms; ` +
+          `${this.current.durationMs} ms (transação ${transactionMs} ms, ` +
+          `montagem ${this.current.durationMs - transactionMs} ms); ` +
           `heap ${(after.heapUsed / MB).toFixed(1)} MB (${signedMb(after.heapUsed - before.heapUsed)}), ` +
           `RSS ${(after.rss / MB).toFixed(1)} MB (${signedMb(after.rss - before.rss)})`,
       );

@@ -1,5 +1,5 @@
 import { FeatureType, ListType } from '../../../generated/prisma/client';
-import { explainer, type RecommendationReason } from './explain';
+import { explainer, type ScoredReason } from './explain';
 import { buildProfile, type Interaction } from './profile';
 import {
   featurePosition,
@@ -23,7 +23,7 @@ describe('explain', () => {
     );
     return explainer(profile, index)(gameOf(index, slug));
   }
-  const featureSlugs = (reason: RecommendationReason | null) =>
+  const featureSlugs = (reason: ScoredReason | null) =>
     reason?.kind === 'features' ? reason.features.map((f) => f.slug) : reason;
 
   it('mostra os gêneros e temas de maior contribuição, da maior para a menor', () => {

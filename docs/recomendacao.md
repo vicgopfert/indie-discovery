@@ -511,7 +511,196 @@ O custo a mais vem das prateleiras de estilo e da soma das palavras-chave no mot
 - **Resultado:** a carga fica cerca de 0,8 s mais longa no local. Em produção, onde a carga foi cerca de dez vezes mais lenta que a local no B-31, isso pode somar alguns segundos ao tempo em que a rota responde 503 depois de um deploy ou de a instância acordar. Vale medir no B-76.
 - **Memória:** o índice retém 4,4 MB a mais, as listas de estilos de cada jogo. Os resumos só passam pela carga. As medidas de heap e RSS do log da carga são fotos antes da coleta de lixo e crescem a cada recarga, nas duas versões.
 
-## Limitações
+### Conferência e tempo em produção (05/11/2026)
+
+Depois do deploy, a conferência rodou contra https://indie-discovery.vercel.app com uma conta nova
+(`b74-producao-2026-11-05@example.com`, registrada no B-52): seis roguelikes com nota 5 (Hades,
+Dead Cells, Slay the Spire, Enter the Gungeon, Spelunky 2 e Risk of Rain 2). As 10 conferências
+passaram:
+- a prateleira `style:roguelike` "Roguelike" na visão geral, com o atributo do tipo `STYLE`;
+- o "ver mais" dela até o teto de 200, com os jogos da visão geral na lista;
+- o motivo com estilo em 5 cartões, também na página `/recomendacoes` (Dwarf Journey: Fantasia,
+  Plataforma, Roguelike);
+- a visão geral sem repetição (40 cartões), o 404 do estilo desconhecido e a mesma visão geral
+  para o mesmo estado.
+
+Tempo medido pelo cliente, das 14:40 às 14:43 UTC, 30 requisições por linha depois de uma de
+aquecimento, mediana (p95):
+
+| Requisição | Direto no Render | Pela Vercel | B-71 (direto / Vercel) |
+| --- | --- | --- | --- |
+| Visão geral, Populares | 411 ms (1.317) | 335 ms (1.081) | 389 / 407 ms |
+| Visão geral, Equilibrado | 397 ms (1.188) | 372 ms (1.126) | 368 / 316 ms |
+| Visão geral, Descobertas | 408 ms (1.197) | 396 ms (1.200) | 400 / 435 ms |
+| "Ver mais", principal, página 1 | 374 ms (890) | 301 ms (990) | 357 / 410 ms |
+| "Ver mais", `style:roguelike`, página 1 | 390 ms (1.098) | 378 ms (1.002) | 303 / 375 ms (prateleira de gênero) |
+| `GET /api/health`, para comparar | 217 ms (232) | 170 ms (195) | 145 / 166 ms |
+
+A mediana ficou na faixa do B-71, perto de 400 ms, e o p95 continua acima de 1 s (B-76). A rede
+estava mais lenta que no B-71 (o `health` direto foi de 145 para 217 ms).
+
+**Carga do índice em produção**, pelo log do Render, a do B-71 e a do B-74 no mesmo deploy:
+
+| | B-71 (sem estilos) | B-74 | Diferença |
+| --- | --- | --- | --- |
+| Tempo | 11.300 ms | 12.905 ms | +1,6 s (+14%) |
+| Heap depois da carga | 68,9 MB (+35,8) | 73,6 MB (+40,3) | +4,7 MB |
+| RSS depois da carga | 194,8 MB (+90,6) | 201,2 MB (+94,4) | +6,4 MB |
+
+Os estilos somam 1,6 s à carga em produção, o dobro do local (0,8 s), e não as dez vezes da
+estimativa acima: parte da carga é espera pelo banco, que não depende da CPU da instância. A rota
+responde 503 por cerca de 13 s depois de um deploy ou de a instância acordar. O RSS fica em
+201 MB dos 512 MB da instância gratuita.
+
+## Revisão do módulo (B-76)
+
+O B-71, o limite de 40% e o B-74 mudaram a mesma lógica em sequência. O B-76 revisou o módulo
+antes da interface do B-72: limpeza sem mudar o comportamento e otimizações que mantêm a resposta
+idêntica, conferida por uma foto das respostas antes e depois.
+
+### Fluxo de uma requisição da visão geral
+
+| # | Etapa | Arquivo e função |
+| --- | --- | --- |
+| 1 | Valida o modo; sem ele, vale o salvo no usuário | `recommendation.controller.ts`, `overview` |
+| 2 | Índice pronto, ou 503 | `generate-recommendations.use-case.ts`, `recommend` |
+| 3 | Notas, listas e preferências numa consulta; os jogos fora do índice, com atributos e resumo, numa segunda, só quando houver | `recommendation.repository.ts`, `findUserState` |
+| 4 | Sem nota, lista nem preferência: `basis: empty` | caso de uso |
+| 5 | Interações, preferências e atributos escondidos (estes, uma vez por índice) | `scoring/profile.ts`, `interactionsOf`; caso de uso, `hiddenPositions` |
+| 6 | Perfil `u` | `scoring/profile.ts`, `buildProfile` |
+| 7a | Perfil sem componente positiva: os mais populares | `scoring/fallback.ts`, `popularFallback` |
+| 7b | Interesses pela cobertura da biblioteca | `scoring/interests.ts`, `pickInterests` |
+| 8 | Cosseno e pontuação dos candidatos, em vetores paralelos | `scoring/score.ts`, `scoreCandidates` |
+| 9 | Principal, "Em breve" e prateleiras; no Descobertas, também com λ = 0 | `scoring/lists.ts`, `buildLists`, com `topBy` (`scoring/top.ts`) e `interleave` |
+| 10 | Visão geral sem repetição e "pouco conhecido" | `scoring/overview.ts`, `overview` |
+| 11 | Motivo dos jogos mostrados | `scoring/explain.ts`, `explainer` |
+| 12 | Resumos dos jogos mostrados numa consulta; rótulos e motivo | `recommendation.repository.ts`, `findGames`; caso de uso, `present` |
+
+```mermaid
+flowchart TD
+  A["GET /api/recommendations?mode"] --> B["RecommendationController.overview"]
+  B --> C["GenerateRecommendationsUseCase.overview"]
+  C --> D{"Índice pronto?"}
+  D -- não --> E["503"]
+  D -- sim --> F["findUserState: notas, listas, preferências"]
+  F --> G{"Tem nota, lista ou preferência?"}
+  G -- não --> H["basis: empty"]
+  G -- sim --> I["interactionsOf, preferências, atributos escondidos"]
+  I --> J["buildProfile: perfil u"]
+  J --> K{"Componente positiva?"}
+  K -- não --> L["popularFallback: basis popular"]
+  K -- sim --> M["pickInterests: cobertura da biblioteca"]
+  M --> N["scoreCandidates: cos(u,v) − λ·pop"]
+  N --> O["buildLists: principal, em breve, prateleiras; λ = 0 no Descobertas"]
+  L --> P["overview: sem repetição, pouco conhecido"]
+  O --> P
+  P --> Q["explainer: motivo dos jogos mostrados"]
+  Q --> R["findGames: resumos no banco"]
+  R --> S["toSummary, rótulos, motivo"]
+  S --> T["JSON da visão geral"]
+```
+
+Valores de `config/recommendation.json` em cada etapa:
+
+| Etapa | Valores |
+| --- | --- |
+| Carga do índice | `tfidf.normalization` e `blockShares` (`globalTypeWeights` no modo global); os limites de frequência e as palavras-chave excluídas valem na ingestão |
+| Perfil | `listBonus`, `preferenceWeight` |
+| Interesses | `lists.maxInterests`, `lists.interestMaxDocumentRatio`, `preferenceWeight` |
+| Pontuação | `popularityWeightByMode` |
+| Listas e populares | `lists.mainCap`, `lists.shelfCap` |
+| Visão geral | `overviewMainSize`, `overviewShelfSize`, `shelfMinItems` |
+| "Ver mais" | `pageSize` |
+
+### Diagnóstico (05/11/2026)
+
+Medido no catálogo local (22.825 jogos), nos 400 perfis da semente 71 × 3 modos, com as funções
+do módulo na ordem do caso de uso. Num perfil por avaliações no Equilibrado, a visão geral levava
+26,7 ms de mediana: 13,9 na montagem das listas, 4,8 na pontuação, 5,1 na consulta dos resumos e
+1,7 na leitura do estado; o resto ficava abaixo de 0,4 ms. No Descobertas, a segunda montagem com
+λ = 0 somava cerca de 7,8 ms. Cada requisição alocava 8,3 MB no Equilibrado e 11,3 MB no
+Descobertas, quase tudo na pontuação (um objeto por candidato, cerca de 17 mil) e nas listas. Pelo
+perfil de CPU, a montagem das listas gastava 47% no `topBy` (ordenar todos os valores de cada
+lista para achar o corte), 31% em achar a prateleira de cada atributo de cada candidato num `Map`
+e 13% no desempate. Cada visão geral fazia 8 idas ao banco, além da sessão.
+
+**Carga do índice:** com a CPU limitada a 0,1 núcleo no local (um *job object* do Windows), a
+carga falhou: a transação passou do tempo-limite de 5 s do Prisma, e o índice ficou em `failed`.
+
+**Produção (hipótese):** a instância gratuita tem 0,1 CPU, que o Linux entrega como cerca de
+10 ms a cada 100 ms. A visão geral usava cerca de 25 ms de CPU, três janelas, o que bate com os
+200 a 250 ms no servidor; a lista única do B-33 cabia em uma, e por isso a razão entre produção e
+local não é fixa. O banco (Neon) está na mesma região da API (AWS US East). A medição em produção
+com a metodologia do B-33 decide o critério.
+
+### O que mudou
+
+- **Carga do índice:**
+  - tempo-limite da transação explícito, de 60 s, com a justificativa no código;
+  - na inicialização, a carga que falha é tentada de novo depois de 10 s e de 30 s, e o health fica em `failed` enquanto não houver índice;
+  - o log mostra cada tentativa e separa o tempo da transação e o da montagem.
+- **Pontuação:** os candidatos em vetores paralelos (posição do jogo, cosseno e pontuação), sem um objeto por candidato.
+- **Listas:**
+  - a prateleira de cada atributo vem de uma tabela pela posição dele;
+  - cada lista é um conjunto de índices de candidato;
+  - o corte do `topBy` vem de uma seleção, sem ordenar todos os valores;
+  - o resultado é o mesmo: os maiores pelo valor, com os empates pelo desempate do usuário.
+- **Banco:** notas, listas e preferências numa consulta só, que já é um instantâneo, e os resumos dos jogos mostrados numa só. De 8 idas por visão geral para 2.
+- **Limpeza, sem mudar o comportamento:**
+  - um tipo para o atributo exibido (`DisplayedAttribute`) e um para o catálogo (`AttributeCatalog`), no lugar de dois de cada;
+  - uma função para "gênero ou tema" (`isLabeledFeatureType`), no lugar de quatro definições;
+  - uma conversão de rótulo no caso de uso, e o "Em breve" lido do tipo da lista;
+  - a chave de estilo nos desempates num lugar só (`attributeKey`);
+  - o estilo de cada palavra-chave e os atributos escondidos calculados uma vez por índice;
+  - `interactionsOf` como função pura do perfil;
+  - os campos da carga obrigatórios e a leitura do arquivo de config num lugar só (`recommendation-config.ts`);
+  - `rank.ts` virou `score.ts`, o `topBy` saiu de `tie-break.ts` para `top.ts`, e o motivo interno passou a se chamar `ScoredReason`, sem colidir com o do contrato.
+- **Contrato da API e `config/recommendation.json`:** sem mudança.
+
+### Comparação das respostas
+
+`pnpm --filter @indie/api recommendations:snapshot` (`src/snapshot-recommendations.ts`):
+- **Contas:** cria as 400 contas da semente 71 no banco local, com ids fixos, porque o desempate depende do usuário, e as apaga no fim.
+- **Chamadas:** chama o caso de uso para a visão geral e o "ver mais" de cada lista, nos três modos.
+- **Saída e comparação:** grava o hash do JSON de cada resposta; `--compare` aponta as diferenças entre duas fotos.
+- **Proteção:** como os e2e, recusa rodar fora de localhost.
+- **Escopo:** a foto completa traz todas as páginas; a rápida, a primeira e a última.
+
+| Passo | Foto | Respostas iguais à linha de base |
+| --- | --- | --- |
+| Linha de base (`main`) | completa | 47.541 (hash `9b3b37ef…`); a rápida, de outra execução, bate em 11.976 de 11.976 |
+| Carga com nova tentativa e tempo-limite | rápida | 11.976 de 11.976 |
+| Tipos e nomes | rápida | 11.976 de 11.976 |
+| Consultas por índice e interações | rápida | 11.976 de 11.976 |
+| Pontuação e listas | completa | 47.541 de 47.541 |
+| Uma consulta para o estado e uma para os resumos | completa | 47.541 de 47.541 |
+
+### Tempo local (05/11/2026)
+
+As duas versões foram medidas na mesma sessão, com os mesmos 400 perfis, o build de produção e
+2.400 requisições cada: visão geral nos três modos e "ver mais" da principal e de uma prateleira
+(páginas 1 e 5). A `main` foi medida pelo build dela, antes do B-76. Mediana (p95):
+
+| Requisição | `main` | B-76 |
+| --- | --- | --- |
+| Visão geral, no servidor | 29 ms (43) | 19 ms (27) |
+| "Ver mais", no servidor | 25 ms (34) | 17 ms (23) |
+| Visão geral por avaliações, Equilibrado, no cliente | 32,6 ms (41,9) | 21,1 ms (26,0) |
+| Visão geral por avaliações, Descobertas, no cliente | 40,6 ms (49,5) | 26,3 ms (32,8) |
+| Visão geral por preferências, Equilibrado, no cliente | 23,9 ms (31,1) | 17,4 ms (23,8) |
+
+No protótipo, medido sozinho, a pontuação e as listas foram de 17,3 para 8,1 ms de mediana, e a
+alocação delas de 5,9 para 2,0 MB por requisição. A leitura do estado foi de 1,6 para 0,7 ms e a
+dos resumos de 4,8 para 2,9 ms.
+
+**Carga do índice:** não mudou. Na inicialização, 2.216 ms na `main` e 1.956 ms no B-76
+(transação 1.188 ms, montagem 768 ms). Nas cinco recargas seguintes, de 1.273 a 1.429 ms na `main`
+e de 1.257 a 1.338 ms no B-76 (transação de 664 a 751 ms, montagem de 571 a 633 ms).
+
+**Produção:** a medição com a metodologia do B-33 vem depois do merge e decide o critério do item
+(p95 fim a fim abaixo de 1 s). Pela hipótese da cota de CPU, a visão geral cai de cerca de três
+janelas de 100 ms para duas; se o p95 continuar acima de 1 s, o cache das listas por usuário e
+modo vira decisão separada.
 
 - **Lista de populares:** não respeita o modo, como previsto na proposta.
 - **Filtros:** a rota não recebe filtros (por exemplo, só "em breve"), porque nenhuma tela do
