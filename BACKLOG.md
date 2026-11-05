@@ -118,10 +118,10 @@ Entrega: jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de
   - [x] "Pouco conhecido" em todas as listas, pelo corte da própria lista com λ = 0
   - [x] Tempo de resposta medido de novo com o catálogo real — 26 ms de mediana no servidor com o catálogo local, contra 15 ms da lista única nos mesmos perfis; produção depois do merge
 - [ ] **B-76** (G, E5) Revisão do módulo de recomendação, antes do B-72: limpeza do código e tempo da visão geral em produção — ampliado e movido da S10 em 05/11/2026: o B-71, o limite de 40% e o B-74 mudaram a mesma lógica em sequência, e a visão geral leva de 200 a 250 ms no servidor em produção, com p95 fim a fim acima de 1 s
-  - [ ] Mapa do módulo: fluxo da requisição, arquivos com responsabilidade, tamanho e dependências, diagrama do fluxo e valores do config usados em cada etapa
-  - [ ] Diagnóstico do código (duplicações, caminhos que sobraram, funções com mais de uma tarefa, nomes e tipos) e da performance, medido por etapa, com alocações, carga do índice e a diferença para a produção
-  - [ ] Script versionado que compara o JSON da visão geral e do "ver mais", nos três modos, nos 400 perfis da semente 71, antes e depois: resposta idêntica; o que mudar o resultado sai do item e vira decisão separada
-  - [ ] Limpeza e otimizações aprovadas no plano, sem camadas novas além das da seção 7 da proposta técnica; regras de pontuação como funções puras; contrato da API e `config/recommendation.json` sem mudança, salvo motivo forte registrado antes do B-72
+  - [x] Mapa do módulo: fluxo da requisição, arquivos com responsabilidade, tamanho e dependências, diagrama do fluxo e valores do config usados em cada etapa
+  - [x] Diagnóstico do código (duplicações, caminhos que sobraram, funções com mais de uma tarefa, nomes e tipos) e da performance, medido por etapa, com alocações, carga do índice e a diferença para a produção
+  - [x] Script versionado que compara o JSON da visão geral e do "ver mais", nos três modos, nos 400 perfis da semente 71, antes e depois: resposta idêntica; o que mudar o resultado sai do item e vira decisão separada
+  - [x] Limpeza e otimizações aprovadas no plano, sem camadas novas além das da seção 7 da proposta técnica; regras de pontuação como funções puras; contrato da API e `config/recommendation.json` sem mudança, salvo motivo forte registrado antes do B-72
   - [ ] Critério: medir de novo em produção com a metodologia do B-33; p95 fim a fim abaixo de 1 s, registrado
 - [ ] **B-72** (M, E5) Interface da visão geral de recomendações e "ver mais": lista principal no topo e prateleiras abaixo, sem repetição; "ver mais" com a lista completa paginada
   - [ ] A rota do "ver mais" responde 404 quando a chave deixou de existir (o interesse pode mudar depois de o jogador avaliar jogos): a página da lista expandida trata esse 404 voltando para a visão geral, sem mostrar erro (levantado no B-71)

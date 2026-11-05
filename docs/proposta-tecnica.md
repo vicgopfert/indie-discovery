@@ -324,6 +324,7 @@ apps/api/
 ├─ src/
 │  ├─ main.ts                  entrada da API
 │  ├─ ingest.ts                entrada da ingestão (aplicação standalone)
+│  ├─ snapshot-recommendations.ts  foto das respostas de recomendação, para conferir mudanças (B-76)
 │  ├─ app.module.ts
 │  ├─ config/                  schema Zod das variáveis de ambiente
 │  ├─ common/
@@ -340,7 +341,7 @@ apps/api/
 │     ├─ library/
 │     ├─ recommendation/
 │     │  ├─ content-index.ts   índice em memória e vetor de um jogo fora dele
-│     │  ├─ scoring/           funções puras: perfil, pontuação, desempate, interesses, listas, motivo e lista de populares
+│     │  ├─ scoring/           funções puras: interações e perfil, pontuação, top-k, desempate, interesses, listas, motivo e lista de populares
 │     │  ├─ tfidf.ts           funções puras, usadas pela ingestão e pelo índice
 │     │  └─ generate-recommendations.use-case.ts
 │     ├─ styles/               estilos curados: leitura do arquivo e atribuição a um jogo (funções puras)
