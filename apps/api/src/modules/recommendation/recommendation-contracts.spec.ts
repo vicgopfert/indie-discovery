@@ -107,6 +107,7 @@ describe('Respostas das recomendações', () => {
     const withFeatures = (count: number) =>
       RecommendationPageSchema.safeParse({
         mode: 'BALANCED',
+        basis: 'profile',
         key: 'main',
         feature: null,
         page: 1,
@@ -126,5 +127,15 @@ describe('Respostas das recomendações', () => {
     expect(withFeatures(1)).toBe(true);
     expect(withFeatures(0)).toBe(false);
     expect(withFeatures(4)).toBe(false);
+  });
+
+  it('a página do "ver mais" exige a base da lista, como a visão geral', () => {
+    const page = { mode: 'BALANCED', key: 'main', feature: null, page: 1, items, hasMore: false };
+    const valid = (basis?: string) =>
+      RecommendationPageSchema.safeParse({ ...page, basis }).success;
+
+    expect(valid('popular')).toBe(true);
+    expect(valid(undefined)).toBe(false);
+    expect(valid('cold-start')).toBe(false);
   });
 });

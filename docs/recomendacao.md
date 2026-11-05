@@ -772,3 +772,25 @@ Aprovado no plano:
 - **Lista de populares:** não respeita o modo, como previsto na proposta.
 - **Filtros:** a rota não recebe filtros (por exemplo, só "em breve"), porque nenhuma tela do
   P0 os usa (decidido no B-33).
+
+## Interface da visão geral e do "ver mais" (B-72)
+
+A interface está descrita na seção 5 da proposta técnica. O módulo de recomendação só mudou num
+ponto: a resposta do "ver mais" ganhou `basis`, como a da visão geral, para a página tratar a lista
+de populares e a vazia. É a exceção ao "contrato sem mudança" do B-76, decidida pelo autor no plano
+do B-72.
+
+### Comparação das respostas (05/11/2026)
+
+Depois da mudança, a foto completa foi comparada com a linha de base do B-76 (`--compare`). Uma
+cópia da foto, só no ambiente de desenvolvimento, gravou também o hash de cada página sem o campo
+`basis`:
+
+| Comparação com a linha de base do B-76 (hash `9b3b37ef…`) | Respostas iguais |
+| --- | --- |
+| Visão geral (400 perfis, três modos) | 1.200 de 1.200 |
+| Páginas do "ver mais", com `basis` | 0 de 46.341 |
+| Páginas do "ver mais", sem `basis` | 46.341 de 46.341 |
+
+A única diferença é o campo novo. A foto completa de depois do B-72 (47.541 respostas, hash
+`118524c3…`) é a linha de base vigente para as próximas mudanças no módulo.

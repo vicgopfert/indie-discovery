@@ -1,4 +1,4 @@
-import type { Recommendation, RecommendationOverview } from '@indie/contracts';
+import type { Recommendation, RecommendationOverview, RecommendationPage } from '@indie/contracts';
 import { sampleGame } from './catalog';
 
 export const sampleRecommendation = (overrides: Partial<Recommendation> = {}): Recommendation => ({
@@ -14,16 +14,29 @@ export const sampleRecommendation = (overrides: Partial<Recommendation> = {}): R
   ...overrides,
 });
 
-// items vira a lista principal; a página ainda não mostra as prateleiras (B-72).
+// items vira a lista principal, sem "ver mais"; main a substitui inteira.
 export const sampleRecommendationOverview = ({
   items = [sampleRecommendation()],
   ...overrides
-}: Partial<Omit<RecommendationOverview, 'main'>> & {
+}: Partial<RecommendationOverview> & {
   items?: Recommendation[];
 } = {}): RecommendationOverview => ({
   mode: 'BALANCED',
   basis: 'profile',
   main: { items, hasMore: false },
   shelves: [],
+  ...overrides,
+});
+
+export const sampleRecommendationPage = (
+  overrides: Partial<RecommendationPage> = {},
+): RecommendationPage => ({
+  mode: 'BALANCED',
+  basis: 'profile',
+  key: 'theme:horror',
+  feature: { type: 'THEME', slug: 'horror', name: 'Terror' },
+  page: 1,
+  items: [sampleRecommendation()],
+  hasMore: false,
   ...overrides,
 });

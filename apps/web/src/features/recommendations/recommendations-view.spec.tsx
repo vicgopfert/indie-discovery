@@ -55,6 +55,60 @@ describe('RecommendationsView', () => {
     expect(screen.queryByText(/o jogo entrou na lista por ser menos popular/)).toBeNull();
   });
 
+  it('mostra a principal no topo e as prateleiras abaixo, na ordem da API', async () => {
+    const game = (slug: string, name: string) =>
+      sampleRecommendation({ game: sampleGame({ slug, name }) });
+    stubList(
+      sampleRecommendationOverview({
+        main: { items: [game('celeste', 'Celeste')], hasMore: true },
+        shelves: [
+          {
+            key: 'upcoming',
+            kind: 'upcoming',
+            feature: null,
+            items: [game('lavaloop', 'Lavaloop')],
+            hasMore: false,
+          },
+          {
+            key: 'theme:horror',
+            kind: 'interest',
+            feature: { type: 'THEME', slug: 'horror', name: 'Terror' },
+            items: [game('darkwood', 'Darkwood')],
+            hasMore: true,
+          },
+          {
+            key: 'style:roguelike',
+            kind: 'interest',
+            feature: { type: 'STYLE', slug: 'roguelike', name: 'Roguelike' },
+            items: [game('dead-cells', 'Dead Cells')],
+            hasMore: true,
+          },
+        ],
+      }),
+    );
+    renderWithQuery(<RecommendationsView />);
+
+    expect(await screen.findByRole('link', { name: 'Darkwood' })).toBeInTheDocument();
+    expect(screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)).toEqual([
+      'Para você',
+      'Em breve no seu gosto',
+      'Porque você curte Terror',
+      'Porque você curte Roguelike',
+    ]);
+    const section = (name: string) => screen.getByRole('region', { name });
+    expect(section('Em breve no seu gosto')).toHaveTextContent('Lavaloop');
+    expect(screen.getByRole('heading', { level: 3, name: 'Darkwood' })).toBeInTheDocument();
+
+    expect(
+      screen.getAllByRole('link', { name: /^Ver mais/ }).map((a) => a.getAttribute('href')),
+    ).toEqual([
+      '/recomendacoes/para-voce',
+      '/recomendacoes/tema-horror',
+      '/recomendacoes/estilo-roguelike',
+    ]);
+    expect(screen.getByRole('link', { name: 'Ver mais: Porque você curte Terror' })).toBeVisible();
+  });
+
   it('trocar o modo grava a escolha e depois traz a lista do modo novo', async () => {
     const fetchMock = stubRecommendations((path, method) => {
       if (method === 'PATCH') return Response.json({ ...sampleUser, discoveryMode: 'DISCOVERY' });

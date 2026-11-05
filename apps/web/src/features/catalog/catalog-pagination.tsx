@@ -1,5 +1,5 @@
 import type { GameSearchQuery } from '@indie/contracts';
-import Link from 'next/link';
+import { Pagination } from '@/components/pagination';
 import { catalogHref } from './search-params';
 
 export function CatalogPagination({
@@ -13,24 +13,10 @@ export function CatalogPagination({
   const { page } = query;
 
   return (
-    <nav aria-label="Paginação" className="flex items-center justify-between gap-4 text-sm">
-      {page > 1 ? (
-        <Link href={catalogHref(query, page - 1)} rel="prev" className="underline">
-          Anterior
-        </Link>
-      ) : (
-        <span />
-      )}
-      <span aria-current="page">
-        Página {page} de {totalPages}
-      </span>
-      {page < totalPages ? (
-        <Link href={catalogHref(query, page + 1)} rel="next" className="underline">
-          Próxima
-        </Link>
-      ) : (
-        <span />
-      )}
-    </nav>
+    <Pagination
+      label={`Página ${page} de ${totalPages}`}
+      previousHref={page > 1 ? catalogHref(query, page - 1) : undefined}
+      nextHref={page < totalPages ? catalogHref(query, page + 1) : undefined}
+    />
   );
 }

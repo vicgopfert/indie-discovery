@@ -29,6 +29,9 @@ export class ApiRequestError extends Error {
 export const isUnauthorized = (error: unknown) =>
   error instanceof ApiRequestError && error.status === 401;
 
+export const isNotFound = (error: unknown) =>
+  error instanceof ApiRequestError && error.status === 404;
+
 export function errorMessage(error: unknown) {
   return error instanceof Error && error.message ? error.message : UNEXPECTED_ERROR_MESSAGE;
 }

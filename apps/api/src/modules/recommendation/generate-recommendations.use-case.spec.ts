@@ -141,6 +141,7 @@ describe('GenerateRecommendationsUseCase', () => {
   it('sem perfil, o "ver mais" só tem a lista principal, vazia', async () => {
     expect(await pageOf('main')).toEqual({
       mode: 'BALANCED',
+      basis: 'empty',
       key: 'main',
       feature: null,
       page: 1,
@@ -159,7 +160,7 @@ describe('GenerateRecommendationsUseCase', () => {
     expect(result.main.items.length).toBeGreaterThan(0);
     expect(result.shelves).toEqual([]);
     await expect(pageOf('upcoming')).rejects.toThrow(new NotFoundException(LIST_NOT_FOUND));
-    expect((await pageOf('main')).items).toEqual(result.main.items);
+    expect(await pageOf('main')).toMatchObject({ basis: 'popular', items: result.main.items });
   });
 
   it('acha as preferências pelo id do atributo e explica com o nome em português', async () => {

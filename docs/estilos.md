@@ -645,7 +645,7 @@ estilos:
   - Hoje o motivo vem da contribuição de cada atributo no cosseno, e os estilos não estão no vetor.
   - A regra nova seria: os estilos do jogo recomendado que também estão nos jogos de peso positivo da biblioteca, pelo peso, ao lado dos gêneros e temas.
   - O contrato do motivo passa a dizer o tipo de cada atributo.
-- **Contrato e interface:** `feature.type` ganha `STYLE`, e a chave das prateleiras ganha `style:<slug>`. O B-72 monta os títulos e a rota `estilo-<slug>`.
+- **Contrato e interface:** `feature.type` ganha `STYLE`, e a chave das prateleiras ganha `style:<slug>`. O B-72 monta os títulos e a rota `estilo-<slug>`. **Feito em 05/11/2026 (B-72):** "Porque você curte `<estilo>`" e `/recomendacoes/estilo-<slug>`.
 - **Filtro do catálogo (opcional):** `GET /api/games?style=`, os estilos em `GET /api/features` e o filtro na página do catálogo.
 - **Testes:**
   - os de interesses, listas, motivo, caso de uso, contrato e o e2e de recomendação ganham casos com estilos;
