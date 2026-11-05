@@ -5,10 +5,15 @@ import { RecommendationListView } from '@/features/recommendations/recommendatio
 
 export const metadata: Metadata = { title: 'Recomendações', robots: { index: false } };
 
+type RecommendationListPageProps = {
+  params: Promise<{ lista: string }>;
+  searchParams: Promise<{ page?: string | string[] }>;
+};
+
 export default async function RecommendationListPage({
   params,
   searchParams,
-}: PageProps<'/recomendacoes/[lista]'>) {
+}: RecommendationListPageProps) {
   const key = listKeyOf((await params).lista);
   if (!key) notFound();
   const { page } = await searchParams;
