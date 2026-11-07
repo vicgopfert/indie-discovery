@@ -17,7 +17,8 @@ import {
 
 export const metadata: Metadata = {
   title: 'Catálogo',
-  description: 'Jogos independentes com filtros de gênero, tema, situação, português e país.',
+  description:
+    'Jogos independentes com filtros de gênero, tema, etiqueta, situação, português e país.',
 };
 
 export default async function CatalogPage({
@@ -45,17 +46,18 @@ async function loadCatalog(query: GameSearchQuery) {
     searchGames(query),
     listFeatures('genre'),
     listFeatures('theme'),
+    listFeatures('tag'),
     listCountries(),
   ]).catch(() => null);
   if (!data) return <CatalogUnavailable retryHref={catalogHref(query)} />;
 
-  const [page, genres, themes, countries] = data;
+  const [page, genres, themes, tags, countries] = data;
   const beyondLastPage = page.items.length === 0 && page.total > 0;
 
   return (
     <div className="grid gap-8 md:grid-cols-[16rem_1fr]">
       <aside aria-label="Filtros">
-        <CatalogFilters query={query} options={{ genres, themes, countries }} />
+        <CatalogFilters query={query} options={{ genres, themes, tags, countries }} />
       </aside>
       <section aria-label="Resultados" className="space-y-6">
         <p className="text-sm text-muted-foreground">

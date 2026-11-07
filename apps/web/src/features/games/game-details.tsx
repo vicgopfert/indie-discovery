@@ -11,6 +11,7 @@ import {
   languageSupport,
   NOT_INFORMED,
   portugueseSupport,
+  tagAttribution,
 } from './game-facts';
 import { releaseLabel } from './release-label';
 import { UpcomingBadge } from './upcoming-badge';
@@ -56,6 +57,10 @@ export function GameDetails({ game }: { game: GameDetail }) {
           </Fact>
           <Fact term="Temas">
             <FeatureLinks param="theme" features={game.themes} />
+          </Fact>
+          <Fact term="Etiquetas">
+            <FeatureLinks param="tag" features={game.tags} />
+            <TagSource game={game} />
           </Fact>
           <Fact term="Desenvolvimento">{companyNames(game.developers)}</Fact>
           <Fact term="Publicação">{companyNames(game.publishers)}</Fact>
@@ -114,6 +119,22 @@ function Fact({ term, children }: { term: string; children: ReactNode }) {
       <dt className="font-medium">{term}</dt>
       <dd>{children}</dd>
     </>
+  );
+}
+
+function TagSource({ game }: { game: GameDetail }) {
+  const attribution = tagAttribution(game);
+  if (!attribution) return null;
+  return (
+    <p className="mt-1 text-sm text-muted-foreground">
+      {attribution.href ? (
+        <a href={attribution.href} {...external} className="underline">
+          {attribution.text}
+        </a>
+      ) : (
+        attribution.text
+      )}
+    </p>
   );
 }
 

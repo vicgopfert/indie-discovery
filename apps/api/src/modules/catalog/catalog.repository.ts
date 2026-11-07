@@ -9,6 +9,8 @@ import { FeatureType, Prisma, ReleaseStatus } from '../../generated/prisma/clien
 import { PrismaService } from '../../prisma/prisma.service';
 import type { LabeledFeatureType } from './feature-labels';
 
+export type FilterFeatureType = LabeledFeatureType | typeof FeatureType.TAG;
+
 const STATUS: Record<NonNullable<GameSearchQuery['status']>, ReleaseStatus> = {
   released: ReleaseStatus.RELEASED,
   upcoming: ReleaseStatus.UPCOMING,
@@ -53,9 +55,11 @@ const gameDetailSelect = {
   storeUrl: true,
   studioCountrySource: true,
   studioCountry: { select: { alpha2: true, namePt: true } },
+  steamAppId: true,
+  tagSource: true,
   features: {
-    where: { feature: { type: { in: [FeatureType.GENRE, FeatureType.THEME] } } },
-    select: { feature: { select: { type: true, slug: true, name: true } } },
+    where: { feature: { type: { in: [FeatureType.GENRE, FeatureType.THEME, FeatureType.TAG] } } },
+    select: { rank: true, feature: { select: { type: true, slug: true, name: true } } },
   },
   companies: {
     where: { OR: [{ isDeveloper: true }, { isPublisher: true }] },
@@ -140,7 +144,7 @@ export class CatalogRepository {
   }
 
   // Conta só jogos do catálogo: um atributo que só aparece em jogos fora dele não vira opção.
-  async countGamesByFeature(type: LabeledFeatureType): Promise<FeatureCountRow[]> {
+  async countGamesByFeature(type: FilterFeatureType): Promise<FeatureCountRow[]> {
     const features = await this.prisma.feature.findMany({
       where: { type, games: { some: { game: { inCatalog: true } } } },
       select: {
@@ -204,10 +208,11 @@ export class CatalogRepository {
   // Filtrar pelo id usa o índice de GameFeature(featureId); pelo slug, o banco cruza a tabela
   // inteira (cerca de 30 ms contra 200 ms no catálogo de 20 mil jogos). Null se algum slug não
   // existe: como os filtros se somam, nenhum jogo atende.
-  private async findFeatureIds({ genre, theme }: GameSearchQuery): Promise<string[] | null> {
+  private async findFeatureIds({ genre, theme, tag }: GameSearchQuery): Promise<string[] | null> {
     const wanted = [
       ...genre.map((slug) => ({ type: FeatureType.GENRE, slug })),
       ...theme.map((slug) => ({ type: FeatureType.THEME, slug })),
+      ...tag.map((slug) => ({ type: FeatureType.TAG, slug })),
     ];
     if (wanted.length === 0) return [];
 

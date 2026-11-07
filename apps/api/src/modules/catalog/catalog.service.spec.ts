@@ -35,7 +35,8 @@ const celeste: GameSummaryRow = {
   features: [genre('puzzle', 'Puzzle'), genre('indie', 'Indie'), genre('adventure', 'Adventure')],
 };
 
-const feature = (type: 'GENRE' | 'THEME', slug: string, name: string) => ({
+const feature = (type: 'GENRE' | 'THEME' | 'TAG', slug: string, name: string, rank?: number) => ({
+  rank: rank ?? null,
   feature: { type, slug, name },
 });
 
@@ -63,10 +64,14 @@ const celesteDetail: GameDetailRow = {
   storeUrl: 'https://www.celestegame.com',
   studioCountrySource: 'WIKIDATA',
   studioCountry: { alpha2: 'CA', namePt: 'Canadá' },
+  steamAppId: 504230,
+  tagSource: 'STEAM',
   features: [
     feature('GENRE', 'puzzle', 'Puzzle'),
+    feature('TAG', 'difficult', 'Difícil', 2),
     feature('GENRE', 'indie', 'Indie'),
     feature('THEME', 'horror', 'Horror'),
+    feature('TAG', 'precision-platformer', 'Plataforma de Precisão', 1),
     feature('GENRE', 'adventure', 'Adventure'),
   ],
   companies: [
@@ -195,6 +200,12 @@ describe('CatalogService', () => {
         ],
         summary: 'Ajude Madeline a escalar a montanha.',
         themes: [{ slug: 'horror', name: 'Terror' }],
+        tags: [
+          { slug: 'precision-platformer', name: 'Plataforma de Precisão' },
+          { slug: 'difficult', name: 'Difícil' },
+        ],
+        tagSource: 'STEAM',
+        steamAppId: 504230,
         developers: ['Extremely OK Games', 'Maddy Makes Games'],
         publishers: ['Annapurna', 'Maddy Makes Games'],
         studioCountry: { code: 'CA', name: 'Canadá', source: 'WIKIDATA' },
@@ -237,6 +248,27 @@ describe('CatalogService', () => {
         expect((await findGame({ ...celesteDetail, storeUrl })).officialUrl).toBeNull();
       },
     );
+
+    it('as etiquetas da reserva da IGDB, sem posição, saem em ordem alfabética', async () => {
+      const detail = await findGame({
+        ...celesteDetail,
+        steamAppId: null,
+        tagSource: 'IGDB',
+        features: [
+          feature('TAG', 'roguelike', 'Roguelike'),
+          feature('TAG', 'metroidvania', 'Metroidvania'),
+        ],
+      });
+
+      expect(detail).toMatchObject({
+        tags: [
+          { slug: 'metroidvania', name: 'Metroidvania' },
+          { slug: 'roguelike', name: 'Roguelike' },
+        ],
+        tagSource: 'IGDB',
+        steamAppId: null,
+      });
+    });
 
     it('jogo inexistente ou fora do catálogo responde 404', async () => {
       await expect(findGame(null)).rejects.toThrow(new NotFoundException('Jogo não encontrado.'));
@@ -328,6 +360,19 @@ describe('CatalogService', () => {
         { slug: 'new-genre', name: 'New Genre', gameCount: 1 },
         { slug: 'puzzle', name: 'Quebra-cabeça', gameCount: 3 },
       ]);
+    });
+
+    it('as etiquetas já vêm em português e saem pelo nome', async () => {
+      const catalog = new FakeCatalog({ total: 0, games: [] }, [
+        { slug: 'roguelike', name: 'Roguelike', gameCount: 3 },
+        { slug: 'cozy', name: 'Aconchegante', gameCount: 10 },
+        { slug: 'action-rpg', name: 'RPG de Ação', gameCount: 5 },
+        { slug: 'difficult', name: 'Difícil', gameCount: 2 },
+      ]);
+
+      expect(
+        (await service(catalog).listFeatures({ type: 'tag' })).map(({ name }) => name),
+      ).toEqual(['Aconchegante', 'Difícil', 'Roguelike', 'RPG de Ação']);
     });
   });
 });

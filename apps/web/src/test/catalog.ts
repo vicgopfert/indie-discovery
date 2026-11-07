@@ -17,6 +17,12 @@ export const sampleGameDetail = (overrides: Partial<GameDetail> = {}): GameDetai
   ...sampleGame(),
   summary: 'Ajude Madeline a escalar a montanha Celeste.',
   themes: [{ slug: 'action', name: 'Ação' }],
+  tags: [
+    { slug: 'precision-platformer', name: 'Plataforma de Precisão' },
+    { slug: 'difficult', name: 'Impiedoso' },
+  ],
+  tagSource: 'STEAM',
+  steamAppId: 504230,
   developers: ['Extremely OK Games'],
   publishers: ['Maddy Makes Games'],
   studioCountry: { code: 'CA', name: 'Canadá', source: 'IGDB' },

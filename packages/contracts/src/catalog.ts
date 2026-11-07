@@ -8,7 +8,8 @@ export const GAMES_SEARCH_MAX_LENGTH = 100;
 
 export const GAMES_SORTS = ['popular', 'newest', 'name'] as const;
 export const RELEASE_STATUS_FILTERS = ['released', 'upcoming'] as const;
-export const FEATURE_TYPE_FILTERS = ['genre', 'theme'] as const;
+export const FEATURE_TYPE_FILTERS = ['genre', 'theme', 'tag'] as const;
+export const TAG_SOURCES = ['STEAM', 'IGDB'] as const;
 export const PORTUGUESE_FILTERS = ['yes', 'no', 'unknown'] as const;
 export const COUNTRY_UNKNOWN = 'unknown';
 
@@ -57,6 +58,7 @@ export const GameSearchQuerySchema = z.object({
     .transform((q) => q || undefined),
   genre: slugList,
   theme: slugList,
+  tag: slugList,
   status: z
     .enum(RELEASE_STATUS_FILTERS, { error: 'Situação deve ser released ou upcoming.' })
     .optional(),
@@ -101,7 +103,7 @@ export const GamePageSchema = z.object({
 export type GamePage = z.infer<typeof GamePageSchema>;
 
 export const FeatureQuerySchema = z.object({
-  type: z.enum(FEATURE_TYPE_FILTERS, { error: 'Tipo deve ser genre ou theme.' }),
+  type: z.enum(FEATURE_TYPE_FILTERS, { error: 'Tipo deve ser genre, theme ou tag.' }),
 });
 
 export type FeatureQuery = z.output<typeof FeatureQuerySchema>;
@@ -136,9 +138,15 @@ export const StudioCountrySchema = z.object({
 
 export type StudioCountry = z.infer<typeof StudioCountrySchema>;
 
+// As etiquetas vêm da comunidade Steam, da mais votada para a menos, ou, sem nenhuma aceita lá,
+// da reserva pelas palavras-chave e pelo resumo da IGDB, em ordem alfabética (B-78). O id da Steam
+// leva à página do jogo na loja, na atribuição.
 export const GameDetailSchema = GameSummarySchema.extend({
   summary: z.string(),
   themes: z.array(FeatureLabelSchema),
+  tags: z.array(FeatureLabelSchema),
+  tagSource: z.enum(TAG_SOURCES).nullable(),
+  steamAppId: z.number().int().positive().nullable(),
   developers: z.array(z.string()),
   publishers: z.array(z.string()),
   studioCountry: StudioCountrySchema.nullable(),

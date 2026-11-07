@@ -6,6 +6,7 @@ import {
   languageSupport,
   metaDescription,
   portugueseSupport,
+  tagAttribution,
 } from './game-facts';
 
 const language = (locale: string, name: string, support: Partial<GameLanguage> = {}) => ({
@@ -66,6 +67,28 @@ describe('countrySource', () => {
     expect(countrySource({ code: 'JP', name: 'Japão', source: 'WIKIDATA' })).toBe(
       'fonte: Wikidata',
     );
+  });
+});
+
+describe('tagAttribution', () => {
+  const tags = [{ slug: 'roguelike', name: 'Roguelike' }];
+
+  it('cita a comunidade Steam e leva à página do jogo na loja', () => {
+    expect(tagAttribution({ tags, tagSource: 'STEAM', steamAppId: 1145360 })).toEqual({
+      text: 'Etiquetas da comunidade Steam',
+      href: 'https://store.steampowered.com/app/1145360',
+    });
+  });
+
+  it('as da reserva dizem que vieram da IGDB, sem link', () => {
+    expect(tagAttribution({ tags, tagSource: 'IGDB', steamAppId: 1145360 })).toEqual({
+      text: 'Etiquetas atribuídas pelo resumo e pelas palavras-chave da IGDB',
+      href: null,
+    });
+  });
+
+  it('sem etiquetas, não há atribuição', () => {
+    expect(tagAttribution({ tags: [], tagSource: null, steamAppId: null })).toBeNull();
   });
 });
 
