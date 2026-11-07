@@ -16,7 +16,10 @@ execução termina como `SUCCEEDED` e 1 quando termina como `FAILED`.
 `PRODUCTION_DATABASE_URL` (conexão direta do Neon), `IGDB_CLIENT_ID` e
 `IGDB_CLIENT_SECRET`. Ele divide o grupo de concorrência com o job de migrations, para que
 os dois nunca rodem juntos, e escreve no resumo da execução o registro do `IngestionRun`, a
-composição do catálogo, as coleções, os alertas e o tamanho do banco.
+composição do catálogo, a origem das etiquetas, as coleções, os alertas e o tamanho do banco.
+O modo `sonda-steam` do mesmo workflow (B-78) roda de qualquer branch e só confere se a loja da
+Steam responde ao Actions, numa amostra de 200 jogos do catálogo, sem gravar nada
+(`apps/api/src/probe-steam.ts`; localmente, `pnpm --filter @indie/api tags:probe`).
 
 ## Uma execução
 
@@ -31,12 +34,15 @@ composição do catálogo, as coleções, os alertas e o tamanho do banco.
    "'Want to Play' como sinal de interesse").
 4. Sobe as cadeias de empresa-mãe das desenvolvedoras dos jogos aceitos. Busca no
    Wikidata o país dos jogos sem país na IGDB (seção "País do estúdio").
-5. Calcula o IDF sobre o catálogo aceito. Os vetores TF-IDF não são gravados: a API os
+5. Busca na IGDB o id da Steam dos jogos aceitos e, na loja da Steam, as etiquetas da
+   comunidade. Os jogos sem etiqueta aceita da Steam recebem a reserva pelas palavras-chave e
+   pelo resumo (seção "Etiquetas da comunidade Steam").
+6. Calcula o IDF sobre o catálogo aceito. Os vetores TF-IDF não são gravados: a API os
    refaz a partir do IDF de `Feature` (B-31; `docs/vetorizacao-tfidf.md`).
-6. Detecta os alertas de revisão, entre eles os das coleções (seção "Coleções").
-7. Grava tudo numa única transação, com as coleções publicadas de `config/collections.json`,
+7. Detecta os alertas de revisão, entre eles os das coleções (seção "Coleções").
+8. Grava tudo numa única transação, com as coleções publicadas de `config/collections.json`,
    e fecha a execução com contagens, escala da popularidade e resumo de erros.
-8. No workflow "Ingestão", chama `POST /api/internal/reload-index` para a API recarregar o
+9. No workflow "Ingestão", chama `POST /api/internal/reload-index` para a API recarregar o
    índice de conteúdo sem reiniciar.
 
 Jogo rejeitado na primeira avaliação não é gravado. Jogo gravado que passa a ser
@@ -53,6 +59,8 @@ avaliações e listas de usuários apontam para ele.
 | "Want to Play" fora da grade de múltiplos inteiros da unidade | `FAILED`, nada gravado |
 | Erro na gravação | `FAILED`: a transação desfaz tudo, e a próxima execução refaz |
 | Busca com menos de 95% dos jogos da última execução bem-sucedida | `SUCCEEDED`, mas nenhum jogo é desativado; o motivo fica no resumo |
+| Loja da Steam fora do ar antes da primeira coleta bem-sucedida (nenhum jogo do catálogo com etiquetas da Steam gravadas) | `FAILED`, nada gravado |
+| Loja da Steam fora do ar depois da primeira coleta | `SUCCEEDED`, com as etiquetas da Steam já gravadas e a reserva da IGDB para os outros jogos; o motivo fica no resumo |
 
 Rodar duas vezes seguidas não duplica nada: a chave é sempre o id da IGDB. Cada execução
 reavalia tudo, mas só regrava a linha que mudou (`ON CONFLICT ... DO UPDATE ... WHERE ...
@@ -71,6 +79,25 @@ data da avaliação fica em `IngestionRun.evaluatedAt`.
   gravação do catálogo inteiro levou de 8 a 16 s no banco local, e o limite é de 5 min.
 - **No Neon (B-14), usar a conexão direta, não a do pooler.** A transação longa de
   gravação não combina com o pooler em modo de transação.
+
+## Etiquetas da comunidade Steam (B-78)
+
+A regra, o vocabulário e as decisões estão em `docs/etiquetas.md` (seções 2 e 10). Na ingestão:
+
+- **Ids:** o `external_games` da IGDB (fonte Steam), só para os jogos aceitos, 200 jogos por
+  consulta. Com mais de um id, vale o primeiro que tem etiquetas, em ordem numérica
+  (`Game.steamAppId`).
+- **Etiquetas:** a rota `IStoreBrowseService/GetItems` da loja, em lotes de 50 ids, uma
+  requisição por segundo, com novas tentativas em 429 e 5xx. Ficam as aceitas pelo vocabulário
+  (`config/tags.json`) no peso mínimo relativo 0,3, com a posição em `GameFeature.rank`.
+- **Reserva:** o jogo sem etiqueta aceita da Steam recebe as etiquetas pelas palavras-chave e
+  pelo resumo. A origem fica em `Game.tagSource`.
+- **Falhas:** na tabela de falhas acima. A etapa da Steam só usa o que já está gravado depois da
+  primeira coleta bem-sucedida.
+- **Carga local de 07/11/2026:** 17 min 36 s no total, dos quais 63 s para os ids e 7 min 31 s
+  para a loja; gravação de 25 s. 21.637 jogos com etiquetas da Steam, 493 pela reserva e 871 sem
+  nenhuma; o banco local foi de 110 para 133 MB, com 276.217 vínculos de etiqueta. O workflow tem
+  limite de 30 min; as execuções em produção levavam de 4 a 7 min.
 
 ## Carência pós-lançamento
 

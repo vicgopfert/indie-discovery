@@ -1,4 +1,4 @@
-# Recomendação: núcleo de pontuação (B-32), rota (B-33), página (B-35), listas por interesse (B-71) e estilos (B-74)
+# Recomendação: núcleo de pontuação (B-32), rota (B-33), página (B-35), listas por interesse (B-71), estilos (B-74) e etiquetas (B-78)
 
 O núcleo são funções puras em `apps/api/src/modules/recommendation/scoring/`, com os pesos
 na seção `scoring` de `apps/api/config/recommendation.json`. Ele recebe o índice de
@@ -451,6 +451,11 @@ Tempo medido pelo cliente, 30 requisições por linha depois de uma de aquecimen
   e 200) e guardar as listas por usuário e modo até a próxima alteração da biblioteca.
 
 ## Estilos na recomendação (B-74)
+
+> **Substituído em 07/11/2026 pelo B-78:** as etiquetas da comunidade Steam entraram no vetor,
+> no lugar das palavras-chave, e ocupam o lugar dos estilos nos interesses, nas prateleiras
+> (`tag:<slug>`, "Porque você curte `<etiqueta>`") e no motivo. Os estilos saíram do código. A
+> regra e as medições estão em `docs/etiquetas.md`, seção 10; esta seção fica como registro.
 
 Os 49 estilos curados de `config/styles.json` (`docs/estilos.md`) entram nos interesses, nas
 prateleiras e no motivo. O vetor não muda.
