@@ -134,17 +134,20 @@ Entrega: jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de
   - [x] Motivo: o estilo só aparece se as palavras-chave dele contribuíram positivamente para a pontuação do jogo, e a contribuição dele é a soma das delas; o estilo atribuído só pelo resumo serve para interesses e prateleiras, mas não entra no motivo (seção 12 da proposta técnica)
   - [x] Testes de regressão do caso de produção (RPG com terror) e do caso Amnesia; interesses e cobertura medidos de novo nos 200 perfis da semente 71; tempo local medido
   - [ ] Separar "Sobrenatural" em fantasmas, demônios e vampiros: rever depois do teste de usabilidade (B-44)
-- [ ] **B-77** (P, E5) Medição das etiquetas da comunidade Steam, só medição, com as regras de decisão escritas no plano antes de medir — acrescentado em 05/11/2026
-  - [ ] Cobertura no catálogo inteiro, por quartil de popularidade; peso mínimo relativo à etiqueta mais votada do próprio jogo
-  - [ ] Vocabulário único: etiquetas aceitas com nome em português, por grupo, para revisão do autor; os 49 estilos mapeados para elas; palavras-chave e termos do resumo da IGDB como evidência de reserva para os jogos sem Steam; falsos positivos corrigidos (`shop-keeper`, `creature-compendium` e os que a medição apontar)
-  - [ ] Protótipo do vetor com as etiquetas e da regra nova de interesses (suporte mínimo, sobreposição), comparados com os atuais nos perfis de teste e nos quatro perfis realistas; decisão sobre as etiquetas no vetor
-  - [ ] Riscos e desvio registrados: a Steam como terceira fonte externa, a rota sem documentação pública, os termos de uso e a atribuição sem sugerir endosso da Valve
+- [x] **B-77** (P, E5) Medição das etiquetas da comunidade Steam, só medição, com as regras de decisão escritas no plano antes de medir — acrescentado em 05/11/2026 — concluído em 07/11/2026: R1 a R4 aprovadas, etiquetas no vetor com peso mínimo 0,3; R5 reprovada; regra de prateleiras de duas fases com até 6 prateleiras, adotada como exceção à regra de parada (`docs/etiquetas.md`)
+  - [x] Cobertura no catálogo inteiro, por quartil de popularidade; peso mínimo relativo à etiqueta mais votada do próprio jogo — 94,1% do catálogo e 87,3% no quartil menos popular, com peso mínimo 0,3; o peso da rota não é contagem de votos
+  - [x] Vocabulário único: etiquetas aceitas com nome em português, por grupo, para revisão do autor; os 49 estilos mapeados para elas; palavras-chave e termos do resumo da IGDB como evidência de reserva para os jogos sem Steam; falsos positivos corrigidos (`shop-keeper`, `creature-compendium` e os que a medição apontar) — 356 etiquetas aceitas, 271 podem virar prateleira, 90 com título, revisadas pelo autor; saíram da reserva 90 evidências que a Steam confirma em menos de 50% dos jogos (`creature-compendium` saiu; `shop-keeper` ficou, com 68%)
+  - [x] Protótipo do vetor com as etiquetas e da regra nova de interesses (suporte mínimo, sobreposição), comparados com os atuais nos perfis de teste e nos quatro perfis realistas; decisão sobre as etiquetas no vetor — etiquetas no vetor (R4); regra de duas fases medida contra A e B, com os critérios C1 a C6 gravados antes; o caso RPG com terror fica como limitação dos dados
+  - [x] Riscos e desvio registrados: a Steam como terceira fonte externa, a rota sem documentação pública, os termos de uso e a atribuição sem sugerir endosso da Valve — seção 12 e risco R-15 da proposta técnica
 - [ ] **B-78** (G, E5) Etiquetas da comunidade na plataforma: ingestão com o id da Steam e as etiquetas (absorve o B-65), ficha, filtro do catálogo (substitui o B-75) e, se o B-77 aprovar, o vetor — acrescentado em 05/11/2026
   - [ ] Se a rota da Steam falhar, a ingestão não falha e mantém as etiquetas gravadas
   - [ ] Vocabulário único na ficha, no filtro, nas prateleiras e no motivo; atribuição à comunidade Steam sem sugerir endosso da Valve
+  - [ ] Etiquetas aceitas no peso mínimo relativo 0,3, com o `tags.draft.json` revisado no B-77, no vetor no lugar das palavras-chave (decidido no B-77)
+  - [ ] RSS da API depois da carga e de três recargas em produção; acima de 450 MB, a decisão do vetor é revista (condição do autor no B-77)
 - [ ] **B-79** (M, E5) Recomendações específicas — acrescentado em 05/11/2026
-  - [ ] Interesses só específicos (até 10% do catálogo, valor final pelo B-77), com suporte mínimo na biblioteca e até 4 prateleiras sem sobreposição; regressão do caso RPG com terror e do caso Amnesia
-  - [ ] Duas prateleiras "Porque você gostou de `<jogo>`", pelo peso e, no empate, pela avaliação mais recente, só se as etiquetas entrarem no vetor (senão ficam de fora, registrado)
+  - [ ] Regra de duas fases com até 6 prateleiras (`docs/etiquetas.md`, seção 6), com os títulos do vocabulário; regressão do caso Amnesia e dos critérios C2 a C6; o caso RPG com terror fica como limitação registrada — alterado em 07/11/2026 (B-77): eram interesses só específicos, até 4 prateleiras
+  - [ ] Duas prateleiras "Porque você gostou de `<jogo>`", pelo peso e, no empate, pela avaliação mais recente (as etiquetas entraram no vetor no B-77); o jogo de origem precisa ter nota 4 ou mais, ou estar em favoritos; um jogo só em "quero jogar" ou só em "concluídos" nunca gera essa prateleira
+  - [ ] A visão geral passa a ter até 10 seções (principal, 2 por jogo, até 6 por interesse, em breve); com as prateleiras por jogo, ela é medida de novo em produção pela metodologia do B-33, com p95 fim a fim abaixo de 1 s
   - [ ] Ordem na página: principal, por jogo, por interesse, em breve; o motivo só cita etiquetas se elas entrarem no vetor
   - [ ] Vizinhos por requisição com os vetores tipados do B-76; p95 fim a fim abaixo de 1 s em produção
 - [ ] **Congelamento do modelo de recomendação** (depois do B-79): nenhuma fonte de dados nova e nenhuma regra nova de prateleira até a defesa; o que surgir vira calibração do B-37 ou Fase B — decidido em 05/11/2026
@@ -163,6 +166,7 @@ Entrega: todos os P0 prontos; pesos calibrados; **congelamento**.
 - [ ] **B-29** (P, E4) Página de perfil (avaliações e listas) e avatar com as iniciais do nome no perfil e no cabeçalho
 - [ ] **B-37** (M, E5) Script de avaliação offline + calibração dos pesos (depois do B-69)
   - [ ] No modo Descobertas, 62% dos itens recebem "Pouco conhecido" (medição do B-32); verificar na calibração se o λ de 0,3 está dominando a afinidade (levantado no B-35). Na conferência em produção do B-35, 18 de 20 itens (90%) saíram com a marca, e só 2 jogos eram comuns às listas do Equilibrado e do Descobertas: indício de que o λ de 0,3 está dominando a afinidade
+  - [ ] Calibrar o limite de frequência das prateleiras (10%, 15% e 20% do catálogo), medindo o C1 (RPG com terror), o C5 (perfis coerentes) e a especificidade das prateleiras; Terror Psicológico (10,3%) está logo acima do limite atual (levantado no B-77)
   - [ ] Métrica "cobertura dos interesses do perfil": fração dos gêneros e temas positivos do perfil presentes no top-20; comparar a lista única atual com a lista principal intercalada do B-71, em todas as métricas
   - [ ] Preferências e fatias de bloco na escolha dos interesses (levantado no B-71): cada preferência da partida a frio soma β = 1 direto na componente dela, contra no máximo `w · 0,4` de um jogo, e as fatias 40/30/30 puxam os gêneros à frente dos temas no `u_k`. Com a regra de cobertura, o `u_k` só decide empates, e a relação que pesa é outra: a preferência entra como item de peso β contra o `w` de cada jogo (de 0,5 a 5), o que decide quanto ela vale nas cotas da lista principal; essa relação também é calibração do B-37
   - [ ] Variante "estilos no vetor" (caminho b do B-73): os estilos no lugar das palavras-chave agrupadas, com o IDF recalculado; entra só se melhorar o acerto@10, o mesmo critério do B-62 e do B-63 (registrado no B-74)
@@ -177,6 +181,7 @@ Entrega: **M3**: critérios de prontidão atendidos.
 - [ ] **B-44** (G, E8) Teste de usabilidade com 8–12 jogadores
   - [ ] Observar se os jogadores reconhecem os jogos só pela capa nas fileiras da visão geral no celular, onde não há o `title` ao passar o mouse (ajuste de design do B-72, 05/11/2026)
   - [ ] Observar se sentem falta dos selos "Em breve" e "Pouco conhecido" e do motivo nas fileiras de capas; a página do "ver mais" continua com os cartões completos, os selos e o motivo
+  - [ ] Observar se o jogador percorre a visão geral até o fim, com até 10 seções (B-79)
 - [ ] **B-45** (M, E7) Correções priorizadas a partir do teste de usabilidade
 - [ ] **B-41** (P, E6) Contingência local: dump do banco + restauração no PostgreSQL embutido
 - [ ] **B-42** (P, E7) Revisão final do Swagger (exemplos e erros em todos os endpoints P0)
