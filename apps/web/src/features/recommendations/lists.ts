@@ -14,7 +14,7 @@ const FIXED_SEGMENTS = new Map([
 const INTEREST_PREFIXES = new Map([
   ['genre', 'genero'],
   ['theme', 'tema'],
-  ['style', 'estilo'],
+  ['tag', 'etiqueta'],
 ]);
 
 const invert = (map: Map<string, string>) => new Map([...map].map(([key, value]) => [value, key]));

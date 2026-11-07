@@ -84,13 +84,15 @@ describe('Respostas das recomendações', () => {
     expect(RecommendationOverviewSchema.safeParse(overview).success).toBe(true);
   });
 
-  it('aceita a prateleira de um estilo curado', () => {
-    const style = { type: 'STYLE', slug: 'roguelike', name: 'Roguelike' };
-    const overview = overviewWith([
-      { key: 'style:roguelike', kind: 'interest', feature: style, items, hasMore: false },
-    ]);
+  it('aceita a prateleira de uma etiqueta e recusa a de estilo, que saiu no B-78', () => {
+    const tag = { type: 'TAG', slug: 'roguelike', name: 'Roguelike' };
+    const valid = (key: string, feature: object) =>
+      RecommendationOverviewSchema.safeParse(
+        overviewWith([{ key, kind: 'interest', feature, items, hasMore: false }]),
+      ).success;
 
-    expect(RecommendationOverviewSchema.safeParse(overview).success).toBe(true);
+    expect(valid('tag:roguelike', tag)).toBe(true);
+    expect(valid('style:roguelike', { ...tag, type: 'STYLE' })).toBe(false);
   });
 
   it('recusa prateleira de interesse sem atributo ou com chave fora do formato', () => {

@@ -5,13 +5,13 @@ import {
   type OnApplicationBootstrap,
   type OnModuleDestroy,
 } from '@nestjs/common';
-import type { StylesConfig } from '../styles/styles';
+import type { TagVocabulary } from '../tags/tags';
 import { buildContentIndex, type ContentIndex } from './content-index';
 import { ContentIndexRepository } from './content-index.repository';
 import type { TfidfConfig } from './tfidf';
 
 export const TFIDF_CONFIG = Symbol('TFIDF_CONFIG');
-export const STYLES_CONFIG = Symbol('STYLES_CONFIG');
+export const TAG_VOCABULARY = Symbol('TAG_VOCABULARY');
 
 export interface LoadedIndex {
   index: ContentIndex;
@@ -36,12 +36,17 @@ export class ContentIndexService implements OnApplicationBootstrap, OnModuleDest
   private failed = false;
   private closing = false;
   private cancelRetry: (() => void) | null = null;
+  private readonly shelfTagIds: ReadonlySet<number>;
 
   constructor(
     private readonly repository: ContentIndexRepository,
     @Inject(TFIDF_CONFIG) private readonly config: TfidfConfig,
-    @Inject(STYLES_CONFIG) private readonly stylesConfig: StylesConfig,
-  ) {}
+    @Inject(TAG_VOCABULARY) vocabulary: TagVocabulary,
+  ) {
+    this.shelfTagIds = new Set(
+      vocabulary.tags.filter((t) => t.accepted && t.shelf).map((t) => t.id),
+    );
+  }
 
   // A carga roda depois que a API começa a escutar: o health check do Render responde em até
   // 5 s mesmo com o banco lento, e uma falha deixa a API no ar com o índice em "failed".
@@ -123,16 +128,15 @@ export class ContentIndexService implements OnApplicationBootstrap, OnModuleDest
     const start = Date.now();
     const before = process.memoryUsage();
     try {
-      const { styles } = this.stylesConfig;
-      const rows = await this.repository.loadRows(styles.flatMap(({ keywords }) => keywords));
+      const rows = await this.repository.loadRows();
       const transactionMs = Date.now() - start;
-      const index = buildContentIndex(rows, this.config, styles);
+      const index = buildContentIndex(rows, this.config, this.shelfTagIds);
       const after = process.memoryUsage();
       this.current = { index, loadedAt: new Date(), durationMs: Date.now() - start };
       this.failed = false;
       this.logger.log(
         `Índice de conteúdo carregado: ${index.games.length} jogos, ` +
-          `${index.features.length} atributos, ${index.styles.length} estilos, ` +
+          `${index.features.length} atributos, ` +
           `${this.current.durationMs} ms (transação ${transactionMs} ms, ` +
           `montagem ${this.current.durationMs - transactionMs} ms); ` +
           `heap ${(after.heapUsed / MB).toFixed(1)} MB (${signedMb(after.heapUsed - before.heapUsed)}), ` +

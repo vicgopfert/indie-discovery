@@ -19,12 +19,13 @@ const feature = (type: FeatureType, igdbId: number): ContentFeature => ({
   name: `${type}-${igdbId}`,
 });
 
-// O gênero 9 só aparece em um jogo e fica abaixo do mínimo: IDF zero, fora do índice.
+// O gênero 9 só aparece em um jogo e fica abaixo do mínimo: IDF zero, fora do índice. As
+// palavras-chave não entram no vetor.
 const catalog: Record<string, ContentFeature[]> = {
-  celeste: [feature('GENRE', 1), feature('GENRE', 2), feature('THEME', 1), feature('KEYWORD', 1)],
-  hades: [feature('GENRE', 1), feature('THEME', 1), feature('KEYWORD', 1)],
-  tunic: [feature('GENRE', 2), feature('THEME', 2), feature('GENRE', 9)],
-  outer: [feature('GENRE', 1), feature('THEME', 2)],
+  celeste: [feature('GENRE', 1), feature('GENRE', 2), feature('THEME', 1), feature('TAG', 1)],
+  hades: [feature('GENRE', 1), feature('THEME', 1), feature('TAG', 1), feature('TAG', 2)],
+  tunic: [feature('GENRE', 2), feature('THEME', 2), feature('GENRE', 9), feature('TAG', 2)],
+  outer: [feature('GENRE', 1), feature('THEME', 2), feature('KEYWORD', 1), feature('KEYWORD', 2)],
   vazio: [],
 };
 
@@ -50,15 +51,13 @@ function rowsFor(games: Record<string, ContentFeature[]>): ContentIndexRows {
       featurePositions: list
         .map((f) => position.get(featureKey(f)))
         .filter((p): p is number => p !== undefined),
-      summary: '',
-      styleKeywords: [],
     })),
   };
 }
 
 describe('buildContentIndex', () => {
   const rows = rowsFor(catalog);
-  const index = buildContentIndex(rows, config, []);
+  const index = buildContentIndex(rows, config, new Set());
 
   it('refaz para cada jogo o mesmo vetor que a ingestão calcula', () => {
     const idf = computeIdf(Object.values(catalog), config);
@@ -85,6 +84,7 @@ describe('buildContentIndex', () => {
 
   it('deixa de fora o atributo com IDF zero e mantém o jogo sem atributos com vetor vazio', () => {
     expect(index.features.map((f) => f.name)).not.toContain('GENRE-9');
+    expect(index.features.map((f) => f.type)).not.toContain('KEYWORD');
     const vazio = index.games[index.positionByGameId.get('g-vazio')!]!;
     expect(vazio.weights).toHaveLength(0);
     expect(index.games).toHaveLength(5);
@@ -94,7 +94,7 @@ describe('buildContentIndex', () => {
     const withoutCeleste = buildContentIndex(
       { ...rows, games: rows.games.filter((game) => game.slug !== 'celeste') },
       config,
-      [],
+      new Set(),
     );
     const celeste = index.games[index.positionByGameId.get('g-celeste')!]!;
 
@@ -130,64 +130,16 @@ describe('buildContentIndex', () => {
   });
 });
 
-describe('buildContentIndex: estilos', () => {
+describe('buildContentIndex: prateleiras', () => {
   const rows = rowsFor(catalog);
-  const styles = [
-    {
-      slug: 'roguelike',
-      name: 'Roguelike',
-      category: 'gameplay' as const,
-      keywords: ['KEYWORD-1', 'rogue-lite'],
-      summaryTerms: ['roguelike'],
-    },
-    {
-      slug: 'cozy',
-      name: 'Aconchegante',
-      category: 'tone' as const,
-      keywords: [],
-      summaryTerms: ['cozy'],
-    },
-  ];
-  const sources: Record<string, { styleKeywords?: string[]; summary?: string }> = {
-    celeste: { styleKeywords: ['KEYWORD-1'] },
-    // rogue-lite não está no vetor (é rara), mas atribui o estilo.
-    tunic: { styleKeywords: ['rogue-lite'], summary: 'A cozy little fox.' },
-    outer: { summary: 'Not a roguelikes game.' },
-  };
-  const index = buildContentIndex(
-    { ...rows, games: rows.games.map((game) => ({ ...game, ...sources[game.slug] })) },
-    config,
-    styles,
-  );
-  const stylesOf = (slug: string) => index.games[index.positionByGameId.get(`g-${slug}`)!]!.styles;
+  const index = buildContentIndex(rows, config, new Set([1]));
+  const shelfOf = (name: string) => index.features.find((f) => f.name === name)!.shelf;
 
-  it('atribui os estilos pelas palavras-chave, mesmo fora do vetor, e pelo resumo', () => {
-    expect(stylesOf('celeste')).toEqual([0]);
-    expect(stylesOf('tunic')).toEqual([0, 1]);
-    expect(stylesOf('outer')).toEqual([]);
-    expect(stylesOf('hades')).toEqual([]);
-  });
-
-  it('guarda a frequência de cada estilo e as posições das palavras-chave dele no vetor', () => {
-    expect(index.styles.map(({ slug, documentRatio }) => [slug, documentRatio])).toEqual([
-      ['roguelike', 2 / 5],
-      ['cozy', 1 / 5],
-    ]);
-    expect(index.styles[0]!.keywordPositions.map((p) => index.features[p]!.slug)).toEqual([
-      'KEYWORD-1',
-    ]);
-    expect(index.styles[1]!.keywordPositions).toEqual([]);
-    expect([...index.styleByKeywordPosition]).toEqual([[index.styles[0]!.keywordPositions[0], 0]]);
-  });
-
-  it('atribui os estilos de um jogo fora do índice pela mesma regra', () => {
-    expect(index.stylesOf({ keywords: ['rogue-lite'], summary: 'Cozy.' })).toEqual([0, 1]);
-  });
-
-  it('sem estilos configurados, nenhum jogo tem estilo', () => {
-    expect(
-      buildContentIndex(rows, config, []).games.every((game) => game.styles.length === 0),
-    ).toBe(true);
+  it('gêneros e temas podem virar prateleira; as etiquetas, só as marcadas no vocabulário', () => {
+    expect(shelfOf('GENRE-1')).toBe(true);
+    expect(shelfOf('THEME-2')).toBe(true);
+    expect(shelfOf('TAG-1')).toBe(true);
+    expect(shelfOf('TAG-2')).toBe(false);
   });
 });
 
@@ -199,7 +151,12 @@ describe('ContentIndexService', () => {
     const service = new ContentIndexService(
       repository as unknown as ContentIndexRepository,
       config,
-      { rule: 'regra', styles: [] },
+      {
+        rule: 'regra',
+        minRelativeWeight: 0.3,
+        minRelativeWeightRationale: 'regra',
+        tags: [],
+      },
     );
     return { service, repository };
   }

@@ -32,7 +32,7 @@ import { buildContentIndex } from '../src/modules/recommendation/content-index';
 import { ContentIndexRepository } from '../src/modules/recommendation/content-index.repository';
 import { computeIdf, readTfidfConfig, tfidfVector } from '../src/modules/recommendation/tfidf';
 import { SteamStoreClient, type SteamTag } from '../src/modules/tags/steam-store.client';
-import { readTagVocabulary } from '../src/modules/tags/tags';
+import { readTagVocabulary, tagAssigner, tagFeatures } from '../src/modules/tags/tags';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { FakeIgdbServer, type ReceivedRequest } from './support/fake-igdb-server';
 import { contentIndexLoaded } from './support/content-index';
@@ -381,20 +381,42 @@ describe('Ingestão', () => {
   });
 
   // Os pesos não são gravados: a API os refaz do IDF de Feature, e precisam sair iguais aos
-  // calculados a partir dos atributos que a IGDB mandou.
-  it('grava o IDF de que a API refaz os mesmos vetores', async () => {
+  // calculados a partir dos atributos que a IGDB mandou e das etiquetas.
+  it('grava o IDF de que a API refaz os mesmos vetores, com as etiquetas', async () => {
+    const vocabulary = readTagVocabulary();
+    const assign = tagAssigner(vocabulary);
+    const toFeatures = tagFeatures(vocabulary);
+    for (const [i, raw] of accepted.slice(0, 3).entries()) {
+      catalog.steamAppIds.set(raw.id, [500 + i]);
+      catalog.steamTags.set(500 + i, [
+        { tagid: 1716, weight: 1000 },
+        { tagid: 1628, weight: 900 },
+      ]);
+    }
     await ingest.execute(NOW);
     const tfidf = readTfidfConfig();
-    const mapped = accepted.map((raw) => mapIgdbGame(igdbGameSchema.parse(raw), NOW));
+    const mapped = accepted.map((raw) => {
+      const game = mapIgdbGame(igdbGameSchema.parse(raw), NOW);
+      const { tags } = assign(
+        {
+          appids: catalog.steamAppIds.get(game.igdbId) ?? [],
+          keywords: game.features.filter((f) => f.type === FeatureType.KEYWORD).map((f) => f.slug),
+          summary: game.summary ?? '',
+        },
+        catalog.steamTags,
+      );
+      return { ...game, features: [...game.features, ...toFeatures(tags)] };
+    });
     const idf = computeIdf(
       mapped.map((game) => game.features),
       tfidf,
     );
+    expect([...idf.keys()]).toContain('TAG:1716');
 
     const index = buildContentIndex(
-      await new ContentIndexRepository(prisma).loadRows([]),
+      await new ContentIndexRepository(prisma).loadRows(),
       tfidf,
-      [],
+      new Set(),
     );
 
     expect(index.games).toHaveLength(mapped.length);

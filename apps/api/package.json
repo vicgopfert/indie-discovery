@@ -11,7 +11,6 @@
     "ingest": "node dist/ingest.js",
     "ingest:dev": "tsx src/ingest.ts",
     "collections:suggest": "tsx src/suggest-collections.ts",
-    "styles:measure": "tsx src/measure-styles.ts",
     "tags:measure": "tsx src/measure-tags.ts",
     "recommendations:snapshot": "node dist/snapshot-recommendations.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",

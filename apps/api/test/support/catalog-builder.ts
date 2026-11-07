@@ -1,5 +1,11 @@
-import { FeatureType, ReleaseStatus, StudioCountrySource } from '../../src/generated/prisma/client';
+import {
+  FeatureType,
+  ReleaseStatus,
+  StudioCountrySource,
+  TagSource,
+} from '../../src/generated/prisma/client';
 import { slugify } from '../../src/modules/ingestion/igdb/igdb.mapper';
+import { readTagVocabulary, tagSlug } from '../../src/modules/tags/tags';
 import type { PrismaService } from '../../src/prisma/prisma.service';
 
 export interface GameSpec {
@@ -7,6 +13,10 @@ export interface GameSpec {
   genres?: string[];
   themes?: string[];
   keywords?: string[];
+  // Pelo nome em inglês do vocabulário, da mais votada para a menos.
+  tags?: string[];
+  tagSource?: TagSource;
+  steamAppId?: number | null;
   summary?: string;
   status?: ReleaseStatus;
   popularity?: number;
@@ -28,6 +38,8 @@ export interface LanguageSpec {
 
 // Países e idiomas vêm do seedReferenceData, que precisa rodar antes.
 
+const vocabulary = readTagVocabulary();
+
 // Monta um catálogo pequeno e conhecido direto no banco, sem passar pela ingestão.
 export class CatalogBuilder {
   private nextIgdbId = 1;
@@ -41,6 +53,9 @@ export class CatalogBuilder {
     genres = [],
     themes = [],
     keywords = [],
+    tags = [],
+    tagSource = tags.length > 0 ? TagSource.STEAM : undefined,
+    steamAppId = null,
     summary,
     status = ReleaseStatus.RELEASED,
     popularity = 0,
@@ -56,7 +71,13 @@ export class CatalogBuilder {
       ...(await Promise.all(genres.map((genre) => this.feature(FeatureType.GENRE, genre)))),
       ...(await Promise.all(themes.map((theme) => this.feature(FeatureType.THEME, theme)))),
       ...(await Promise.all(keywords.map((keyword) => this.feature(FeatureType.KEYWORD, keyword)))),
-    ];
+    ].map((featureId) => ({ featureId }));
+    const tagLinks = await Promise.all(
+      tags.map(async (tag, i) => ({
+        featureId: await this.tag(tag),
+        rank: tagSource === TagSource.STEAM ? i + 1 : null,
+      })),
+    );
     const companies = await Promise.all(
       [...new Set([...developers, ...publishers])].map(async (company) => ({
         companyId: await this.company(company),
@@ -87,10 +108,12 @@ export class CatalogBuilder {
         storeUrl,
         studioCountryCode: country?.code ?? null,
         studioCountrySource: studioCountry?.source ?? null,
+        steamAppId,
+        tagSource: tagSource ?? null,
         criteriaVerdict: {},
         criteriaVersion: 'teste',
         syncedAt: new Date(),
-        features: { create: featureIds.map((featureId) => ({ featureId })) },
+        features: { create: [...featureIds, ...tagLinks] },
         companies: { create: companies },
         languages: { create: gameLanguages },
       },
@@ -104,6 +127,20 @@ export class CatalogBuilder {
       data: { igdbId: this.nextIgdbId++, name },
     });
     this.companyIds.set(name, id);
+    return id;
+  }
+
+  // A etiqueta como a ingestão grava: o id da Steam e o nome em português do vocabulário.
+  private async tag(englishName: string) {
+    const tag = vocabulary.tags.find((t) => t.englishName === englishName && t.accepted);
+    if (!tag) throw new Error(`Etiqueta fora do vocabulário aceito: ${englishName}`);
+    const key = `${FeatureType.TAG}:${tag.id}`;
+    const known = this.featureIds.get(key);
+    if (known) return known;
+    const { id } = await this.prisma.feature.create({
+      data: { type: FeatureType.TAG, igdbId: tag.id, name: tag.name, slug: tagSlug(tag) },
+    });
+    this.featureIds.set(key, id);
     return id;
   }
 

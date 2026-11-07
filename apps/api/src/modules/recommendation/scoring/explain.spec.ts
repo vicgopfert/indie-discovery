@@ -1,4 +1,5 @@
-import { FeatureType, ListType } from '../../../generated/prisma/client';
+import { FeatureType, ListType, ReleaseStatus } from '../../../generated/prisma/client';
+import type { IndexedFeature, IndexedGame } from '../content-index';
 import { explainer, type ScoredReason } from './explain';
 import { buildProfile, type Interaction } from './profile';
 import {
@@ -7,8 +8,8 @@ import {
   rated,
   scoringConfig,
   scoringIndex,
-  STYLED_LIBRARY,
-  styledIndex,
+  TAGGED_LIBRARY,
+  taggedIndex,
 } from './scoring.fixture';
 
 describe('explain', () => {
@@ -26,34 +27,36 @@ describe('explain', () => {
   const featureSlugs = (reason: ScoredReason | null) =>
     reason?.kind === 'features' ? reason.features.map((f) => f.slug) : reason;
 
-  it('mostra os gêneros e temas de maior contribuição, da maior para a menor', () => {
+  it('sem etiqueta a favor, mostra os gêneros e temas de maior contribuição, da maior para a menor', () => {
     expect(featureSlugs(reasonFor('dead-cells', [rated(index, 'hades', 5)]))).toEqual([
       'roguelike',
       'fantasy',
     ]);
   });
 
-  it('nunca mostra palavra-chave, mesmo quando ela é o que mais contribui', () => {
-    // Celeste e Spelunky dividem Platform e a palavra-chave pixel art.
-    expect(featureSlugs(reasonFor('spelunky', [rated(index, 'celeste', 5)]))).toEqual(['platform']);
-  });
-
-  it('sem gênero ou tema a favor, mostra o jogo da biblioteca que mais pesou', () => {
-    // Climb-only só tem a palavra-chave rock climbing, que divide com Celeste.
-    expect(reasonFor('climb-only', [rated(index, 'celeste', 5)])).toEqual({
-      kind: 'liked-game',
-      gameId: 'g-celeste',
+  it('a etiqueta que pode virar prateleira vem antes das outras etiquetas e dos gêneros', () => {
+    // Free Solo divide com Celeste a etiqueta Escalada e a visual Pixel Art.
+    expect(reasonFor('free-solo', [rated(index, 'celeste', 5)])).toEqual({
+      kind: 'features',
+      features: [{ type: FeatureType.TAG, slug: 'rock-climbing', name: 'Escalada' }],
     });
   });
 
-  it('escolhe o jogo de maior w_i · cos(v_i, v_j), não o de maior nota', () => {
-    // Free Solo tem nota menor, mas é favorito e mais parecido com Climb-only.
-    const reason = reasonFor('climb-only', [
+  it('a etiqueta sem prateleira só entra se nenhuma das primeiras contribuir, antes dos gêneros', () => {
+    // Spelunky divide com Celeste o gênero Platform e a etiqueta visual Pixel Art.
+    expect(featureSlugs(reasonFor('spelunky', [rated(index, 'celeste', 5)]))).toEqual([
+      'pixel-art',
+    ]);
+  });
+
+  it('a etiqueta com contribuição negativa não entra, e o motivo passa ao grupo seguinte', () => {
+    // A nota 1 em Climb-only, que só tem Escalada, deixa a etiqueta negativa no perfil.
+    const reason = reasonFor('free-solo', [
       rated(index, 'celeste', 5),
-      rated(index, 'free-solo', 4, [ListType.FAVORITE]),
+      rated(index, 'climb-only', 1),
     ]);
 
-    expect(reason).toEqual({ kind: 'liked-game', gameId: 'g-free-solo' });
+    expect(featureSlugs(reason)).toEqual(['pixel-art']);
   });
 
   it('só com preferências declaradas, mostra os gêneros e temas preferidos que o jogo tem', () => {
@@ -64,7 +67,7 @@ describe('explain', () => {
     ]);
   });
 
-  it('nenhum motivo é palavra-chave, em nenhum candidato', () => {
+  it('todo motivo é etiqueta, gênero ou tema, com no máximo três, em qualquer candidato', () => {
     const profiles = [
       [rated(index, 'celeste', 5)],
       [rated(index, 'dead-cells', 5), rated(index, 'climb-only', 1)],
@@ -74,47 +77,88 @@ describe('explain', () => {
       for (const game of index.games) {
         const reason = reasonFor(game.slug, interactions);
         if (reason?.kind !== 'features') continue;
-        expect(reason.features.map((f) => f.type)).not.toContain(FeatureType.KEYWORD);
+        for (const { type } of reason.features) {
+          expect([FeatureType.TAG, FeatureType.GENRE, FeatureType.THEME]).toContain(type);
+        }
         expect(reason.features.length).toBeLessThanOrEqual(3);
       }
     }
   });
 });
 
-describe('explain com estilos', () => {
-  const index = styledIndex();
+// Com as etiquetas no vetor, todo atributo dele vira motivo. O jogo curtido só aparece com um tipo
+// de atributo que não vira motivo, montado aqui à mão.
+describe('explain sem atributo que vire motivo', () => {
+  const keyword = (slug: string): IndexedFeature => ({
+    id: slug,
+    type: FeatureType.KEYWORD,
+    slug,
+    name: slug,
+    documentRatio: 0.1,
+    shelf: false,
+  });
+  const index = { features: [keyword('a'), keyword('b')] };
+  const vector = (weights: number[]) => ({
+    featurePositions: Int32Array.from(weights.keys()),
+    weights: Float64Array.from(weights),
+  });
+  const liked = (gameId: string, score: number, weights: number[], lists: ListType[] = []) => ({
+    gameId,
+    score,
+    lists,
+    vector: vector(weights),
+  });
+  const candidate: IndexedGame = {
+    id: 'g-candidate',
+    slug: 'candidate',
+    releaseStatus: ReleaseStatus.RELEASED,
+    popularityNorm: 0.5,
+    ...vector([1, 0]),
+  };
+  const reasonFor = (interactions: Interaction[]) =>
+    explainer(buildProfile(interactions, [], 2, scoringConfig), index)(candidate);
+
+  it('mostra o jogo da biblioteca que mais pesou', () => {
+    expect(reasonFor([liked('g-a', 5, [0.6, 0.8])])).toEqual({
+      kind: 'liked-game',
+      gameId: 'g-a',
+    });
+  });
+
+  it('escolhe o jogo de maior w_i · cos(v_i, v_j), não o de maior nota', () => {
+    // B tem nota menor, mas é favorito (w = 3) e mais parecido com o candidato.
+    const reason = reasonFor([
+      liked('g-a', 5, [0.6, 0.8]),
+      liked('g-b', 4, [1, 0], [ListType.FAVORITE]),
+    ]);
+
+    expect(reason).toEqual({ kind: 'liked-game', gameId: 'g-b' });
+  });
+});
+
+describe('explain com etiquetas', () => {
+  const index = taggedIndex();
   const reasonFor = (slug: string, interactions: Interaction[]) => {
     const profile = buildProfile(interactions, [], index.features.length, scoringConfig);
     const reason = explainer(profile, index)(gameOf(index, slug));
     return reason?.kind === 'features' ? reason.features : reason;
   };
-  const library = () => STYLED_LIBRARY.map((slug) => rated(index, slug, 5));
-  const style = { type: 'STYLE', slug: 'survival-horror', name: 'Terror de sobrevivência' };
+  const library = () => TAGGED_LIBRARY.map((slug) => rated(index, slug, 5));
+  const survivalHorror = {
+    type: FeatureType.TAG,
+    slug: 'survival-horror',
+    name: 'Terror de Sobrevivência',
+  };
 
-  it('o estilo entra no motivo pela contribuição das palavras-chave dele', () => {
-    // scare-a tem a palavra-chave survival-horror, que scare-1, da biblioteca, também tem. Com
-    // scare-1 sozinho no perfil, ela fica entre as três maiores contribuições.
-    expect(reasonFor('scare-a', [rated(index, 'scare-1', 5)])).toContainEqual(style);
+  it('a etiqueta entra no motivo pela contribuição dela, sem gênero nem tema junto', () => {
+    expect(reasonFor('scare-a', [rated(index, 'scare-1', 5)])).toEqual([survivalHorror]);
+    expect(reasonFor('scare-b', library())).toEqual([survivalHorror]);
   });
 
-  it('o estilo que veio só do resumo não entra no motivo: não contribuiu para a pontuação', () => {
-    const reason = reasonFor('scare-b', library());
-
-    expect(reason).not.toContainEqual(style);
-    expect(reason).toEqual(expect.arrayContaining([expect.objectContaining({ slug: 'horror' })]));
-  });
-
-  it('sem gênero ou tema a favor, o estilo pode ser o único motivo', () => {
-    // rogue-1 só tem a palavra-chave roguelite, que rogue-a também tem.
-    expect(reasonFor('rogue-1', [rated(index, 'rogue-a', 5)])).toEqual([
-      { type: 'STYLE', slug: 'roguelike', name: 'Roguelike' },
-    ]);
-  });
-
-  it('a contribuição negativa das palavras-chave tira o estilo do motivo', () => {
-    // A nota 1 em rogue-1 deixa a palavra-chave roguelite negativa no perfil.
+  it('a contribuição negativa tira a etiqueta do motivo', () => {
+    // A nota 1 em rogue-1, que só tem Roguelike, deixa a etiqueta negativa no perfil.
     const reason = reasonFor('rogue-a', [rated(index, 'quest-1', 5), rated(index, 'rogue-1', 1)]);
 
-    expect(reason).not.toContainEqual({ type: 'STYLE', slug: 'roguelike', name: 'Roguelike' });
+    expect(reason).toEqual([{ type: FeatureType.GENRE, slug: 'rpg', name: 'RPG' }]);
   });
 });

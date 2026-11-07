@@ -2,20 +2,22 @@ import { z } from 'zod';
 import { FeatureType } from '../../generated/prisma/client';
 import { RECOMMENDATION_CONFIG_FILE, readRecommendationConfig } from './recommendation-config';
 
-const FEATURE_TYPES = [FeatureType.GENRE, FeatureType.THEME, FeatureType.KEYWORD] as const;
+// As palavras-chave da IGDB saíram do vetor no B-78: as etiquetas da comunidade Steam ocupam o
+// lugar delas. Elas continuam gravadas, como evidência da reserva das etiquetas.
+const FEATURE_TYPES = [FeatureType.GENRE, FeatureType.THEME, FeatureType.TAG] as const;
 type VectorFeatureType = (typeof FEATURE_TYPES)[number];
 
 const perFeatureType = z.object({
   [FeatureType.GENRE]: z.number().positive(),
   [FeatureType.THEME]: z.number().positive(),
-  [FeatureType.KEYWORD]: z.number().positive(),
+  [FeatureType.TAG]: z.number().positive(),
 });
 
 export const tfidfConfigSchema = z.object({
   normalization: z.enum(['block', 'global']),
   normalizationRationale: z.string().min(1),
   blockShares: perFeatureType.refine(
-    (shares) => Math.abs(shares.GENRE + shares.THEME + shares.KEYWORD - 1) < 1e-9,
+    (shares) => Math.abs(shares.GENRE + shares.THEME + shares.TAG - 1) < 1e-9,
     { message: 'As fatias dos blocos precisam somar 1.' },
   ),
   blockSharesRationale: z.string().min(1),
@@ -23,9 +25,6 @@ export const tfidfConfigSchema = z.object({
   minDocumentFrequency: z.number().int().positive(),
   maxDocumentRatio: z.number().positive().max(1),
   thresholdsRationale: z.string().min(1),
-  excludedKeywordsRule: z.string().min(1),
-  excludedKeywordPatterns: z.array(z.string().min(1)),
-  excludedKeywords: z.array(z.string().min(1)),
 });
 
 export type TfidfConfig = z.infer<typeof tfidfConfigSchema>;
@@ -52,21 +51,19 @@ export function featureKey(feature: Pick<ContentFeature, 'type' | 'igdbId'>): Fe
   return `${feature.type}:${feature.igdbId}`;
 }
 
-export function excludedKeywordMatcher(config: TfidfConfig) {
-  const names = new Set(config.excludedKeywords.map((name) => name.toLowerCase()));
-  const patterns = config.excludedKeywordPatterns.map((pattern) => new RegExp(pattern, 'i'));
-  return (feature: ContentFeature) =>
-    feature.type === FeatureType.KEYWORD &&
-    (names.has(feature.name.toLowerCase()) || patterns.some((p) => p.test(feature.name)));
+function isVectorType(type: FeatureType): type is VectorFeatureType {
+  return (FEATURE_TYPES as readonly FeatureType[]).includes(type);
 }
 
-// IDF = ln(N / df), só para atributos dentro dos limites de frequência e fora da lista de
-// palavras-chave excluídas.
-export function computeIdf(catalog: readonly ContentFeature[][], config: TfidfConfig): IdfTable {
-  const isExcluded = excludedKeywordMatcher(config);
+// IDF = ln(N / df), só para os tipos do vetor e os atributos dentro dos limites de frequência. O
+// termo é binário: a etiqueta conta uma vez, qualquer que seja o peso dela na Steam.
+export function computeIdf(
+  catalog: readonly Pick<ContentFeature, 'type' | 'igdbId'>[][],
+  config: TfidfConfig,
+): IdfTable {
   const documentFrequency = new Map<FeatureKey, number>();
   for (const features of catalog) {
-    const keys = new Set(features.filter((f) => !isExcluded(f)).map(featureKey));
+    const keys = new Set(features.filter((f) => isVectorType(f.type)).map(featureKey));
     for (const key of keys) documentFrequency.set(key, (documentFrequency.get(key) ?? 0) + 1);
   }
 
@@ -82,7 +79,7 @@ export function computeIdf(catalog: readonly ContentFeature[][], config: TfidfCo
 
 // Os atributos descartados ficam fora antes de qualquer normalização. No modo "block", cada tipo é
 // normalizado separadamente e ocupa uma fatia fixa do vetor, para que o equilíbrio entre gêneros,
-// temas e palavras-chave não dependa de quantos atributos de cada tipo o jogo tem; a fatia de um
+// temas e etiquetas não dependa de quantos atributos de cada tipo o jogo tem; a fatia de um
 // tipo ausente é redistribuída entre os presentes. No modo "global", todos os atributos são
 // normalizados juntos, com o peso do tipo multiplicando o IDF. Nos dois, o vetor tem norma 1.
 export function tfidfVector(

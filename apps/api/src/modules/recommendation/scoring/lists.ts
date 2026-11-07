@@ -1,11 +1,6 @@
 import { DiscoveryMode, ReleaseStatus } from '../../../generated/prisma/client';
-import type {
-  AttributeCatalog,
-  ContentIndex,
-  DisplayedAttribute,
-  IndexedGame,
-} from '../content-index';
-import type { Interest, InterestAttribute } from './interests';
+import type { ContentIndex, DisplayedAttribute, IndexedGame } from '../content-index';
+import type { Interest } from './interests';
 import type { ScoredCandidates } from './score';
 import type { ListsConfig } from './scoring-config';
 import type { TieBreak } from './tie-break';
@@ -18,14 +13,10 @@ export const interestListKey = ({ type, slug }: DisplayedAttribute) =>
   `${type.toLowerCase()}:${slug}`;
 
 export function listAttribute(
-  attribute: InterestAttribute,
-  { features, styles }: AttributeCatalog,
+  position: number,
+  { features }: Pick<ContentIndex, 'features'>,
 ): DisplayedAttribute {
-  if (attribute.kind === 'style') {
-    const { slug, name } = styles[attribute.style]!;
-    return { type: 'STYLE', slug, name };
-  }
-  const { type, slug, name } = features[attribute.position]!;
+  const { type, slug, name } = features[position]!;
   return { type, slug, name };
 }
 
@@ -63,7 +54,7 @@ interface OrderedLists {
 // perfil inteiro: sobem primeiro os jogos que também batem com os outros gostos.
 export function buildLists(
   candidates: ScoredCandidates,
-  catalog: Pick<ContentIndex, 'games' | 'features' | 'styles'>,
+  catalog: Pick<ContentIndex, 'games' | 'features'>,
   { mode, interests, tieBreak }: ListOptions,
   config: ListsConfig,
 ): RankedList[] {
@@ -89,8 +80,8 @@ export function buildLists(
       games: byScore.upcoming,
       bySimilarity: bySimilarity?.upcoming ?? null,
     },
-    ...interests.map(({ attribute }, slot): RankedList => {
-      const label = listAttribute(attribute, catalog);
+    ...interests.map(({ position }, slot): RankedList => {
+      const label = listAttribute(position, catalog);
       return {
         key: interestListKey(label),
         kind: 'interest',
@@ -107,14 +98,12 @@ export function buildLists(
 // de um terço da montagem das listas (B-76).
 function poolsOf(
   { count, gamePositions }: ScoredCandidates,
-  { games, features, styles }: Pick<ContentIndex, 'games' | 'features' | 'styles'>,
+  { games, features }: Pick<ContentIndex, 'games' | 'features'>,
   interests: readonly Interest[],
 ): Pools {
   const featureSlot = new Int16Array(features.length).fill(-1);
-  const styleSlot = new Int16Array(styles.length).fill(-1);
-  interests.forEach(({ attribute }, slot) => {
-    if (attribute.kind === 'feature') featureSlot[attribute.position] = slot;
-    else styleSlot[attribute.style] = slot;
+  interests.forEach(({ position }, slot) => {
+    featureSlot[position] = slot;
   });
 
   const all: number[] = [];
@@ -125,10 +114,6 @@ function poolsOf(
     all.push(k);
     for (let i = 0; i < game.featurePositions.length; i++) {
       const slot = featureSlot[game.featurePositions[i]!]!;
-      if (slot >= 0) byInterest[slot]!.push(k);
-    }
-    for (const style of game.styles) {
-      const slot = styleSlot[style]!;
       if (slot >= 0) byInterest[slot]!.push(k);
     }
     if (game.releaseStatus === ReleaseStatus.UPCOMING) upcoming.push(k);

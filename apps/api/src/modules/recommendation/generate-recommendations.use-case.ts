@@ -7,7 +7,7 @@ import type {
   RecommendationShelf,
 } from '@indie/contracts';
 import { Inject, Injectable, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
-import type { DiscoveryMode } from '../../generated/prisma/client';
+import { type DiscoveryMode, FeatureType } from '../../generated/prisma/client';
 import { CatalogService } from '../catalog/catalog.service';
 import { FeatureLabels } from '../catalog/feature-labels';
 import { type ContentIndex, type DisplayedAttribute, isLabeledFeatureType } from './content-index';
@@ -171,18 +171,19 @@ export class GenerateRecommendationsUseCase {
     );
   }
 
-  // Os interesses são só gêneros, temas e estilos (pickInterests): toda prateleira deles tem nome.
+  // Os interesses são só gêneros, temas e etiquetas (pickInterests): toda prateleira deles tem nome.
   private shelf(list: RankedList, items: Recommendation[], hasMore: boolean): RecommendationShelf {
     return list.kind === 'upcoming'
       ? { key: 'upcoming', kind: 'upcoming', feature: null, items, hasMore }
       : { key: list.key, kind: 'interest', feature: this.feature(list.attribute)!, items, hasMore };
   }
 
-  // O nome do estilo já está em português no arquivo de estilos; palavra-chave não tem nome exibido.
+  // O nome da etiqueta já está em português, gravado do vocabulário; palavra-chave não tem nome
+  // exibido.
   private feature(attribute: DisplayedAttribute | null): RecommendationFeature | null {
     if (attribute === null) return null;
     const { type, slug, name } = attribute;
-    if (type === 'STYLE') return { type, slug, name };
+    if (type === FeatureType.TAG) return { type, slug, name };
     if (!isLabeledFeatureType(type)) return null;
     return { type, slug, name: this.labels.name(type, slug, name) };
   }
@@ -204,7 +205,9 @@ export class GenerateRecommendationsUseCase {
     const features = reason.features.flatMap((attribute) => {
       const feature = this.feature(attribute);
       if (feature === null) return [];
-      if (feature.type !== 'STYLE' && this.labels.isHidden(feature.type, feature.slug)) return [];
+      if (feature.type !== FeatureType.TAG && this.labels.isHidden(feature.type, feature.slug)) {
+        return [];
+      }
       return [{ slug: feature.slug, name: feature.name }];
     });
     return features.length > 0 ? { kind: 'features', features } : null;

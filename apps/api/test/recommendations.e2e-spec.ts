@@ -214,27 +214,28 @@ describe('Recomendações (GET /recommendations)', () => {
     expect((await listPage('main', '?page=2')).items).toEqual([]);
   });
 
-  it('o estilo curado vira interesse e tem "ver mais", pela palavra-chave e pelo resumo', async () => {
-    await catalog.game({ name: 'Dead Cells', genres: ['Platform'], keywords: ['roguelite'] });
+  it('a etiqueta vira interesse e tem "ver mais"', async () => {
+    await catalog.game({ name: 'Dead Cells', genres: ['Platform'], tags: ['Roguelike'] });
     await catalog.game({
       name: 'Rogue Legacy',
       genres: ['Platform'],
-      summary: 'A roguelike platformer.',
+      tags: ['Roguelike'],
+      tagSource: 'IGDB',
     });
-    await catalog.game({ name: 'Spelunky', genres: ['Platform'], keywords: ['roguelite'] });
+    await catalog.game({ name: 'Spelunky', genres: ['Platform'], tags: ['Roguelike'] });
     await prisma.feature.updateMany({ data: { idf: 1 } });
     await app.get(ContentIndexService).reload();
     await rate('dead-cells', 5);
     await rate('rogue-legacy', 5);
 
     // Plataforma, nos dois jogos, está em mais de 40% deste catálogo pequeno e não concorre.
-    const roguelike = await listPage('style:roguelike');
-    expect(roguelike.feature).toEqual({ type: 'STYLE', slug: 'roguelike', name: 'Roguelike' });
+    const roguelike = await listPage('tag:roguelike');
+    expect(roguelike.feature).toEqual({ type: 'TAG', slug: 'roguelike', name: 'Roguelike' });
     expect(roguelike.items.map(({ game }) => game.slug)).toEqual(['spelunky']);
-    // A palavra-chave roguelite, que Dead Cells também tem, contribuiu: o estilo entra no motivo.
-    expect(roguelike.items[0]!.reason).toMatchObject({
+    // A etiqueta contribuiu e pode virar prateleira: o motivo é ela, antes do gênero.
+    expect(roguelike.items[0]!.reason).toEqual({
       kind: 'features',
-      features: expect.arrayContaining([{ slug: 'roguelike', name: 'Roguelike' }]) as unknown,
+      features: [{ slug: 'roguelike', name: 'Roguelike' }],
     });
   });
 

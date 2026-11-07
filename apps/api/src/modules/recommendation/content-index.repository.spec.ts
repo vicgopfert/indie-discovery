@@ -4,11 +4,11 @@ import { ContentIndexRepository, LOAD_TRANSACTION_TIMEOUT_MS } from './content-i
 describe('ContentIndexRepository', () => {
   it('lê a carga numa transação com tempo-limite explícito e folgado', async () => {
     const transaction = jest.fn<Promise<unknown[]>, [unknown[], { timeout?: number }]>(() =>
-      Promise.resolve([[], [], []]),
+      Promise.resolve([[], []]),
     );
     const prisma = { $transaction: transaction, $queryRaw: jest.fn(() => ({})) };
 
-    await new ContentIndexRepository(prisma as unknown as PrismaService).loadRows(['roguelike']);
+    await new ContentIndexRepository(prisma as unknown as PrismaService).loadRows();
 
     expect(transaction.mock.calls[0]![1]).toMatchObject({
       isolationLevel: 'RepeatableRead',
