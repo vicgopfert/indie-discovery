@@ -55,6 +55,9 @@ describe('Índice de conteúdo', () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject({ games: 3, features: 4 });
+    const memory = response.body as { rssMb: number; heapUsedMb: number };
+    expect(memory.rssMb).toBeGreaterThan(0);
+    expect(memory.heapUsedMb).toBeGreaterThan(0);
     expect(contentIndex.index!.games.map((game) => game.slug)).toContain('tunic');
   });
 
