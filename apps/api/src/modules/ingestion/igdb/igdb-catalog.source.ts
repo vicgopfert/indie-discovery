@@ -3,13 +3,20 @@ import type { IgdbCompanyNode, IgdbScopeRecord } from '../model/igdb-records';
 import { IGDB_GAME_FIELDS } from './igdb-game.schema';
 import { IGDB_MAX_PAGE_SIZE, type IgdbClient, type IgdbRecord } from './igdb.client';
 
-// Código conferido na API da IGDB (popularity_types): "Want to Play".
+// Códigos conferidos na API da IGDB: "Want to Play" (popularity_types) e Steam
+// (external_game_sources).
 const WANT_TO_PLAY = 2;
+const STEAM_SOURCE = 1;
+// Um jogo pode ter mais de um id da Steam: 200 jogos por consulta cabem no limite de 500 linhas.
+const GAMES_PER_EXTERNAL_QUERY = 200;
 
 const companySchema = z.array(
   z.object({ id: z.number().int(), name: z.string(), parent: z.number().int().optional() }),
 );
 const popularitySchema = z.array(z.object({ game_id: z.number().int(), value: z.number() }));
+const externalGamesSchema = z.array(
+  z.object({ game: z.number().int().optional(), uid: z.string().optional() }),
+);
 const scopeSchema = z.array(
   z.object({ id: z.number().int(), genres: z.array(z.number().int()).default([]) }),
 );
@@ -54,6 +61,26 @@ export class IgdbCatalogSource {
       ),
     );
     return new Map(rows.map(({ game_id, value }) => [game_id, value]));
+  }
+
+  // Os ids da Steam de cada jogo; o uid que não é número fica de fora.
+  async steamAppIds(gameIds: Iterable<number>) {
+    const ids = [...gameIds];
+    const appids = new Map<number, number[]>();
+    for (let start = 0; start < ids.length; start += GAMES_PER_EXTERNAL_QUERY) {
+      const batch = ids.slice(start, start + GAMES_PER_EXTERNAL_QUERY);
+      const rows = externalGamesSchema.parse(
+        await this.igdb.query(
+          'external_games',
+          `fields game,uid; where game = (${batch.join(',')}) & external_game_source = ${STEAM_SOURCE}; limit ${IGDB_MAX_PAGE_SIZE};`,
+        ),
+      );
+      for (const { game, uid } of rows) {
+        if (game === undefined || !uid || !/^\d+$/.test(uid)) continue;
+        appids.set(game, [...(appids.get(game) ?? []), Number(uid)]);
+      }
+    }
+    return appids;
   }
 
   // Busca de novo, pelo id, jogos que a passada pelo conjunto candidato não guardou.

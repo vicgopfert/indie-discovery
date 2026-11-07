@@ -22,6 +22,14 @@ enum FeatureType {
   GENRE
   THEME
   KEYWORD
+  TAG
+}
+
+// De onde vieram as etiquetas do jogo: da comunidade Steam ou, sem nenhuma aceita lá, da reserva
+// pelas palavras-chave e pelo resumo da IGDB.
+enum TagSource {
+  STEAM
+  IGDB
 }
 
 enum IngestionStatus {
@@ -149,6 +157,7 @@ model Company {
   @@index([countryCode])
 }
 
+// Na etiqueta (TAG), igdbId guarda o id da etiqueta na Steam, e o nome é o do vocabulário.
 model Feature {
   id          String           @id @default(uuid()) @db.Uuid
   type        FeatureType
@@ -180,6 +189,9 @@ model Game {
   studioCountryCode   Int?
   studioCountry       Country?             @relation(fields: [studioCountryCode], references: [code])
   studioCountrySource StudioCountrySource?
+  // Não é único: uma colisão nos dados da IGDB derrubaria a gravação inteira da ingestão.
+  steamAppId          Int?
+  tagSource           TagSource?
   syncedAt            DateTime
   companies           GameCompany[]
   features            GameFeature[]
@@ -206,6 +218,8 @@ model GameCompany {
 model GameFeature {
   gameId    String  @db.Uuid
   featureId String  @db.Uuid
+  // Só nas etiquetas da Steam: 1 é a mais votada. A posição, e não o peso, que muda a cada coleta.
+  rank      Int?    @db.SmallInt
   game      Game    @relation(fields: [gameId], references: [id], onDelete: Cascade)
   feature   Feature @relation(fields: [featureId], references: [id], onDelete: Cascade)
 

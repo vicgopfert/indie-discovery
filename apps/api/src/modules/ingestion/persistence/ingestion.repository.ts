@@ -1,7 +1,9 @@
 import {
+  FeatureType,
   IngestionStatus,
   type Prisma,
   StudioCountrySource,
+  TagSource,
 } from '../../../generated/prisma/client';
 import type { PrismaService } from '../../../prisma/prisma.service';
 import type { CollectionWrite } from '../collections/collections';
@@ -10,6 +12,7 @@ import type { ReviewFlag } from '../model/review-flag';
 import type { StoredGame } from '../model/stored-game';
 import type { StudioCountry } from '../studio-country/studio-country';
 import type { FeatureKey } from '../../recommendation/tfidf';
+import type { AssignedTags } from '../../tags/tags';
 
 export interface CatalogGame {
   game: MappedGame;
@@ -17,6 +20,8 @@ export interface CatalogGame {
   popularityCount: number;
   popularityNorm: number;
   studioCountry: StudioCountry;
+  steamAppId: number | null;
+  tagSource: TagSource | null;
 }
 
 export interface OutOfCatalogGame {
@@ -99,6 +104,33 @@ export class IngestionRepository {
       select: { igdbId: true, studioCountryCode: true },
     });
     return new Map(rows.map((r) => [r.igdbId, r.studioCountryCode!]));
+  }
+
+  // As etiquetas da Steam dos jogos do catálogo, para manter quando a loja estiver fora do ar.
+  async storedSteamTags(): Promise<Map<number, AssignedTags>> {
+    const rows = await this.prisma.game.findMany({
+      where: { inCatalog: true, tagSource: TagSource.STEAM },
+      select: {
+        igdbId: true,
+        steamAppId: true,
+        features: {
+          where: { feature: { type: FeatureType.TAG } },
+          select: { rank: true, feature: { select: { igdbId: true } } },
+        },
+      },
+    });
+    return new Map(
+      rows.map(({ igdbId, steamAppId, features }) => [
+        igdbId,
+        {
+          steamAppId,
+          source: TagSource.STEAM,
+          tags: features
+            .map(({ rank, feature }) => ({ tagid: feature.igdbId, rank }))
+            .sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity)),
+        },
+      ]),
+    );
   }
 
   async storedGames(previous: PreviousRun | null) {
@@ -205,12 +237,13 @@ export class IngestionRepository {
       INSERT INTO "Game" AS g (
         "id", "igdbId", "slug", "name", "summary", "coverImageId", "firstReleaseDate",
         "releaseStatus", "popularityCount", "popularityNorm", "inCatalog", "storeUrl",
-        "studioCountryCode", "studioCountrySource", "syncedAt", "criteriaVerdict", "criteriaVersion"
+        "studioCountryCode", "studioCountrySource", "steamAppId", "tagSource", "syncedAt",
+        "criteriaVerdict", "criteriaVersion"
       )
       SELECT gen_random_uuid(), t.igdb_id, t.slug, t.name, t.summary, t.cover, t.released::date,
         t.status::"ReleaseStatus", t.raw, t.norm, true, t.store, c."code",
         CASE WHEN c."code" IS NULL THEN NULL ELSE t.country_source::"StudioCountrySource" END,
-        ${evaluatedAt}, t.verdict::jsonb, ${criteriaVersion}
+        t.steam_app_id, t.tag_source::"TagSource", ${evaluatedAt}, t.verdict::jsonb, ${criteriaVersion}
       FROM unnest(
         ${rows.map((r) => r.game.igdbId)}::int[],
         ${rows.map((r) => r.game.slug)}::text[],
@@ -224,8 +257,10 @@ export class IngestionRepository {
         ${rows.map((r) => r.game.storeUrl)}::text[],
         ${rows.map((r) => r.studioCountry.code)}::int[],
         ${rows.map((r) => r.studioCountry.source)}::text[],
+        ${rows.map((r) => r.steamAppId)}::int[],
+        ${rows.map((r) => r.tagSource)}::text[],
         ${rows.map((r) => JSON.stringify(r.verdict))}::text[]
-      ) AS t(igdb_id, slug, name, summary, cover, released, status, raw, norm, store, country, country_source, verdict)
+      ) AS t(igdb_id, slug, name, summary, cover, released, status, raw, norm, store, country, country_source, steam_app_id, tag_source, verdict)
       LEFT JOIN "Country" c ON c."code" = t.country
       ON CONFLICT ("igdbId") DO UPDATE SET
         "slug" = EXCLUDED."slug", "name" = EXCLUDED."name", "summary" = EXCLUDED."summary",
@@ -233,17 +268,20 @@ export class IngestionRepository {
         "releaseStatus" = EXCLUDED."releaseStatus", "popularityCount" = EXCLUDED."popularityCount",
         "popularityNorm" = EXCLUDED."popularityNorm", "inCatalog" = true,
         "storeUrl" = EXCLUDED."storeUrl", "studioCountryCode" = EXCLUDED."studioCountryCode",
-        "studioCountrySource" = EXCLUDED."studioCountrySource", "syncedAt" = EXCLUDED."syncedAt",
+        "studioCountrySource" = EXCLUDED."studioCountrySource", "steamAppId" = EXCLUDED."steamAppId",
+        "tagSource" = EXCLUDED."tagSource", "syncedAt" = EXCLUDED."syncedAt",
         "criteriaVerdict" = EXCLUDED."criteriaVerdict", "criteriaVersion" = EXCLUDED."criteriaVersion"
       WHERE (
         g."slug", g."name", g."summary", g."coverImageId", g."firstReleaseDate", g."releaseStatus",
         g."popularityCount", g."popularityNorm", g."inCatalog", g."storeUrl", g."studioCountryCode",
-        g."studioCountrySource", g."criteriaVerdict", g."criteriaVersion"
+        g."studioCountrySource", g."steamAppId", g."tagSource", g."criteriaVerdict",
+        g."criteriaVersion"
       ) IS DISTINCT FROM (
         EXCLUDED."slug", EXCLUDED."name", EXCLUDED."summary", EXCLUDED."coverImageId",
         EXCLUDED."firstReleaseDate", EXCLUDED."releaseStatus", EXCLUDED."popularityCount",
         EXCLUDED."popularityNorm", true, EXCLUDED."storeUrl", EXCLUDED."studioCountryCode",
-        EXCLUDED."studioCountrySource", EXCLUDED."criteriaVerdict", EXCLUDED."criteriaVersion"
+        EXCLUDED."studioCountrySource", EXCLUDED."steamAppId", EXCLUDED."tagSource",
+        EXCLUDED."criteriaVerdict", EXCLUDED."criteriaVersion"
       )`,
     );
   }
@@ -341,13 +379,18 @@ export class IngestionRepository {
                 AND t.feature_id = f."igdbId"
             )`,
           this.prisma.$executeRaw`
-          INSERT INTO "GameFeature" ("gameId", "featureId")
-          SELECT g."id", f."id"
-          FROM unnest(${gameIds}::int[], ${types}::text[], ${featureIds}::int[])
-            AS t(game_id, type, feature_id)
+          INSERT INTO "GameFeature" AS gf ("gameId", "featureId", "rank")
+          SELECT g."id", f."id", t.rank
+          FROM unnest(
+            ${gameIds}::int[],
+            ${types}::text[],
+            ${featureIds}::int[],
+            ${rows.map((r) => r.rank ?? null)}::int[]
+          ) AS t(game_id, type, feature_id, rank)
           JOIN "Game" g ON g."igdbId" = t.game_id
           JOIN "Feature" f ON f."type" = t.type::"FeatureType" AND f."igdbId" = t.feature_id
-          ON CONFLICT ("gameId", "featureId") DO NOTHING`,
+          ON CONFLICT ("gameId", "featureId") DO UPDATE SET "rank" = EXCLUDED."rank"
+          WHERE gf."rank" IS DISTINCT FROM EXCLUDED."rank"`,
         ];
       },
       GAMES_PER_LINK_STATEMENT,

@@ -14,6 +14,8 @@ export interface MappedFeature {
   igdbId: number;
   name: string;
   slug: string;
+  // Só nas etiquetas da Steam (GameFeature.rank).
+  rank?: number | null;
 }
 
 export interface MappedLanguageSupport {

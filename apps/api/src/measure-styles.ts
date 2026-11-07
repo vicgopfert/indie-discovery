@@ -2,7 +2,11 @@ import { existsSync } from 'node:fs';
 import { apiEnvSchema, parseEnv, rootEnvFile } from './config/env';
 import { FeatureType } from './generated/prisma/client';
 import { FeatureLabels } from './modules/catalog/feature-labels';
-import { buildContentIndex, type ContentIndex } from './modules/recommendation/content-index';
+import {
+  buildContentIndex,
+  type ContentIndex,
+  isLabeledFeatureType,
+} from './modules/recommendation/content-index';
 import { ContentIndexRepository } from './modules/recommendation/content-index.repository';
 import { type Interest, pickInterests } from './modules/recommendation/scoring/interests';
 import { buildProfile, type Profile } from './modules/recommendation/scoring/profile';
@@ -372,7 +376,7 @@ function tieBreaks(
   const { maxInterests, interestMaxDocumentRatio } = scoring.lists;
   const hidden = new Set<number>();
   index.features.forEach((f, p) => {
-    if (f.type !== FeatureType.KEYWORD && labels.isHidden(f.type, f.slug)) hidden.add(p);
+    if (isLabeledFeatureType(f.type) && labels.isHidden(f.type, f.slug)) hidden.add(p);
   });
   const styleRatio = new Map(
     styles.map(({ slug }) => [

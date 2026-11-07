@@ -3,6 +3,7 @@ import { FeatureType } from '../../generated/prisma/client';
 import { RECOMMENDATION_CONFIG_FILE, readRecommendationConfig } from './recommendation-config';
 
 const FEATURE_TYPES = [FeatureType.GENRE, FeatureType.THEME, FeatureType.KEYWORD] as const;
+type VectorFeatureType = (typeof FEATURE_TYPES)[number];
 
 const perFeatureType = z.object({
   [FeatureType.GENRE]: z.number().positive(),
@@ -38,7 +39,7 @@ export type IdfTable = ReadonlyMap<FeatureKey, number>;
 
 export interface TfidfVector {
   weights: ReadonlyMap<FeatureKey, number>;
-  presentBlocks: readonly FeatureType[];
+  presentBlocks: readonly VectorFeatureType[];
 }
 
 export interface ContentFeature {
@@ -109,7 +110,7 @@ export function tfidfVector(
   };
 }
 
-type WeightedBlock = { type: FeatureType; weights: Map<FeatureKey, number>; norm: number };
+type WeightedBlock = { type: VectorFeatureType; weights: Map<FeatureKey, number>; norm: number };
 
 function blockNormalized(blocks: WeightedBlock[], config: TfidfConfig) {
   const presentShare = blocks.reduce((sum, b) => sum + config.blockShares[b.type], 0);
