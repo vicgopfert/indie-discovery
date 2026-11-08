@@ -506,12 +506,25 @@ trecho em qualquer lugar do nome, sem acento: "acao" também mostra Automação 
 
 ### Em produção
 
-- **Sonda da Steam, antes do merge:** ainda não rodada. Na máquina local, a mesma sonda fez 4
-  requisições, todas com status 200, com mediana de 268 ms.
+- **Sonda da Steam, antes do merge (08/11/2026, 14:41 UTC):** a Steam respondeu ao GitHub
+  Actions. Na amostra de 200 dos 22.834 jogos do catálogo (um a cada 114), 196 tinham id da
+  Steam. As 4 requisições voltaram com status 200, sem nova tentativa, com latência mediana de
+  140 ms e máxima de 190 ms (no local, a mediana foi de 268 ms). Na amostra, 194 jogos ficaram
+  com etiquetas da Steam, 1 com a reserva e 5 sem etiqueta. O job inteiro levou 47 s e não gravou
+  nada.
   - **Decisão do autor:** com o resultado da sonda, estima-se o tempo total da ingestão em
     produção (IGDB, ids, loja e gravação), comparando a velocidade da sonda com a da carga local.
     Se a estimativa passar de 25 minutos, o merge espera e as opções voltam ao autor; o workflow
     tem limite de 30 minutos.
+  - **Estimativa:** de 18 a 20 minutos. A base foi a última ingestão em produção (02/11, 7 min de
+    workflow e gravação de 17 s), mais cerca de 1 min para os ids, 7,5 min para a loja e até 2 min a
+    mais na gravação. A loja é limitada a 1 requisição por segundo, e a sonda confirmou esse ritmo
+    (4 requisições em 3,1 s).
+- **Primeira ingestão em produção (08/11/2026):** o workflow levou 12 min 26 s, abaixo da
+  estimativa, e o passo da ingestão, 11 min 43 s. Os ids da Steam saíram em 29 s (22.058 jogos), e
+  as etiquetas da loja, em 452 s (21.912 ids); a gravação levou 23 s. Do catálogo de 23.085 jogos,
+  21.721 (94,1%) ficaram com etiquetas da Steam, 493 com a reserva e 871 sem etiqueta. O log não
+  teve nenhum aviso nem nova tentativa.
 - **RSS da API** (condição do autor no B-77): o maior RSS entre a carga e três recargas precisa
   ficar abaixo de 450 MB; se passar, a decisão do vetor é revista. A medida vem na resposta da
   recarga do índice (`rssMb` e `heapUsedMb`) e no log da carga, e é tomada depois do merge e da
@@ -522,3 +535,35 @@ trecho em qualquer lugar do nome, sem acento: "acao" também mostra Automação 
   - **Alternativa não aplicada:** se o critério falhar em produção, uma opção é fixar o limite de
     heap do Node no Render (`--max-old-space-size`), que no local manteve o RSS em até 317 MB
     com o limite de 256 MB. Ela só seria adotada por decisão do autor, depois da medição.
+  - **Resultado (08/11/2026): critério atendido.** O RSS chegou a no máximo 216,7 MB, abaixo
+    também da linha de base da `main`. As etiquetas ficam no vetor.
+
+    | Medida (log da carga) | `main`, antes do merge | B-78, depois da ingestão |
+    | --- | --- | --- |
+    | Carga do reinício | 187,9 MB (13,8 s) | 165,7 MB (11,9 s) |
+    | 1ª recarga | 225,2 MB (8,6 s) | 191,9 MB (7,6 s) |
+    | 2ª recarga | 231,6 MB (9,1 s) | 215,8 MB (5,1 s) |
+    | 3ª recarga | 253,0 MB (8,1 s) | 216,7 MB (5,4 s) |
+    | Atributos no índice | 2.690 | 399 |
+
+    - Em produção, com 512 MB, o Node coleta mais cedo que na máquina local: a mesma `main` chegou
+      a 465 MB no local sem limite de heap e a 253 MB em produção.
+    - O índice com etiquetas é menor e carrega mais rápido, porque a carga não lê mais os resumos
+      nem os estilos.
+    - A recarga feita pelo workflow, logo depois da ingestão, respondeu com `rssMb` de 188.
+- **Conferência no navegador em produção** (conta de teste reutilizável): 13 de 13 conferências.
+  - Ficha de Hollow Knight com 13 etiquetas e o link para a página da loja; ficha de Star Citizen com
+    a atribuição à reserva da IGDB.
+  - Filtro `?tag=metroidvania` com 811 jogos; busca por nome e filtro pelo formulário.
+  - Na conta, a prateleira "Porque você curte Roguelike", com motivos como "Roguelike de Ação,
+    Roguelike, Impiedoso", e o "ver mais" com 20 jogos.
+  - Na primeira rodada, o script leu o título provisório da página do "ver mais" antes da carga;
+    a conferência isolada mostrou o título final em 0,9 s.
+- **Neon:** o painel de uso mostrou 137,04 MB de armazenamento antes e depois da ingestão; ele não
+  tinha atualizado na hora da leitura. Pelo resumo da execução, o banco tem 134 MB
+  (`pg_database_size`), dentro do limite de 1 GB.
+  - `GameFeature`: 69 MB e 491.906 linhas.
+  - Linhas mortas: 20.061 em `Game` e 2.652 em `Feature`, de uma vez só. A primeira gravação
+    preencheu as colunas novas de todo jogo do catálogo e zerou o IDF das palavras-chave, que
+    saíram do vetor.
+  - Nas próximas execuções, só mudam as linhas que mudarem de fato.
