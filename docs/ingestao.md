@@ -98,6 +98,11 @@ A regra, o vocabulário e as decisões estão em `docs/etiquetas.md` (seções 2
   para a loja; gravação de 25 s. 21.637 jogos com etiquetas da Steam, 493 pela reserva e 871 sem
   nenhuma; o banco local foi de 110 para 133 MB, com 276.217 vínculos de etiqueta. O workflow tem
   limite de 30 min; as execuções em produção levavam de 4 a 7 min.
+- **Primeira carga em produção (08/11/2026):** o workflow levou 12 min 26 s, e a ingestão 11 min
+  43 s. Os ids saíram em 29 s (22.058 jogos), a loja em 452 s (21.912 ids) e a gravação em 23 s.
+  Do catálogo de 23.085 jogos, 21.721 ficaram com etiquetas da Steam, 493 com a reserva e 871 sem
+  etiqueta. Nenhuma nova tentativa na Steam. Antes do merge, a sonda (`modo: sonda-steam`)
+  confirmou que a loja responde ao GitHub Actions: 4 requisições, todas com status 200.
 
 ## Carência pós-lançamento
 
