@@ -1,4 +1,4 @@
-import { FeatureType, type ListType } from '../../../generated/prisma/client';
+import type { FeatureType, ListType } from '../../../generated/prisma/client';
 import type { ContentIndex, ContentVector } from '../content-index';
 import type { ScoringConfig } from './scoring-config';
 
@@ -8,25 +8,23 @@ export interface Interaction {
   lists: readonly ListType[];
   // Sem vetor, o jogo só sai dos candidatos.
   vector: ContentVector | null;
-  // Índices em ContentIndex.styles.
-  styles: readonly number[];
 }
 
 // O que está gravado na biblioteca do jogador. O jogo que saiu do catálogo continua nela, com os
-// atributos e o resumo lidos do banco.
+// atributos lidos do banco.
 export interface LibraryState {
   ratings: readonly { gameId: string; score: number }[];
   listEntries: readonly { gameId: string; listType: ListType }[];
   unindexedGames: ReadonlyMap<
     string,
-    { features: readonly { type: FeatureType; igdbId: number; slug: string }[]; summary: string }
+    { features: readonly { type: FeatureType; igdbId: number }[] }
   >;
 }
 
-// Nota e listas do mesmo jogo viram uma interação só. O jogo fora do índice tem o vetor e os
-// estilos montados com os atributos e o resumo gravados no banco.
+// Nota e listas do mesmo jogo viram uma interação só. O jogo fora do índice tem o vetor montado com
+// os atributos gravados no banco.
 export function interactionsOf(
-  index: Pick<ContentIndex, 'games' | 'positionByGameId' | 'vectorOf' | 'stylesOf'>,
+  index: Pick<ContentIndex, 'games' | 'positionByGameId' | 'vectorOf'>,
   { ratings, listEntries, unindexedGames }: LibraryState,
 ): Interaction[] {
   const byGame = new Map<string, { score: number | null; lists: ListType[] }>();
@@ -40,19 +38,9 @@ export function interactionsOf(
 
   return [...byGame].map(([gameId, { score, lists }]) => {
     const position = index.positionByGameId.get(gameId);
-    if (position !== undefined) {
-      const game = index.games[position]!;
-      return { gameId, score, lists, vector: game, styles: game.styles };
-    }
-    const { features = [], summary = '' } = unindexedGames.get(gameId) ?? {};
-    const keywords = features.filter(({ type }) => type === FeatureType.KEYWORD);
-    return {
-      gameId,
-      score,
-      lists,
-      vector: index.vectorOf(features),
-      styles: index.stylesOf({ keywords: keywords.map(({ slug }) => slug), summary }),
-    };
+    if (position !== undefined) return { gameId, score, lists, vector: index.games[position]! };
+    const { features = [] } = unindexedGames.get(gameId) ?? {};
+    return { gameId, score, lists, vector: index.vectorOf(features) };
   });
 }
 
@@ -60,7 +48,6 @@ export interface WeightedGame {
   gameId: string;
   weight: number;
   vector: ContentVector;
-  styles: readonly number[];
 }
 
 export interface Profile {
@@ -80,7 +67,7 @@ export function interactionWeight(
   return (score === null ? 0 : score - 3) + bonus;
 }
 
-// u = Σ w_i · v_i + β · Σ e_f, com e_f o vetor unitário de cada gênero ou tema preferido. A soma
+// u = Σ w_i · v_i + β · Σ e_f, com e_f o vetor unitário de cada atributo preferido. A soma
 // em ponto flutuante depende da ordem, e o banco não garante uma: soma na ordem do id do jogo.
 export function buildProfile(
   interactions: readonly Interaction[],
@@ -100,12 +87,7 @@ export function buildProfile(
     for (let i = 0; i < featurePositions.length; i++) {
       vector[featurePositions[i]!]! += weight * weights[i]!;
     }
-    games.push({
-      gameId: interaction.gameId,
-      weight,
-      vector: interaction.vector,
-      styles: interaction.styles,
-    });
+    games.push({ gameId: interaction.gameId, weight, vector: interaction.vector });
   }
   for (const position of new Set(preferencePositions)) {
     vector[position]! += config.preferenceWeight;

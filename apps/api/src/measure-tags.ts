@@ -10,7 +10,7 @@ import {
   fallbackMatcher,
   readTagVocabulary,
   relevantTags,
-  TAG_DRAFT_FILE,
+  TAG_VOCABULARY_FILE,
   type TagVocabulary,
 } from './modules/tags/tags';
 import { PrismaService } from './prisma/prisma.service';
@@ -18,7 +18,7 @@ import { PrismaService } from './prisma/prisma.service';
 // Medição das etiquetas da comunidade Steam (B-77), só leitura no banco. A coleta busca o id da
 // Steam de cada jogo do catálogo na IGDB (external_games, fonte 1) e as etiquetas na loja, e grava
 // tudo num cache fora do repositório: os termos da Web API permitem mostrar os dados aos usuários,
-// não redistribuí-los. O relatório lê o cache, o banco e o rascunho do vocabulário.
+// não redistribuí-los. O relatório lê o cache, o banco e o vocabulário.
 //
 //   tsx src/measure-tags.ts --cache <pasta> [--offline] [--skeleton <arquivo>] > relatorio.md
 
@@ -79,7 +79,7 @@ async function main() {
       writeFileSync(skeleton, JSON.stringify(tagFrequencies(games, cache), null, 2));
       console.error(`Lista de etiquetas gravada em ${skeleton}`);
     }
-    const vocabulary = existsSync(TAG_DRAFT_FILE) ? readTagVocabulary() : null;
+    const vocabulary = existsSync(TAG_VOCABULARY_FILE) ? readTagVocabulary() : null;
     console.log(report(games, cache, vocabulary).join('\n'));
   } finally {
     await prisma.$disconnect();
@@ -192,7 +192,7 @@ function report(
 
   out.push('# Medição das etiquetas da comunidade Steam (B-77)', '');
   out.push(
-    `Catálogo do banco local: ${total} jogos com inCatalog. Coleta em ${cache.fetchedAt.slice(0, 10)}. Vocabulário: ${vocabulary ? `${accepted!.size} etiquetas aceitas de ${vocabulary.tags.length}` : 'ainda sem rascunho (todas as etiquetas contam)'}.`,
+    `Catálogo do banco local: ${total} jogos com inCatalog. Coleta em ${cache.fetchedAt.slice(0, 10)}. Vocabulário: ${vocabulary ? `${accepted!.size} etiquetas aceitas de ${vocabulary.tags.length}` : 'sem vocabulário (todas as etiquetas contam)'}.`,
     '',
   );
 

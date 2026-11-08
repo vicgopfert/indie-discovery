@@ -12,6 +12,8 @@ import { IngestionRepository } from './persistence/ingestion.repository';
 import { RunIngestionUseCase } from './run-ingestion.use-case';
 import { WikidataCountrySource } from './wikidata/wikidata-country.source';
 import { readTfidfConfig } from '../recommendation/tfidf';
+import { SteamStoreClient } from '../tags/steam-store.client';
+import { readTagVocabulary } from '../tags/tags';
 
 @Module({
   providers: [
@@ -35,6 +37,7 @@ import { readTfidfConfig } from '../recommendation/tfidf';
         return new RunIngestionUseCase(
           new IgdbCatalogSource(igdb, ingestion),
           new WikidataCountrySource(),
+          new SteamStoreClient(),
           new IngestionRepository(prisma),
           {
             criteria,
@@ -42,6 +45,7 @@ import { readTfidfConfig } from '../recommendation/tfidf';
             tfidf: readTfidfConfig(),
             ingestion,
             collections: readCollectionsConfig(),
+            tags: readTagVocabulary(),
           },
         );
       },

@@ -25,9 +25,9 @@ import {
   gameOf,
   scoringConfig,
   scoringIndex,
-  STYLED_LIBRARY,
-  styledGameOf,
-  styledIndex,
+  TAGGED_LIBRARY,
+  taggedGameOf,
+  taggedIndex,
   TASTE_LIBRARY,
   tasteIndex,
 } from './scoring/scoring.fixture';
@@ -65,7 +65,7 @@ class FakeRepository implements Pick<RecommendationRepository, 'findUserState' |
       unindexedGames: new Map(
         unindexed.map((id) => [
           id,
-          this.unindexedSources.get(id) ?? { features: featuresOf(slugOf(id)), summary: '' },
+          this.unindexedSources.get(id) ?? { features: featuresOf(slugOf(id)) },
         ]),
       ),
     });
@@ -209,14 +209,12 @@ describe('GenerateRecommendationsUseCase', () => {
             score: 4,
             lists: [ListType.FAVORITE],
             vector: gameOf(index, 'celeste'),
-            styles: [],
           },
           {
             gameId: gameId('hades'),
             score: null,
             lists: [ListType.WANT_TO_PLAY],
             vector: gameOf(index, 'hades'),
-            styles: [],
           },
         ],
         preferencePositions: [],
@@ -240,7 +238,7 @@ describe('GenerateRecommendationsUseCase', () => {
     expect(outOfIndex).toEqual(inIndex);
   });
 
-  it('o motivo pode citar o jogo da biblioteca que saiu do catálogo, marcado', async () => {
+  it('o jogo da biblioteca que saiu do catálogo ainda explica pelas etiquetas dele', async () => {
     rate('celeste', 5);
     repository.outOfCatalog.add('celeste');
 
@@ -248,8 +246,8 @@ describe('GenerateRecommendationsUseCase', () => {
     const climbOnly = result.main.items.find(({ game }) => game.slug === 'climb-only');
 
     expect(climbOnly?.reason).toEqual({
-      kind: 'liked-game',
-      game: { slug: 'celeste', name: 'celeste', inCatalog: false },
+      kind: 'features',
+      features: [{ slug: 'rock-climbing', name: 'Escalada' }],
     });
   });
 
@@ -326,32 +324,31 @@ describe('GenerateRecommendationsUseCase', () => {
     });
   });
 
-  describe('com estilos', () => {
-    const style = { type: 'STYLE', slug: 'survival-horror', name: 'Terror de sobrevivência' };
+  describe('com etiquetas', () => {
+    const tag = { type: 'TAG', slug: 'survival-horror', name: 'Terror de Sobrevivência' };
 
     beforeEach(() => {
-      for (const slug of STYLED_LIBRARY) rate(slug, 5);
+      for (const slug of TAGGED_LIBRARY) rate(slug, 5);
     });
 
-    it('a prateleira do estilo traz o nome do arquivo de estilos, e o "ver mais" também', async () => {
-      const page = await pageOf('style:survival-horror', 1, styledIndex());
+    it('a prateleira da etiqueta traz o nome gravado do vocabulário, e o "ver mais" também', async () => {
+      const page = await pageOf('tag:survival-horror', 1, taggedIndex());
 
-      expect(page).toMatchObject({ key: 'style:survival-horror', feature: style });
+      expect(page).toMatchObject({ key: 'tag:survival-horror', feature: tag });
       expect(page.items.map(({ game }) => game.slug).sort()).toEqual(['scare-a', 'scare-b']);
     });
 
-    it('o jogo da biblioteca fora do catálogo também recebe estilos, pelas palavras-chave e pelo resumo', async () => {
-      // scare-2 só tem o estilo pelo resumo; sem ele, o estilo cobriria só scare-1 e perderia
-      // para Terror, que também está em scare-2.
-      repository.unindexedSources.set(gameId('scare-2'), styledGameOf('scare-2'));
-      const index = styledIndex({ without: ['scare-2'] });
+    it('o jogo da biblioteca fora do catálogo conta com as etiquetas gravadas', async () => {
+      // Sem as etiquetas de scare-2, a etiqueta cobriria só scare-1 e perderia para Terror, que
+      // também está em scare-2.
+      repository.unindexedSources.set(gameId('scare-2'), taggedGameOf('scare-2'));
+      const index = taggedIndex({ without: ['scare-2'] });
 
-      expect((await pageOf('style:survival-horror', 1, index)).feature).toEqual(style);
+      expect((await pageOf('tag:survival-horror', 1, index)).feature).toEqual(tag);
       repository.unindexedSources.set(gameId('scare-2'), {
-        ...styledGameOf('scare-2'),
-        summary: '',
+        features: taggedGameOf('scare-2').features.filter(({ type }) => type !== 'TAG'),
       });
-      await expect(pageOf('style:survival-horror', 1, index)).rejects.toThrow(
+      await expect(pageOf('tag:survival-horror', 1, index)).rejects.toThrow(
         new NotFoundException(LIST_NOT_FOUND),
       );
     });

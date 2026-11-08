@@ -53,6 +53,12 @@ const GAME_DETAIL_EXAMPLE = {
   ...GAME_PAGE_EXAMPLE.items[0],
   summary: 'Ajude Madeline a sobreviver aos seus demônios interiores na montanha Celeste.',
   themes: [{ slug: 'action', name: 'Ação' }],
+  tags: [
+    { slug: 'precision-platformer', name: 'Plataforma de Precisão' },
+    { slug: 'difficult', name: 'Impiedoso' },
+  ],
+  tagSource: 'STEAM',
+  steamAppId: 504230,
   developers: ['Maddy Makes Games'],
   publishers: ['Maddy Makes Games'],
   studioCountry: { code: 'CA', name: 'Canadá', source: 'IGDB' },
@@ -91,6 +97,12 @@ export class CatalogController {
     required: false,
     isArray: true,
     description: `Slug do tema; repetido, o jogo precisa ter todos (até ${GAMES_FILTER_MAX_VALUES})`,
+  })
+  @ApiQuery({
+    name: 'tag',
+    required: false,
+    isArray: true,
+    description: `Slug da etiqueta da comunidade Steam; repetido, o jogo precisa ter todas (até ${GAMES_FILTER_MAX_VALUES})`,
   })
   @ApiQuery({ name: 'status', required: false, enum: RELEASE_STATUS_FILTERS })
   @ApiQuery({
@@ -133,7 +145,7 @@ export class CatalogController {
   @ApiParam({ name: 'slug', description: 'Slug do jogo, o mesmo da IGDB' })
   @ApiOkResponse({
     description:
-      'Ficha do jogo com empresas, país do estúdio e a origem desse dado, idiomas e link oficial',
+      'Ficha do jogo com empresas, país do estúdio e a origem desse dado, etiquetas da comunidade Steam e a origem delas, idiomas e link oficial',
     schema: { example: GAME_DETAIL_EXAMPLE },
   })
   @ApiNotFoundResponse({ description: 'Slug inexistente ou jogo fora do catálogo' })
@@ -145,10 +157,11 @@ export class CatalogController {
   @Get('features')
   @ApiQuery({ name: 'type', enum: FEATURE_TYPE_FILTERS })
   @ApiOkResponse({
-    description: 'Opções de filtro com o nome em português e quantos jogos do catálogo as têm',
+    description:
+      'Opções de filtro (gênero, tema ou etiqueta) com o nome em português e quantos jogos do catálogo as têm',
     schema: { example: [{ slug: 'puzzle', name: 'Quebra-cabeça', gameCount: 3607 }] },
   })
-  @ApiBadRequestResponse({ description: 'Tipo ausente ou diferente de genre e theme' })
+  @ApiBadRequestResponse({ description: 'Tipo ausente ou diferente de genre, theme e tag' })
   listFeatures(@Query({ schema: FeatureQuerySchema }) query: FeatureQuery) {
     return this.catalog.listFeatures(query);
   }

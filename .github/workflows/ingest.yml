@@ -1,8 +1,18 @@
 name: Ingestão
 
 # Execução manual da ingestão no banco de produção (B-14). O agendamento é o B-54.
+# O modo sonda-steam (B-78) só confere, de qualquer branch, se a rota de etiquetas da Steam
+# responde ao Actions, numa amostra do catálogo, sem gravar nada.
 on:
   workflow_dispatch:
+    inputs:
+      modo:
+        description: ingestao grava o catálogo; sonda-steam só lê, sem gravar nada
+        type: choice
+        options:
+          - ingestao
+          - sonda-steam
+        default: ingestao
 
 permissions:
   contents: read
@@ -16,7 +26,7 @@ concurrency:
 jobs:
   ingest:
     name: Ingestão do catálogo no banco de produção
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && inputs.modo != 'sonda-steam'
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -103,6 +113,13 @@ jobs:
                 count(*) AS jogos, round(100.0 * count(*) / sum(count(*)) OVER (), 1) AS percentual
               FROM \"Game\" WHERE \"inCatalog\" GROUP BY 1 ORDER BY 2 DESC"
             echo '```'
+            echo '## Etiquetas'
+            echo '```'
+            psql "$PSQL_URL" -X -q -c "
+              SELECT coalesce(\"tagSource\"::text, 'sem etiqueta') AS origem,
+                count(*) AS jogos, round(100.0 * count(*) / sum(count(*)) OVER (), 1) AS percentual
+              FROM \"Game\" WHERE \"inCatalog\" GROUP BY 1 ORDER BY 2 DESC"
+            echo '```'
             echo '## Coleções'
             echo '```'
             psql "$PSQL_URL" -X -q -c "
@@ -131,3 +148,39 @@ jobs:
               FROM pg_stat_user_tables ORDER BY pg_total_relation_size(relid) DESC LIMIT 8"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
+
+  steam-probe:
+    name: Sonda da Steam (só leitura)
+    if: inputs.modo == 'sonda-steam'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    # Só lê o catálogo gravado, para escolher a amostra: nada é gravado no banco.
+    env:
+      DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+      IGDB_CLIENT_ID: ${{ secrets.IGDB_CLIENT_ID }}
+      IGDB_CLIENT_SECRET: ${{ secrets.IGDB_CLIENT_SECRET }}
+      NODE_ENV: production
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+        with:
+          cache: true
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - name: Instalação
+        run: pnpm install --frozen-lockfile
+
+      - name: Build da API
+        run: pnpm --filter @indie/api run build
+
+      # Com pipefail (shell bash), a falha da sonda falha o passo mesmo passando pelo tee.
+      - name: Sonda
+        shell: bash
+        working-directory: apps/api
+        run: node dist/probe-steam.js --games 200 | tee -a "$GITHUB_STEP_SUMMARY"

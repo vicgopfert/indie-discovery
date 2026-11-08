@@ -12,12 +12,18 @@ import type {
   GameSummary,
 } from '@indie/contracts';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { CatalogRepository, type GameDetailRow, type GameSummaryRow } from './catalog.repository';
+import {
+  CatalogRepository,
+  type FilterFeatureType,
+  type GameDetailRow,
+  type GameSummaryRow,
+} from './catalog.repository';
 import { FeatureLabels, type LabeledFeatureType } from './feature-labels';
 
-const FEATURE_TYPES: Record<FeatureQuery['type'], LabeledFeatureType> = {
+const FEATURE_TYPES: Record<FeatureQuery['type'], FilterFeatureType> = {
   genre: 'GENRE',
   theme: 'THEME',
+  tag: 'TAG',
 };
 
 // Mínimo de jogos para um país virar opção de filtro (F-06); injetado para o e2e testar o limite.
@@ -46,6 +52,14 @@ export class CatalogService {
     const features = game.features.map(({ feature }) => feature);
     const ofType = (type: LabeledFeatureType) =>
       features.filter((feature) => feature.type === type);
+    const tags = game.features
+      .filter(({ feature }) => feature.type === 'TAG')
+      .sort(
+        (a, b) =>
+          (a.rank ?? Infinity) - (b.rank ?? Infinity) ||
+          a.feature.name.localeCompare(b.feature.name, 'pt-BR'),
+      )
+      .map(({ feature: { slug, name } }) => ({ slug, name }));
     const companies = (role: 'isDeveloper' | 'isPublisher') =>
       sortedNames(game.companies.filter((link) => link[role]).map(({ company }) => company.name));
 
@@ -54,6 +68,9 @@ export class CatalogService {
       genres: this.labeled('GENRE', ofType('GENRE')),
       summary: game.summary,
       themes: this.labeled('THEME', ofType('THEME')),
+      tags,
+      tagSource: game.tagSource,
+      steamAppId: game.steamAppId,
       developers: companies('isDeveloper'),
       publishers: companies('isPublisher'),
       studioCountry: toStudioCountry(game),
@@ -68,9 +85,11 @@ export class CatalogService {
     };
   }
 
+  // A etiqueta já vem em português, gravada do vocabulário.
   async listFeatures({ type }: FeatureQuery): Promise<FeatureOption[]> {
     const featureType = FEATURE_TYPES[type];
     const features = await this.catalog.countGamesByFeature(featureType);
+    if (featureType === 'TAG') return features.sort(byName);
     return features
       .filter(({ slug }) => !this.labels.isHidden(featureType, slug))
       .map((feature) => ({

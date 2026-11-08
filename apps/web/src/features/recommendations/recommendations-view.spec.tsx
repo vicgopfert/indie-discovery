@@ -77,9 +77,9 @@ describe('RecommendationsView', () => {
             hasMore: true,
           },
           {
-            key: 'style:roguelike',
+            key: 'tag:roguelike',
             kind: 'interest',
-            feature: { type: 'STYLE', slug: 'roguelike', name: 'Roguelike' },
+            feature: { type: 'TAG', slug: 'roguelike', name: 'Roguelike' },
             items: [game('dead-cells', 'Dead Cells')],
             hasMore: true,
           },
@@ -110,7 +110,7 @@ describe('RecommendationsView', () => {
     ).toEqual([
       '/recomendacoes/para-voce',
       '/recomendacoes/tema-horror',
-      '/recomendacoes/estilo-roguelike',
+      '/recomendacoes/etiqueta-roguelike',
     ]);
     expect(screen.getByRole('link', { name: 'Ver mais: Porque você curte Terror' })).toBeVisible();
   });

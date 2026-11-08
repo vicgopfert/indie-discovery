@@ -10,8 +10,8 @@ import {
   featurePosition,
   rated,
   scoringConfig,
-  STYLED_LIBRARY,
-  styledIndex,
+  TAGGED_LIBRARY,
+  taggedIndex,
   TASTE_LIBRARY,
   tasteIndex,
 } from './scoring.fixture';
@@ -188,16 +188,16 @@ describe('buildLists', () => {
   });
 });
 
-describe('buildLists com estilos', () => {
-  const index = styledIndex();
+describe('buildLists com etiquetas', () => {
+  const index = taggedIndex();
   const profile = buildProfile(
-    STYLED_LIBRARY.map((slug) => rated(index, slug, 5)),
+    TAGGED_LIBRARY.map((slug) => rated(index, slug, 5)),
     [],
     index.features.length,
     scoringConfig,
   );
   const mode = DiscoveryMode.BALANCED;
-  const excludedGameIds = new Set(STYLED_LIBRARY.map((slug) => `g-${slug}`));
+  const excludedGameIds = new Set(TAGGED_LIBRARY.map((slug) => `g-${slug}`));
   const built = buildLists(
     scoreCandidates(index, profile, { mode, excludedGameIds }, scoringConfig),
     index,
@@ -208,19 +208,18 @@ describe('buildLists com estilos', () => {
     },
     scoringConfig.lists,
   );
-  const shelf = built.find(({ key }) => key === 'style:survival-horror')!;
+  const shelf = built.find(({ key }) => key === 'tag:survival-horror')!;
 
-  it('a prateleira do estilo traz o atributo e os candidatos que têm o estilo, também pelo resumo', () => {
+  it('a prateleira da etiqueta traz o atributo e os candidatos que têm a etiqueta', () => {
     expect(shelf.attribute).toEqual({
-      type: 'STYLE',
+      type: 'TAG',
       slug: 'survival-horror',
-      name: 'Terror de sobrevivência',
+      name: 'Terror de Sobrevivência',
     });
-    // scare-a tem a palavra-chave; scare-b, só o termo no resumo.
     expect(shelf.games.map(({ slug }) => slug).sort()).toEqual(['scare-a', 'scare-b']);
   });
 
-  it('a principal intercala o estilo pela cota dele', () => {
+  it('a principal intercala a etiqueta pela cota dela', () => {
     const main = built.find(({ key }) => key === 'main')!.games.map(({ slug }) => slug);
 
     expect(main[2]).toBe(shelf.games[0]!.slug);

@@ -12,7 +12,7 @@ import type { App } from 'supertest/types';
 import { seedReferenceData } from '../prisma/seed/reference-data';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/configure-app';
-import { ReleaseStatus, StudioCountrySource } from '../src/generated/prisma/client';
+import { ReleaseStatus, StudioCountrySource, TagSource } from '../src/generated/prisma/client';
 import { COUNTRY_OPTION_MIN_GAMES } from '../src/modules/catalog/catalog.service';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { CatalogBuilder } from './support/catalog-builder';
@@ -48,6 +48,8 @@ describe('Catálogo', () => {
         popularity: 0.9,
         releasedOn: '2018-01-25',
         storeUrl: 'https://www.celestegame.com',
+        tags: ['Precision Platformer', 'Difficult'],
+        steamAppId: 504230,
         studioCountry: { alpha2: 'CA', source: StudioCountrySource.IGDB },
         developers: ['Maddy Makes Games', 'Extremely OK Games'],
         publishers: ['Maddy Makes Games'],
@@ -60,6 +62,7 @@ describe('Catálogo', () => {
         name: 'Hollow Knight',
         genres: ['Platform', 'Adventure', 'Indie'],
         themes: ['Action', 'Fantasy'],
+        tags: ['Metroidvania', 'Difficult'],
         popularity: 0.8,
         releasedOn: '2017-02-24',
         studioCountry: { alpha2: 'AU', source: IGDB },
@@ -76,6 +79,8 @@ describe('Catálogo', () => {
         name: 'Outer Wilds',
         genres: ['Adventure', 'Puzzle', 'Indie'],
         themes: ['Science fiction'],
+        tags: ['Space', 'Exploration'],
+        tagSource: TagSource.IGDB,
         popularity: 0.5,
         releasedOn: '2019-05-28',
         studioCountry: { alpha2: 'US', source: IGDB },
@@ -107,6 +112,7 @@ describe('Catálogo', () => {
         name: 'Jogo Rejeitado',
         genres: ['Puzzle', 'Indie'],
         themes: ['Horror'],
+        tags: ['Souls-like'],
         popularity: 1,
         inCatalog: false,
         studioCountry: { alpha2: 'CA', source: IGDB },
@@ -182,6 +188,13 @@ describe('Catálogo', () => {
 
     it('trata "%" digitado como texto, não como curinga', async () => {
       expect(await names({ q: '100%' })).toEqual(['100% Orange Juice']);
+    });
+
+    it('filtra por etiqueta; com duas, só traz jogos que têm as duas', async () => {
+      expect(await names({ tag: 'difficult' })).toEqual(['Celeste', 'Hollow Knight']);
+      expect(await names({ tag: ['difficult', 'metroidvania'] })).toEqual(['Hollow Knight']);
+      expect(await names({ tag: 'space', genre: 'puzzle' })).toEqual(['Outer Wilds']);
+      expect(await names({ tag: 'souls-like' })).toEqual([]);
     });
 
     it('com dois gêneros, só traz jogos que têm os dois', async () => {
@@ -304,6 +317,12 @@ describe('Catálogo', () => {
         ],
         summary: 'Resumo de Celeste',
         themes: [{ slug: 'action', name: 'Ação' }],
+        tags: [
+          { slug: 'precision-platformer', name: 'Plataforma de Precisão' },
+          { slug: 'difficult', name: 'Impiedoso' },
+        ],
+        tagSource: 'STEAM',
+        steamAppId: 504230,
         developers: ['Extremely OK Games', 'Maddy Makes Games'],
         publishers: ['Maddy Makes Games'],
         studioCountry: { code: 'CA', name: 'Canadá', source: 'IGDB' },
@@ -330,8 +349,24 @@ describe('Catálogo', () => {
         developers: [],
         publishers: [],
         studioCountry: null,
+        tags: [],
+        tagSource: null,
+        steamAppId: null,
         languages: [],
         officialUrl: null,
+      });
+    });
+
+    it('as etiquetas da reserva da IGDB vêm marcadas, em ordem alfabética', async () => {
+      const response = await game('outer-wilds').expect(200);
+
+      expect(GameDetailSchema.parse(response.body)).toMatchObject({
+        tags: [
+          { slug: 'space', name: 'Espacial' },
+          { slug: 'exploration', name: 'Exploração' },
+        ],
+        tagSource: 'IGDB',
+        steamAppId: null,
       });
     });
 
@@ -458,11 +493,25 @@ describe('Catálogo', () => {
       ]);
     });
 
+    it('lista as etiquetas com o nome do vocabulário e a contagem, sem as de fora do catálogo', async () => {
+      const response = await features('tag').expect(200);
+
+      expect(response.body).toEqual([
+        { slug: 'space', name: 'Espacial', gameCount: 1 },
+        { slug: 'exploration', name: 'Exploração', gameCount: 1 },
+        { slug: 'difficult', name: 'Impiedoso', gameCount: 2 },
+        { slug: 'metroidvania', name: 'Metroidvania', gameCount: 1 },
+        { slug: 'precision-platformer', name: 'Plataforma de Precisão', gameCount: 1 },
+      ]);
+    });
+
     it('recusa tipo desconhecido', async () => {
       const response = await features('keyword');
 
       expect(response.status).toBe(400);
-      expect(response.body).toMatchObject({ message: ['type: Tipo deve ser genre ou theme.'] });
+      expect(response.body).toMatchObject({
+        message: ['type: Tipo deve ser genre, theme ou tag.'],
+      });
     });
   });
 });

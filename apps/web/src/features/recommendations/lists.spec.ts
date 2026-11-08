@@ -9,7 +9,7 @@ describe('listas na URL', () => {
     ['upcoming', 'em-breve'],
     ['genre:role-playing-rpg', 'genero-role-playing-rpg'],
     ['theme:horror', 'tema-horror'],
-    ['style:bullet-hell', 'estilo-bullet-hell'],
+    ['tag:bullet-hell', 'etiqueta-bullet-hell'],
   ])('a chave %s vira o segmento %s e volta', (key, segment) => {
     expect(listSegment(key)).toBe(segment);
     expect(listKeyOf(segment)).toBe(key);
@@ -48,9 +48,9 @@ describe('listas na URL', () => {
     expect(listTitle('main', null)).toBe('Para você');
     expect(listTitle('upcoming', null)).toBe('Em breve no seu gosto');
     expect(listTitle('theme:horror', horror)).toBe('Porque você curte Terror');
-    expect(
-      listTitle('style:roguelike', { type: 'STYLE', slug: 'roguelike', name: 'Roguelike' }),
-    ).toBe('Porque você curte Roguelike');
+    expect(listTitle('tag:roguelike', { type: 'TAG', slug: 'roguelike', name: 'Roguelike' })).toBe(
+      'Porque você curte Roguelike',
+    );
     expect(listTitle('theme:horror', undefined)).toBe('Recomendações');
   });
 });

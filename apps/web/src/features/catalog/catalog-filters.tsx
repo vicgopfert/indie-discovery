@@ -2,7 +2,6 @@ import {
   type CountryOption,
   COUNTRY_UNKNOWN,
   type FeatureOption,
-  GAMES_FILTER_MAX_VALUES,
   GAMES_SEARCH_MAX_LENGTH,
   type GameSearchQuery,
 } from '@indie/contracts';
@@ -11,15 +10,15 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { type Choice, ChoiceList } from './choice-list';
 import { CATALOG_PATH, catalogHref } from './search-params';
 
 export interface CatalogFilterOptions {
   genres: FeatureOption[];
   themes: FeatureOption[];
+  tags: FeatureOption[];
   countries: CountryOption[];
 }
-
-type Choice = { value: string; label: string };
 
 const STATUS_CHOICES: Choice[] = [
   { value: '', label: 'Todas' },
@@ -76,6 +75,13 @@ export function CatalogFilters({
         selected={query.theme}
         choices={options.themes.map((theme) => ({ value: theme.slug, label: withCount(theme) }))}
       />
+      <ChoiceList
+        legend="Etiquetas"
+        name="tag"
+        selected={query.tag}
+        choices={options.tags.map((tag) => ({ value: tag.slug, label: withCount(tag) }))}
+        searchLabel="Buscar etiqueta pelo nome"
+      />
       <Select label="Situação" name="status" value={query.status} choices={STATUS_CHOICES} />
       <Select
         label="Português"
@@ -103,43 +109,6 @@ export function CatalogFilters({
         </Link>
       </div>
     </Form>
-  );
-}
-
-function ChoiceList({
-  legend,
-  name,
-  choices,
-  selected,
-}: {
-  legend: string;
-  name: string;
-  choices: Choice[];
-  selected: string[];
-}) {
-  return (
-    <details open={selected.length > 0} className="rounded-md border px-3 py-2">
-      <summary className="cursor-pointer text-sm font-medium">
-        {legend}
-        {selected.length > 0 && ` (${selected.length})`}
-      </summary>
-      <fieldset className="mt-2 max-h-64 space-y-1 overflow-y-auto">
-        <legend className="mb-1 text-xs text-muted-foreground">
-          {legend}: escolha até {GAMES_FILTER_MAX_VALUES}
-        </legend>
-        {choices.map(({ value, label }) => (
-          <label key={value} className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              name={name}
-              value={value}
-              defaultChecked={selected.includes(value)}
-            />
-            {label}
-          </label>
-        ))}
-      </fieldset>
-    </details>
   );
 }
 

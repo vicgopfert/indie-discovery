@@ -100,6 +100,32 @@ describe('GamePage', () => {
     );
   });
 
+  it('as etiquetas levam ao catálogo filtrado, com a atribuição à comunidade Steam', async () => {
+    stubGame(sampleGameDetail());
+
+    await renderPage();
+
+    expect(screen.getByRole('link', { name: 'Impiedoso' })).toHaveAttribute(
+      'href',
+      '/catalogo?tag=difficult',
+    );
+    expect(fact('Etiquetas')).toHaveTextContent(/^Plataforma de PrecisãoImpiedoso/);
+    const attribution = screen.getByRole('link', { name: 'Etiquetas da comunidade Steam' });
+    expect(attribution).toHaveAttribute('href', 'https://store.steampowered.com/app/504230');
+    expect(attribution).toHaveAttribute('target', '_blank');
+  });
+
+  it('as etiquetas da reserva dizem que vieram da IGDB, sem link para a Steam', async () => {
+    stubGame(sampleGameDetail({ tagSource: 'IGDB', steamAppId: null }));
+
+    await renderPage();
+
+    expect(fact('Etiquetas')).toHaveTextContent(
+      'Etiquetas atribuídas pelo resumo e pelas palavras-chave da IGDB',
+    );
+    expect(screen.queryByRole('link', { name: /comunidade Steam/ })).toBeNull();
+  });
+
   it('jogo em breve tem o selo e a data prevista', async () => {
     stubGame(sampleGameDetail({ releaseStatus: 'UPCOMING', firstReleaseDate: null }));
 
@@ -114,6 +140,9 @@ describe('GamePage', () => {
       sampleGameDetail({
         coverImageId: '',
         themes: [],
+        tags: [],
+        tagSource: null,
+        steamAppId: null,
         developers: [],
         publishers: [],
         studioCountry: null,
@@ -125,7 +154,7 @@ describe('GamePage', () => {
     const { container } = await renderPage();
 
     expect(container.querySelector('img')).not.toBeInTheDocument();
-    for (const term of ['Temas', 'Desenvolvimento', 'Publicação', 'País do estúdio']) {
+    for (const term of ['Temas', 'Etiquetas', 'Desenvolvimento', 'Publicação', 'País do estúdio']) {
       expect(fact(term)).toHaveTextContent('Não informado');
     }
     expect(fact('Português')).toHaveTextContent('Idiomas não informados');

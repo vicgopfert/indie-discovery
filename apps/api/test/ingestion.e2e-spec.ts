@@ -4,7 +4,12 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { seedReferenceData } from '../prisma/seed/reference-data';
 import { AppModule } from '../src/app.module';
-import { IngestionStatus, ReviewFlagKind } from '../src/generated/prisma/client';
+import {
+  FeatureType,
+  IngestionStatus,
+  ReviewFlagKind,
+  TagSource,
+} from '../src/generated/prisma/client';
 import {
   type CollectionsConfig,
   readCollectionsConfig,
@@ -26,6 +31,8 @@ import { WikidataCountrySource } from '../src/modules/ingestion/wikidata/wikidat
 import { buildContentIndex } from '../src/modules/recommendation/content-index';
 import { ContentIndexRepository } from '../src/modules/recommendation/content-index.repository';
 import { computeIdf, readTfidfConfig, tfidfVector } from '../src/modules/recommendation/tfidf';
+import { SteamStoreClient, type SteamTag } from '../src/modules/tags/steam-store.client';
+import { readTagVocabulary, tagAssigner, tagFeatures } from '../src/modules/tags/tags';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { FakeIgdbServer, type ReceivedRequest } from './support/fake-igdb-server';
 import { contentIndexLoaded } from './support/content-index';
@@ -69,6 +76,8 @@ const medianCount =
     ? sortedCounts[middle]!
     : (sortedCounts[middle - 1]! + sortedCounts[middle]!) / 2;
 
+const STEAM_ITEMS_ROUTE = '/steam/IStoreBrowseService/GetItems/v1/';
+
 const idsIn = (body: string, field: string) =>
   (new RegExp(`${field} = \\(([\\d,]+)\\)`).exec(body)?.[1] ?? '').split(',').map(Number);
 
@@ -81,9 +90,27 @@ class FakeCatalog {
   wantToPlay = new Map(accepted.map((g, i) => [g.id, wantToPlayCounts[i]! * UNIT]));
   wikidata: { igdb: string; developerCountry?: string; originCountry?: string }[] = [];
   wikidataDown = false;
+  steamAppIds = new Map<number, number[]>();
+  steamTags = new Map<number, SteamTag[]>();
+  steamDown = false;
 
   reply(request: ReceivedRequest) {
     const { endpoint, body } = request;
+    if (endpoint.startsWith(STEAM_ITEMS_ROUTE)) {
+      const input = new URL(endpoint, 'http://steam').searchParams.get('input_json')!;
+      const { ids } = JSON.parse(input) as { ids: { appid: number }[] };
+      const items = ids.map(({ appid }) => ({
+        appid,
+        success: 1,
+        tags: this.steamTags.get(appid),
+      }));
+      return { response: { store_items: items } };
+    }
+    if (endpoint === 'external_games') {
+      return idsIn(body, 'game').flatMap((game) =>
+        (this.steamAppIds.get(game) ?? []).map((appid) => ({ game, uid: String(appid) })),
+      );
+    }
     if (endpoint.startsWith('sparql')) {
       const bindings = this.wikidata.map((row) =>
         Object.fromEntries(
@@ -141,7 +168,8 @@ describe('Ingestão', () => {
     server = new FakeIgdbServer();
     const urls = await server.start();
     server.respond = (request) =>
-      catalog.wikidataDown && request.endpoint.startsWith('sparql')
+      (catalog.wikidataDown && request.endpoint.startsWith('sparql')) ||
+      (catalog.steamDown && request.endpoint.startsWith(STEAM_ITEMS_ROUTE))
         ? { status: 503 }
         : { status: 200, body: catalog.reply(request) };
     const igdb = new IgdbClient({
@@ -150,11 +178,17 @@ describe('Ingestão', () => {
       rateLimit: { requestsPerWindow: 1000, windowMs: 1000, maxConcurrent: 8 },
       maxAttempts: 1,
     });
+    const steam = new SteamStoreClient({
+      apiUrl: urls.apiUrl.replace('/v4', '/steam'),
+      rateLimit: { requestsPerWindow: 1000, windowMs: 1000, maxConcurrent: 8 },
+      maxAttempts: 1,
+    });
     const ingestion = readIngestionConfig();
     ingestWith = (overrides) =>
       new RunIngestionUseCase(
         new IgdbCatalogSource(igdb, ingestion),
         new WikidataCountrySource({ endpoint: `${urls.apiUrl}/sparql`, maxAttempts: 1 }),
+        steam,
         new IngestionRepository(prisma),
         {
           criteria: versioned,
@@ -162,6 +196,7 @@ describe('Ingestão', () => {
           tfidf: readTfidfConfig(),
           ingestion,
           collections: noCollections,
+          tags: readTagVocabulary(),
           ...overrides,
         },
       );
@@ -224,6 +259,108 @@ describe('Ingestão', () => {
     });
   });
 
+  describe('etiquetas da comunidade Steam', () => {
+    const ROGUELIKE = 1716;
+    const METROIDVANIA = 1628;
+    const ACTION = 19;
+    const INDIE = 492;
+    const [onSteam, offSteam] = accepted;
+
+    beforeEach(() => {
+      catalog.steamAppIds.set(onSteam!.id, [700, 500]);
+      catalog.steamTags.set(500, [
+        { tagid: INDIE, weight: 1000 },
+        { tagid: ROGUELIKE, weight: 900 },
+        { tagid: METROIDVANIA, weight: 400 },
+        { tagid: ACTION, weight: 200 },
+      ]);
+      const raw = catalog.games.find((g) => g.id === offSteam!.id)!;
+      raw.keywords = [...((raw.keywords as unknown[]) ?? []), { id: 990001, name: 'Metroidvania' }];
+    });
+
+    const tagsOf = async (igdbId: number) =>
+      (
+        await prisma.gameFeature.findMany({
+          where: { game: { igdbId }, feature: { type: FeatureType.TAG } },
+          select: { rank: true, feature: { select: { igdbId: true, name: true, slug: true } } },
+        })
+      ).map(({ rank, feature }) => ({ rank, ...feature }));
+
+    it('grava o id da Steam e as aceitas no peso mínimo, na ordem, e a reserva para quem não tem', async () => {
+      const result = await ingest.execute(NOW);
+
+      expect(result.status).toBe(IngestionStatus.SUCCEEDED);
+      expect(await gameRow(onSteam!.id)).toMatchObject({
+        steamAppId: 500,
+        tagSource: TagSource.STEAM,
+      });
+      expect(await tagsOf(onSteam!.id)).toEqual(
+        expect.arrayContaining([
+          { igdbId: ROGUELIKE, name: 'Roguelike', slug: 'roguelike', rank: 1 },
+          { igdbId: METROIDVANIA, name: 'Metroidvania', slug: 'metroidvania', rank: 2 },
+        ]),
+      );
+      expect(await tagsOf(onSteam!.id)).toHaveLength(2);
+      expect(await gameRow(offSteam!.id)).toMatchObject({
+        steamAppId: null,
+        tagSource: TagSource.IGDB,
+      });
+      expect(await tagsOf(offSteam!.id)).toContainEqual(
+        expect.objectContaining({ igdbId: METROIDVANIA, rank: null }),
+      );
+    });
+
+    it('atualiza a posição quando a ordem muda na Steam', async () => {
+      await ingest.execute(NOW);
+      catalog.steamTags.set(500, [
+        { tagid: METROIDVANIA, weight: 1000 },
+        { tagid: ROGUELIKE, weight: 900 },
+      ]);
+
+      await ingest.execute(NOW);
+
+      expect(await tagsOf(onSteam!.id)).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ igdbId: METROIDVANIA, rank: 1 }),
+          expect.objectContaining({ igdbId: ROGUELIKE, rank: 2 }),
+        ]),
+      );
+    });
+
+    it('com a Steam fora do ar antes da primeira coleta, falha sem gravar nada', async () => {
+      catalog.steamDown = true;
+
+      const result = await ingest.execute(NOW);
+
+      expect(result.status).toBe(IngestionStatus.FAILED);
+      expect(result.errorSummary).toContain('nenhuma gravada ainda');
+      expect(await prisma.game.count()).toBe(0);
+      expect(await prisma.feature.count()).toBe(0);
+    });
+
+    it('com a Steam fora do ar depois da primeira coleta, segue e mantém as gravadas', async () => {
+      await ingest.execute(NOW);
+      catalog.steamTags.set(500, [{ tagid: ACTION, weight: 1000 }]);
+      catalog.steamDown = true;
+
+      const result = await ingest.execute(NOW);
+
+      expect(result.status).toBe(IngestionStatus.SUCCEEDED);
+      expect(result.errorSummary).toContain('etiquetas da Steam mantidas da execução anterior');
+      expect(await gameRow(onSteam!.id)).toMatchObject({
+        steamAppId: 500,
+        tagSource: TagSource.STEAM,
+      });
+      expect((await tagsOf(onSteam!.id)).map(({ igdbId, rank }) => [igdbId, rank])).toEqual(
+        expect.arrayContaining([
+          [ROGUELIKE, 1],
+          [METROIDVANIA, 2],
+        ]),
+      );
+      expect(await gameRow(offSteam!.id)).toMatchObject({ tagSource: TagSource.IGDB });
+    });
+  });
+
   it('a primeira execução grava o catálogo e sai sem alertas de empresa já revisada', async () => {
     const result = await ingest.execute(NOW);
 
@@ -244,20 +381,42 @@ describe('Ingestão', () => {
   });
 
   // Os pesos não são gravados: a API os refaz do IDF de Feature, e precisam sair iguais aos
-  // calculados a partir dos atributos que a IGDB mandou.
-  it('grava o IDF de que a API refaz os mesmos vetores', async () => {
+  // calculados a partir dos atributos que a IGDB mandou e das etiquetas.
+  it('grava o IDF de que a API refaz os mesmos vetores, com as etiquetas', async () => {
+    const vocabulary = readTagVocabulary();
+    const assign = tagAssigner(vocabulary);
+    const toFeatures = tagFeatures(vocabulary);
+    for (const [i, raw] of accepted.slice(0, 3).entries()) {
+      catalog.steamAppIds.set(raw.id, [500 + i]);
+      catalog.steamTags.set(500 + i, [
+        { tagid: 1716, weight: 1000 },
+        { tagid: 1628, weight: 900 },
+      ]);
+    }
     await ingest.execute(NOW);
     const tfidf = readTfidfConfig();
-    const mapped = accepted.map((raw) => mapIgdbGame(igdbGameSchema.parse(raw), NOW));
+    const mapped = accepted.map((raw) => {
+      const game = mapIgdbGame(igdbGameSchema.parse(raw), NOW);
+      const { tags } = assign(
+        {
+          appids: catalog.steamAppIds.get(game.igdbId) ?? [],
+          keywords: game.features.filter((f) => f.type === FeatureType.KEYWORD).map((f) => f.slug),
+          summary: game.summary ?? '',
+        },
+        catalog.steamTags,
+      );
+      return { ...game, features: [...game.features, ...toFeatures(tags)] };
+    });
     const idf = computeIdf(
       mapped.map((game) => game.features),
       tfidf,
     );
+    expect([...idf.keys()]).toContain('TAG:1716');
 
     const index = buildContentIndex(
-      await new ContentIndexRepository(prisma).loadRows([]),
+      await new ContentIndexRepository(prisma).loadRows(),
       tfidf,
-      [],
+      new Set(),
     );
 
     expect(index.games).toHaveLength(mapped.length);

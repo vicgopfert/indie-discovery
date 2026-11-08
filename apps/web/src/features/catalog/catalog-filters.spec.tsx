@@ -1,4 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { CatalogFilters, type CatalogFilterOptions } from './catalog-filters';
 import { parseCatalogParams, type CatalogSearchParams } from './search-params';
@@ -11,6 +12,11 @@ const options: CatalogFilterOptions = {
     { slug: 'puzzle', name: 'Quebra-cabeça', gameCount: 3607 },
   ],
   themes: [{ slug: 'horror', name: 'Terror', gameCount: 1500 }],
+  tags: [
+    { slug: 'action-rpg', name: 'RPG de Ação', gameCount: 900 },
+    { slug: 'difficult', name: 'Impiedoso', gameCount: 2100 },
+    { slug: 'metroidvania', name: 'Metroidvania', gameCount: 700 },
+  ],
   countries: [{ code: 'BR', name: 'Brasil', gameCount: 251 }],
 };
 
@@ -46,6 +52,7 @@ describe('CatalogFilters', () => {
     renderFilters({
       q: 'knight',
       genre: ['puzzle'],
+      tag: ['metroidvania'],
       country: 'br',
       status: 'upcoming',
       portuguese: 'no',
@@ -56,6 +63,7 @@ describe('CatalogFilters', () => {
     expect(screen.getByRole('checkbox', { name: 'Quebra-cabeça (3.607)' })).toBeChecked();
     expect(screen.getByRole('checkbox', { name: 'Aventura (10.922)' })).not.toBeChecked();
     expect(screen.getByRole('checkbox', { name: 'Brasil (251)' })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: 'Metroidvania (700)' })).toBeChecked();
     expect(screen.getByRole('combobox', { name: 'Situação' })).toHaveValue('upcoming');
     expect(screen.getByRole('combobox', { name: 'Português' })).toHaveValue('no');
     expect(screen.getByRole('combobox', { name: 'Ordenar por' })).toHaveValue('name');
@@ -68,6 +76,22 @@ describe('CatalogFilters', () => {
       (summary) => summary.textContent,
     );
     expect(open).toEqual(['Tema (1)']);
+  });
+
+  it('a busca por nome esconde as outras etiquetas, sem acento nem maiúscula, e não vai na URL', async () => {
+    const { container } = renderFilters({ tag: 'difficult' });
+    const tags = group('Etiquetas');
+    const search = screen.getByRole('searchbox', { name: 'Buscar etiqueta pelo nome' });
+
+    await userEvent.type(search, 'acao');
+
+    expect(within(tags).getByRole('checkbox', { name: 'RPG de Ação (900)' })).toBeVisible();
+    expect(within(tags).queryByRole('checkbox', { name: 'Metroidvania (700)' })).toBeNull();
+    // A marcada continua no formulário, mesmo escondida pela busca.
+    expect(container.querySelector('input[name="tag"][value="difficult"]')).toBeChecked();
+    expect(search).not.toHaveAttribute('name');
+    await userEvent.clear(search);
+    expect(within(tags).getAllByRole('checkbox')).toHaveLength(3);
   });
 
   it('não leva a página: filtrar de novo volta para a primeira', () => {

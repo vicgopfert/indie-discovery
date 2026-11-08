@@ -11,7 +11,15 @@ describe('parseCatalogParams', () => {
   it('sem parâmetros, usa a primeira página dos mais populares', () => {
     expect(parseCatalogParams({})).toEqual({
       ok: true,
-      query: { genre: [], theme: [], country: [], sort: 'popular', page: 1, pageSize: 24 },
+      query: {
+        genre: [],
+        theme: [],
+        tag: [],
+        country: [],
+        sort: 'popular',
+        page: 1,
+        pageSize: 24,
+      },
     });
   });
 
@@ -35,6 +43,10 @@ describe('parseCatalogParams', () => {
       ok: false,
       errors: ['Gênero: Até 5 valores por filtro.', 'Página: A página deve ser um número.'],
     });
+    expect(parseCatalogParams({ tag: ['a', 'b', 'c', 'd', 'e', 'f'] })).toEqual({
+      ok: false,
+      errors: ['Etiqueta: Até 5 valores por filtro.'],
+    });
   });
 });
 
@@ -48,6 +60,7 @@ describe('catalogHref', () => {
       q: 'knight',
       genre: ['platform', 'adventure'],
       theme: 'fantasy',
+      tag: ['metroidvania', 'difficult'],
       status: 'released',
       portuguese: 'yes',
       country: ['US', 'unknown'],
@@ -55,7 +68,7 @@ describe('catalogHref', () => {
     });
 
     expect(catalogHref(filtered)).toBe(
-      '/catalogo?q=knight&genre=platform&genre=adventure&theme=fantasy&status=released&portuguese=yes&country=US&country=unknown&sort=newest',
+      '/catalogo?q=knight&genre=platform&genre=adventure&theme=fantasy&tag=metroidvania&tag=difficult&status=released&portuguese=yes&country=US&country=unknown&sort=newest',
     );
   });
 

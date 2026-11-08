@@ -1,8 +1,9 @@
 # Etiquetas da comunidade Steam (B-77)
 
 Medição feita entre 05/11 e 07/11/2026, sem mudar o que a API usa. O resultado é o vocabulário de
-etiquetas aceitas (`apps/api/config/tags.draft.json`), a decisão de pôr as etiquetas no vetor e a
-regra de prateleiras que o B-79 implementa. A ingestão e a interface ficam para o B-78.
+etiquetas aceitas (`apps/api/config/tags.json`, que se chamava `tags.draft.json` até o B-78), a
+decisão de pôr as etiquetas no vetor e a regra de prateleiras que o B-79 implementa. A ingestão, o
+vetor e a interface entraram no B-78 (seção 10).
 
 ## Por que medir
 
@@ -330,6 +331,9 @@ com 6 prateleiras foi medida de novo, só para registro:
 - **Rota sem documentação pública.** A `IStoreBrowseService/GetItems` não está na documentação
   pública da Valve. O B-78 grava as etiquetas na ingestão: nenhuma requisição de usuário chama a
   Steam (RNF-02), e, se a rota falhar, a execução não falha e mantém as etiquetas gravadas.
+  **Alterado em 07/11/2026 (B-78), por decisão do autor:** isso vale depois da primeira coleta
+  bem-sucedida. Antes dela, não há etiqueta gravada para manter, e a execução falha sem gravar
+  nada (seção 10).
 - **Termos da Web API da Steam:**
   - limite de 100 mil chamadas por dia, quando o catálogo inteiro pede cerca de 450;
   - a ficha cita "Etiquetas da comunidade Steam", sem sugerir endosso da Valve;
@@ -340,7 +344,7 @@ com 6 prateleiras foi medida de novo, só para registro:
 
 - **B-78:**
   - ingestão do id da Steam e das etiquetas aceitas, no peso mínimo 0,3, com o vocabulário
-    `tags.draft.json` revisado;
+    `tags.draft.json` revisado (hoje `tags.json`);
   - ficha e filtro do catálogo;
   - etiquetas no vetor, no lugar das palavras-chave;
   - RSS da API medido depois da carga e de três recargas em produção.
@@ -352,3 +356,169 @@ com 6 prateleiras foi medida de novo, só para registro:
     pela metodologia do B-33, com p95 fim a fim abaixo de 1 s.
 - **B-37:** calibrar o limite de frequência das prateleiras (10%, 15% e 20%).
 - **B-44:** observar se o jogador percorre a visão geral até o fim.
+
+## 10. Na plataforma (B-78)
+
+Implementado em 07/11/2026. As decisões do plano foram aprovadas pelo autor, com os ajustes
+marcados abaixo como "decisão do autor".
+
+### Ingestão
+
+- **Id da Steam:** a ingestão busca no `external_games` da IGDB (fonte 1) o id da Steam dos jogos
+  aceitos, 200 jogos por consulta. Com mais de um id, vale o primeiro que tem etiquetas, em ordem
+  numérica, como no B-77. O id fica em `Game.steamAppId`, sem índice único: hoje nenhum id é
+  dividido entre dois jogos, mas uma colisão nos dados da IGDB derrubaria a gravação inteira, e
+  nenhuma consulta depende da unicidade (desvio do texto do B-65, aprovado no plano).
+- **Etiquetas:** a ingestão busca na loja da Steam as etiquetas de todos os ids, em lotes de 50,
+  uma requisição por segundo, e fica com as aceitas pelo vocabulário (`config/tags.json`) no peso
+  mínimo relativo 0,3 (`minRelativeWeight`, com a justificativa no próprio arquivo). Etiqueta fora
+  do vocabulário é ignorada até uma nova revisão.
+- **Reserva:** o jogo sem nenhuma etiqueta aceita da Steam recebe as etiquetas pelas palavras-chave
+  e pelos termos do resumo do vocabulário (as evidências que vieram dos estilos).
+- **Gravação:** as etiquetas são atributos do tipo `TAG` em `Feature` e `GameFeature`, com o id da
+  Steam em `Feature.igdbId` e o nome em português do vocabulário. Nas etiquetas da Steam, o
+  `GameFeature.rank` guarda a posição (1 para a mais votada), e não o peso: o peso muda a cada
+  coleta e regravaria cerca de 300 mil vínculos por execução, todos com linha morta no
+  PostgreSQL. A origem fica em `Game.tagSource` (`STEAM`, `IGDB` ou nula).
+- **Falhas (decisão do autor):** se a loja falhar depois das novas tentativas, a ingestão segue com
+  as etiquetas da Steam já gravadas e com a reserva da IGDB para os outros jogos, e o motivo fica
+  no `errorSummary`. Isso só vale depois da primeira coleta bem-sucedida. Antes dela, nenhum jogo
+  do catálogo tem etiquetas da Steam gravadas, e a execução termina `FAILED` sem gravar nada, para
+  o catálogo não ficar só com a reserva. Os dois caminhos têm teste e2e com um servidor falso da
+  Steam. Uma falha no `external_games` é falha da IGDB, como as outras consultas a ela.
+- **Sonda antes do merge (decisão do autor):** o modo `sonda-steam` do workflow "Ingestão" roda a
+  partir da branch e busca as etiquetas de uma amostra sistemática de 200 jogos do catálogo de
+  produção (um a cada k, na ordem do `igdbId`), só leitura, com o status, o tempo e as falhas de
+  cada requisição (`src/probe-steam.ts`). Se a Steam bloquear o Actions, o merge espera.
+- **Entre o deploy e a primeira ingestão (decisão do autor):** a migration e o código novo entram
+  antes de qualquer etiqueta gravada. Nesse intervalo, o vetor novo roda sem etiquetas: as
+  palavras-chave já não contam, e o vetor fica só com gêneros e temas. Por isso a ingestão manual
+  é feita logo depois do merge.
+
+### Vetor, interesses e motivo
+
+- **Vetor:** gênero, tema e etiqueta, com fatias de 40/30/30, termo binário e IDF no catálogo, com
+  os limites de sempre (mínimo de 3 jogos, máximo de 80%). As palavras-chave saíram do vetor.
+- **Interesses:** a regra de cobertura do B-71 continua, até o B-79. As etiquetas que podem virar
+  prateleira (`shelf`) entram no lugar dos estilos, ao lado de gêneros e temas, com o mesmo limite
+  de 40% do catálogo. A prateleira é `tag:<slug>`, com o "ver mais" em
+  `/recomendacoes/etiqueta-<slug>`. Os títulos do vocabulário ficam para o B-79.
+- **Motivo (decisão do autor):** entra o primeiro grupo com alguma contribuição positiva, com até
+  3 atributos: as etiquetas que podem virar prateleira; depois as outras etiquetas (visuais e
+  vagas); depois gêneros e temas; e por fim "Porque você gostou de `<jogo>`". Como todo atributo do
+  vetor está num dos três primeiros grupos, o jogo curtido virou só reserva: ele aparecia nos jogos
+  que só dividiam palavras-chave com a biblioteca.
+- **Estilos:** o `config/styles.json`, o módulo de estilos e o `styles:measure` saíram do código.
+
+### Ficha e catálogo
+
+- **Ficha:** a linha "Etiquetas" vem depois de Temas, com todas as aceitas, na ordem da Steam, e
+  cada uma leva ao catálogo filtrado. Abaixo dela, a atribuição:
+  - etiquetas da Steam: "Etiquetas da comunidade Steam", com link para a página do jogo na loja,
+    sem sugerir endosso da Valve;
+  - reserva: "Etiquetas atribuídas pelo resumo e pelas palavras-chave da IGDB", sem link;
+  - sem etiqueta: "Não informado".
+- **Filtro:** `tag` repetível em `GET /api/games`, como gênero e tema (o jogo precisa ter todas, até
+  5), e `GET /api/features?type=tag` com a contagem. Na página do catálogo, a lista "Etiquetas" fica
+  em ordem alfabética, com a contagem e, por decisão do autor, um campo de busca por nome no topo.
+  A busca ignora acentos e maiúsculas, só esconde as opções (as marcadas continuam no formulário)
+  e não vai para a URL.
+
+### Medições locais (07/11/2026)
+
+Os critérios foram fixados no plano antes de medir. A ingestão local real usou o build de produção
+(`node dist/ingest.js`) contra a IGDB e a Steam, no banco local.
+
+**Ingestão** (23.001 jogos no catálogo; 22.825 na carga local anterior, por dados novos da IGDB):
+
+| Etapa | Tempo |
+| --- | --- |
+| Conjunto candidato (132.122 jogos) | 5 min 37 s |
+| "Want to Play", empresas e Wikidata | cerca de 3 min |
+| Ids da Steam na IGDB (21.974 jogos com id) | 63 s |
+| Etiquetas na loja (21.828 ids com etiquetas) | 7 min 31 s |
+| Gravação | 25 s |
+| **Total** | **17 min 36 s** |
+
+| Origem das etiquetas | Jogos |
+| --- | --- |
+| Steam | 21.637 (94,1%) |
+| Reserva da IGDB | 493 (2,1%) |
+| Nenhuma | 871 (3,8%) |
+
+A reserva cobre 36,1% dos jogos sem etiqueta aceita da Steam; o B-77 tinha medido 36,5%.
+
+| Banco local | Antes | Depois |
+| --- | --- | --- |
+| Tamanho (`pg_database_size`) | 110 MB | 133 MB |
+| `GameFeature` | 211.808 linhas, 46 MB | 489.804 linhas, 69 MB |
+| Vínculos de etiqueta | — | 276.217 (12,5 por jogo com etiqueta) |
+| Atributos no índice (IDF > 0) | 2.690 (22 gêneros, 21 temas, 2.647 palavras-chave) | 399 (22 gêneros, 21 temas, 356 etiquetas) |
+
+**Memória da API local** (carga da inicialização e três recargas seguidas, RSS do log da carga):
+
+| Versão | Carga | 1ª recarga | 2ª recarga | 3ª recarga |
+| --- | --- | --- | --- | --- |
+| `main` | 299 MB | 352 MB | 408 MB | 465 MB |
+| B-78 | 286 MB | 319 MB | 361 MB | 404 MB |
+| `main`, heap limitado a 256 MB | 295 MB | 325 MB | 327 MB | 333 MB |
+| B-78, heap limitado a 256 MB | 281 MB | 313 MB | 317 MB | 316 MB |
+
+- Sem limite de heap, o RSS cresce a cada recarga, porque o coletor não devolve a memória dos
+  índices antigos entre recargas seguidas, na máquina local com muita memória. Na `main`, ele
+  já passava de 450 MB na terceira recarga.
+- Com o heap limitado a 256 MB, como numa instância de 512 MB, o RSS se estabiliza. É só uma
+  aproximação do Render; a condição do autor (RSS abaixo de 450 MB) vale para a medição em
+  produção, depois da primeira ingestão.
+- O índice ficou menor que o da `main`: a carga não lê mais os resumos nem os estilos, e o vetor
+  tem 399 atributos em vez de 2.690.
+
+**Tempo da visão geral** (os 400 perfis da semente 71 nos três modos, em processo, duas rodadas):
+mediana de 12,0 ms na `main` e 12,3 ms no B-78, razão de 1,02 (critério C6: até 1,5); p95 de 20,3
+contra 19,2 ms.
+
+**Conferência com o protótipo do B-77** (as mesmas 15 referências; as etiquetas são de 07/11, e
+não do cache de 05/11):
+
+| Critério | Protótipo | Implementado |
+| --- | --- | --- |
+| (a) referências com 5 ou mais empatados no 10º vizinho (até 2) | 2 | 2 (Gravity Circuit e Atmasphere) |
+| (b) curingas entre os 10 primeiros, somados (até 8) | 8 | 8 |
+
+**Interesses com a regra atual** (400 perfis da semente 71):
+- 184 dos 200 perfis por avaliações têm alguma etiqueta entre os interesses, e 307 dos 419
+  interesses deles são etiquetas. Os 200 perfis por preferências não têm etiqueta, porque as
+  preferências da partida a frio são só gêneros e temas (B-34).
+- **Ideia repetida** (gênero ou tema e etiqueta da mesma ideia, pela tabela de equivalência do
+  protótipo do B-77): nenhum perfil, entre os interesses escolhidos e entre as prateleiras
+  mostradas.
+- **Limitação que o B-79 corrige:** com uma biblioteca coerente, um gênero ou tema largo da IGDB
+  ainda cobre a biblioteca inteira e encerra a escolha. Hollow Knight, Dead Cells, Hades, Celeste,
+  Grim Dawn e Slay the Spire, todos com o tema Fantasia, ficam só com a prateleira de Fantasia,
+  embora Metroidvania, Roguelike e Impiedoso sejam candidatas. Com dois gostos distintos (Inside e
+  Limbo; Vampire Survivors e Brotato), saem as prateleiras "Inferno de Balas" e "Plataforma com
+  Quebra-Cabeça".
+
+**Navegador local:** 14 de 14 conferências: a ficha de Hollow Knight com 13 etiquetas e o link
+para a página da loja, a ficha de um jogo da reserva com a atribuição à IGDB, o filtro pela URL e
+pelo formulário, a busca por nome e as prateleiras e o "ver mais" de etiqueta. A busca casa o
+trecho em qualquer lugar do nome, sem acento: "acao" também mostra Automação e Decoração.
+
+### Em produção
+
+- **Sonda da Steam, antes do merge:** ainda não rodada. Na máquina local, a mesma sonda fez 4
+  requisições, todas com status 200, com mediana de 268 ms.
+  - **Decisão do autor:** com o resultado da sonda, estima-se o tempo total da ingestão em
+    produção (IGDB, ids, loja e gravação), comparando a velocidade da sonda com a da carga local.
+    Se a estimativa passar de 25 minutos, o merge espera e as opções voltam ao autor; o workflow
+    tem limite de 30 minutos.
+- **RSS da API** (condição do autor no B-77): o maior RSS entre a carga e três recargas precisa
+  ficar abaixo de 450 MB; se passar, a decisão do vetor é revista. A medida vem na resposta da
+  recarga do índice (`rssMb` e `heapUsedMb`) e no log da carga, e é tomada depois do merge e da
+  primeira ingestão em produção.
+  - **Linha de base (decisão do autor):** antes do merge, a `main` em produção é medida pelo mesmo
+    método (reinício e três recargas), para separar o efeito das etiquetas do comportamento do
+    coletor de lixo, que no local já levava a `main` acima de 450 MB. O critério não muda.
+  - **Alternativa não aplicada:** se o critério falhar em produção, uma opção é fixar o limite de
+    heap do Node no Render (`--max-old-space-size`), que no local manteve o RSS em até 317 MB
+    com o limite de 256 MB. Ela só seria adotada por decisão do autor, depois da medição.

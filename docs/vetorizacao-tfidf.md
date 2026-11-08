@@ -4,6 +4,14 @@ Funções em `apps/api/src/modules/recommendation/tfidf.ts`; valores em
 `apps/api/config/recommendation.json`. Medições feitas em 22 e 23/10/2026 sobre o
 catálogo aceito pelo critério indie (19.998 jogos).
 
+> **Alterado em 07/11/2026 (B-78):** o bloco de palavras-chave saiu do vetor, e as etiquetas
+> da comunidade Steam ocupam a fatia dele. Os blocos passam a ser gênero, tema e etiqueta, com
+> 40/30/30, termo binário e o mesmo IDF no catálogo, com os mesmos limites (mínimo de 3 jogos,
+> máximo de 80%). A lista das 245 palavras-chave de metadados saiu da configuração, porque só
+> valia para o vetor. As palavras-chave continuam gravadas, como evidência da reserva das
+> etiquetas (`docs/etiquetas.md`). As medições abaixo são do vetor com palavras-chave e ficam
+> como registro.
+
 ## Como funciona
 
 1. **Descarte, antes de qualquer normalização.** Sai o atributo presente em menos de 3

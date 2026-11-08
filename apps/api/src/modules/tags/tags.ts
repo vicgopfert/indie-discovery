@@ -1,7 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { z } from 'zod';
+import { FeatureType, TagSource } from '../../generated/prisma/client';
 import { snippet, wholeTerm } from '../ingestion/collections/candidate-suggestions';
+import { slugify } from '../ingestion/igdb/igdb.mapper';
+import type { MappedFeature } from '../ingestion/model/mapped-game';
 import type { SteamTag } from './steam-store.client';
 
 // Grupos da documentação da Steam (Tag Wizard). Os de jogadores, recursos técnicos e opinião não
@@ -26,6 +29,8 @@ export type TagGroup = (typeof TAG_GROUPS)[number];
 export const tagVocabularySchema = z
   .object({
     rule: z.string().min(1),
+    minRelativeWeight: z.number().positive().max(1),
+    minRelativeWeightRationale: z.string().min(1),
     tags: z.array(
       z.object({
         id: z.number().int().positive(),
@@ -55,15 +60,27 @@ export const tagVocabularySchema = z
       return new Set(keywords).size === keywords.length;
     },
     { error: 'Uma palavra-chave é evidência de uma etiqueta só.' },
+  )
+  .refine(
+    ({ tags }) => {
+      const slugs = tags.filter((t) => t.accepted).map(tagSlug);
+      return new Set(slugs).size === slugs.length;
+    },
+    { error: 'Cada etiqueta aceita precisa de um slug próprio.' },
   );
 
 export type TagVocabulary = z.infer<typeof tagVocabularySchema>;
 export type VocabularyTag = TagVocabulary['tags'][number];
 
-export const TAG_DRAFT_FILE = resolve(process.cwd(), 'config/tags.draft.json');
+export const TAG_VOCABULARY_FILE = resolve(process.cwd(), 'config/tags.json');
 
-export function readTagVocabulary(file = TAG_DRAFT_FILE): TagVocabulary {
+export function readTagVocabulary(file = TAG_VOCABULARY_FILE): TagVocabulary {
   return tagVocabularySchema.parse(JSON.parse(readFileSync(file, 'utf8')));
+}
+
+// Pelo nome em inglês, como os slugs dos gêneros da IGDB: ?tag=action-roguelike.
+export function tagSlug({ englishName }: { englishName: string }) {
+  return slugify(englishName);
 }
 
 export interface RelevantTag extends SteamTag {
@@ -148,4 +165,67 @@ export function evidenceAgreement(
   return [...byTerm.values()].sort(
     (a, b) => a.confirmed / a.games - b.confirmed / b.games || b.games - a.games,
   );
+}
+
+export interface GameTag {
+  tagid: number;
+  // A posição entre as aceitas da Steam, 1 para a mais votada; nula nas da reserva.
+  rank: number | null;
+}
+
+export interface AssignedTags {
+  steamAppId: number | null;
+  source: TagSource | null;
+  tags: GameTag[];
+}
+
+export interface TagEvidence {
+  // Os ids da Steam do jogo na IGDB.
+  appids: readonly number[];
+  // Slugs das palavras-chave da IGDB.
+  keywords: readonly string[];
+  summary: string;
+}
+
+// Com mais de um id da Steam (edições, relançamentos), vale o primeiro que tem etiquetas, na ordem
+// numérica: o id mais antigo costuma ser o do jogo original (B-77). Sem nenhuma etiqueta aceita da
+// Steam no peso mínimo, entra a reserva da IGDB.
+export function tagAssigner(vocabulary: TagVocabulary) {
+  const accepted = new Set(vocabulary.tags.filter((t) => t.accepted).map((t) => t.id));
+  const fallback = fallbackMatcher(vocabulary);
+
+  return (game: TagEvidence, steamTags: ReadonlyMap<number, readonly SteamTag[]>): AssignedTags => {
+    const appids = [...new Set(game.appids)].sort((a, b) => a - b);
+    const steamAppId = appids.find((id) => steamTags.get(id)?.length) ?? appids[0] ?? null;
+    const steam = relevantTags(
+      steamAppId === null ? [] : (steamTags.get(steamAppId) ?? []),
+      vocabulary.minRelativeWeight,
+    ).filter((tag) => accepted.has(tag.tagid));
+    if (steam.length > 0) {
+      return {
+        steamAppId,
+        source: TagSource.STEAM,
+        tags: steam.map(({ tagid }, i) => ({ tagid, rank: i + 1 })),
+      };
+    }
+    const tagids = [...new Set(fallback(game).map((match) => match.tagid))].sort((a, b) => a - b);
+    return {
+      steamAppId,
+      source: tagids.length > 0 ? TagSource.IGDB : null,
+      tags: tagids.map((tagid) => ({ tagid, rank: null })),
+    };
+  };
+}
+
+// As etiquetas como atributos do jogo, com o nome em português do vocabulário. A etiqueta que saiu
+// das aceitas fica de fora.
+export function tagFeatures(vocabulary: TagVocabulary) {
+  const byId = new Map(vocabulary.tags.filter((t) => t.accepted).map((t) => [t.id, t]));
+  return (tags: readonly GameTag[]): MappedFeature[] =>
+    tags.flatMap(({ tagid, rank }) => {
+      const tag = byId.get(tagid);
+      return tag
+        ? [{ type: FeatureType.TAG, igdbId: tag.id, name: tag.name, slug: tagSlug(tag), rank }]
+        : [];
+    });
 }

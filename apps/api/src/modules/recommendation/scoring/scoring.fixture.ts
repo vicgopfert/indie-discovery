@@ -1,26 +1,33 @@
 import { FeatureType, type ListType, ReleaseStatus } from '../../../generated/prisma/client';
-import { buildContentIndex, type ContentIndex, type IndexedGame } from '../content-index';
-import type { CuratedStyle } from '../../styles/styles';
+import {
+  buildContentIndex,
+  type ContentIndex,
+  type ContentIndexRows,
+  type IndexedGame,
+} from '../content-index';
 import { readTfidfConfig } from '../tfidf';
 import type { Interaction } from './profile';
 import { readScoringConfig, type ScoringConfig } from './scoring-config';
 import type { ScoredCandidates } from './score';
 
-const { GENRE, THEME, KEYWORD } = FeatureType;
+const { GENRE, THEME, TAG } = FeatureType;
 
 export const featureId = (slug: string) => `f-${slug}`;
 
-const FILLER_FEATURE = {
+// shelf: só nas etiquetas, se ela pode virar prateleira (pelo vocabulário, na API).
+type FixtureFeature = ContentIndexRows['features'][number] & { shelf?: boolean };
+
+const FILLER_FEATURE: FixtureFeature = {
   id: featureId('filler'),
-  type: KEYWORD,
+  type: TAG,
   igdbId: 99,
   slug: 'filler',
-  name: 'filler',
+  name: 'Enchimento',
   idf: 0.5,
 };
 
 // Na mesma ordem do repositório: tipo e igdbId.
-export const FEATURES = [
+export const FEATURES: FixtureFeature[] = [
   {
     id: featureId('roguelike'),
     type: GENRE,
@@ -42,31 +49,30 @@ export const FEATURES = [
   { id: featureId('horror'), type: THEME, igdbId: 2, slug: 'horror', name: 'Horror', idf: 1.6 },
   {
     id: featureId('pixel-art'),
-    type: KEYWORD,
+    type: TAG,
     igdbId: 1,
     slug: 'pixel-art',
-    name: 'pixel art',
+    name: 'Pixel Art',
     idf: 1.1,
   },
   {
     id: featureId('rock-climbing'),
-    type: KEYWORD,
+    type: TAG,
     igdbId: 2,
     slug: 'rock-climbing',
-    name: 'rock climbing',
+    name: 'Escalada',
     idf: 3,
+    shelf: true,
   },
   FILLER_FEATURE,
 ];
 
-type FixtureFeature = (typeof FEATURES)[number];
-
-// [atributos, popularidade normalizada, situação (lançado se omitida), resumo]
-type FixtureGames = Record<string, [string[], number, ReleaseStatus?, string?]>;
+// [atributos, popularidade normalizada, situação (lançado se omitida)]
+type FixtureGames = Record<string, [string[], number, ReleaseStatus?]>;
 
 // No catálogo real, cada gênero ou tema está numa fração pequena dos jogos; num fixture de uma
 // dúzia, quase todos passariam do limite de frequência dos interesses. Os jogos de enchimento só
-// têm uma palavra-chave própria: não mudam os vetores dos outros nem viram candidatos.
+// têm uma etiqueta própria, sem prateleira: não mudam os vetores dos outros nem viram candidatos.
 function fillers(prefix: string, count: number, features: string[]): FixtureGames {
   return Object.fromEntries(
     Array.from({ length: count }, (_, i) => [`${prefix}-${i + 1}`, [features, 0.01]]),
@@ -200,29 +206,23 @@ function fixtureIndex(
   features: FixtureFeature[],
   games: FixtureGames,
   without: readonly string[],
-  styles: readonly CuratedStyle[] = [],
 ): ContentIndex {
   const position = new Map(features.map((f, i) => [f.slug, i]));
-  const isKeyword = new Set(features.filter((f) => f.type === KEYWORD).map((f) => f.slug));
   return buildContentIndex(
     {
       features,
       games: Object.entries(games)
         .filter(([slug]) => !without.includes(slug))
-        .map(
-          ([slug, [slugs, popularityNorm, releaseStatus = ReleaseStatus.RELEASED, summary]]) => ({
-            id: gameId(slug),
-            slug,
-            releaseStatus,
-            popularityNorm,
-            featurePositions: slugs.map((f) => position.get(f)!),
-            summary: summary ?? '',
-            styleKeywords: slugs.filter((f) => isKeyword.has(f)),
-          }),
-        ),
+        .map(([slug, [slugs, popularityNorm, releaseStatus = ReleaseStatus.RELEASED]]) => ({
+          id: gameId(slug),
+          slug,
+          releaseStatus,
+          popularityNorm,
+          featurePositions: slugs.map((f) => position.get(f)!),
+        })),
     },
     readTfidfConfig(),
-    styles,
+    new Set(features.filter((f) => f.type === TAG && f.shelf).map((f) => f.igdbId)),
   );
 }
 
@@ -278,10 +278,10 @@ export function amnesiaIndex(): ContentIndex {
 export const gameId = (slug: string) => `g-${slug}`;
 
 // Os atributos do jogo como o banco os guarda, para montar o vetor de quem está fora do índice.
-export function featuresOf(slug: string): { type: FeatureType; igdbId: number; slug: string }[] {
+export function featuresOf(slug: string): { type: FeatureType; igdbId: number }[] {
   return GAMES[slug]![0].map((feature) => {
     const { type, igdbId } = FEATURES.find((f) => f.slug === feature)!;
-    return { type, igdbId, slug: feature };
+    return { type, igdbId };
   });
 }
 
@@ -308,88 +308,71 @@ export function rated(
   score: number | null,
   lists: ListType[] = [],
 ): Interaction {
-  const game = gameOf(index, slug);
-  return { gameId: gameId(slug), score, lists, vector: game, styles: game.styles };
+  return { gameId: gameId(slug), score, lists, vector: gameOf(index, slug) };
 }
 
-// O caso de produção com estilos (B-74): o terror de sobrevivência é um estilo, pela palavra-chave
-// em scare-1 e scare-a e só pelo resumo em scare-2 e scare-b. Aventura está em todo o catálogo, e
-// Tiro é mais frequente que o estilo. rogue-1 só tem a palavra-chave do Roguelike.
-export const STYLES: CuratedStyle[] = [
-  {
-    slug: 'survival-horror',
-    name: 'Terror de sobrevivência',
-    category: 'tone',
-    keywords: ['survival-horror'],
-    summaryTerms: ['survival horror'],
-  },
-  {
-    slug: 'roguelike',
-    name: 'Roguelike',
-    category: 'gameplay',
-    keywords: ['roguelite'],
-    summaryTerms: ['roguelike'],
-  },
-];
-
-const STYLED_FEATURES: FixtureFeature[] = [
+// O caso de produção com etiquetas (B-74, refeito com as etiquetas no B-78): o terror de
+// sobrevivência é uma etiqueta que pode virar prateleira, em scare-1, scare-2, scare-a e scare-b.
+// Aventura está em todo o catálogo, e Tiro é mais frequente que a etiqueta. rogue-1 só tem a
+// etiqueta Roguelike.
+const TAGGED_FEATURES: FixtureFeature[] = [
   ...GENERIC_FEATURES,
   {
     id: featureId('survival-horror'),
-    type: KEYWORD,
+    type: TAG,
     igdbId: 1,
     slug: 'survival-horror',
-    name: 'survival horror',
+    name: 'Terror de Sobrevivência',
     idf: 2,
+    shelf: true,
   },
   {
-    id: featureId('roguelite'),
-    type: KEYWORD,
+    id: featureId('roguelike'),
+    type: TAG,
     igdbId: 2,
-    slug: 'roguelite',
-    name: 'roguelite',
+    slug: 'roguelike',
+    name: 'Roguelike',
     idf: 2,
+    shelf: true,
   },
   FILLER_FEATURE,
 ];
 
-const STYLED_GAMES: FixtureGames = {
+const TAGGED_GAMES: FixtureGames = {
   ...Object.fromEntries(
     [0.5, 0.6, 0.7, 0.8, 0.9, 0.95].map((pop, i) => [`quest-${i + 1}`, [QUEST, pop]]),
   ),
   'scare-1': [[...SCARE, 'survival-horror'], 0.4],
-  'scare-2': [SCARE, 0.3, ReleaseStatus.RELEASED, 'A survival horror classic.'],
-  'rogue-1': [['roguelite'], 0.5],
+  'scare-2': [[...SCARE, 'survival-horror'], 0.3],
+  'rogue-1': [['roguelike'], 0.5],
   ...Object.fromEntries(
     [0.9, 0.7, 0.5, 0.3].map((pop, i) => [`quest-${String.fromCharCode(97 + i)}`, [QUEST, pop]]),
   ),
   'scare-a': [[...SCARE, 'survival-horror'], 0.6],
-  'scare-b': [SCARE, 0.2, ReleaseStatus.RELEASED, 'Survival horror in the dark.'],
-  'rogue-a': [['rpg', 'roguelite'], 0.4],
+  'scare-b': [[...SCARE, 'survival-horror'], 0.2],
+  'rogue-a': [['rpg', 'roguelike'], 0.4],
   ...fillers('gun', 6, ['shooter']),
   ...fillers('fright', 3, ['horror']),
   ...fillers('trail', 25, ['adventure']),
   ...fillers('filler', 20, ['filler']),
 };
 
-export const STYLED_LIBRARY = [
+export const TAGGED_LIBRARY = [
   ...Array.from({ length: 6 }, (_, i) => `quest-${i + 1}`),
   'scare-1',
   'scare-2',
 ];
 
-export function styledIndex({ without = [] }: { without?: string[] } = {}): ContentIndex {
-  return fixtureIndex(STYLED_FEATURES, STYLED_GAMES, without, STYLES);
+export function taggedIndex({ without = [] }: { without?: string[] } = {}): ContentIndex {
+  return fixtureIndex(TAGGED_FEATURES, TAGGED_GAMES, without);
 }
 
-// Um jogo do catálogo com estilos como o banco o guarda, para o que saiu do índice.
-export function styledGameOf(slug: string) {
-  const [features, , , summary = ''] = STYLED_GAMES[slug]!;
+// Os atributos de um jogo como o banco os guarda, para o que saiu do índice.
+export function taggedGameOf(slug: string) {
   return {
-    summary,
-    features: features.map((feature) => {
-      const { type, igdbId } = STYLED_FEATURES.find((f) => f.slug === feature)!;
-      return { type, igdbId, slug: feature };
+    features: TAGGED_GAMES[slug]![0].map((feature) => {
+      const { type, igdbId } = TAGGED_FEATURES.find((f) => f.slug === feature)!;
+      return { type, igdbId };
     }),
   };
 }

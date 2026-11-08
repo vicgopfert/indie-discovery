@@ -90,7 +90,7 @@ describe('recommend', () => {
           rated(index, 'dead-cells', 5),
           rated(index, 'spelunky', 3),
           rated(index, 'hades', null, [ListType.WANT_TO_PLAY]),
-          { gameId: 'g-popular-rogue', score: 4, lists: [], vector: null, styles: [] },
+          { gameId: 'g-popular-rogue', score: 4, lists: [], vector: null },
         ],
       }),
       scoringConfig,

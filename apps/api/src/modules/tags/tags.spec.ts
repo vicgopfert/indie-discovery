@@ -1,7 +1,10 @@
+import { FeatureType, TagSource } from '../../generated/prisma/client';
 import {
   evidenceAgreement,
   fallbackMatcher,
   relevantTags,
+  tagAssigner,
+  tagFeatures,
   type TagVocabulary,
   tagVocabularySchema,
 } from './tags';
@@ -26,10 +29,13 @@ const tag = (
 
 const vocabulary: TagVocabulary = {
   rule: 'teste',
+  minRelativeWeight: 0.3,
+  minRelativeWeightRationale: 'teste',
   tags: [
     tag(1716, 'Roguelike', { keywords: ['roguelike', 'roguelite'], summaryTerms: ['roguelike'] }),
     tag(1628, 'Metroidvania', { keywords: ['metroidvania'], summaryTerms: ['metroidvania'] }),
     tag(492, 'Indie', { group: 'other', accepted: false, keywords: ['indie'] }),
+    tag(4106, 'RPG de Ação', { englishName: 'Action RPG', group: 'subgenre' }),
   ],
 };
 
@@ -108,11 +114,85 @@ describe('evidenceAgreement', () => {
 
 describe('tagVocabularySchema', () => {
   it('recusa uma palavra-chave em duas etiquetas e uma etiqueta repetida', () => {
-    const valid = (tags: TagVocabulary['tags']) =>
-      tagVocabularySchema.safeParse({ rule: 'x', tags }).success;
-
     expect(valid(vocabulary.tags)).toBe(true);
     expect(valid([tag(1, 'A', { keywords: ['x'] }), tag(2, 'B', { keywords: ['X'] })])).toBe(false);
     expect(valid([tag(1, 'A'), tag(1, 'B')])).toBe(false);
+  });
+
+  it('recusa duas etiquetas aceitas com o mesmo slug, que o filtro não distinguiria', () => {
+    expect(valid([tag(1, 'Pixel Art'), tag(2, 'Pixel-art')])).toBe(false);
+    expect(valid([tag(1, 'Pixel Art'), tag(2, 'Pixel-art', { accepted: false })])).toBe(true);
+  });
+
+  function valid(tags: TagVocabulary['tags']) {
+    return tagVocabularySchema.safeParse({
+      rule: 'x',
+      minRelativeWeight: 0.3,
+      minRelativeWeightRationale: 'x',
+      tags,
+    }).success;
+  }
+});
+
+describe('tagAssigner', () => {
+  const assign = tagAssigner(vocabulary);
+  const steam = new Map([
+    [
+      100,
+      [
+        { tagid: 492, weight: 2000 },
+        { tagid: 1716, weight: 1000 },
+        { tagid: 4106, weight: 700 },
+        { tagid: 1628, weight: 500 },
+      ],
+    ],
+    [50, []],
+  ]);
+  const game = { appids: [100], keywords: ['metroidvania'], summary: 'A roguelike.' };
+
+  it('fica com as aceitas da Steam no peso mínimo relativo, numeradas da mais votada', () => {
+    // A mais votada (Indie) está fora do vocabulário, mas o peso relativo conta a partir dela.
+    expect(assign(game, steam)).toEqual({
+      steamAppId: 100,
+      source: TagSource.STEAM,
+      tags: [
+        { tagid: 1716, rank: 1 },
+        { tagid: 4106, rank: 2 },
+      ],
+    });
+  });
+
+  it('com mais de um id, vale o primeiro com etiquetas na ordem numérica', () => {
+    expect(assign({ ...game, appids: [300, 100, 50] }, steam).steamAppId).toBe(100);
+    expect(assign({ ...game, appids: [300, 200] }, steam).steamAppId).toBe(200);
+  });
+
+  it('sem etiqueta aceita da Steam, usa a reserva da IGDB, sem posição', () => {
+    expect(assign({ ...game, appids: [50] }, steam)).toEqual({
+      steamAppId: 50,
+      source: TagSource.IGDB,
+      tags: [
+        { tagid: 1628, rank: null },
+        { tagid: 1716, rank: null },
+      ],
+    });
+    expect(assign({ appids: [], keywords: [], summary: '' }, steam)).toEqual({
+      steamAppId: null,
+      source: null,
+      tags: [],
+    });
+  });
+});
+
+describe('tagFeatures', () => {
+  it('vira atributo TAG com o nome em português e o slug pelo nome em inglês', () => {
+    expect(
+      tagFeatures(vocabulary)([
+        { tagid: 4106, rank: 1 },
+        { tagid: 492, rank: 2 },
+      ]),
+    ).toEqual([
+      { type: FeatureType.TAG, igdbId: 4106, name: 'RPG de Ação', slug: 'action-rpg', rank: 1 },
+    ]);
   });
 });

@@ -55,22 +55,23 @@ describe('Índice de conteúdo', () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toMatchObject({ games: 3, features: 4 });
+    const memory = response.body as { rssMb: number; heapUsedMb: number };
+    expect(memory.rssMb).toBeGreaterThan(0);
+    expect(memory.heapUsedMb).toBeGreaterThan(0);
     expect(contentIndex.index!.games.map((game) => game.slug)).toContain('tunic');
   });
 
-  it('atribui os estilos pela palavra-chave e pelo resumo na carga', async () => {
-    await catalog.game({ name: 'Dead Cells', genres: ['Platform'], keywords: ['roguelite'] });
-    await catalog.game({ name: 'Unpacking', genres: ['Puzzle'], summary: 'A cozy, zen game.' });
+  it('carrega as etiquetas no vetor e marca pelo vocabulário as que podem virar prateleira', async () => {
+    await catalog.game({ name: 'Dead Cells', genres: ['Platform'], tags: ['Roguelike', '2D'] });
+    await prisma.feature.updateMany({ data: { idf: 1 } });
     await contentIndex.reload();
 
     const index = contentIndex.index!;
-    const stylesOf = (slug: string) =>
-      index.games
-        .find((game) => game.slug === slug)!
-        .styles.map((style) => index.styles[style]!.slug);
-    expect(stylesOf('dead-cells')).toEqual(['roguelike']);
-    expect(stylesOf('unpacking')).toEqual(['cozy']);
-    expect(stylesOf('celeste')).toEqual([]);
+    const tag = (slug: string) => index.features.find((f) => f.type === 'TAG' && f.slug === slug)!;
+    expect(tag('roguelike')).toMatchObject({ name: 'Roguelike', shelf: true });
+    expect(tag('2d')).toMatchObject({ name: '2D', shelf: false });
+    const deadCells = index.games.find((game) => game.slug === 'dead-cells')!;
+    expect(deadCells.featurePositions).toContain(index.features.indexOf(tag('roguelike')));
   });
 
   it('recusa a recarga sem o segredo ou com o segredo errado', async () => {

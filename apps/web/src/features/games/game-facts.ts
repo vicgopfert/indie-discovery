@@ -1,4 +1,4 @@
-import type { GameLanguage, StudioCountry } from '@indie/contracts';
+import type { GameDetail, GameLanguage, StudioCountry } from '@indie/contracts';
 
 export const NOT_INFORMED = 'Não informado';
 
@@ -30,6 +30,31 @@ export const companyNames = (names: string[]) =>
   names.length > 0 ? listFormat.format(names) : NOT_INFORMED;
 
 export const countrySource = ({ source }: StudioCountry) => `fonte: ${SOURCE_NAMES[source]}`;
+
+export interface TagAttribution {
+  text: string;
+  href: string | null;
+}
+
+// A atribuição cita a comunidade Steam e leva à página do jogo na loja, sem sugerir endosso da
+// Valve; as etiquetas da reserva dizem de onde vieram (B-78).
+export function tagAttribution({
+  tags,
+  tagSource,
+  steamAppId,
+}: Pick<GameDetail, 'tags' | 'tagSource' | 'steamAppId'>): TagAttribution | null {
+  if (tags.length === 0 || tagSource === null) return null;
+  if (tagSource === 'IGDB') {
+    return {
+      text: 'Etiquetas atribuídas pelo resumo e pelas palavras-chave da IGDB',
+      href: null,
+    };
+  }
+  return {
+    text: 'Etiquetas da comunidade Steam',
+    href: steamAppId === null ? null : `https://store.steampowered.com/app/${steamAppId}`,
+  };
+}
 
 // Corta na última palavra inteira que cabe, para o resumo caber nos resultados de busca.
 export function metaDescription(summary: string, maxLength = 160) {

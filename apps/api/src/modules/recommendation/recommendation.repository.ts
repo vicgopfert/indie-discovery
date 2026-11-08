@@ -11,14 +11,11 @@ export type RecommendedGameRow = Prisma.GameGetPayload<{
 export interface StoredFeature {
   type: FeatureType;
   igdbId: number;
-  slug: string;
 }
 
-// O jogo da biblioteca que não está no índice: os atributos montam o vetor, e as palavras-chave e
-// o resumo, os estilos.
+// O jogo da biblioteca que não está no índice: os atributos gravados montam o vetor.
 export interface UnindexedGame {
   features: StoredFeature[];
-  summary: string;
 }
 
 export interface UserState {
@@ -34,7 +31,7 @@ export class RecommendationRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   // O índice só tem os jogos do catálogo, mas o jogo que saiu dele continua na biblioteca e no
-  // perfil: os atributos e o resumo dele vêm do banco. Notas, listas e preferências vêm numa
+  // perfil: os atributos dele vêm do banco. Notas, listas e preferências vêm numa
   // consulta só, que já é um instantâneo: a transação com três consultas custava cinco idas ao
   // banco por requisição (B-76).
   async findUserState(userId: string, isIndexed: (gameId: string) => boolean): Promise<UserState> {
@@ -63,17 +60,11 @@ export class RecommendationRepository {
             where: { id: { in: unindexed } },
             select: {
               id: true,
-              summary: true,
-              features: {
-                select: { feature: { select: { type: true, igdbId: true, slug: true } } },
-              },
+              features: { select: { feature: { select: { type: true, igdbId: true } } } },
             },
           });
     const unindexedGames = new Map(
-      games.map(({ id, summary, features }) => [
-        id,
-        { summary, features: features.map(({ feature }) => feature) },
-      ]),
+      games.map(({ id, features }) => [id, { features: features.map(({ feature }) => feature) }]),
     );
 
     return { ratings, listEntries, preferenceFeatureIds, unindexedGames };

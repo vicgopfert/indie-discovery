@@ -15,6 +15,7 @@ const FILTER_LABELS: Record<string, string> = {
   q: 'Busca',
   genre: 'Gênero',
   theme: 'Tema',
+  tag: 'Etiqueta',
   status: 'Situação',
   portuguese: 'Português',
   country: 'País',
@@ -50,6 +51,7 @@ export function toSearchParams(query: GameSearchQuery, page = query.page) {
   if (query.q) params.set('q', query.q);
   for (const genre of query.genre) params.append('genre', genre);
   for (const theme of query.theme) params.append('theme', theme);
+  for (const tag of query.tag) params.append('tag', tag);
   if (query.status) params.set('status', query.status);
   if (query.portuguese) params.set('portuguese', query.portuguese);
   for (const country of query.country) params.append('country', country);

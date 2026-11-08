@@ -33,8 +33,9 @@ export const RecommendationPageQuerySchema = RecommendationQuerySchema.extend({
 
 export type RecommendationPageQuery = z.output<typeof RecommendationPageQuerySchema>;
 
-// Os gêneros e temas que mais contribuíram, do maior para o menor, ou o jogo da biblioteca que
-// mais pesou. Esse jogo pode ter saído do catálogo e vem marcado, como na biblioteca.
+// As etiquetas, gêneros ou temas que mais contribuíram, do maior para o menor, ou o jogo da
+// biblioteca que mais pesou. Esse jogo pode ter saído do catálogo e vem marcado, como na
+// biblioteca.
 export const RecommendationReasonSchema = z.discriminatedUnion('kind', [
   z.object({
     kind: z.literal('features'),
@@ -63,9 +64,9 @@ export type Recommendation = z.infer<typeof RecommendationSchema>;
 export const RECOMMENDATION_BASES = ['profile', 'popular', 'empty'] as const;
 
 // O atributo de uma prateleira de interesse, com o nome em português: gênero ou tema, com os
-// valores do banco, como o modo, ou um estilo curado (B-74).
+// valores do banco, como o modo, ou uma etiqueta da comunidade Steam (B-78).
 export const RecommendationFeatureSchema = FeatureLabelSchema.extend({
-  type: z.enum(['GENRE', 'THEME', 'STYLE']),
+  type: z.enum(['GENRE', 'THEME', 'TAG']),
 });
 
 export type RecommendationFeature = z.infer<typeof RecommendationFeatureSchema>;
@@ -85,7 +86,7 @@ export const RecommendationShelfSchema = z.discriminatedUnion('kind', [
     ...listItems,
   }),
   z.object({
-    key: z.string().regex(/^(genre|theme|style):/),
+    key: z.string().regex(/^(genre|theme|tag):/),
     kind: z.literal('interest'),
     feature: RecommendationFeatureSchema,
     ...listItems,
@@ -104,7 +105,7 @@ export const RecommendationOverviewSchema = z.object({
 export type RecommendationOverview = z.infer<typeof RecommendationOverviewSchema>;
 
 // Uma página de uma lista só, para o "ver mais": main, upcoming, genre:<slug>, theme:<slug> ou
-// style:<slug>. A base vem como na visão geral, para a página tratar populares e vazia (B-72).
+// tag:<slug>. A base vem como na visão geral, para a página tratar populares e vazia (B-72).
 export const RecommendationPageSchema = z.object({
   mode: z.enum(DISCOVERY_MODES),
   basis: z.enum(RECOMMENDATION_BASES),

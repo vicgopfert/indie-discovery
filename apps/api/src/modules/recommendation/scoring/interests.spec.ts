@@ -9,8 +9,9 @@ import {
   genericIndex,
   rated,
   scoringConfig,
-  STYLED_LIBRARY,
-  styledIndex,
+  scoringIndex,
+  TAGGED_LIBRARY,
+  taggedIndex,
   TASTE_LIBRARY,
   tasteIndex,
 } from './scoring.fixture';
@@ -43,7 +44,7 @@ describe('pickInterests', () => {
     return {
       profile,
       interests,
-      slugs: interests.map((i) => listAttribute(i.attribute, index).slug),
+      slugs: interests.map((i) => listAttribute(i.position, index).slug),
     };
   }
 
@@ -55,9 +56,7 @@ describe('pickInterests', () => {
     const { profile, slugs } = interestsOf(library());
 
     const byU = [...index.features.keys()]
-      .filter(
-        (p) => profile.vector[p]! > 0 && !hidden.has(p) && index.features[p]!.type !== 'KEYWORD',
-      )
+      .filter((p) => profile.vector[p]! > 0 && !hidden.has(p) && index.features[p]!.shelf)
       .sort((a, b) => profile.vector[b]! - profile.vector[a]!)
       .map((p) => index.features[p]!.slug);
     expect(byU.slice(0, scoringConfig.lists.maxInterests).sort()).toEqual([...dominant].sort());
@@ -138,39 +137,55 @@ describe('pickInterests', () => {
   });
 });
 
-describe('pickInterests com estilos', () => {
-  const index = styledIndex();
+describe('pickInterests com etiquetas', () => {
+  const index = taggedIndex();
   const slugsOf = (interactions: Interaction[], lists = scoringConfig.lists) => {
     const profile = buildProfile(interactions, [], index.features.length, scoringConfig);
     return pickInterests(profile, [], index, new Set(), { ...scoringConfig, lists }).map(
-      ({ attribute, coverage }) => [listAttribute(attribute, index).slug, coverage],
+      ({ position, coverage }) => [listAttribute(position, index).slug, coverage],
     );
   };
-  const library = STYLED_LIBRARY.map((slug) => rated(index, slug, 5));
+  const library = TAGGED_LIBRARY.map((slug) => rated(index, slug, 5));
 
-  it('o estilo concorre ao lado dos gêneros e temas e cobre também o jogo que só o tem no resumo', () => {
-    // scare-1 tem a palavra-chave; scare-2, só o termo no resumo. O estilo empata com Terror e
-    // Tiro na cobertura e no peso na biblioteca e entra por ser o menos frequente.
+  it('a etiqueta concorre ao lado dos gêneros e temas', () => {
+    // O terror de sobrevivência empata com Terror e Tiro na cobertura e no peso na biblioteca e
+    // entra por ser o menos frequente.
     expect(slugsOf(library)).toEqual([
       ['fantasy', 12],
       ['survival-horror', 4],
     ]);
   });
 
-  it('o estilo menos frequente vence o gênero no empate', () => {
+  it('a etiqueta menos frequente vence o gênero no empate', () => {
     expect(slugsOf([rated(index, 'rogue-a', 5)])).toEqual([['roguelike', 2]]);
   });
 
-  it('o estilo com soma de pesos negativa na biblioteca não concorre, como o u_k ≤ 0', () => {
-    // rogue-1 só tem a palavra-chave do estilo: a nota 1 (w = −2) anula a nota 5 de rogue-a.
+  it('a etiqueta com u_k ≤ 0 não concorre', () => {
+    // rogue-1 só tem Roguelike: a nota 1 (w = −2) anula a nota 5 de rogue-a.
     expect(slugsOf([rated(index, 'rogue-a', 5), rated(index, 'rogue-1', 1)])).toEqual([['rpg', 2]]);
   });
 
-  it('o limite de frequência no catálogo vale para os estilos', () => {
-    const ratio = index.styles.find(({ slug }) => slug === 'survival-horror')!.documentRatio;
+  it('o limite de frequência no catálogo vale para as etiquetas', () => {
+    const ratio = index.features[featurePosition(index, 'survival-horror')]!.documentRatio;
     const below = { ...scoringConfig.lists, interestMaxDocumentRatio: ratio - 0.001 };
 
     expect(slugsOf(library, below).map(([slug]) => slug)).not.toContain('survival-horror');
+  });
+});
+
+describe('pickInterests: etiqueta que não pode virar prateleira', () => {
+  const index = scoringIndex();
+
+  it('a etiqueta visual não concorre, mesmo cobrindo a biblioteca inteira', () => {
+    // Pixel Art está nos dois jogos; Escalada, só em Celeste.
+    const interactions = [rated(index, 'celeste', 5), rated(index, 'spelunky', 5)];
+    const profile = buildProfile(interactions, [], index.features.length, scoringConfig);
+    const slugs = pickInterests(profile, [], index, new Set(), scoringConfig).map(
+      ({ position }) => listAttribute(position, index).slug,
+    );
+
+    expect(profile.vector[featurePosition(index, 'pixel-art')]!).toBeGreaterThan(0);
+    expect(slugs).not.toContain('pixel-art');
   });
 });
 
@@ -180,7 +195,7 @@ describe('pickInterests: desempate da cobertura (caso Amnesia)', () => {
     const interactions = library.map((slug) => rated(index, slug, 5));
     const profile = buildProfile(interactions, [], index.features.length, scoringConfig);
     return pickInterests(profile, [], index, new Set(), scoringConfig).map(
-      ({ attribute }) => listAttribute(attribute, index).slug,
+      ({ position }) => listAttribute(position, index).slug,
     );
   };
 
@@ -211,7 +226,7 @@ describe('pickInterests com um atributo genérico nos dois gostos', () => {
     pickInterests(profile, [], index, new Set(), {
       ...scoringConfig,
       lists: { ...scoringConfig.lists, interestMaxDocumentRatio },
-    }).map(({ attribute }) => listAttribute(attribute, index).slug);
+    }).map(({ position }) => listAttribute(position, index).slug);
 
   it('sem o limite de frequência, Aventura cobre a biblioteca inteira e vira o único interesse', () => {
     expect(slugsWith(1)).toEqual(['adventure']);

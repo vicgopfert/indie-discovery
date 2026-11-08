@@ -1,5 +1,12 @@
 # Estilos: medição de uma camada curada sobre as palavras-chave (B-73)
 
+> **Substituído pelas etiquetas da comunidade Steam (B-78, 07/11/2026).** Os estilos deixaram de
+> ser lista paralela: cada um foi mapeado para uma etiqueta no B-77, e as palavras-chave e os
+> termos do resumo dele viraram evidência de reserva para os jogos sem etiqueta da Steam
+> (`apps/api/config/tags.json`, `docs/etiquetas.md`). O `config/styles.json`, o módulo de estilos
+> e o `styles:measure` saíram do código; a última versão deles está no commit `aed0505` da `main`.
+> Este documento fica como registro da medição.
+
 Medição feita em 03/11/2026 no banco local, com o catálogo de 22.825 jogos (`inCatalog`). É só
 medição: os estilos não foram implementados e a pontuação não mudou.
 

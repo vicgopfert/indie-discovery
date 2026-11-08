@@ -10,6 +10,7 @@ describe('GameSearchQuerySchema', () => {
     expect(GameSearchQuerySchema.parse({})).toEqual({
       genre: [],
       theme: [],
+      tag: [],
       country: [],
       sort: 'popular',
       page: 1,
@@ -19,8 +20,12 @@ describe('GameSearchQuerySchema', () => {
 
   it('aceita filtro com um valor ou repetido, sem duplicar', () => {
     expect(
-      GameSearchQuerySchema.parse({ genre: 'puzzle', theme: ['horror', ' horror '] }),
-    ).toMatchObject({ genre: ['puzzle'], theme: ['horror'] });
+      GameSearchQuerySchema.parse({
+        genre: 'puzzle',
+        theme: ['horror', ' horror '],
+        tag: ['roguelike', 'action-rpg'],
+      }),
+    ).toMatchObject({ genre: ['puzzle'], theme: ['horror'], tag: ['roguelike', 'action-rpg'] });
   });
 
   it('aceita a sigla do país em minúsculas e o país não informado', () => {
@@ -87,6 +92,9 @@ describe('GameDetailSchema', () => {
     genres: [{ slug: 'platform', name: 'Plataforma' }],
     summary: 'Ajude Madeline a escalar a montanha.',
     themes: [{ slug: 'action', name: 'Ação' }],
+    tags: [{ slug: 'precision-platformer', name: 'Plataforma de Precisão' }],
+    tagSource: 'STEAM',
+    steamAppId: 504230,
     developers: ['Maddy Makes Games'],
     publishers: ['Maddy Makes Games'],
     studioCountry: { code: 'CA', name: 'Canadá', source: 'IGDB' },
@@ -111,6 +119,9 @@ describe('GameDetailSchema', () => {
         developers: [],
         publishers: [],
         studioCountry: null,
+        tags: [],
+        tagSource: null,
+        steamAppId: null,
         languages: [],
         officialUrl: null,
       }).success,

@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { IngestionStatus, ReviewFlagKind } from '../../generated/prisma/client';
+import { FeatureType, IngestionStatus, ReviewFlagKind } from '../../generated/prisma/client';
 import { canDeactivateMissing, missingCause } from './review-flags/candidate-set';
 import { collectionFlags, collectionWrites } from './collections/collections';
 import type { CollectionsConfig } from './collections/collections.config';
@@ -30,6 +30,14 @@ import type { StoredGame } from './model/stored-game';
 import { resolveStudioCountry, type WikidataCountries } from './studio-country/studio-country';
 import type { WikidataCountrySource } from './wikidata/wikidata-country.source';
 import { computeIdf, type TfidfConfig } from '../recommendation/tfidf';
+import type { SteamTag } from '../tags/steam-store.client';
+import {
+  type AssignedTags,
+  tagAssigner,
+  tagFeatures,
+  type TagEvidence,
+  type TagVocabulary,
+} from '../tags/tags';
 
 export interface IngestionSettings {
   criteria: VersionedIndieCriteria;
@@ -37,6 +45,11 @@ export interface IngestionSettings {
   tfidf: TfidfConfig;
   ingestion: IngestionConfig;
   collections: CollectionsConfig;
+  tags: TagVocabulary;
+}
+
+export interface SteamTagSource {
+  tagsOf(appids: readonly number[]): Promise<ReadonlyMap<number, readonly SteamTag[]>>;
 }
 
 export interface IngestionResult extends RunOutcome {
@@ -47,6 +60,11 @@ type Counts = Pick<RunOutcome, 'gamesFetched' | 'gamesInvalid'>;
 
 interface WikidataLookup {
   countriesOf: (game: MappedGame) => WikidataCountries | undefined;
+  unavailableReason?: string;
+}
+
+interface TagLookup {
+  tagsOf: (game: MappedGame) => AssignedTags;
   unavailableReason?: string;
 }
 
@@ -64,6 +82,7 @@ export class RunIngestionUseCase {
   constructor(
     private readonly source: IgdbCatalogSource,
     private readonly wikidata: WikidataCountrySource,
+    private readonly steam: SteamTagSource,
     private readonly repository: IngestionRepository,
     private readonly settings: IngestionSettings,
   ) {}
@@ -118,6 +137,22 @@ export class RunIngestionUseCase {
       signalScale,
     );
     const countries = await this.wikidataCountries();
+    const tags = await this.communityTags(catalogEntries.map(({ game }) => game));
+    const toFeatures = tagFeatures(this.settings.tags);
+    const tagged = catalogEntries.map(({ game, verdict }) => {
+      const assigned = tags.tagsOf(game);
+      return {
+        game: { ...game, features: [...game.features, ...toFeatures(assigned.tags)] },
+        verdict,
+        assigned,
+      };
+    });
+    const bySource = (source: AssignedTags['source']) =>
+      tagged.filter(({ assigned }) => assigned.source === source).length;
+    this.logger.log(
+      `Etiquetas: ${bySource('STEAM')} jogos pela Steam, ${bySource('IGDB')} pela reserva da ` +
+        `IGDB, ${bySource(null)} sem nenhuma`,
+    );
 
     const missing = [...stored.values()].filter((g) => g.inCatalog && !fetchedIds.has(g.igdbId));
     const deactivation = await this.planDeactivation(
@@ -127,10 +162,10 @@ export class RunIngestionUseCase {
     );
 
     const idf = computeIdf(
-      catalogEntries.map(({ game }) => game.features),
+      tagged.map(({ game }) => game.features),
       this.settings.tfidf,
     );
-    const catalog: CatalogGame[] = catalogEntries.map(({ game, verdict }) => {
+    const catalog: CatalogGame[] = tagged.map(({ game, verdict, assigned }) => {
       const count = reconstructedCount(wantToPlay.get(game.igdbId) ?? 0, scale);
       return {
         game,
@@ -138,6 +173,8 @@ export class RunIngestionUseCase {
         popularityCount: count,
         popularityNorm: normalizedPopularity(count, scale),
         studioCountry: resolveStudioCountry(game.studioCountryCode, countries.countriesOf(game)),
+        steamAppId: assigned.steamAppId,
+        tagSource: assigned.source,
       };
     });
     const outOfCatalog: OutOfCatalogGame[] = [
@@ -190,8 +227,9 @@ export class RunIngestionUseCase {
       popularityMax: scale?.maxCount ?? null,
       popularityMedian: scale?.medianCount ?? null,
       errorSummary:
-        [deactivation.skippedReason, countries.unavailableReason].filter(Boolean).join('; ') ||
-        null,
+        [deactivation.skippedReason, countries.unavailableReason, tags.unavailableReason]
+          .filter(Boolean)
+          .join('; ') || null,
     };
   }
 
@@ -211,6 +249,48 @@ export class RunIngestionUseCase {
           return code === undefined ? undefined : { developer: new Set([code]), origin: new Set() };
         },
         unavailableReason: `${reason}; países do Wikidata mantidos da execução anterior`,
+      };
+    }
+  }
+
+  // Etiquetas da comunidade Steam, só dos jogos do catálogo e antes da gravação: nenhuma requisição
+  // de usuário chama a Steam. Se a loja falhar, a ingestão segue com as etiquetas da Steam já
+  // gravadas e com a reserva da IGDB para os outros jogos, com o motivo no resumo. Antes da
+  // primeira coleta bem-sucedida não há o que manter: a execução falha sem gravar nada, para o
+  // catálogo não ficar só com a reserva.
+  private async communityTags(games: readonly MappedGame[]): Promise<TagLookup> {
+    const appidsStart = Date.now();
+    const appids = await this.source.steamAppIds(games.map((game) => game.igdbId));
+    this.logger.log(
+      `Ids da Steam: ${appids.size} jogos em ${Math.round((Date.now() - appidsStart) / 1000)} s`,
+    );
+    const assign = tagAssigner(this.settings.tags);
+    const evidence = (game: MappedGame): TagEvidence => ({
+      appids: appids.get(game.igdbId) ?? [],
+      keywords: game.features.filter((f) => f.type === FeatureType.KEYWORD).map((f) => f.slug),
+      summary: game.summary ?? '',
+    });
+    try {
+      const storeStart = Date.now();
+      const steamTags = await this.steam.tagsOf([...new Set([...appids.values()].flat())]);
+      this.logger.log(
+        `Etiquetas da loja: ${steamTags.size} ids em ` +
+          `${Math.round((Date.now() - storeStart) / 1000)} s`,
+      );
+      return { tagsOf: (game) => assign(evidence(game), steamTags) };
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : String(error);
+      const stored = await this.repository.storedSteamTags();
+      if (stored.size === 0) {
+        throw new Error(
+          `Etiquetas da Steam indisponíveis e nenhuma gravada ainda: ${reason}; nada foi gravado`,
+        );
+      }
+      this.logger.warn(`Etiquetas da Steam indisponíveis: ${reason}`);
+      const noSteamTags = new Map<number, SteamTag[]>();
+      return {
+        tagsOf: (game) => stored.get(game.igdbId) ?? assign(evidence(game), noSteamTags),
+        unavailableReason: `${reason}; etiquetas da Steam mantidas da execução anterior`,
       };
     }
   }
