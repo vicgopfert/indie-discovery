@@ -152,7 +152,7 @@ function orderLists(
 }
 
 // Posição a posição, entra o próximo jogo ainda não usado da prateleira com o maior déficit em
-// relação à cota, share_k · n − c_k; no empate, a que vem antes, de maior cota. O jogo de dois
+// relação à cota, share_k · n − c_k; no empate, a que vem antes na página. O jogo de dois
 // interesses conta para a prateleira que o pôs. Esgotadas as prateleiras, segue pelo resto.
 export function interleave(
   shelves: readonly (readonly IndexedGame[])[],

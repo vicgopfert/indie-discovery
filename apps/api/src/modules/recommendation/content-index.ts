@@ -88,6 +88,8 @@ export interface ContentIndex {
   // O vetor de um jogo fora do índice (o que saiu do catálogo e continua na biblioteca), com o
   // mesmo IDF e as mesmas posições: atributo fora do índice fica de fora, como nos outros jogos.
   vectorOf(features: readonly Pick<ContentFeature, 'type' | 'igdbId'>[]): ContentVector;
+  // Jaccard entre os jogos do índice que têm cada um dos dois atributos.
+  catalogJaccard(a: number, b: number): number;
 }
 
 // Os pesos são refeitos a partir do IDF gravado na ingestão, com a mesma conta dela (tfidfVector).
@@ -125,6 +127,8 @@ export function buildContentIndex(
     for (const position of featurePositions) documentCount[position]!++;
   }
   const ratio = (count: number) => (rows.games.length === 0 ? 0 : count / rows.games.length);
+  const gamesWith = postings(rows.games, documentCount);
+  const jaccardMemo = new Map<number, number>();
 
   return {
     games,
@@ -146,5 +150,44 @@ export function buildContentIndex(
     positionByGameId: new Map(games.map(({ id }, position) => [id, position])),
     positionByFeatureId: new Map(rows.features.map(({ id }, position) => [id, position])),
     vectorOf,
+    // Poucos pares chegam a ser comparados (os atributos das bibliotecas, contra até 6
+    // prateleiras), e cada um custa uma passada pelos jogos dos dois: calculado na primeira vez.
+    catalogJaccard(a, b) {
+      if (a === b) return 1;
+      const key = Math.min(a, b) * rows.features.length + Math.max(a, b);
+      let value = jaccardMemo.get(key);
+      if (value === undefined) {
+        value = sortedJaccard(gamesWith[a]!, gamesWith[b]!);
+        jaccardMemo.set(key, value);
+      }
+      return value;
+    },
   };
+}
+
+// As posições dos jogos de cada atributo, em ordem crescente.
+function postings(
+  games: ContentIndexRows['games'],
+  documentCount: readonly number[],
+): Int32Array[] {
+  const lists = documentCount.map((count) => new Int32Array(count));
+  const filled = new Array<number>(documentCount.length).fill(0);
+  games.forEach(({ featurePositions }, game) => {
+    for (const position of featurePositions) lists[position]![filled[position]!++] = game;
+  });
+  return lists;
+}
+
+function sortedJaccard(a: Int32Array, b: Int32Array): number {
+  let both = 0;
+  for (let i = 0, j = 0; i < a.length && j < b.length;) {
+    if (a[i] === b[j]) {
+      both++;
+      i++;
+      j++;
+    } else if (a[i]! < b[j]!) i++;
+    else j++;
+  }
+  const union = a.length + b.length - both;
+  return union === 0 ? 0 : both / union;
 }

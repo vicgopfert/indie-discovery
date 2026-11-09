@@ -152,7 +152,10 @@ describe('buildLists', () => {
   });
 
   it('com menos de 2 interesses, a principal é a ordem da pontuação', () => {
-    const { byKey, candidates } = listsOf(DiscoveryMode.BALANCED, {}, [rated(index, 'saga-1', 5)]);
+    const { byKey, candidates } = listsOf(DiscoveryMode.BALANCED, {}, [
+      rated(index, 'saga-1', 5),
+      rated(index, 'saga-2', 5),
+    ]);
 
     expect(byKey.size).toBe(3);
     const scores = slugs(byKey.get('main')).map(
@@ -219,9 +222,18 @@ describe('buildLists com etiquetas', () => {
     expect(shelf.games.map(({ slug }) => slug).sort()).toEqual(['scare-a', 'scare-b']);
   });
 
+  // A etiqueta vem antes na página, pela fase 1, com cota de 25% contra 75% de Fantasia: a
+  // primeira posição é de Fantasia, e a segunda empata no déficit e fica com a etiqueta.
   it('a principal intercala a etiqueta pela cota dela', () => {
     const main = built.find(({ key }) => key === 'main')!.games.map(({ slug }) => slug);
 
-    expect(main[2]).toBe(shelf.games[0]!.slug);
+    expect(built.map(({ key }) => key)).toEqual([
+      'main',
+      'upcoming',
+      'tag:survival-horror',
+      'theme:fantasy',
+    ]);
+    expect(main[1]).toBe(shelf.games[0]!.slug);
+    expect(main[0]).not.toBe(shelf.games[0]!.slug);
   });
 });

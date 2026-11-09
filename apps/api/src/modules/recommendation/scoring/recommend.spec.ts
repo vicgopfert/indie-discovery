@@ -104,17 +104,18 @@ describe('recommend', () => {
   });
 
   it('com um interesse só, a principal é a ordem da pontuação', () => {
-    // Hades tem um gênero e um tema, nos mesmos jogos: o segundo não cobre nada novo.
+    // Hades e Dead Cells dividem um gênero e um tema: o primeiro a entrar cobre os dois jogos, e o
+    // segundo não cobre nada novo.
     const result = recommend(
       index,
-      input({ interactions: [rated(index, 'hades', 5)] }),
+      input({ interactions: [rated(index, 'hades', 5), rated(index, 'dead-cells', 5)] }),
       scoringConfig,
     );
 
     expect(result.lists.map(({ key }) => key)).toEqual(['main', 'upcoming', 'theme:fantasy']);
-    // Os dois primeiros têm o vetor de Hades e empatam no cosseno 1: o sorteio decide.
     expect(slugs(result).slice(0, 2).sort()).toEqual(['obscure-rogue', 'popular-rogue']);
-    expect(slugs(result).slice(2)).toEqual(['dead-cells', 'spelunky']);
+    // Os outros pela pontuação: Spelunky divide o gênero, Plataforma e Pixel Art com Dead Cells.
+    expect(slugs(result).slice(2)).toEqual(['spelunky', 'celeste', 'limbo', 'inside', 'free-solo']);
   });
 
   it('trocar o modo muda a lista: o mais popular sobe em Populares e o menos em Descobertas', () => {

@@ -329,7 +329,8 @@ export function rated(
 }
 
 // O caso de produção com etiquetas (B-74, refeito com as etiquetas no B-78): o terror de
-// sobrevivência é uma etiqueta que pode virar prateleira, em scare-1, scare-2, scare-a e scare-b.
+// sobrevivência é uma etiqueta de subgênero que pode virar prateleira, em scare-1, scare-2, scare-a
+// e scare-b.
 // Aventura está em todo o catálogo, e Tiro é mais frequente que a etiqueta. rogue-1 só tem a
 // etiqueta Roguelike.
 const TAGGED_FEATURES: FixtureFeature[] = [
@@ -342,6 +343,7 @@ const TAGGED_FEATURES: FixtureFeature[] = [
     name: 'Terror de Sobrevivência',
     idf: 2,
     shelf: true,
+    gameKind: true,
   },
   {
     id: featureId('roguelike'),
@@ -351,6 +353,7 @@ const TAGGED_FEATURES: FixtureFeature[] = [
     name: 'Roguelike',
     idf: 2,
     shelf: true,
+    gameKind: true,
   },
   FILLER_FEATURE,
 ];
@@ -392,4 +395,66 @@ export function taggedGameOf(slug: string) {
       return { type, igdbId };
     }),
   };
+}
+
+// A regra de duas fases (B-79). Na biblioteca: três jogos de plataforma (a etiqueta Plataforma, de
+// subgênero, tem a mesma ideia do gênero Platform), dois de roguelike, dois de RPG sem etiqueta
+// de tipo de jogo e Amnesia, o único de terror. Impiedoso é mecânica, em quatro jogos.
+// Metroidvania quase só aparece junto com Plataforma no catálogo.
+const tag = (igdbId: number, slug: string, name: string, extra: Partial<FixtureFeature> = {}) => ({
+  id: featureId(slug),
+  type: TAG,
+  igdbId,
+  slug,
+  name,
+  idf: 2,
+  shelf: true,
+  ...extra,
+});
+
+const SHELF_FEATURES: FixtureFeature[] = [
+  { id: featureId('rpg'), type: GENRE, igdbId: 1, slug: 'rpg', name: 'RPG', idf: 1 },
+  {
+    id: featureId('platform'),
+    type: GENRE,
+    igdbId: 2,
+    slug: 'platform',
+    name: 'Platform',
+    idf: 1,
+  },
+  { id: featureId('fantasy'), type: THEME, igdbId: 1, slug: 'fantasy', name: 'Fantasy', idf: 1 },
+  { id: featureId('horror'), type: THEME, igdbId: 2, slug: 'horror', name: 'Horror', idf: 1.6 },
+  tag(1, 'platformer', 'Plataforma', { gameKind: true, sameIdeaAs: 'genre:platform' }),
+  tag(2, 'roguelike', 'Roguelike', { gameKind: true, title: 'roguelikes e roguelites' }),
+  tag(3, 'metroidvania', 'Metroidvania', { gameKind: true }),
+  tag(4, 'survival-horror', 'Terror de Sobrevivência', { gameKind: true }),
+  tag(5, 'difficult', 'Impiedoso', { title: 'jogos difíceis' }),
+  tag(6, 'rpg-tag', 'RPG', { sameIdeaAs: 'genre:rpg' }),
+  tag(7, 'pixel-art', 'Pixel Art', { shelf: false }),
+  FILLER_FEATURE,
+];
+
+const SHELF_GAMES: FixtureGames = {
+  hollow: [['platform', 'fantasy', 'platformer', 'metroidvania', 'difficult', 'pixel-art'], 0.9],
+  dead: [['platform', 'fantasy', 'platformer', 'metroidvania', 'roguelike', 'difficult'], 0.8],
+  hades: [['fantasy', 'roguelike', 'difficult'], 0.9],
+  celeste: [['platform', 'platformer', 'difficult', 'pixel-art'], 0.8],
+  amnesia: [['horror', 'survival-horror'], 0.6],
+  'tale-1': [['rpg', 'rpg-tag'], 0.5],
+  'tale-2': [['rpg', 'rpg-tag'], 0.4],
+  'metro-a': [['platform', 'platformer', 'metroidvania'], 0.5],
+  'metro-b': [['platform', 'platformer', 'metroidvania', 'pixel-art'], 0.3],
+  'plat-a': [['platform', 'platformer'], 0.4],
+  'rogue-a': [['fantasy', 'roguelike'], 0.5],
+  'hard-a': [['difficult'], 0.2],
+  'hard-b': [['difficult'], 0.1],
+  'tale-a': [['rpg', 'fantasy', 'rpg-tag'], 0.6],
+  'fright-a': [['horror', 'survival-horror'], 0.3],
+  ...fillers('filler', 65, ['filler']),
+};
+
+export const SHELF_LIBRARY = ['hollow', 'dead', 'hades', 'celeste', 'amnesia', 'tale-1', 'tale-2'];
+
+export function shelfIndex(): ContentIndex {
+  return fixtureIndex(SHELF_FEATURES, SHELF_GAMES, []);
 }
