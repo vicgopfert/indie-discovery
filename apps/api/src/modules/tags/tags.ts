@@ -42,7 +42,7 @@ export const tagVocabularySchema = z
         // na pontuação, mas uma prateleira com elas não diria nada ao jogador.
         shelf: z.boolean(),
         // No lugar do nome em "Porque você curte <título>", quando o nome não se lê bem ali
-        // (Impiedoso → "jogos difíceis").
+        // (Difícil → "jogos difíceis").
         title: z.string().min(1).optional(),
         // O gênero ou tema da IGDB com a mesma ideia: as prateleiras não repetem uma ideia pelas
         // duas fontes (gênero Visual Novel e etiqueta Romance Visual).

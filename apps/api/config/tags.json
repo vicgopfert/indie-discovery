@@ -1,5 +1,5 @@
 {
-  "rule": "Vocabulário das etiquetas da comunidade Steam (B-77), revisado pelo autor em 07/11/2026: grupos, prateleiras e títulos. Etiquetas com ao menos 3 jogos no catálogo (peso mínimo relativo 0,1 na coleta de 05/11/2026), com o nome em português da própria Steam. Grupos pelos da documentação da Steam (Tag Wizard): entram gênero, subgênero, mecânica, clima, tema e visual; ficam de fora jogadores, recursos técnicos, opinião e outros (inclusive Indie, em quase todo o catálogo, e as de conteúdo adulto). Simulação e Simulador de Caminhada saíram pela precisão (R3). shelf: pode virar prateleira de interesse (o visual e as etiquetas vagas ou subjetivas não viram). title: opcional, substitui o nome em \"Porque você curte <título>\". sameIdeaAs: opcional, o gênero ou tema da IGDB que diz a mesma coisa (\"genre:visual-novel\" para Romance Visual), para as prateleiras não repetirem uma ideia pelas duas fontes; tabela do protótipo do B-77, adotada no B-79. As palavras-chave e os termos do resumo vêm dos 49 estilos do B-74 e são evidência de reserva para os jogos sem etiqueta aceita da Steam; saiu a evidência que a Steam confirma em menos de 50% dos jogos com as duas fontes. Etiqueta fora deste arquivo é ignorada pela ingestão até uma nova revisão.",
+  "rule": "Vocabulário das etiquetas da comunidade Steam (B-77), revisado pelo autor em 07/11/2026: grupos, prateleiras e títulos. Etiquetas com ao menos 3 jogos no catálogo (peso mínimo relativo 0,1 na coleta de 05/11/2026), com o nome em português da própria Steam; por decisão do autor (B-79), 44 nomes trocados pelo termo que a comunidade usa (Puzzle, Deckbuilding, Bullet Hell), em português quando é natural (Difícil, Simulador de Fazenda). Grupos pelos da documentação da Steam (Tag Wizard): entram gênero, subgênero, mecânica, clima, tema e visual; ficam de fora jogadores, recursos técnicos, opinião e outros (inclusive Indie, em quase todo o catálogo, e as de conteúdo adulto). Simulação e Simulador de Caminhada saíram pela precisão (R3). shelf: pode virar prateleira de interesse (o visual e as etiquetas vagas ou subjetivas não viram). title: opcional, substitui o nome em \"Porque você curte <título>\". sameIdeaAs: opcional, o gênero ou tema da IGDB que diz a mesma coisa (\"genre:visual-novel\" para Romance Visual), para as prateleiras não repetirem uma ideia pelas duas fontes; tabela do protótipo do B-77, adotada no B-79. As palavras-chave e os termos do resumo vêm dos 49 estilos do B-74 e são evidência de reserva para os jogos sem etiqueta aceita da Steam; saiu a evidência que a Steam confirma em menos de 50% dos jogos com as duas fontes. Etiqueta fora deste arquivo é ignorada pela ingestão até uma nova revisão.",
   "minRelativeWeight": 0.3,
   "minRelativeWeightRationale": "Medido no B-77 (R2): uma etiqueta conta se o peso dela for pelo menos 0,3 vez o da mais votada do próprio jogo. É o maior corte com precisão de ao menos 90% na amostra julgada pelo autor (91,6%) que mantém a cobertura (94,1% do catálogo, 87,3% no quartil menos popular). O corte é relativo porque o peso da rota não é contagem de votos.",
   "unmappedStyles": ["walking-simulator", "liminal-horror"],
@@ -141,7 +141,7 @@
     },
     {
       "id": 1664,
-      "name": "Quebra-Cabeça",
+      "name": "Puzzle",
       "englishName": "Puzzle",
       "group": "genre",
       "accepted": true,
@@ -167,7 +167,7 @@
     },
     {
       "id": 3964,
-      "name": "Gráficos Pixelados",
+      "name": "Pixel Art",
       "englishName": "Pixel Graphics",
       "group": "visual",
       "accepted": true,
@@ -454,7 +454,7 @@
     },
     {
       "id": 4026,
-      "name": "Impiedoso",
+      "name": "Difícil",
       "englishName": "Difficult",
       "group": "mood",
       "accepted": true,
@@ -467,7 +467,7 @@
     },
     {
       "id": 6426,
-      "name": "Você Decide",
+      "name": "Escolhas Importam",
       "englishName": "Choices Matter",
       "group": "mechanic",
       "accepted": true,
@@ -551,7 +551,7 @@
     },
     {
       "id": 3810,
-      "name": "Faça o que Quiser",
+      "name": "Sandbox",
       "englishName": "Sandbox",
       "group": "mechanic",
       "accepted": true,
@@ -715,7 +715,7 @@
     },
     {
       "id": 1698,
-      "name": "Apontar e Clicar",
+      "name": "Point-and-Click",
       "englishName": "Point & Click",
       "group": "genre",
       "accepted": true,
@@ -752,7 +752,7 @@
     },
     {
       "id": 1702,
-      "name": "Fabricação",
+      "name": "Crafting",
       "englishName": "Crafting",
       "group": "mechanic",
       "accepted": true,
@@ -837,7 +837,7 @@
     },
     {
       "id": 3799,
-      "name": "Romance Visual",
+      "name": "Visual Novel",
       "englishName": "Visual Novel",
       "group": "genre",
       "accepted": true,
@@ -851,7 +851,7 @@
     },
     {
       "id": 1663,
-      "name": "Tiro em Primeira Pessoa (FPS)",
+      "name": "FPS",
       "englishName": "FPS",
       "group": "subgenre",
       "accepted": true,
@@ -984,7 +984,7 @@
     },
     {
       "id": 9204,
-      "name": "Simulador Imersivo",
+      "name": "Immersive Sim",
       "englishName": "Immersive Sim",
       "group": "subgenre",
       "accepted": true,
@@ -1087,7 +1087,7 @@
     },
     {
       "id": 4057,
-      "name": "Mágica",
+      "name": "Magia",
       "englishName": "Magic",
       "group": "theme",
       "accepted": true,
@@ -1110,7 +1110,7 @@
     },
     {
       "id": 5537,
-      "name": "Plataforma com Quebra-Cabeça",
+      "name": "Puzzle Platformer",
       "englishName": "Puzzle Platformer",
       "group": "subgenre",
       "accepted": true,
@@ -1186,7 +1186,7 @@
     },
     {
       "id": 1720,
-      "name": "Explorador de Calabouços",
+      "name": "Dungeon Crawler",
       "englishName": "Dungeon Crawler",
       "group": "subgenre",
       "accepted": true,
@@ -1302,7 +1302,7 @@
     },
     {
       "id": 4885,
-      "name": "Inferno de Balas",
+      "name": "Bullet Hell",
       "englishName": "Bullet Hell",
       "group": "subgenre",
       "accepted": true,
@@ -1327,7 +1327,7 @@
     },
     {
       "id": 10235,
-      "name": "Simulador de Vida Real",
+      "name": "Simulador de Vida",
       "englishName": "Life Sim",
       "group": "subgenre",
       "accepted": true,
@@ -1427,7 +1427,7 @@
     },
     {
       "id": 1687,
-      "name": "Furtivo",
+      "name": "Furtividade",
       "englishName": "Stealth",
       "group": "mechanic",
       "accepted": true,
@@ -1594,7 +1594,7 @@
     },
     {
       "id": 4255,
-      "name": "Mandando Bala",
+      "name": "Shoot 'em Up",
       "englishName": "Shoot 'Em Up",
       "group": "subgenre",
       "accepted": true,
@@ -1679,7 +1679,7 @@
     },
     {
       "id": 32322,
-      "name": "Montagem de Decks",
+      "name": "Deckbuilding",
       "englishName": "Deckbuilding",
       "group": "subgenre",
       "accepted": true,
@@ -1695,7 +1695,7 @@
         "deck building",
         "deck builder"
       ],
-      "title": "construção de baralho (deckbuilding)"
+      "title": "jogos de deckbuilding"
     },
     {
       "id": 1666,
@@ -1738,7 +1738,7 @@
     },
     {
       "id": 4637,
-      "name": "SHMUP com Visão Superior",
+      "name": "Top-Down Shooter",
       "englishName": "Top-Down Shooter",
       "group": "subgenre",
       "accepted": true,
@@ -1747,7 +1747,7 @@
       "styles": [],
       "keywords": [],
       "summaryTerms": [],
-      "title": "tiro com visão de cima"
+      "title": "top-down shooters"
     },
     {
       "id": 1659,
@@ -1947,7 +1947,7 @@
     },
     {
       "id": 4236,
-      "name": "Saques",
+      "name": "Loot",
       "englishName": "Loot",
       "group": "mechanic",
       "accepted": true,
@@ -2109,7 +2109,7 @@
     },
     {
       "id": 615955,
-      "name": "Progressão Ociosa",
+      "name": "Idle",
       "englishName": "Idler",
       "group": "subgenre",
       "accepted": true,
@@ -2207,7 +2207,7 @@
     },
     {
       "id": 791774,
-      "name": "Batalha com Cartas",
+      "name": "Card Battler",
       "englishName": "Card Battler",
       "group": "subgenre",
       "accepted": true,
@@ -2232,7 +2232,7 @@
     },
     {
       "id": 4158,
-      "name": "Porradaria",
+      "name": "Beat 'em Up",
       "englishName": "Beat 'em up",
       "group": "subgenre",
       "accepted": true,
@@ -2270,7 +2270,7 @@
     },
     {
       "id": 916648,
-      "name": "Coleção de Criaturas",
+      "name": "Creature Collector",
       "englishName": "Creature Collector",
       "group": "subgenre",
       "accepted": true,
@@ -2291,11 +2291,11 @@
         "creature-collecting",
         "creature collecting"
       ],
-      "title": "coleta de criaturas"
+      "title": "creature collectors"
     },
     {
       "id": 9551,
-      "name": "Simulador de Encontros",
+      "name": "Dating Sim",
       "englishName": "Dating Sim",
       "group": "subgenre",
       "accepted": true,
@@ -2319,7 +2319,7 @@
     },
     {
       "id": 87918,
-      "name": "Simulador Rural",
+      "name": "Simulador de Fazenda",
       "englishName": "Farming Sim",
       "group": "subgenre",
       "accepted": true,
@@ -2377,7 +2377,7 @@
     },
     {
       "id": 4758,
-      "name": "Controle com Alavanca Dupla",
+      "name": "Twin Stick Shooter",
       "englishName": "Twin Stick Shooter",
       "group": "subgenre",
       "accepted": true,
@@ -2386,7 +2386,7 @@
       "styles": [],
       "keywords": [],
       "summaryTerms": [],
-      "title": "tiro com dois analógicos (twin stick)"
+      "title": "twin stick shooters"
     },
     {
       "id": 10397,
@@ -2446,7 +2446,7 @@
     },
     {
       "id": 7178,
-      "name": "Reúna a Galera",
+      "name": "Party Game",
       "englishName": "Party Game",
       "group": "genre",
       "accepted": true,
@@ -2455,7 +2455,7 @@
       "styles": [],
       "keywords": [],
       "summaryTerms": [],
-      "title": "jogos para jogar com a galera",
+      "title": "party games",
       "sameIdeaAs": "theme:party"
     },
     {
@@ -2472,7 +2472,7 @@
     },
     {
       "id": 5547,
-      "name": "Tiro em Arena",
+      "name": "Arena Shooter",
       "englishName": "Arena Shooter",
       "group": "subgenre",
       "accepted": true,
@@ -2582,7 +2582,7 @@
     },
     {
       "id": 1091588,
-      "name": "Montagem de Decks Roguelike",
+      "name": "Roguelike Deckbuilder",
       "englishName": "Roguelike Deckbuilder",
       "group": "subgenre",
       "accepted": true,
@@ -2858,7 +2858,7 @@
     },
     {
       "id": 1084988,
-      "name": "Batalha Automática",
+      "name": "Auto Battler",
       "englishName": "Auto Battler",
       "group": "subgenre",
       "accepted": true,
@@ -2981,7 +2981,7 @@
     },
     {
       "id": 8666,
-      "name": "Corredor",
+      "name": "Endless Runner",
       "englishName": "Runner",
       "group": "subgenre",
       "accepted": true,
@@ -2990,7 +2990,7 @@
       "styles": [],
       "keywords": [],
       "summaryTerms": [],
-      "title": "runners (corrida infinita)"
+      "title": "endless runners"
     },
     {
       "id": 1777,
@@ -3030,7 +3030,7 @@
     },
     {
       "id": 723991,
-      "name": "Paraíso de Balas",
+      "name": "Bullet Heaven",
       "englishName": "Bullet Heaven",
       "group": "subgenre",
       "accepted": true,
@@ -3112,7 +3112,7 @@
     },
     {
       "id": 1023537,
-      "name": "Tiro de Tiozão",
+      "name": "Boomer Shooter",
       "englishName": "Boomer Shooter",
       "group": "subgenre",
       "accepted": true,
@@ -3121,7 +3121,7 @@
       "styles": ["boomer-shooter"],
       "keywords": ["boomer-shooter"],
       "summaryTerms": ["boomer shooter", "retro fps", "retro shooter", "old-school fps"],
-      "title": "boomer shooters (tiro retrô)"
+      "title": "boomer shooters"
     },
     {
       "id": 5794,
@@ -3400,7 +3400,7 @@
     },
     {
       "id": 769306,
-      "name": "Fuja da Sala",
+      "name": "Escape Room",
       "englishName": "Escape Room",
       "group": "subgenre",
       "accepted": true,
@@ -3409,7 +3409,7 @@
       "styles": [],
       "keywords": ["escape-room"],
       "summaryTerms": ["escape room", "escape-room"],
-      "title": "jogos de sala de fuga"
+      "title": "escape rooms"
     },
     {
       "id": 1681,
@@ -3461,7 +3461,7 @@
     },
     {
       "id": 3955,
-      "name": "Jogo de Ação Focado em Personagem",
+      "name": "Character Action",
       "englishName": "Character Action Game",
       "group": "subgenre",
       "accepted": true,
@@ -3470,7 +3470,7 @@
       "styles": [],
       "keywords": [],
       "summaryTerms": [],
-      "title": "ação focada em combos"
+      "title": "jogos de character action"
     },
     {
       "id": 1239876,
@@ -3487,7 +3487,7 @@
     },
     {
       "id": 198631,
-      "name": "Calabouço Misterioso",
+      "name": "Mystery Dungeon",
       "englishName": "Mystery Dungeon",
       "group": "subgenre",
       "accepted": true,
@@ -3500,7 +3500,7 @@
     },
     {
       "id": 353880,
-      "name": "Tiro com Saques",
+      "name": "Looter Shooter",
       "englishName": "Looter Shooter",
       "group": "subgenre",
       "accepted": true,
@@ -4013,7 +4013,7 @@
     },
     {
       "id": 1665,
-      "name": "Combinar 3",
+      "name": "Match 3",
       "englishName": "Match 3",
       "group": "subgenre",
       "accepted": true,
@@ -4086,7 +4086,7 @@
     },
     {
       "id": 620519,
-      "name": "Tiro de Heróis",
+      "name": "Hero Shooter",
       "englishName": "Hero Shooter",
       "group": "subgenre",
       "accepted": true,
@@ -4368,7 +4368,7 @@
     },
     {
       "id": 7622,
-      "name": "Estrada de Terra",
+      "name": "Off-Road",
       "englishName": "Offroad",
       "group": "subgenre",
       "accepted": true,
@@ -4430,7 +4430,7 @@
     },
     {
       "id": 11095,
-      "name": "Duelo contra Chefões",
+      "name": "Boss Rush",
       "englishName": "Boss Rush",
       "group": "mechanic",
       "accepted": true,
@@ -4443,7 +4443,7 @@
     },
     {
       "id": 1199779,
-      "name": "Tiro de Extração",
+      "name": "Extraction Shooter",
       "englishName": "Extraction Shooter",
       "group": "subgenre",
       "accepted": true,
@@ -4541,7 +4541,7 @@
     },
     {
       "id": 56690,
-      "name": "Tiro sobre Trilhos",
+      "name": "Rail Shooter",
       "englishName": "On-Rails Shooter",
       "group": "subgenre",
       "accepted": true,

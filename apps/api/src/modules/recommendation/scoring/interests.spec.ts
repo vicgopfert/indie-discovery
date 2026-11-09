@@ -56,7 +56,7 @@ describe('pickInterests: regra de duas fases', () => {
 
   it('fase 1 pelas etiquetas de tipo de jogo, o atributo largo só para os jogos sem etiqueta, e a fase 2 completa', () => {
     // Plataforma cobre três jogos e Roguelike, o que sobra (Hades). O RPG largo cobre os dois jogos
-    // sem etiqueta de tipo de jogo. Impiedoso, mecânica, entra na fase 2, pelo peso dos quatro jogos.
+    // sem etiqueta de tipo de jogo. Difícil, de clima, entra na fase 2, pelo peso dos quatro jogos.
     expect(slugsWith()).toEqual(['platformer', 'roguelike', 'rpg', 'difficult']);
   });
 

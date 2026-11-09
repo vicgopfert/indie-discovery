@@ -14,7 +14,7 @@ const options: CatalogFilterOptions = {
   themes: [{ slug: 'horror', name: 'Terror', gameCount: 1500 }],
   tags: [
     { slug: 'action-rpg', name: 'RPG de Ação', gameCount: 900 },
-    { slug: 'difficult', name: 'Impiedoso', gameCount: 2100 },
+    { slug: 'difficult', name: 'Difícil', gameCount: 2100 },
     { slug: 'metroidvania', name: 'Metroidvania', gameCount: 700 },
   ],
   countries: [{ code: 'BR', name: 'Brasil', gameCount: 251 }],

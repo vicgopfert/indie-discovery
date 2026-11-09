@@ -51,7 +51,7 @@ describe('listas na URL', () => {
     expect(listTitle('theme:horror', { feature: horror })).toBe('Porque você curte Terror');
     expect(
       listTitle('tag:difficult', {
-        feature: { type: 'TAG', slug: 'difficult', name: 'Impiedoso', title: 'jogos difíceis' },
+        feature: { type: 'TAG', slug: 'difficult', name: 'Difícil', title: 'jogos difíceis' },
       }),
     ).toBe('Porque você curte jogos difíceis');
     expect(

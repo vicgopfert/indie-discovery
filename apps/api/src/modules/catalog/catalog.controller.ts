@@ -55,7 +55,7 @@ const GAME_DETAIL_EXAMPLE = {
   themes: [{ slug: 'action', name: 'Ação' }],
   tags: [
     { slug: 'precision-platformer', name: 'Plataforma de Precisão' },
-    { slug: 'difficult', name: 'Impiedoso' },
+    { slug: 'difficult', name: 'Difícil' },
   ],
   tagSource: 'STEAM',
   steamAppId: 504230,

@@ -389,7 +389,7 @@ describe('GenerateRecommendationsUseCase', () => {
       const featureOf = async (key: string) => (await pageOf(key, 1, index, small)).feature;
 
       expect(await featureOf('tag:difficult')).toMatchObject({
-        name: 'Impiedoso',
+        name: 'Difícil',
         title: 'jogos difíceis',
       });
       expect(await featureOf('tag:roguelike')).toMatchObject({ title: 'roguelikes e roguelites' });

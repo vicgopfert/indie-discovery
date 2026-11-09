@@ -401,7 +401,7 @@ export function taggedGameOf(slug: string) {
 
 // A regra de duas fases (B-79). Na biblioteca: três jogos de plataforma (a etiqueta Plataforma, de
 // subgênero, tem a mesma ideia do gênero Platform), dois de roguelike, dois de RPG sem etiqueta
-// de tipo de jogo e Amnesia, o único de terror. Impiedoso é mecânica, em quatro jogos.
+// de tipo de jogo e Amnesia, o único de terror. Difícil é de clima, em quatro jogos.
 // Metroidvania quase só aparece junto com Plataforma no catálogo.
 const tag = (igdbId: number, slug: string, name: string, extra: Partial<FixtureFeature> = {}) => ({
   id: featureId(slug),
@@ -430,7 +430,7 @@ const SHELF_FEATURES: FixtureFeature[] = [
   tag(2, 'roguelike', 'Roguelike', { gameKind: true, title: 'roguelikes e roguelites' }),
   tag(3, 'metroidvania', 'Metroidvania', { gameKind: true }),
   tag(4, 'survival-horror', 'Terror de Sobrevivência', { gameKind: true }),
-  tag(5, 'difficult', 'Impiedoso', { title: 'jogos difíceis' }),
+  tag(5, 'difficult', 'Difícil', { title: 'jogos difíceis' }),
   tag(6, 'rpg-tag', 'RPG', { sameIdeaAs: 'genre:rpg' }),
   tag(7, 'pixel-art', 'Pixel Art', { shelf: false }),
   FILLER_FEATURE,

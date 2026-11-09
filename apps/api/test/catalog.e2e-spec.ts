@@ -319,7 +319,7 @@ describe('Catálogo', () => {
         themes: [{ slug: 'action', name: 'Ação' }],
         tags: [
           { slug: 'precision-platformer', name: 'Plataforma de Precisão' },
-          { slug: 'difficult', name: 'Impiedoso' },
+          { slug: 'difficult', name: 'Difícil' },
         ],
         tagSource: 'STEAM',
         steamAppId: 504230,
@@ -497,9 +497,9 @@ describe('Catálogo', () => {
       const response = await features('tag').expect(200);
 
       expect(response.body).toEqual([
+        { slug: 'difficult', name: 'Difícil', gameCount: 2 },
         { slug: 'space', name: 'Espacial', gameCount: 1 },
         { slug: 'exploration', name: 'Exploração', gameCount: 1 },
-        { slug: 'difficult', name: 'Impiedoso', gameCount: 2 },
         { slug: 'metroidvania', name: 'Metroidvania', gameCount: 1 },
         { slug: 'precision-platformer', name: 'Plataforma de Precisão', gameCount: 1 },
       ]);
