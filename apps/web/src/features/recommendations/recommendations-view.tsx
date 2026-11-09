@@ -47,8 +47,9 @@ function Recommendations({ mode }: { mode: DiscoveryMode }) {
   );
 }
 
-// A principal no topo e as prateleiras na ordem da API; a API já tirou as repetições. Todas são
-// fileiras de capas; os cartões completos, com o motivo e os selos, ficam no "ver mais".
+// A principal no topo e as prateleiras na ordem da API (por jogo, por interesse e "Em breve"); a
+// API já tirou as repetições. Todas são fileiras de capas; os cartões completos, com o motivo e os
+// selos, ficam no "ver mais".
 function RecommendedGames({
   overview: { mode, basis, main, shelves },
   updating,
@@ -61,7 +62,7 @@ function RecommendedGames({
   return (
     <div aria-busy={updating} className="space-y-10">
       <BasisNote basis={basis} mode={mode} withBadges={false} />
-      <ListSection listKey="main" title={listTitle('main', null)} hasMore={main.hasMore}>
+      <ListSection listKey="main" title={listTitle('main')} hasMore={main.hasMore}>
         {main.items.length > 0 ? (
           <CoverRow items={main.items} />
         ) : (
@@ -72,7 +73,7 @@ function RecommendedGames({
         <ListSection
           key={shelf.key}
           listKey={shelf.key}
-          title={listTitle(shelf.key, shelf.feature)}
+          title={listTitle(shelf.key, shelf)}
           hasMore={shelf.hasMore}
         >
           <CoverRow items={shelf.items} />

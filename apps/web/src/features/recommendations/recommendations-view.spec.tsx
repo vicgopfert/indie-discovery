@@ -63,11 +63,12 @@ describe('RecommendationsView', () => {
         main: { items: [game('celeste', 'Celeste')], hasMore: true },
         shelves: [
           {
-            key: 'upcoming',
-            kind: 'upcoming',
+            key: 'game:hollow-knight',
+            kind: 'liked-game',
             feature: null,
-            items: [game('lavaloop', 'Lavaloop')],
-            hasMore: false,
+            game: { slug: 'hollow-knight', name: 'Hollow Knight', inCatalog: true },
+            items: [game('ori', 'Ori')],
+            hasMore: true,
           },
           {
             key: 'theme:horror',
@@ -79,9 +80,21 @@ describe('RecommendationsView', () => {
           {
             key: 'tag:roguelike',
             kind: 'interest',
-            feature: { type: 'TAG', slug: 'roguelike', name: 'Roguelike', title: 'Roguelike' },
+            feature: {
+              type: 'TAG',
+              slug: 'roguelike',
+              name: 'Roguelike',
+              title: 'roguelikes e roguelites',
+            },
             items: [game('dead-cells', 'Dead Cells')],
             hasMore: true,
+          },
+          {
+            key: 'upcoming',
+            kind: 'upcoming',
+            feature: null,
+            items: [game('lavaloop', 'Lavaloop')],
+            hasMore: false,
           },
         ],
       }),
@@ -91,9 +104,10 @@ describe('RecommendationsView', () => {
     expect(await screen.findByRole('link', { name: 'Darkwood' })).toBeInTheDocument();
     expect(screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)).toEqual([
       'Para você',
-      'Em breve no seu gosto',
+      'Porque você gostou de Hollow Knight',
       'Porque você curte Terror',
-      'Porque você curte Roguelike',
+      'Porque você curte roguelikes e roguelites',
+      'Em breve no seu gosto',
     ]);
     const section = (name: string) => screen.getByRole('region', { name });
     expect(
@@ -109,6 +123,7 @@ describe('RecommendationsView', () => {
       screen.getAllByRole('link', { name: /^Ver mais/ }).map((a) => a.getAttribute('href')),
     ).toEqual([
       '/recomendacoes/para-voce',
+      '/recomendacoes/jogo-hollow-knight',
       '/recomendacoes/tema-horror',
       '/recomendacoes/etiqueta-roguelike',
     ]);

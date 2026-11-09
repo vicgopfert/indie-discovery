@@ -33,7 +33,7 @@ export function RecommendationListView({ listKey, page }: ListProps) {
       </Link>
       <SessionGate
         next={listHref(listKey, page)}
-        heading={<ListHeading title={listTitle(listKey, null)} />}
+        heading={<ListHeading title={listTitle(listKey)} />}
       >
         {(user) => <RecommendationList listKey={listKey} page={page} mode={user.discoveryMode} />}
       </SessionGate>
@@ -52,7 +52,7 @@ function RecommendationList({ listKey, page, mode }: ListProps & { mode: Discove
     if (missing) router.replace(RECOMMENDATIONS_PATH);
   }, [missing, router]);
 
-  const heading = <ListHeading title={listTitle(listKey, list.data?.feature)} />;
+  const heading = <ListHeading title={listTitle(listKey, list.data)} />;
   if (list.isPending || missing) {
     return (
       <>

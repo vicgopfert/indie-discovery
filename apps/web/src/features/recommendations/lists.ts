@@ -1,17 +1,23 @@
-import { type RecommendationFeature, RecommendationPageQuerySchema } from '@indie/contracts';
+import {
+  type RecommendationFeature,
+  type RecommendationLikedGame,
+  RecommendationPageQuerySchema,
+} from '@indie/contracts';
 
 export const RECOMMENDATIONS_PATH = '/recomendacoes';
 
 const MAIN_KEY = 'main';
 const UPCOMING_KEY = 'upcoming';
 
-// Na URL, a chave da API vai em português: main → para-voce, theme:horror → tema-horror. Os
-// prefixos não têm hífen, então o slug, que pode ter, é tudo o que vem depois do primeiro.
+// Na URL, a chave da API vai em português: main → para-voce, theme:horror → tema-horror,
+// game:celeste → jogo-celeste. Os prefixos não têm hífen, então o slug, que pode ter, é tudo o que
+// vem depois do primeiro.
 const FIXED_SEGMENTS = new Map([
   [MAIN_KEY, 'para-voce'],
   [UPCOMING_KEY, 'em-breve'],
 ]);
 const INTEREST_PREFIXES = new Map([
+  ['game', 'jogo'],
   ['genre', 'genero'],
   ['theme', 'tema'],
   ['tag', 'etiqueta'],
@@ -43,11 +49,17 @@ export function listHref(key: string, page = 1) {
   return page > 1 ? `${path}?page=${page}` : path;
 }
 
-// Sem o atributo ainda carregado, a prateleira de interesse fica com o título da página.
-export function listTitle(key: string, feature: RecommendationFeature | null | undefined) {
+// A prateleira por jogo leva o nome do jogo de origem, e a de interesse, o título do atributo. Sem
+// eles ainda carregados, fica o título da página.
+export function listTitle(
+  key: string,
+  about?: { feature: RecommendationFeature | null; game?: RecommendationLikedGame | null },
+) {
   if (key === MAIN_KEY) return 'Para você';
   if (key === UPCOMING_KEY) return 'Em breve no seu gosto';
-  return feature ? `Porque você curte ${feature.name}` : 'Recomendações';
+  if (about?.game) return `Porque você gostou de ${about.game.name}`;
+  if (about?.feature) return `Porque você curte ${about.feature.title}`;
+  return 'Recomendações';
 }
 
 // Uma página inválida vira a primeira, como um endereço sem página.

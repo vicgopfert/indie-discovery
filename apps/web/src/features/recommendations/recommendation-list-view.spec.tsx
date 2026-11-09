@@ -64,6 +64,21 @@ describe('RecommendationListView', () => {
     );
   });
 
+  it('a prateleira por jogo tem o nome do jogo de origem no título', async () => {
+    stubPage(
+      sampleRecommendationPage({
+        key: 'game:hollow-knight',
+        feature: null,
+        game: { slug: 'hollow-knight', name: 'Hollow Knight', inCatalog: true },
+      }),
+    );
+    renderList(1, 'game:hollow-knight');
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Porque você gostou de Hollow Knight' }),
+    ).toBeInTheDocument();
+  });
+
   it('no meio, liga para a anterior e a próxima; na última, só para a anterior', async () => {
     stubList((path) =>
       Response.json(
