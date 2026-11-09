@@ -86,8 +86,8 @@ describe('explain', () => {
   });
 });
 
-// Com as etiquetas no vetor, todo atributo dele vira motivo. O jogo curtido só aparece com um tipo
-// de atributo que não vira motivo, montado aqui à mão.
+// Com as etiquetas no vetor, todo atributo dele vira motivo. Um tipo de atributo que não vira motivo
+// é montado aqui à mão.
 describe('explain sem atributo que vire motivo', () => {
   const keyword = (slug: string): IndexedFeature => ({
     id: slug,
@@ -123,21 +123,8 @@ describe('explain sem atributo que vire motivo', () => {
   const reasonFor = (interactions: Interaction[]) =>
     explainer(buildProfile(interactions, [], 2, scoringConfig), index)(candidate);
 
-  it('mostra o jogo da biblioteca que mais pesou', () => {
-    expect(reasonFor([liked('g-a', 5, [0.6, 0.8])])).toEqual({
-      kind: 'liked-game',
-      gameId: 'g-a',
-    });
-  });
-
-  it('escolhe o jogo de maior w_i · cos(v_i, v_j), não o de maior nota', () => {
-    // B tem nota menor, mas é favorito (w = 3) e mais parecido com o candidato.
-    const reason = reasonFor([
-      liked('g-a', 5, [0.6, 0.8]),
-      liked('g-b', 4, [1, 0], [ListType.FAVORITE]),
-    ]);
-
-    expect(reason).toEqual({ kind: 'liked-game', gameId: 'g-b' });
+  it('fica sem motivo, em vez de citar o jogo curtido (B-79)', () => {
+    expect(reasonFor([liked('g-a', 5, [0.6, 0.8], [ListType.FAVORITE])])).toBeNull();
   });
 });
 

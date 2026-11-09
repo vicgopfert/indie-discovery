@@ -60,11 +60,6 @@ describe('Respostas das recomendações', () => {
       reason: { kind: 'features', features: [{ slug: 'platform', name: 'Plataforma' }] },
       lowKnown: true,
     },
-    {
-      game,
-      reason: { kind: 'liked-game', game: { slug: 'celeste', name: 'Celeste', inCatalog: false } },
-      lowKnown: false,
-    },
     { game, reason: null, lowKnown: false },
   ];
   const horror = { type: 'THEME', slug: 'horror', name: 'Terror', title: 'Terror' };
@@ -76,7 +71,7 @@ describe('Respostas das recomendações', () => {
     shelves,
   });
 
-  it('a visão geral aceita os dois tipos de motivo, o item sem motivo e os três tipos de prateleira', () => {
+  it('a visão geral aceita o motivo, o item sem motivo e os três tipos de prateleira', () => {
     const overview = overviewWith([
       {
         key: 'game:celeste',
@@ -135,6 +130,21 @@ describe('Respostas das recomendações', () => {
     expect(valid({ feature: null })).toBe(false);
     expect(valid({ key: 'horror' })).toBe(false);
     expect(valid({ feature: { ...horror, type: 'KEYWORD' } })).toBe(false);
+  });
+
+  it('recusa o motivo "Porque você gostou de", que saiu no B-79', () => {
+    const liked = {
+      game,
+      reason: { kind: 'liked-game', game: { slug: 'celeste', name: 'Celeste', inCatalog: true } },
+      lowKnown: false,
+    };
+
+    expect(
+      RecommendationOverviewSchema.safeParse({
+        ...overviewWith([]),
+        main: { items: [liked], hasMore: false },
+      }).success,
+    ).toBe(false);
   });
 
   it('recusa motivo sem atributos ou com mais de três', () => {

@@ -47,9 +47,9 @@ const ITEM_EXAMPLE = {
   lowKnown: true,
 };
 
-const LIKED_GAME_EXAMPLE = {
+const SECOND_ITEM_EXAMPLE = {
   game: { ...GAME_EXAMPLE, slug: 'dead-cells', name: 'Dead Cells' },
-  reason: { kind: 'liked-game', game: { slug: 'celeste', name: 'Celeste', inCatalog: true } },
+  reason: { kind: 'features', features: [{ slug: 'roguelike', name: 'Roguelike' }] },
   lowKnown: false,
 };
 
@@ -83,7 +83,7 @@ export class RecommendationController {
       example: {
         mode: 'DISCOVERY',
         basis: 'profile',
-        main: { items: [ITEM_EXAMPLE, LIKED_GAME_EXAMPLE], hasMore: true },
+        main: { items: [ITEM_EXAMPLE, SECOND_ITEM_EXAMPLE], hasMore: true },
         shelves: [
           {
             key: 'game:celeste',
@@ -145,7 +145,7 @@ export class RecommendationController {
         feature: HORROR,
         game: null,
         page: 1,
-        items: [ITEM_EXAMPLE, LIKED_GAME_EXAMPLE],
+        items: [ITEM_EXAMPLE, SECOND_ITEM_EXAMPLE],
         hasMore: true,
       },
     },

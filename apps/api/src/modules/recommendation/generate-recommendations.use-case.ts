@@ -161,11 +161,7 @@ export class GenerateRecommendationsUseCase {
     );
     const gameIds = [
       ...lists.flatMap(({ list }) => (list.likedGameId === null ? [] : [list.likedGameId])),
-      ...explained
-        .flat()
-        .flatMap(({ game, reason }) =>
-          reason?.kind === 'liked-game' ? [game.id, reason.gameId] : [game.id],
-        ),
+      ...explained.flat().map(({ game }) => game.id),
     ];
     const games = new Map(
       (await this.repository.findGames([...new Set(gameIds)])).map((game) => [game.id, game]),
@@ -174,9 +170,7 @@ export class GenerateRecommendationsUseCase {
       list.flatMap(({ game, reason, lowKnown }) => {
         const row = games.get(game.id);
         if (!row?.inCatalog) return [];
-        return [
-          { game: this.catalog.toSummary(row), reason: this.reason(reason, games), lowKnown },
-        ];
+        return [{ game: this.catalog.toSummary(row), reason: this.reason(reason), lowKnown }];
       }),
     );
     return { items, games };
@@ -221,20 +215,9 @@ export class GenerateRecommendationsUseCase {
     return { type, slug, name, title: title ?? name };
   }
 
-  private reason(
-    reason: ScoredReason | null,
-    games: ReadonlyMap<string, RecommendedGameRow>,
-  ): RecommendationReason | null {
+  // O motivo não mostra os gêneros e temas escondidos dos filtros.
+  private reason(reason: ScoredReason | null): RecommendationReason | null {
     if (reason === null) return null;
-    if (reason.kind === 'liked-game') {
-      const game = games.get(reason.gameId);
-      if (!game) return null;
-      return {
-        kind: 'liked-game',
-        game: { slug: game.slug, name: game.name, inCatalog: game.inCatalog },
-      };
-    }
-    // O motivo não mostra os gêneros e temas escondidos dos filtros.
     const features = reason.features.flatMap((attribute) => {
       const feature = this.feature({ ...attribute, title: null });
       if (feature === null) return [];

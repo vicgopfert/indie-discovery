@@ -33,19 +33,13 @@ export const RecommendationPageQuerySchema = RecommendationQuerySchema.extend({
 
 export type RecommendationPageQuery = z.output<typeof RecommendationPageQuerySchema>;
 
-// As etiquetas, gêneros ou temas que mais contribuíram, do maior para o menor, ou o jogo da
-// biblioteca que mais pesou. Esse jogo pode ter saído do catálogo e vem marcado, como na
-// biblioteca.
-export const RecommendationReasonSchema = z.discriminatedUnion('kind', [
-  z.object({
-    kind: z.literal('features'),
-    features: z.array(FeatureLabelSchema).min(1).max(RECOMMENDATION_REASONS_MAX),
-  }),
-  z.object({
-    kind: z.literal('liked-game'),
-    game: LibraryGameSchema.pick({ slug: true, name: true, inCatalog: true }),
-  }),
-]);
+// As etiquetas, gêneros ou temas que mais contribuíram, do maior para o menor. O motivo "Porque
+// você gostou de <jogo>" saiu no B-79: com as etiquetas no vetor, todo jogo recomendado tem um
+// atributo a favor, e a frase virou o título das prateleiras por jogo.
+export const RecommendationReasonSchema = z.object({
+  kind: z.literal('features'),
+  features: z.array(FeatureLabelSchema).min(1).max(RECOMMENDATION_REASONS_MAX),
+});
 
 export type RecommendationReason = z.infer<typeof RecommendationReasonSchema>;
 

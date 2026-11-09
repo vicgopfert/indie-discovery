@@ -76,7 +76,7 @@ export interface Profile {
   // Denso: uma posição por atributo do índice.
   vector: Float64Array;
   norm: number;
-  // Os jogos que moveram o perfil, para o motivo "Porque você gostou de".
+  // Os jogos que moveram o perfil, para as prateleiras de interesse.
   games: readonly WeightedGame[];
 }
 
