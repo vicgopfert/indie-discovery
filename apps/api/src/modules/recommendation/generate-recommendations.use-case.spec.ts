@@ -100,7 +100,7 @@ describe('GenerateRecommendationsUseCase', () => {
     new GenerateRecommendationsUseCase(
       { index } as ContentIndexService,
       repository as unknown as RecommendationRepository,
-      new CatalogService({} as CatalogRepository, labels, 20),
+      new CatalogService({} as CatalogRepository, labels, 20, new Map()),
       labels,
       config,
     );

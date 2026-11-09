@@ -50,6 +50,9 @@ export const tagVocabularySchema = z
           .string()
           .regex(/^(genre|theme):[a-z0-9-]+$/)
           .optional(),
+        // Os nomes de antes (os da Steam, trocados no B-79 pelo termo da comunidade), pelos quais
+        // a busca do filtro do catálogo também encontra a etiqueta.
+        aliases: z.array(z.string().min(1)).default([]),
         catalogGames: z.number().int().nonnegative(),
         styles: z.array(z.string().min(1)).default([]),
         keywords: z.array(z.string().min(1)).default([]),
@@ -87,6 +90,15 @@ export function readTagVocabulary(file = TAG_VOCABULARY_FILE): TagVocabulary {
 // Pelo nome em inglês, como os slugs dos gêneros da IGDB: ?tag=action-roguelike.
 export function tagSlug({ englishName }: { englishName: string }) {
   return slugify(englishName);
+}
+
+// Os nomes de antes das etiquetas aceitas, pelo slug.
+export function tagAliases(vocabulary: TagVocabulary): ReadonlyMap<string, readonly string[]> {
+  return new Map(
+    vocabulary.tags
+      .filter((t) => t.accepted && t.aliases.length > 0)
+      .map((t) => [tagSlug(t), t.aliases]),
+  );
 }
 
 export interface RelevantTag extends SteamTag {

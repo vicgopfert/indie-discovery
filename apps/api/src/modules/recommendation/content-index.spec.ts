@@ -167,6 +167,7 @@ describe('shelfTagsOf', () => {
     group,
     accepted: true,
     shelf,
+    aliases: [],
     catalogGames: 10,
     styles: [],
     keywords: [],

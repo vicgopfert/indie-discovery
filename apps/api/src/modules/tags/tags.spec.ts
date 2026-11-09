@@ -3,6 +3,7 @@ import {
   evidenceAgreement,
   fallbackMatcher,
   relevantTags,
+  tagAliases,
   tagAssigner,
   tagFeatures,
   type TagVocabulary,
@@ -20,6 +21,7 @@ const tag = (
   group: 'subgenre',
   accepted: true,
   shelf: true,
+  aliases: [],
   catalogGames: 10,
   styles: [],
   keywords: [],
@@ -139,6 +141,21 @@ describe('tagVocabularySchema', () => {
       tags,
     }).success;
   }
+});
+
+describe('tagAliases', () => {
+  it('os nomes de antes das etiquetas aceitas, pelo slug', () => {
+    const aliases = tagAliases({
+      ...vocabulary,
+      tags: [
+        tag(1, 'Difícil', { englishName: 'Difficult', aliases: ['Impiedoso'] }),
+        tag(2, 'Puzzle', { aliases: ['Quebra-Cabeça'], accepted: false }),
+        tag(3, 'Roguelike'),
+      ],
+    });
+
+    expect([...aliases]).toEqual([['difficult', ['Impiedoso']]]);
+  });
 });
 
 describe('tagAssigner', () => {

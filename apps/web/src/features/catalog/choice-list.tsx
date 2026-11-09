@@ -3,7 +3,8 @@
 import { GAMES_FILTER_MAX_VALUES } from '@indie/contracts';
 import { useId, useState } from 'react';
 
-export type Choice = { value: string; label: string };
+// aliases: outros nomes pelos quais a busca também encontra a opção.
+export type Choice = { value: string; label: string; aliases?: readonly string[] };
 
 const normalized = (text: string) =>
   text
@@ -29,7 +30,8 @@ export function ChoiceList({
   const [search, setSearch] = useState('');
   const searchId = useId();
   const term = normalized(search.trim());
-  const shown = (label: string) => term === '' || normalized(label).includes(term);
+  const shown = ({ label, aliases = [] }: Choice) =>
+    term === '' || [label, ...aliases].some((name) => normalized(name).includes(term));
 
   return (
     <details open={selected.length > 0} className="rounded-md border px-3 py-2">
@@ -55,15 +57,19 @@ export function ChoiceList({
         <legend className="mb-1 text-xs text-muted-foreground">
           {legend}: escolha até {GAMES_FILTER_MAX_VALUES}
         </legend>
-        {choices.map(({ value, label }) => (
-          <label key={value} hidden={!shown(label)} className="flex items-center gap-2 text-sm">
+        {choices.map((choice) => (
+          <label
+            key={choice.value}
+            hidden={!shown(choice)}
+            className="flex items-center gap-2 text-sm"
+          >
             <input
               type="checkbox"
               name={name}
-              value={value}
-              defaultChecked={selected.includes(value)}
+              value={choice.value}
+              defaultChecked={selected.includes(choice.value)}
             />
-            {label}
+            {choice.label}
           </label>
         ))}
       </fieldset>

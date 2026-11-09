@@ -28,6 +28,7 @@ const FEATURE_TYPES: Record<FeatureQuery['type'], FilterFeatureType> = {
 
 // Mínimo de jogos para um país virar opção de filtro (F-06); injetado para o e2e testar o limite.
 export const COUNTRY_OPTION_MIN_GAMES = Symbol('COUNTRY_OPTION_MIN_GAMES');
+export const TAG_ALIASES = Symbol('TAG_ALIASES');
 
 const byName = (a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name, 'pt-BR');
 
@@ -39,6 +40,7 @@ export class CatalogService {
     private readonly catalog: CatalogRepository,
     private readonly labels: FeatureLabels,
     @Inject(COUNTRY_OPTION_MIN_GAMES) private readonly countryOptionMinGames: number,
+    @Inject(TAG_ALIASES) private readonly tagAliases: ReadonlyMap<string, readonly string[]>,
   ) {}
 
   async searchGames(query: GameSearchQuery): Promise<GamePage> {
@@ -85,11 +87,15 @@ export class CatalogService {
     };
   }
 
-  // A etiqueta já vem em português, gravada do vocabulário.
+  // A etiqueta já vem com o nome do vocabulário, gravado na ingestão, e leva os nomes de antes.
   async listFeatures({ type }: FeatureQuery): Promise<FeatureOption[]> {
     const featureType = FEATURE_TYPES[type];
     const features = await this.catalog.countGamesByFeature(featureType);
-    if (featureType === 'TAG') return features.sort(byName);
+    if (featureType === 'TAG') {
+      return features
+        .map((feature) => ({ ...feature, aliases: [...(this.tagAliases.get(feature.slug) ?? [])] }))
+        .sort(byName);
+    }
     return features
       .filter(({ slug }) => !this.labels.isHidden(featureType, slug))
       .map((feature) => ({

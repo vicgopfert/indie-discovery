@@ -493,15 +493,20 @@ describe('Catálogo', () => {
       ]);
     });
 
-    it('lista as etiquetas com o nome do vocabulário e a contagem, sem as de fora do catálogo', async () => {
+    it('lista as etiquetas com o nome do vocabulário, os nomes de antes e a contagem, sem as de fora do catálogo', async () => {
       const response = await features('tag').expect(200);
 
       expect(response.body).toEqual([
-        { slug: 'difficult', name: 'Difícil', gameCount: 2 },
-        { slug: 'space', name: 'Espacial', gameCount: 1 },
-        { slug: 'exploration', name: 'Exploração', gameCount: 1 },
-        { slug: 'metroidvania', name: 'Metroidvania', gameCount: 1 },
-        { slug: 'precision-platformer', name: 'Plataforma de Precisão', gameCount: 1 },
+        { slug: 'difficult', name: 'Difícil', gameCount: 2, aliases: ['Impiedoso'] },
+        { slug: 'space', name: 'Espacial', gameCount: 1, aliases: [] },
+        { slug: 'exploration', name: 'Exploração', gameCount: 1, aliases: [] },
+        { slug: 'metroidvania', name: 'Metroidvania', gameCount: 1, aliases: [] },
+        {
+          slug: 'precision-platformer',
+          name: 'Plataforma de Precisão',
+          gameCount: 1,
+          aliases: [],
+        },
       ]);
     });
 
