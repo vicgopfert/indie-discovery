@@ -319,13 +319,15 @@ export function featurePosition(index: ContentIndex, slug: string): number {
   return index.features.findIndex((f) => f.slug === slug);
 }
 
+// likedAt: a data da nota ou do favorito, em milissegundos.
 export function rated(
   index: ContentIndex,
   slug: string,
   score: number | null,
   lists: ListType[] = [],
+  likedAt: number | null = null,
 ): Interaction {
-  return { gameId: gameId(slug), score, lists, vector: gameOf(index, slug) };
+  return { gameId: gameId(slug), slug, score, lists, vector: gameOf(index, slug), likedAt };
 }
 
 // O caso de produção com etiquetas (B-74, refeito com as etiquetas no B-78): o terror de

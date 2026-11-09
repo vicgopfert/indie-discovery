@@ -107,9 +107,11 @@ describe('explain sem atributo que vire motivo', () => {
   });
   const liked = (gameId: string, score: number, weights: number[], lists: ListType[] = []) => ({
     gameId,
+    slug: gameId,
     score,
     lists,
     vector: vector(weights),
+    likedAt: null,
   });
   const candidate: IndexedGame = {
     id: 'g-candidate',

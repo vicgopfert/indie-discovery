@@ -90,7 +90,14 @@ describe('recommend', () => {
           rated(index, 'dead-cells', 5),
           rated(index, 'spelunky', 3),
           rated(index, 'hades', null, [ListType.WANT_TO_PLAY]),
-          { gameId: 'g-popular-rogue', score: 4, lists: [], vector: null },
+          {
+            gameId: 'g-popular-rogue',
+            slug: 'popular-rogue',
+            score: 4,
+            lists: [],
+            vector: null,
+            likedAt: null,
+          },
         ],
       }),
       scoringConfig,
@@ -112,7 +119,13 @@ describe('recommend', () => {
       scoringConfig,
     );
 
-    expect(result.lists.map(({ key }) => key)).toEqual(['main', 'upcoming', 'theme:fantasy']);
+    expect(result.lists.map(({ key }) => key)).toEqual([
+      'main',
+      'game:dead-cells',
+      'game:hades',
+      'theme:fantasy',
+      'upcoming',
+    ]);
     expect(slugs(result).slice(0, 2).sort()).toEqual(['obscure-rogue', 'popular-rogue']);
     // Os outros pela pontuação: Spelunky divide o gênero, Plataforma e Pixel Art com Dead Cells.
     expect(slugs(result).slice(2)).toEqual(['spelunky', 'celeste', 'limbo', 'inside', 'free-solo']);
@@ -147,7 +160,7 @@ describe('recommend', () => {
     expect(users.map(limboFirst)).toEqual(users.map(limboFirst));
   });
 
-  it('com gosto dominante e secundário, monta uma prateleira por interesse e a de "em breve"', () => {
+  it('com gosto dominante e secundário, monta as prateleiras por jogo, uma por interesse e a de "em breve"', () => {
     const taste = tasteIndex();
     const result = recommend(
       taste,
@@ -158,11 +171,15 @@ describe('recommend', () => {
       scoringConfig,
     );
 
+    // Os oito jogos têm o mesmo peso, e todos estão em alguma prateleira de interesse: sem data,
+    // vale o id do jogo.
     expect(result.lists.map(({ key }) => key)).toEqual([
       'main',
-      'upcoming',
+      'game:dread-1',
+      'game:dread-2',
       'theme:action',
       'theme:horror',
+      'upcoming',
     ]);
   });
 
@@ -175,10 +192,16 @@ describe('recommend', () => {
         { ...scoringConfig, lists: { ...scoringConfig.lists, interestMaxDocumentRatio } },
       ).lists;
 
-    expect(listsWith(1).map(({ key }) => key)).toEqual(['main', 'upcoming', 'genre:adventure']);
+    expect(listsWith(1).map(({ key, kind }) => (kind === 'liked-game' ? kind : key))).toEqual([
+      'main',
+      'liked-game',
+      'liked-game',
+      'genre:adventure',
+      'upcoming',
+    ]);
 
     const lists = listsWith(scoringConfig.lists.interestMaxDocumentRatio);
-    expect(lists).toHaveLength(4);
+    expect(lists.filter(({ kind }) => kind === 'interest')).toHaveLength(2);
     // Cotas de 75% e 25%: o gosto secundário entra na 3ª posição.
     expect(lists[0]!.games.slice(0, 4).map(({ slug }) => slug.split('-')[0])).toEqual([
       'quest',

@@ -1,6 +1,7 @@
 import { DiscoveryMode, ReleaseStatus } from '../../../generated/prisma/client';
 import type { IndexedGame } from '../content-index';
 import { pickInterests } from './interests';
+import { pickLikedGames } from './liked-games';
 import { buildLists, interleave, type RankedList } from './lists';
 import { buildProfile } from './profile';
 import { scoreCandidates } from './score';
@@ -8,8 +9,12 @@ import type { ListsConfig } from './scoring-config';
 import {
   candidateList,
   featurePosition,
+  gameId,
+  gameOf,
   rated,
+  SHELF_LIBRARY,
   scoringConfig,
+  shelfIndex,
   TAGGED_LIBRARY,
   taggedIndex,
   TASTE_LIBRARY,
@@ -88,7 +93,7 @@ describe('buildLists', () => {
     const built = buildLists(
       scored,
       index,
-      { mode, interests, tieBreak: userTieBreak('u-1') },
+      { mode, popularityWeight: 0, interests, likedGames: [], tieBreak: userTieBreak('u-1') },
       { ...scoringConfig.lists, ...lists },
     );
     const byKey = new Map(built.map((list) => [list.key, list]));
@@ -96,12 +101,12 @@ describe('buildLists', () => {
   }
   const slugs = (list: RankedList | undefined) => list!.games.map(({ slug }) => slug);
 
-  it('põe as listas na ordem da página: principal, "em breve" e os interesses', () => {
+  it('põe as listas na ordem da página: principal, os interesses e "em breve"', () => {
     expect(listsOf().built.map(({ key, kind }) => [key, kind])).toEqual([
       ['main', 'main'],
-      ['upcoming', 'upcoming'],
       ['theme:action', 'interest'],
       ['theme:horror', 'interest'],
+      ['upcoming', 'upcoming'],
     ]);
   });
 
@@ -206,7 +211,9 @@ describe('buildLists com etiquetas', () => {
     index,
     {
       mode,
+      popularityWeight: 0,
       interests: pickInterests(profile, [], index, new Set(), scoringConfig),
+      likedGames: [],
       tieBreak: userTieBreak('u-1'),
     },
     scoringConfig.lists,
@@ -218,6 +225,7 @@ describe('buildLists com etiquetas', () => {
       type: 'TAG',
       slug: 'survival-horror',
       name: 'Terror de Sobrevivência',
+      title: null,
     });
     expect(shelf.games.map(({ slug }) => slug).sort()).toEqual(['scare-a', 'scare-b']);
   });
@@ -229,11 +237,91 @@ describe('buildLists com etiquetas', () => {
 
     expect(built.map(({ key }) => key)).toEqual([
       'main',
-      'upcoming',
       'tag:survival-horror',
       'theme:fantasy',
+      'upcoming',
     ]);
     expect(main[1]).toBe(shelf.games[0]!.slug);
     expect(main[0]).not.toBe(shelf.games[0]!.slug);
+  });
+});
+
+describe('buildLists: prateleiras por jogo', () => {
+  const index = shelfIndex();
+  const library = SHELF_LIBRARY.map((slug) => rated(index, slug, 5));
+  const profile = buildProfile(library, [], index.features.length, scoringConfig);
+  const interests = pickInterests(profile, [], index, new Set(), scoringConfig);
+  const likedGames = pickLikedGames(library, interests, scoringConfig);
+  const excludedGameIds = new Set(library.map(({ gameId }) => gameId));
+  const listsIn = (mode: DiscoveryMode) =>
+    buildLists(
+      scoreCandidates(index, profile, { mode, excludedGameIds }, scoringConfig),
+      index,
+      {
+        mode,
+        popularityWeight: scoringConfig.popularityWeightByMode[mode],
+        interests,
+        likedGames,
+        tieBreak: userTieBreak('u-1'),
+      },
+      scoringConfig.lists,
+    );
+  const balanced = listsIn(DiscoveryMode.BALANCED);
+  const cosine = (source: string, slug: string) => {
+    const a = gameOf(index, source);
+    const b = gameOf(index, slug);
+    let dot = 0;
+    a.featurePositions.forEach((p, i) => {
+      const j = b.featurePositions.indexOf(p);
+      if (j >= 0) dot += a.weights[i]! * b.weights[j]!;
+    });
+    return dot;
+  };
+
+  it('vêm logo depois da principal, antes dos interesses e de "em breve"', () => {
+    // Amnesia é o gosto de um jogo só; entre os outros, empatados no peso, vale o id.
+    expect(balanced.map(({ key }) => key)).toEqual([
+      'main',
+      'game:amnesia',
+      'game:celeste',
+      'tag:platformer',
+      'tag:roguelike',
+      'genre:rpg',
+      'tag:difficult',
+      'upcoming',
+    ]);
+    expect(balanced[1]).toMatchObject({
+      kind: 'liked-game',
+      attribute: null,
+      likedGameId: gameId('amnesia'),
+    });
+  });
+
+  it('trazem os candidatos do perfil com algum atributo do jogo, pela semelhança com ele', () => {
+    const shelf = balanced.find(({ key }) => key === 'game:celeste')!;
+    const slugs = shelf.games.map(({ slug }) => slug);
+
+    expect(slugs.sort()).toEqual(['hard-a', 'hard-b', 'metro-a', 'metro-b', 'plat-a']);
+    const similarities = shelf.games.map(({ slug }) => cosine('celeste', slug));
+    expect(similarities).toEqual([...similarities].sort((x, y) => y - x));
+    expect(shelf.bySimilarity).toBeNull();
+  });
+
+  it('no modo Descobertas, descontam a popularidade e guardam a ordem só pela semelhança', () => {
+    const shelf = listsIn(DiscoveryMode.DISCOVERY).find(({ key }) => key === 'game:celeste')!;
+    const lambda = scoringConfig.popularityWeightByMode.DISCOVERY;
+    const scores = shelf.games.map(
+      ({ slug }) => cosine('celeste', slug) - lambda * gameOf(index, slug).popularityNorm,
+    );
+    const similarities = shelf.bySimilarity!.map(({ slug }) => cosine('celeste', slug));
+
+    expect(scores).toEqual([...scores].sort((x, y) => y - x));
+    expect(similarities).toEqual([...similarities].sort((x, y) => y - x));
+  });
+
+  it('não trazem jogo da biblioteca nem candidato sem atributo a favor no perfil', () => {
+    const shelf = balanced.find(({ key }) => key === 'game:amnesia')!;
+
+    expect(shelf.games.map(({ slug }) => slug)).toEqual(['fright-a']);
   });
 });

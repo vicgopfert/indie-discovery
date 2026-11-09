@@ -53,7 +53,9 @@ const LIKED_GAME_EXAMPLE = {
   lowKnown: false,
 };
 
-const HORROR = { type: 'THEME', slug: 'horror', name: 'Terror' };
+const HORROR = { type: 'THEME', slug: 'horror', name: 'Terror', title: 'Terror' };
+
+const CELESTE = { slug: 'celeste', name: 'Celeste', inCatalog: true };
 
 const MODE_QUERY = {
   name: 'mode',
@@ -76,7 +78,7 @@ export class RecommendationController {
   @ApiQuery(MODE_QUERY)
   @ApiOkResponse({
     description:
-      'Visão geral: a lista principal "Para você", que intercala os interesses do perfil na proporção da cobertura de cada um, e as prateleiras "Em breve no seu gosto" (kind upcoming) e "Porque você curte <atributo>" (kind interest; o atributo é um gênero, um tema ou um estilo curado), nessa ordem. Um jogo aparece uma vez só: cada prateleira vem sem os jogos mostrados antes, e a que fica abaixo do mínimo não vem. hasMore diz se a lista completa tem mais jogos que os mostrados. Nenhum jogo já avaliado ou em lista; cada um com o motivo: os gêneros e temas que mais contribuíram, ou o jogo da biblioteca que mais pesou. basis é profile (pelo perfil), popular (perfil sem atributo a favor: os mais populares, sem prateleiras) ou empty (sem avaliações, listas nem preferências: levar à partida a frio). lowKnown só é true no modo Descobertas',
+      'Visão geral: a lista principal "Para você", que intercala as prateleiras de interesse na proporção do peso dos jogos de cada uma, e as prateleiras "Porque você gostou de <jogo>" (kind liked-game, até 2, de jogos com nota 4 ou mais ou em favoritos), "Porque você curte <título>" (kind interest, até 6; o atributo é uma etiqueta da comunidade Steam, um gênero ou um tema, com o título do vocabulário) e "Em breve no seu gosto" (kind upcoming), nessa ordem. Um jogo aparece uma vez só: cada prateleira vem sem os jogos mostrados antes, e a que fica abaixo do mínimo não vem. hasMore diz se a lista completa tem mais jogos que os mostrados. Nenhum jogo já avaliado ou em lista; cada um com o motivo: as etiquetas, gêneros ou temas que mais contribuíram. basis é profile (pelo perfil), popular (perfil sem atributo a favor: os mais populares, sem prateleiras) ou empty (sem avaliações, listas nem preferências: levar à partida a frio). lowKnown só é true no modo Descobertas',
     schema: {
       example: {
         mode: 'DISCOVERY',
@@ -84,11 +86,12 @@ export class RecommendationController {
         main: { items: [ITEM_EXAMPLE, LIKED_GAME_EXAMPLE], hasMore: true },
         shelves: [
           {
-            key: 'upcoming',
-            kind: 'upcoming',
+            key: 'game:celeste',
+            kind: 'liked-game',
             feature: null,
+            game: CELESTE,
             items: [ITEM_EXAMPLE],
-            hasMore: false,
+            hasMore: true,
           },
           {
             key: 'theme:horror',
@@ -96,6 +99,13 @@ export class RecommendationController {
             feature: HORROR,
             items: [ITEM_EXAMPLE],
             hasMore: true,
+          },
+          {
+            key: 'upcoming',
+            kind: 'upcoming',
+            feature: null,
+            items: [ITEM_EXAMPLE],
+            hasMore: false,
           },
         ],
       },
@@ -114,7 +124,8 @@ export class RecommendationController {
   @Get('lists/:key')
   @ApiParam({
     name: 'key',
-    description: 'main, upcoming, genre:<slug>, theme:<slug> ou style:<slug>, como na visão geral',
+    description:
+      'main, upcoming, game:<slug>, genre:<slug>, theme:<slug> ou tag:<slug>, como na visão geral',
     example: 'theme:horror',
   })
   @ApiQuery(MODE_QUERY)
@@ -125,13 +136,14 @@ export class RecommendationController {
   })
   @ApiOkResponse({
     description:
-      'Uma página da lista completa, para o "ver mais", até o teto da configuração; a repetição com as outras listas é permitida. basis e os itens vêm como na visão geral; com basis popular, só a lista main existe',
+      'Uma página da lista completa, para o "ver mais", até o teto da configuração; a repetição com as outras listas é permitida. basis e os itens vêm como na visão geral; com basis popular, só a lista main existe. feature vem nas prateleiras de interesse, e game, nas prateleiras por jogo',
     schema: {
       example: {
         mode: 'DISCOVERY',
         basis: 'profile',
         key: 'theme:horror',
         feature: HORROR,
+        game: null,
         page: 1,
         items: [ITEM_EXAMPLE, LIKED_GAME_EXAMPLE],
         hasMore: true,

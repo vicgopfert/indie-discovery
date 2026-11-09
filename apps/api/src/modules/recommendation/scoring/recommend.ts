@@ -3,6 +3,7 @@ import type { ContentIndex, IndexedGame } from '../content-index';
 import { explainer, type ScoredReason } from './explain';
 import { popularFallback } from './fallback';
 import { pickInterests } from './interests';
+import { pickLikedGames } from './liked-games';
 import { buildLists, MAIN_LIST_KEY, type RankedList } from './lists';
 import { buildProfile, hasPositiveComponent, type Interaction } from './profile';
 import { scoreCandidates } from './score';
@@ -56,6 +57,7 @@ export function recommend(
           key: MAIN_LIST_KEY,
           kind: 'main',
           attribute: null,
+          likedGameId: null,
           games: popular.map(({ game }) => game),
           bySimilarity: null,
         },
@@ -72,9 +74,21 @@ export function recommend(
     config,
   );
   const candidates = scoreCandidates(index, profile, { mode, excludedGameIds }, config);
+  const likedGames = pickLikedGames(interactions, interests, config);
   return {
     basis: 'profile',
-    lists: buildLists(candidates, index, { mode, interests, tieBreak }, config.lists),
+    lists: buildLists(
+      candidates,
+      index,
+      {
+        mode,
+        popularityWeight: config.popularityWeightByMode[mode],
+        interests,
+        likedGames,
+        tieBreak,
+      },
+      config.lists,
+    ),
     reasonOf: explainer(profile, index),
   };
 }

@@ -1,23 +1,28 @@
-import type { FeatureType, ListType } from '../../../generated/prisma/client';
+import { type FeatureType, ListType } from '../../../generated/prisma/client';
 import type { ContentIndex, ContentVector } from '../content-index';
 import type { ScoringConfig } from './scoring-config';
 
 export interface Interaction {
   gameId: string;
+  slug: string;
   score: number | null;
   lists: readonly ListType[];
   // Sem vetor, o jogo só sai dos candidatos.
   vector: ContentVector | null;
+  // A data mais recente entre a nota e a entrada em favoritos, em milissegundos; nula sem nenhuma
+  // das duas.
+  likedAt: number | null;
 }
 
 // O que está gravado na biblioteca do jogador. O jogo que saiu do catálogo continua nela, com os
 // atributos lidos do banco.
 export interface LibraryState {
-  ratings: readonly { gameId: string; score: number }[];
-  listEntries: readonly { gameId: string; listType: ListType }[];
+  // As datas em milissegundos.
+  ratings: readonly { gameId: string; score: number; ratedAt: number }[];
+  listEntries: readonly { gameId: string; listType: ListType; addedAt: number }[];
   unindexedGames: ReadonlyMap<
     string,
-    { features: readonly { type: FeatureType; igdbId: number }[] }
+    { slug: string; features: readonly { type: FeatureType; igdbId: number }[] }
   >;
 }
 
@@ -27,20 +32,37 @@ export function interactionsOf(
   index: Pick<ContentIndex, 'games' | 'positionByGameId' | 'vectorOf'>,
   { ratings, listEntries, unindexedGames }: LibraryState,
 ): Interaction[] {
-  const byGame = new Map<string, { score: number | null; lists: ListType[] }>();
+  const byGame = new Map<
+    string,
+    { score: number | null; lists: ListType[]; likedAt: number | null }
+  >();
   const entryOf = (gameId: string) => {
-    const entry = byGame.get(gameId) ?? { score: null, lists: [] };
+    const entry = byGame.get(gameId) ?? { score: null, lists: [], likedAt: null };
     byGame.set(gameId, entry);
     return entry;
   };
-  for (const { gameId, score } of ratings) entryOf(gameId).score = score;
-  for (const { gameId, listType } of listEntries) entryOf(gameId).lists.push(listType);
+  const liked = (entry: { likedAt: number | null }, at: number) => {
+    entry.likedAt = Math.max(entry.likedAt ?? at, at);
+  };
+  for (const { gameId, score, ratedAt } of ratings) {
+    const entry = entryOf(gameId);
+    entry.score = score;
+    liked(entry, ratedAt);
+  }
+  for (const { gameId, listType, addedAt } of listEntries) {
+    const entry = entryOf(gameId);
+    entry.lists.push(listType);
+    if (listType === ListType.FAVORITE) liked(entry, addedAt);
+  }
 
-  return [...byGame].map(([gameId, { score, lists }]) => {
+  return [...byGame].map(([gameId, entry]) => {
     const position = index.positionByGameId.get(gameId);
-    if (position !== undefined) return { gameId, score, lists, vector: index.games[position]! };
-    const { features = [] } = unindexedGames.get(gameId) ?? {};
-    return { gameId, score, lists, vector: index.vectorOf(features) };
+    if (position !== undefined) {
+      const game = index.games[position]!;
+      return { gameId, slug: game.slug, ...entry, vector: game };
+    }
+    const { slug = gameId, features = [] } = unindexedGames.get(gameId) ?? {};
+    return { gameId, slug, ...entry, vector: index.vectorOf(features) };
   });
 }
 

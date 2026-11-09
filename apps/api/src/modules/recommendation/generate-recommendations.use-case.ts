@@ -1,6 +1,7 @@
 import type {
   Recommendation,
   RecommendationFeature,
+  RecommendationLikedGame,
   RecommendationOverview,
   RecommendationPage,
   RecommendationReason,
@@ -10,11 +11,11 @@ import { Inject, Injectable, NotFoundException, ServiceUnavailableException } fr
 import { type DiscoveryMode, FeatureType } from '../../generated/prisma/client';
 import { CatalogService } from '../catalog/catalog.service';
 import { FeatureLabels } from '../catalog/feature-labels';
-import { type ContentIndex, type DisplayedAttribute, isLabeledFeatureType } from './content-index';
+import { type ContentIndex, isLabeledFeatureType } from './content-index';
 import { ContentIndexService } from './content-index.service';
 import { type RecommendedGameRow, RecommendationRepository } from './recommendation.repository';
 import type { ScoredReason } from './scoring/explain';
-import { MAIN_LIST_KEY, type RankedList } from './scoring/lists';
+import { MAIN_LIST_KEY, type RankedList, type ShelfAttribute } from './scoring/lists';
 import { listPage, overview, type ShownGame } from './scoring/overview';
 import { interactionsOf } from './scoring/profile';
 import { recommend, type RecommendationLists } from './scoring/recommend';
@@ -46,15 +47,17 @@ export class GenerateRecommendationsUseCase {
     if (result === null) return { mode, basis: 'empty', main: NO_ITEMS, shelves: [] };
 
     const [main, ...shelves] = overview(result.lists, this.config.lists);
-    const [mainItems, ...shelfItems] = await this.present(
-      result,
-      [main!, ...shelves].map(({ items }) => items),
-    );
+    const {
+      items: [mainItems, ...shelfItems],
+      games,
+    } = await this.present(result, [main!, ...shelves]);
     return {
       mode,
       basis: result.basis,
       main: { items: mainItems!, hasMore: main!.hasMore },
-      shelves: shelves.map(({ list, hasMore }, i) => this.shelf(list, shelfItems[i]!, hasMore)),
+      shelves: shelves.flatMap(({ list, hasMore }, i) =>
+        this.shelf(list, shelfItems[i]!, hasMore, games),
+      ),
     };
   }
 
@@ -68,18 +71,22 @@ export class GenerateRecommendationsUseCase {
   ): Promise<RecommendationPage> {
     const result = await this.recommend(userId, mode);
     if (result === null && key === MAIN_LIST_KEY) {
-      return { mode, basis: 'empty', key, feature: null, page, ...NO_ITEMS };
+      return { mode, basis: 'empty', key, feature: null, game: null, page, ...NO_ITEMS };
     }
     const list = result?.lists.find((candidate) => candidate.key === key);
     if (!result || !list) throw new NotFoundException(LIST_NOT_FOUND);
 
     const { items, hasMore } = listPage(list, page, this.config.lists);
-    const [presented] = await this.present(result, [items]);
+    const {
+      items: [presented],
+      games,
+    } = await this.present(result, [{ list, items }]);
     return {
       mode,
       basis: result.basis,
       key,
       feature: this.feature(list.attribute),
+      game: this.likedGame(list, games),
       page,
       items: presented!,
       hasMore,
@@ -143,25 +150,28 @@ export class GenerateRecommendationsUseCase {
     return hidden;
   }
 
-  // Uma consulta ao banco para todas as listas. Um jogo pode ter saído do catálogo depois da
-  // última carga do índice: fica de fora.
+  // Uma consulta ao banco para todas as listas, com os jogos de origem das prateleiras por jogo.
+  // Um jogo pode ter saído do catálogo depois da última carga do índice: fica de fora.
   private async present(
     result: RecommendationLists,
-    lists: readonly (readonly ShownGame[])[],
-  ): Promise<Recommendation[][]> {
-    const explained = lists.map((items) =>
+    lists: readonly { list: RankedList; items: readonly ShownGame[] }[],
+  ): Promise<{ items: Recommendation[][]; games: ReadonlyMap<string, RecommendedGameRow> }> {
+    const explained = lists.map(({ items }) =>
       items.map(({ game, lowKnown }) => ({ game, lowKnown, reason: result.reasonOf(game) })),
     );
-    const gameIds = explained
-      .flat()
-      .flatMap(({ game, reason }) =>
-        reason?.kind === 'liked-game' ? [game.id, reason.gameId] : [game.id],
-      );
+    const gameIds = [
+      ...lists.flatMap(({ list }) => (list.likedGameId === null ? [] : [list.likedGameId])),
+      ...explained
+        .flat()
+        .flatMap(({ game, reason }) =>
+          reason?.kind === 'liked-game' ? [game.id, reason.gameId] : [game.id],
+        ),
+    ];
     const games = new Map(
       (await this.repository.findGames([...new Set(gameIds)])).map((game) => [game.id, game]),
     );
-    return explained.map((items) =>
-      items.flatMap(({ game, reason, lowKnown }) => {
+    const items = explained.map((list) =>
+      list.flatMap(({ game, reason, lowKnown }) => {
         const row = games.get(game.id);
         if (!row?.inCatalog) return [];
         return [
@@ -169,23 +179,46 @@ export class GenerateRecommendationsUseCase {
         ];
       }),
     );
+    return { items, games };
   }
 
   // Os interesses são só gêneros, temas e etiquetas (pickInterests): toda prateleira deles tem nome.
-  private shelf(list: RankedList, items: Recommendation[], hasMore: boolean): RecommendationShelf {
-    return list.kind === 'upcoming'
-      ? { key: 'upcoming', kind: 'upcoming', feature: null, items, hasMore }
-      : { key: list.key, kind: 'interest', feature: this.feature(list.attribute)!, items, hasMore };
+  private shelf(
+    list: RankedList,
+    items: Recommendation[],
+    hasMore: boolean,
+    games: ReadonlyMap<string, RecommendedGameRow>,
+  ): RecommendationShelf[] {
+    if (list.kind === 'upcoming') {
+      return [{ key: 'upcoming', kind: 'upcoming', feature: null, items, hasMore }];
+    }
+    if (list.kind === 'liked-game') {
+      const game = this.likedGame(list, games);
+      return game
+        ? [{ key: list.key, kind: 'liked-game', feature: null, game, items, hasMore }]
+        : [];
+    }
+    const feature = this.feature(list.attribute)!;
+    return [{ key: list.key, kind: 'interest', feature, items, hasMore }];
+  }
+
+  private likedGame(
+    { likedGameId }: RankedList,
+    games: ReadonlyMap<string, RecommendedGameRow>,
+  ): RecommendationLikedGame | null {
+    const row = likedGameId === null ? undefined : games.get(likedGameId);
+    return row ? { slug: row.slug, name: row.name, inCatalog: row.inCatalog } : null;
   }
 
   // O nome da etiqueta já está em português, gravado do vocabulário; palavra-chave não tem nome
-  // exibido.
-  private feature(attribute: DisplayedAttribute | null): RecommendationFeature | null {
+  // exibido. O título da prateleira é o do vocabulário ou, sem ele, o nome.
+  private feature(attribute: ShelfAttribute | null): RecommendationFeature | null {
     if (attribute === null) return null;
-    const { type, slug, name } = attribute;
-    if (type === FeatureType.TAG) return { type, slug, name };
-    if (!isLabeledFeatureType(type)) return null;
-    return { type, slug, name: this.labels.name(type, slug, name) };
+    const { type, slug, title } = attribute;
+    if (type !== FeatureType.TAG && !isLabeledFeatureType(type)) return null;
+    const name =
+      type === FeatureType.TAG ? attribute.name : this.labels.name(type, slug, attribute.name);
+    return { type, slug, name, title: title ?? name };
   }
 
   private reason(
@@ -203,7 +236,7 @@ export class GenerateRecommendationsUseCase {
     }
     // O motivo não mostra os gêneros e temas escondidos dos filtros.
     const features = reason.features.flatMap((attribute) => {
-      const feature = this.feature(attribute);
+      const feature = this.feature({ ...attribute, title: null });
       if (feature === null) return [];
       if (feature.type !== FeatureType.TAG && this.labels.isHidden(feature.type, feature.slug)) {
         return [];

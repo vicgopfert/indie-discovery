@@ -72,14 +72,14 @@ describe('RecommendationsView', () => {
           {
             key: 'theme:horror',
             kind: 'interest',
-            feature: { type: 'THEME', slug: 'horror', name: 'Terror' },
+            feature: { type: 'THEME', slug: 'horror', name: 'Terror', title: 'Terror' },
             items: [game('darkwood', 'Darkwood')],
             hasMore: true,
           },
           {
             key: 'tag:roguelike',
             kind: 'interest',
-            feature: { type: 'TAG', slug: 'roguelike', name: 'Roguelike' },
+            feature: { type: 'TAG', slug: 'roguelike', name: 'Roguelike', title: 'Roguelike' },
             items: [game('dead-cells', 'Dead Cells')],
             hasMore: true,
           },
@@ -132,7 +132,7 @@ describe('RecommendationsView', () => {
           {
             key: 'theme:horror',
             kind: 'interest',
-            feature: { type: 'THEME', slug: 'horror', name: 'Terror' },
+            feature: { type: 'THEME', slug: 'horror', name: 'Terror', title: 'Terror' },
             items: covers,
             hasMore: true,
           },

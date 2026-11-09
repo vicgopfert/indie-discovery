@@ -67,7 +67,8 @@ describe('Respostas das recomendações', () => {
     },
     { game, reason: null, lowKnown: false },
   ];
-  const horror = { type: 'THEME', slug: 'horror', name: 'Terror' };
+  const horror = { type: 'THEME', slug: 'horror', name: 'Terror', title: 'Terror' };
+  const celeste = { slug: 'celeste', name: 'Celeste', inCatalog: true };
   const overviewWith = (shelves: unknown[]) => ({
     mode: 'DISCOVERY',
     basis: 'profile',
@@ -75,17 +76,48 @@ describe('Respostas das recomendações', () => {
     shelves,
   });
 
-  it('a visão geral aceita os dois tipos de motivo, o item sem motivo e os dois tipos de prateleira', () => {
+  it('a visão geral aceita os dois tipos de motivo, o item sem motivo e os três tipos de prateleira', () => {
     const overview = overviewWith([
-      { key: 'upcoming', kind: 'upcoming', feature: null, items, hasMore: false },
+      {
+        key: 'game:celeste',
+        kind: 'liked-game',
+        feature: null,
+        game: celeste,
+        items,
+        hasMore: true,
+      },
       { key: 'theme:horror', kind: 'interest', feature: horror, items, hasMore: true },
+      { key: 'upcoming', kind: 'upcoming', feature: null, items, hasMore: false },
     ]);
 
     expect(RecommendationOverviewSchema.safeParse(overview).success).toBe(true);
   });
 
+  it('a prateleira por jogo exige o jogo de origem e a chave game:<slug>', () => {
+    const shelf = { key: 'game:celeste', kind: 'liked-game', feature: null, game: celeste };
+    const valid = (changes: object) =>
+      RecommendationOverviewSchema.safeParse(
+        overviewWith([{ ...shelf, items, hasMore: false, ...changes }]),
+      ).success;
+
+    expect(valid({})).toBe(true);
+    expect(valid({ game: null })).toBe(false);
+    expect(valid({ key: 'celeste' })).toBe(false);
+  });
+
+  it('a prateleira de interesse exige o título', () => {
+    const withoutTitle = { type: 'THEME', slug: 'horror', name: 'Terror' };
+    const valid = (feature: object) =>
+      RecommendationOverviewSchema.safeParse(
+        overviewWith([{ key: 'theme:horror', kind: 'interest', feature, items, hasMore: false }]),
+      ).success;
+
+    expect(valid(horror)).toBe(true);
+    expect(valid(withoutTitle)).toBe(false);
+  });
+
   it('aceita a prateleira de uma etiqueta e recusa a de estilo, que saiu no B-78', () => {
-    const tag = { type: 'TAG', slug: 'roguelike', name: 'Roguelike' };
+    const tag = { type: 'TAG', slug: 'roguelike', name: 'Roguelike', title: 'roguelikes' };
     const valid = (key: string, feature: object) =>
       RecommendationOverviewSchema.safeParse(
         overviewWith([{ key, kind: 'interest', feature, items, hasMore: false }]),
@@ -112,6 +144,7 @@ describe('Respostas das recomendações', () => {
         basis: 'profile',
         key: 'main',
         feature: null,
+        game: null,
         page: 1,
         hasMore: false,
         items: [
@@ -132,7 +165,15 @@ describe('Respostas das recomendações', () => {
   });
 
   it('a página do "ver mais" exige a base da lista, como a visão geral', () => {
-    const page = { mode: 'BALANCED', key: 'main', feature: null, page: 1, items, hasMore: false };
+    const page = {
+      mode: 'BALANCED',
+      key: 'main',
+      feature: null,
+      game: null,
+      page: 1,
+      items,
+      hasMore: false,
+    };
     const valid = (basis?: string) =>
       RecommendationPageSchema.safeParse({ ...page, basis }).success;
 

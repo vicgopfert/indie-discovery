@@ -96,7 +96,14 @@ describe('buildProfile', () => {
       [
         rated(index, 'hades', 5),
         rated(index, 'spelunky', 3),
-        { gameId: 'g-fora-do-indice', score: 5, lists: [], vector: null },
+        {
+          gameId: 'g-fora-do-indice',
+          slug: 'fora-do-indice',
+          score: 5,
+          lists: [],
+          vector: null,
+          likedAt: null,
+        },
       ],
       [],
       featureCount,
@@ -128,10 +135,10 @@ describe('interactionsOf', () => {
 
   it('junta a nota e as listas do mesmo jogo numa interação só', () => {
     const [hades, ...rest] = interactionsOf(index, {
-      ratings: [{ gameId: gameId('hades'), score: 5 }],
+      ratings: [{ gameId: gameId('hades'), score: 5, ratedAt: 100 }],
       listEntries: [
-        { gameId: gameId('hades'), listType: FAVORITE },
-        { gameId: gameId('hades'), listType: COMPLETED },
+        { gameId: gameId('hades'), listType: FAVORITE, addedAt: 50 },
+        { gameId: gameId('hades'), listType: COMPLETED, addedAt: 200 },
       ],
       unindexedGames: new Map(),
     });
@@ -139,8 +146,10 @@ describe('interactionsOf', () => {
     expect(rest).toEqual([]);
     expect(hades).toMatchObject({
       gameId: gameId('hades'),
+      slug: 'hades',
       score: 5,
       lists: [FAVORITE, COMPLETED],
+      likedAt: 100,
     });
     expect(hades!.vector).toBe(gameOf(index, 'hades'));
   });
@@ -153,12 +162,17 @@ describe('interactionsOf', () => {
       return { type, igdbId, slug };
     });
     const [interaction] = interactionsOf(index, {
-      ratings: [{ gameId: gameId('celeste'), score: 4 }],
+      ratings: [{ gameId: gameId('celeste'), score: 4, ratedAt: 100 }],
       listEntries: [],
-      unindexedGames: new Map([[gameId('celeste'), { features, summary: '' }]]),
+      unindexedGames: new Map([[gameId('celeste'), { slug: 'celeste', features }]]),
     });
 
-    expect(interaction).toMatchObject({ gameId: gameId('celeste'), score: 4, lists: [] });
+    expect(interaction).toMatchObject({
+      gameId: gameId('celeste'),
+      slug: 'celeste',
+      score: 4,
+      lists: [],
+    });
     expect([...interaction!.vector!.weights]).toEqual([...celeste.weights]);
   });
 });

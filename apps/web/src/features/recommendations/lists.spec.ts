@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { listHref, listKeyOf, listSegment, listTitle, parseListPage } from './lists';
 
-const horror = { type: 'THEME', slug: 'horror', name: 'Terror' } as const;
+const horror = { type: 'THEME', slug: 'horror', name: 'Terror', title: 'Terror' } as const;
 
 describe('listas na URL', () => {
   it.each([
@@ -48,9 +48,14 @@ describe('listas na URL', () => {
     expect(listTitle('main', null)).toBe('Para você');
     expect(listTitle('upcoming', null)).toBe('Em breve no seu gosto');
     expect(listTitle('theme:horror', horror)).toBe('Porque você curte Terror');
-    expect(listTitle('tag:roguelike', { type: 'TAG', slug: 'roguelike', name: 'Roguelike' })).toBe(
-      'Porque você curte Roguelike',
-    );
+    expect(
+      listTitle('tag:roguelike', {
+        type: 'TAG',
+        slug: 'roguelike',
+        name: 'Roguelike',
+        title: 'Roguelike',
+      }),
+    ).toBe('Porque você curte Roguelike');
     expect(listTitle('theme:horror', undefined)).toBe('Recomendações');
   });
 });

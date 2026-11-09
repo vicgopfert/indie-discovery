@@ -30,6 +30,9 @@ import { PrismaService } from './prisma/prisma.service';
 const SEED = 71;
 const PROFILES_PER_KIND = 200;
 const RATED_SCORES = [5, 5, 4, 1];
+// Datas fixas: a data da nota desempata as prateleiras "Porque você gostou de" (B-79), e notas
+// gravadas no mesmo milissegundo mudariam a foto entre execuções.
+const RATED_AT = Date.UTC(2026, 0, 1);
 const PREFERENCES_PER_PROFILE = 3;
 const EMAIL_PREFIX = 'snapshot-recomendacoes-';
 const MODES = [DiscoveryMode.POPULAR, DiscoveryMode.BALANCED, DiscoveryMode.DISCOVERY];
@@ -143,7 +146,12 @@ async function createProfiles(prisma: PrismaService, labels: FeatureLabels) {
   await prisma.user.createMany({ data: profiles });
   await prisma.rating.createMany({
     data: rated.flatMap((gameIds, i) =>
-      gameIds.map((gameId, j) => ({ userId: profileUserId(i), gameId, score: RATED_SCORES[j]! })),
+      gameIds.map((gameId, j) => ({
+        userId: profileUserId(i),
+        gameId,
+        score: RATED_SCORES[j]!,
+        updatedAt: new Date(RATED_AT + j * 1000),
+      })),
     ),
   });
   await prisma.userPreference.createMany({

@@ -64,12 +64,24 @@ export type Recommendation = z.infer<typeof RecommendationSchema>;
 export const RECOMMENDATION_BASES = ['profile', 'popular', 'empty'] as const;
 
 // O atributo de uma prateleira de interesse, com o nome em português: gênero ou tema, com os
-// valores do banco, como o modo, ou uma etiqueta da comunidade Steam (B-78).
+// valores do banco, como o modo, ou uma etiqueta da comunidade Steam (B-78). O título vai em
+// "Porque você curte <título>": o do vocabulário das etiquetas ou, sem ele, o nome (B-79).
 export const RecommendationFeatureSchema = FeatureLabelSchema.extend({
   type: z.enum(['GENRE', 'THEME', 'TAG']),
+  title: z.string().min(1),
 });
 
 export type RecommendationFeature = z.infer<typeof RecommendationFeatureSchema>;
+
+// O jogo da biblioteca de "Porque você gostou de <jogo>" (B-79). Pode ter saído do catálogo e vem
+// marcado, como na biblioteca.
+export const RecommendationLikedGameSchema = LibraryGameSchema.pick({
+  slug: true,
+  name: true,
+  inCatalog: true,
+});
+
+export type RecommendationLikedGame = z.infer<typeof RecommendationLikedGameSchema>;
 
 const listItems = {
   items: z.array(RecommendationSchema),
@@ -77,18 +89,26 @@ const listItems = {
   hasMore: z.boolean(),
 };
 
-// Na visão geral, os itens já vêm sem os jogos que apareceram antes na página.
+// Na visão geral, na ordem da página (por jogo, por interesse e "Em breve"), os itens já vêm sem
+// os jogos que apareceram antes.
 export const RecommendationShelfSchema = z.discriminatedUnion('kind', [
   z.object({
-    key: z.literal('upcoming'),
-    kind: z.literal('upcoming'),
+    key: z.string().regex(/^game:/),
+    kind: z.literal('liked-game'),
     feature: z.null(),
+    game: RecommendationLikedGameSchema,
     ...listItems,
   }),
   z.object({
     key: z.string().regex(/^(genre|theme|tag):/),
     kind: z.literal('interest'),
     feature: RecommendationFeatureSchema,
+    ...listItems,
+  }),
+  z.object({
+    key: z.literal('upcoming'),
+    kind: z.literal('upcoming'),
+    feature: z.null(),
     ...listItems,
   }),
 ]);
@@ -104,13 +124,15 @@ export const RecommendationOverviewSchema = z.object({
 
 export type RecommendationOverview = z.infer<typeof RecommendationOverviewSchema>;
 
-// Uma página de uma lista só, para o "ver mais": main, upcoming, genre:<slug>, theme:<slug> ou
-// tag:<slug>. A base vem como na visão geral, para a página tratar populares e vazia (B-72).
+// Uma página de uma lista só, para o "ver mais": main, upcoming, game:<slug>, genre:<slug>,
+// theme:<slug> ou tag:<slug>. A base vem como na visão geral, para a página tratar populares e
+// vazia (B-72).
 export const RecommendationPageSchema = z.object({
   mode: z.enum(DISCOVERY_MODES),
   basis: z.enum(RECOMMENDATION_BASES),
   key: z.string(),
   feature: RecommendationFeatureSchema.nullable(),
+  game: RecommendationLikedGameSchema.nullable(),
   page: z.number().int().min(1),
   ...listItems,
 });
