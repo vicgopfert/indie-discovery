@@ -206,7 +206,8 @@ describe('Recomendações (GET /recommendations)', () => {
       mode: 'BALANCED',
       basis: 'profile',
       key: 'theme:horror',
-      feature: { type: 'THEME', slug: 'horror', name: 'Terror' },
+      feature: { type: 'THEME', slug: 'horror', name: 'Terror', title: 'Terror' },
+      game: null,
       page: 1,
       hasMore: false,
     });
@@ -214,7 +215,10 @@ describe('Recomendações (GET /recommendations)', () => {
     expect((await listPage('main', '?page=2')).items).toEqual([]);
   });
 
-  it('a etiqueta vira interesse e tem "ver mais"', async () => {
+  it('a etiqueta vira interesse e tem "ver mais", com o título do vocabulário', async () => {
+    // Com 30 jogos, Roguelike fica em 10% do catálogo, no limite das prateleiras específicas.
+    for (let i = 1; i <= 21; i++)
+      await catalog.game({ name: `Enchimento ${i}`, genres: ['Puzzle'] });
     await catalog.game({ name: 'Dead Cells', genres: ['Platform'], tags: ['Roguelike'] });
     await catalog.game({
       name: 'Rogue Legacy',
@@ -228,15 +232,51 @@ describe('Recomendações (GET /recommendations)', () => {
     await rate('dead-cells', 5);
     await rate('rogue-legacy', 5);
 
-    // Plataforma, nos dois jogos, está em mais de 40% deste catálogo pequeno e não concorre.
+    // Roguelike, de subgênero, cobre os dois jogos na fase 1.
     const roguelike = await listPage('tag:roguelike');
-    expect(roguelike.feature).toEqual({ type: 'TAG', slug: 'roguelike', name: 'Roguelike' });
+    expect(roguelike.feature).toEqual({
+      type: 'TAG',
+      slug: 'roguelike',
+      name: 'Roguelike',
+      title: 'roguelikes e roguelites',
+    });
     expect(roguelike.items.map(({ game }) => game.slug)).toEqual(['spelunky']);
     // A etiqueta contribuiu e pode virar prateleira: o motivo é ela, antes do gênero.
     expect(roguelike.items[0]!.reason).toEqual({
       kind: 'features',
       features: [{ slug: 'roguelike', name: 'Roguelike' }],
     });
+  });
+
+  it('"Porque você gostou de": só de jogo com nota 4 ou mais ou favorito, com "ver mais"', async () => {
+    await catalog.game({ name: 'Dead Cells', genres: ['Platform'], themes: ['Action'] });
+    await catalog.game({ name: 'Katana Zero', genres: ['Platform'], themes: ['Action'] });
+    await prisma.feature.updateMany({ data: { idf: 1 } });
+    await app.get(ContentIndexService).reload();
+    await rate('hollow-knight', 5);
+    await helpers.as(jogadora).put('/api/me/lists/favorite/celeste');
+    await helpers.as(jogadora).put('/api/me/lists/want-to-play/ori');
+    await helpers.as(jogadora).put('/api/me/lists/completed/inside');
+
+    const keys = (await recommendations()).shelves.map(({ key }) => key);
+    expect(keys).not.toContain('game:ori');
+    expect(keys).not.toContain('game:inside');
+    const celeste = await listPage('game:celeste');
+    expect(celeste).toMatchObject({
+      key: 'game:celeste',
+      feature: null,
+      game: { slug: 'celeste', name: 'Celeste', inCatalog: true },
+    });
+    expect(celeste.items.map(({ game }) => game.slug).sort()).toEqual([
+      'dead-cells',
+      'katana-zero',
+    ]);
+    expect((await listPage('game:hollow-knight')).game).toMatchObject({ slug: 'hollow-knight' });
+    for (const key of ['game:ori', 'game:inside', 'game:dead-cells']) {
+      expect((await helpers.as(jogadora).get(`/api/recommendations/lists/${key}`)).status).toBe(
+        404,
+      );
+    }
   });
 
   it('responde 404 para a lista que não é do perfil', async () => {

@@ -108,7 +108,11 @@ export const FeatureQuerySchema = z.object({
 
 export type FeatureQuery = z.output<typeof FeatureQuerySchema>;
 
-export const FeatureOptionSchema = FeatureLabelSchema.extend({ gameCount: z.number().int() });
+// Só nas etiquetas, os nomes de antes, que a busca do filtro também aceita (B-79).
+export const FeatureOptionSchema = FeatureLabelSchema.extend({
+  gameCount: z.number().int(),
+  aliases: z.array(z.string()).optional(),
+});
 
 export type FeatureOption = z.infer<typeof FeatureOptionSchema>;
 

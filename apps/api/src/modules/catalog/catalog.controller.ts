@@ -55,7 +55,7 @@ const GAME_DETAIL_EXAMPLE = {
   themes: [{ slug: 'action', name: 'Ação' }],
   tags: [
     { slug: 'precision-platformer', name: 'Plataforma de Precisão' },
-    { slug: 'difficult', name: 'Impiedoso' },
+    { slug: 'difficult', name: 'Difícil' },
   ],
   tagSource: 'STEAM',
   steamAppId: 504230,
@@ -159,7 +159,12 @@ export class CatalogController {
   @ApiOkResponse({
     description:
       'Opções de filtro (gênero, tema ou etiqueta) com o nome em português e quantos jogos do catálogo as têm',
-    schema: { example: [{ slug: 'puzzle', name: 'Quebra-cabeça', gameCount: 3607 }] },
+    schema: {
+      example: [
+        { slug: 'puzzle', name: 'Quebra-cabeça', gameCount: 3607 },
+        { slug: 'difficult', name: 'Difícil', gameCount: 1900, aliases: ['Impiedoso'] },
+      ],
+    },
   })
   @ApiBadRequestResponse({ description: 'Tipo ausente ou diferente de genre, theme e tag' })
   listFeatures(@Query({ schema: FeatureQuerySchema }) query: FeatureQuery) {

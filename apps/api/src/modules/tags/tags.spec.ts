@@ -3,6 +3,7 @@ import {
   evidenceAgreement,
   fallbackMatcher,
   relevantTags,
+  tagAliases,
   tagAssigner,
   tagFeatures,
   type TagVocabulary,
@@ -20,6 +21,7 @@ const tag = (
   group: 'subgenre',
   accepted: true,
   shelf: true,
+  aliases: [],
   catalogGames: 10,
   styles: [],
   keywords: [],
@@ -124,6 +126,13 @@ describe('tagVocabularySchema', () => {
     expect(valid([tag(1, 'Pixel Art'), tag(2, 'Pixel-art', { accepted: false })])).toBe(true);
   });
 
+  it('a mesma ideia aponta para um gênero ou tema da IGDB, pela chave da prateleira', () => {
+    expect(valid([tag(1, 'Romance Visual', { sameIdeaAs: 'genre:visual-novel' })])).toBe(true);
+    expect(valid([tag(1, 'Terror', { sameIdeaAs: 'theme:horror' })])).toBe(true);
+    expect(valid([tag(1, 'Romance Visual', { sameIdeaAs: 'Visual Novel' })])).toBe(false);
+    expect(valid([tag(1, 'Roguelike', { sameIdeaAs: 'tag:roguelike' })])).toBe(false);
+  });
+
   function valid(tags: TagVocabulary['tags']) {
     return tagVocabularySchema.safeParse({
       rule: 'x',
@@ -132,6 +141,21 @@ describe('tagVocabularySchema', () => {
       tags,
     }).success;
   }
+});
+
+describe('tagAliases', () => {
+  it('os nomes de antes das etiquetas aceitas, pelo slug', () => {
+    const aliases = tagAliases({
+      ...vocabulary,
+      tags: [
+        tag(1, 'Difícil', { englishName: 'Difficult', aliases: ['Impiedoso'] }),
+        tag(2, 'Puzzle', { aliases: ['Quebra-Cabeça'], accepted: false }),
+        tag(3, 'Roguelike'),
+      ],
+    });
+
+    expect([...aliases]).toEqual([['difficult', ['Impiedoso']]]);
+  });
 });
 
 describe('tagAssigner', () => {

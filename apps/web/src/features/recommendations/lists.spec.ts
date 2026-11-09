@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { listHref, listKeyOf, listSegment, listTitle, parseListPage } from './lists';
 
-const horror = { type: 'THEME', slug: 'horror', name: 'Terror' } as const;
+const horror = { type: 'THEME', slug: 'horror', name: 'Terror', title: 'Terror' } as const;
 
 describe('listas na URL', () => {
   it.each([
     ['main', 'para-voce'],
     ['upcoming', 'em-breve'],
+    ['game:hollow-knight', 'jogo-hollow-knight'],
     ['genre:role-playing-rpg', 'genero-role-playing-rpg'],
     ['theme:horror', 'tema-horror'],
     ['tag:bullet-hell', 'etiqueta-bullet-hell'],
@@ -44,13 +45,22 @@ describe('listas na URL', () => {
     expect(parseListPage(['2', '3'])).toBe(1);
   });
 
-  it('monta o título pelo tipo da lista e pelo nome do atributo', () => {
-    expect(listTitle('main', null)).toBe('Para você');
-    expect(listTitle('upcoming', null)).toBe('Em breve no seu gosto');
-    expect(listTitle('theme:horror', horror)).toBe('Porque você curte Terror');
-    expect(listTitle('tag:roguelike', { type: 'TAG', slug: 'roguelike', name: 'Roguelike' })).toBe(
-      'Porque você curte Roguelike',
-    );
-    expect(listTitle('theme:horror', undefined)).toBe('Recomendações');
+  it('monta o título pelo tipo da lista, pelo título do atributo e pelo jogo de origem', () => {
+    expect(listTitle('main')).toBe('Para você');
+    expect(listTitle('upcoming')).toBe('Em breve no seu gosto');
+    expect(listTitle('theme:horror', { feature: horror })).toBe('Porque você curte Terror');
+    expect(
+      listTitle('tag:difficult', {
+        feature: { type: 'TAG', slug: 'difficult', name: 'Difícil', title: 'jogos difíceis' },
+      }),
+    ).toBe('Porque você curte jogos difíceis');
+    expect(
+      listTitle('game:hollow-knight', {
+        feature: null,
+        game: { slug: 'hollow-knight', name: 'Hollow Knight', inCatalog: true },
+      }),
+    ).toBe('Porque você gostou de Hollow Knight');
+    expect(listTitle('theme:horror')).toBe('Recomendações');
+    expect(listTitle('game:hollow-knight')).toBe('Recomendações');
   });
 });

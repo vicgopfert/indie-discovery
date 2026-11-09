@@ -1,4 +1,4 @@
-# Recomendação: núcleo de pontuação (B-32), rota (B-33), página (B-35), listas por interesse (B-71), estilos (B-74) e etiquetas (B-78)
+# Recomendação: núcleo de pontuação (B-32), rota (B-33), página (B-35), listas por interesse (B-71), estilos (B-74), etiquetas (B-78) e recomendações específicas (B-79)
 
 O núcleo são funções puras em `apps/api/src/modules/recommendation/scoring/`, com os pesos
 na seção `scoring` de `apps/api/config/recommendation.json`. Ele recebe o índice de
@@ -824,3 +824,137 @@ Nenhuma visão geral ganhou ou perdeu prateleira. Com a principal mostrando 5, o
 que ela mostrava ficam livres para as prateleiras abaixo, que continuam cheias, com 5 cada; o que
 muda é quais jogos entram nelas. A foto nova (47.541 respostas, hash `8dc8b107…`) é a linha de
 base vigente.
+
+## Recomendações específicas (B-79)
+
+Implementado em 08 e 09/11/2026, com as decisões do plano aprovadas pelo autor. A regra de
+prateleiras, a conformidade com o protótipo do B-77, os critérios C1 a C5 e a troca dos nomes das
+etiquetas estão em `docs/etiquetas.md` (seções 11 e 12).
+
+### Prateleiras de interesse
+
+A cobertura do B-71 deu lugar à regra de duas fases do B-77 (`pickInterests`), com até 6
+prateleiras:
+1. **Fase 1:** as etiquetas de gênero e subgênero (em até 10% do catálogo, com suporte de 2 jogos),
+   a cada passo a que cobre mais peso da biblioteca ainda sem prateleira, sem repetir uma ideia nem
+   os jogos da biblioteca de outra prateleira (Jaccard acima de 0,8). Depois, o gênero ou tema largo
+   da IGDB (até 40%), só para os jogos que nenhuma etiqueta cobriu.
+2. **Preferências da partida a frio**, isentas do suporte e dos limites, sem repetir uma ideia.
+3. **Fase 2:** etiquetas de qualquer grupo que pode virar prateleira, pelo peso da biblioteca que
+   sustentam, sem repetir uma ideia nem os jogos do catálogo de outra prateleira (Jaccard acima de
+   0,5).
+
+A prateleira é "Porque você curte `<título>`", com o título do vocabulário ou, sem ele, o nome. A
+cota de cada uma na lista principal é o peso dos jogos que a sustentam.
+
+### Prateleiras "Porque você gostou de `<jogo>`"
+
+- **Quais jogos:** até 2, de jogos com nota 4 ou mais ou em favoritos, com peso positivo no perfil.
+  Um jogo só em "quero jogar" ou só em "concluídos" nunca gera a prateleira, e um favorito com nota
+  1 ou 2 também não (decisão do autor).
+- **Ordem (decisões do autor):** primeiro os jogos que nenhuma prateleira de interesse cobre, o
+  gosto de um jogo só; depois o de maior peso; no empate, o de data mais recente entre a nota e a
+  entrada em favoritos; por fim, o id do jogo.
+- **Jogos da prateleira:** os candidatos do perfil (cosseno positivo com ele, fora da biblioteca)
+  com algum atributo do jogo de origem, por `cos(v_origem, v_j) − λ_modo · pop_j`, com o mesmo
+  desempate e o mesmo "pouco conhecido". Ficam fora das cotas da lista principal.
+- **Jogo de origem fora do catálogo:** a prateleira continua, com o nome sem link.
+- **Chave e endereço:** `game:<slug>` na API e `/recomendacoes/jogo-<slug>` na página; a página do
+  "ver mais" traz o jogo de origem (`game`).
+
+### Ordem da página e motivo
+
+- **Ordem:** principal, por jogo, por interesse e "Em breve no seu gosto", até 10 seções. A remoção
+  dos repetidos segue essa ordem.
+- **Motivo (decisão do autor):** a reserva "Porque você gostou de `<jogo>`" saiu do motivo, do
+  contrato e do cartão. Todo candidato tem cosseno positivo, e todo atributo do vetor está num dos
+  três grupos do motivo (B-78): o caminho não era alcançado.
+
+### Comparação das respostas
+
+- **Índice com as informações das etiquetas** (grupo, título e ideia): a foto rápida (11.865
+  respostas) ficou idêntica à foto completa da `main` (46.452 respostas).
+- **Otimização das prateleiras por jogo:** a foto completa depois da otimização ficou idêntica à
+  foto completa da branch antes dela: 53.991 respostas, 0 diferentes, o mesmo hash.
+- **Datas fixas na foto:** a data da nota desempata as prateleiras por jogo. A foto passou a gravar
+  as notas com datas fixas, porque notas criadas no mesmo milissegundo mudariam a foto entre
+  execuções.
+
+### Tempo local (critério da decisão 8)
+
+Critério, gravado antes de medir: a mediana do cálculo da visão geral, em processo, nos 400 perfis
+da semente 71 e nos três modos, fica em até 1,5 vez a da `main`, medida na mesma sessão.
+
+**Primeira versão (08/11/2026): reprovada.** Mediana de 21,2 e 20,7 ms contra 12,5 e 12,3 ms da
+`main`, razão de 1,70 e 1,68. Pela regra de parada, nada mudou até a decisão do autor.
+
+**Diagnóstico por etapa** (mediana, build da branch, todos os 1.200 cálculos):
+
+| Etapa | Mediana |
+| --- | --- |
+| Perfil | 0,02 ms |
+| Prateleiras de interesse (regra de duas fases) | 0,05 ms |
+| Pontuação dos candidatos | 3,3 ms |
+| Jogos de origem | 0,02 ms |
+| Listas sem as prateleiras por jogo | 9,0 ms |
+| Prateleiras por jogo (a mais) | 4,2 ms (média de 6,8 ms) |
+| Visão geral e motivos | 0,10 ms |
+
+A regra de duas fases não pesa. O acréscimo vem das 2 prateleiras por jogo: cada uma percorre cerca
+de 15,5 mil candidatos (mediana), porque quase todo candidato divide algum atributo largo com o
+jogo de origem, e o custo se divide entre o produto escalar e a ordenação.
+
+**Otimização (decisão do autor, 09/11/2026):** as 2 prateleiras saem de uma só passada pelos
+candidatos, com os pesos dos jogos de origem lado a lado por atributo e a soma de cada uma na mesma
+ordem de antes. O corte do topo é por seleção sobre um vetor tipado de valores (`topIndices`, que
+o `topBy` passou a usar). A foto completa ficou idêntica (critério de prova fixado pelo autor), e a
+parada foi fixada antes de medir: se passasse de 1,5 vez, a otimização ficaria registrada como
+reprovada, e o critério passaria a ser o p95 em produção.
+
+| Rodada (09/11/2026) | `main` | Branch antes | Otimizada | Razão da otimizada |
+| --- | --- | --- | --- | --- |
+| 1 | 12,1 ms | 21,8 ms | 19,4 ms | 1,60 |
+| 2 | 12,3 ms | 20,9 ms | 19,4 ms | 1,58 |
+
+- **Resultado:** a otimização tirou cerca de 2 ms da mediana (p95 de 37 a 38 ms para 30 a 31,5 ms),
+  mas a razão ficou acima de 1,5. **A otimização fica registrada como reprovada.**
+- **Exceção explícita (decisão do autor, opção 2):** o critério local não é atendido, e quem
+  decide é o p95 fim a fim em produção, pela metodologia do B-33 e pelas regras 1 a 3 do B-76. A
+  otimização fica no código, porque a saída é a mesma e o tempo é menor. Se a produção falhar pela
+  regra 3, entra a alternativa abaixo.
+
+### Alternativa não aplicada: vizinhos na carga do índice
+
+Por decisão do autor, fica registrada: se a medição em produção falhar pela regra 3 do B-76 (p95
+acima de 1 s sem cauda parecida na rota de saúde), os vizinhos das prateleiras por jogo passam a
+ser calculados na carga do índice, em vez de a cada requisição. Cada jogo guardaria os seus N
+vizinhos mais parecidos, e a requisição só tiraria deles os jogos fora dos candidatos do perfil.
+Isso custa memória no índice e muda a lista (o corte em N vem antes do filtro pelo perfil), e por
+isso só seria adotado depois da medição em produção.
+
+### Conferência no navegador local
+
+Build de produção da API (porta 3001) e da web (porta 3006), banco local com os nomes novos das
+etiquetas gravados como a ingestão faria. Conta nova com o caso Fantasia do B-78 (Hollow Knight,
+Dead Cells, Hades, Celeste, Grim Dawn e Slay the Spire com nota 5, Hollow Knight também em
+favoritos), Amnesia: The Bunker com nota 4, Inside só em "quero jogar" e Limbo só em "concluídos".
+19 de 19 conferências passaram:
+- **Ordem:** principal, "Porque você gostou de Hollow Knight", "Porque você gostou de Slay the
+  Spire", seis prateleiras de interesse (Soulslike, roguelikes e roguelites, Puzzle Platformer,
+  Terror, jogos difíceis, Metroidvania) e "Em breve no seu gosto": 10 seções, 50 jogos, nenhum
+  repetido.
+- **Jogos de origem:** todos estão cobertos por alguma prateleira de interesse (Grim Dawn e Amnesia
+  têm o tema Terror, que virou prateleira); por isso vale o peso, e Hollow Knight (nota 5 e
+  favorito) vem primeiro. Entre as notas 5, o desempate pela data trouxe Slay the Spire, o último
+  avaliado. A primeira versão da conferência esperava Amnesia primeiro; a expectativa estava errada,
+  e a regra do jogo não coberto continua testada nos testes de unidade, de caso de uso e e2e.
+- **"Quero jogar" e "concluídos":** não geram prateleira, e `/recomendacoes/jogo-inside` volta
+  para a visão geral.
+- **"Ver mais" por jogo:** `/recomendacoes/jogo-hollow-knight` abre com "Porque você gostou de
+  Hollow Knight" e 20 cartões, todos com "Recomendado por".
+- **Títulos do vocabulário:** "Porque você curte jogos difíceis" e "roguelikes e roguelites".
+- **Nomes novos:** a ficha de Hollow Knight mostra Difícil; no filtro do catálogo, a busca
+  "impiedoso" encontra Difícil, "quebra-cabeca" encontra Puzzle e Puzzle Platformer, e "deckb"
+  encontra Deckbuilding e Roguelike Deckbuilder.
+- **Capas:** na captura da página inteira, as fileiras de baixo apareceram vazias. As capas têm
+  `loading="lazy"`; rolando a página, as 50 carregaram.

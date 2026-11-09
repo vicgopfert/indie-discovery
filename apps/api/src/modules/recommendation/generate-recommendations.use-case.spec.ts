@@ -23,8 +23,10 @@ import {
   featuresOf,
   gameId,
   gameOf,
+  SHELF_LIBRARY,
   scoringConfig,
   scoringIndex,
+  shelfIndex,
   TAGGED_LIBRARY,
   taggedGameOf,
   taggedIndex,
@@ -65,7 +67,7 @@ class FakeRepository implements Pick<RecommendationRepository, 'findUserState' |
       unindexedGames: new Map(
         unindexed.map((id) => [
           id,
-          this.unindexedSources.get(id) ?? { features: featuresOf(slugOf(id)) },
+          this.unindexedSources.get(id) ?? { slug: slugOf(id), features: featuresOf(slugOf(id)) },
         ]),
       ),
     });
@@ -98,7 +100,7 @@ describe('GenerateRecommendationsUseCase', () => {
     new GenerateRecommendationsUseCase(
       { index } as ContentIndexService,
       repository as unknown as RecommendationRepository,
-      new CatalogService({} as CatalogRepository, labels, 20),
+      new CatalogService({} as CatalogRepository, labels, 20, new Map()),
       labels,
       config,
     );
@@ -117,8 +119,10 @@ describe('GenerateRecommendationsUseCase', () => {
   const pageOf = (key: string, page = 1, index?: ContentIndex, config?: ScoringConfig) =>
     useCase(index, config).page('u-1', DiscoveryMode.BALANCED, key, page);
 
-  const rate = (slug: string, score: number) =>
-    repository.state.ratings.push({ gameId: gameId(slug), score });
+  const rate = (slug: string, score: number, ratedAt = 0) =>
+    repository.state.ratings.push({ gameId: gameId(slug), score, ratedAt });
+  const list = (slug: string, listType: ListType, addedAt = 0) =>
+    repository.state.listEntries.push({ gameId: gameId(slug), listType, addedAt });
 
   const slugs = (result: Awaited<ReturnType<typeof execute>>) =>
     result.main.items.map(({ game }) => game.slug);
@@ -144,6 +148,7 @@ describe('GenerateRecommendationsUseCase', () => {
       basis: 'empty',
       key: 'main',
       feature: null,
+      game: null,
       page: 1,
       items: [],
       hasMore: false,
@@ -194,8 +199,8 @@ describe('GenerateRecommendationsUseCase', () => {
   it('junta a nota e as listas do mesmo jogo numa interação só', async () => {
     const index = scoringIndex();
     rate('celeste', 4);
-    repository.state.listEntries.push({ gameId: gameId('celeste'), listType: ListType.FAVORITE });
-    repository.state.listEntries.push({ gameId: gameId('hades'), listType: ListType.WANT_TO_PLAY });
+    list('celeste', ListType.FAVORITE);
+    list('hades', ListType.WANT_TO_PLAY);
 
     const result = await execute(index);
     const expected = recommend(
@@ -206,15 +211,19 @@ describe('GenerateRecommendationsUseCase', () => {
         interactions: [
           {
             gameId: gameId('celeste'),
+            slug: 'celeste',
             score: 4,
             lists: [ListType.FAVORITE],
             vector: gameOf(index, 'celeste'),
+            likedAt: 0,
           },
           {
             gameId: gameId('hades'),
+            slug: 'hades',
             score: null,
             lists: [ListType.WANT_TO_PLAY],
             vector: gameOf(index, 'hades'),
+            likedAt: null,
           },
         ],
         preferencePositions: [],
@@ -273,10 +282,16 @@ describe('GenerateRecommendationsUseCase', () => {
     expect(await firstOf(DiscoveryMode.BALANCED)).toEqual(['BALANCED', 'spelunky', false]);
   });
 
+  // Sem as prateleiras por jogo, que no catálogo pequeno levariam os jogos de terror antes.
   describe('com um gosto dominante e um secundário', () => {
     const index = tasteIndex();
-    const small = withLists({ overviewMainSize: 6, overviewShelfSize: 3, shelfMinItems: 1 });
-    const horror = { type: 'THEME', slug: 'horror', name: 'Terror' };
+    const small = withLists({
+      overviewMainSize: 6,
+      overviewShelfSize: 3,
+      shelfMinItems: 1,
+      likedGameShelves: 0,
+    });
+    const horror = { type: 'THEME', slug: 'horror', name: 'Terror', title: 'Terror' };
     const horrorGames = ['saga-fright', 'fright-a', 'fright-b', 'fright-c', 'fright-soon'];
 
     beforeEach(() => {
@@ -287,9 +302,13 @@ describe('GenerateRecommendationsUseCase', () => {
       const { shelves } = await execute(index, DiscoveryMode.BALANCED, small);
 
       expect(shelves.map(({ key, kind, feature }) => [key, kind, feature])).toEqual([
-        ['upcoming', 'upcoming', null],
-        ['theme:action', 'interest', { type: 'THEME', slug: 'action', name: 'Ação' }],
+        [
+          'theme:action',
+          'interest',
+          { type: 'THEME', slug: 'action', name: 'Ação', title: 'Ação' },
+        ],
         ['theme:horror', 'interest', horror],
+        ['upcoming', 'upcoming', null],
       ]);
     });
 
@@ -324,8 +343,68 @@ describe('GenerateRecommendationsUseCase', () => {
     });
   });
 
+  describe('prateleiras por jogo', () => {
+    const index = shelfIndex();
+    const small = withLists({ shelfMinItems: 1 });
+
+    beforeEach(() => {
+      for (const slug of SHELF_LIBRARY) rate(slug, 5);
+    });
+
+    it('vêm depois da principal, com o jogo de origem, sem repetir os jogos da página', async () => {
+      const { main, shelves } = await execute(index, DiscoveryMode.BALANCED, small);
+      const shown = [main, ...shelves].flatMap(({ items }) => items.map(({ game }) => game.slug));
+
+      expect(shelves.slice(0, 2)).toMatchObject([
+        {
+          key: 'game:amnesia',
+          kind: 'liked-game',
+          feature: null,
+          game: { slug: 'amnesia', name: 'amnesia', inCatalog: true },
+        },
+        { key: 'game:celeste', kind: 'liked-game', game: { slug: 'celeste' } },
+      ]);
+      expect(new Set(shown).size).toBe(shown.length);
+    });
+
+    it('o "ver mais" traz o jogo de origem, mesmo fora do catálogo', async () => {
+      repository.outOfCatalog.add('celeste');
+      const page = await pageOf('game:celeste', 1, index, small);
+
+      expect(page).toMatchObject({
+        key: 'game:celeste',
+        feature: null,
+        game: { slug: 'celeste', name: 'celeste', inCatalog: false },
+      });
+      expect(page.items.length).toBeGreaterThan(0);
+    });
+
+    it('responde 404 para o jogo que não gera prateleira', async () => {
+      await expect(pageOf('game:hollow', 1, index, small)).rejects.toThrow(
+        new NotFoundException(LIST_NOT_FOUND),
+      );
+    });
+
+    it('as prateleiras de etiqueta trazem o título do vocabulário ou, sem ele, o nome', async () => {
+      const featureOf = async (key: string) => (await pageOf(key, 1, index, small)).feature;
+
+      expect(await featureOf('tag:difficult')).toMatchObject({
+        name: 'Difícil',
+        title: 'jogos difíceis',
+      });
+      expect(await featureOf('tag:roguelike')).toMatchObject({ title: 'roguelikes e roguelites' });
+      expect(await featureOf('tag:platformer')).toMatchObject({ title: 'Plataforma' });
+      expect(await featureOf('genre:rpg')).toMatchObject({ name: 'RPG', title: 'RPG' });
+    });
+  });
+
   describe('com etiquetas', () => {
-    const tag = { type: 'TAG', slug: 'survival-horror', name: 'Terror de Sobrevivência' };
+    const tag = {
+      type: 'TAG',
+      slug: 'survival-horror',
+      name: 'Terror de Sobrevivência',
+      title: 'Terror de Sobrevivência',
+    };
 
     beforeEach(() => {
       for (const slug of TAGGED_LIBRARY) rate(slug, 5);
@@ -341,11 +420,15 @@ describe('GenerateRecommendationsUseCase', () => {
     it('o jogo da biblioteca fora do catálogo conta com as etiquetas gravadas', async () => {
       // Sem as etiquetas de scare-2, a etiqueta cobriria só scare-1 e perderia para Terror, que
       // também está em scare-2.
-      repository.unindexedSources.set(gameId('scare-2'), taggedGameOf('scare-2'));
+      repository.unindexedSources.set(gameId('scare-2'), {
+        slug: 'scare-2',
+        ...taggedGameOf('scare-2'),
+      });
       const index = taggedIndex({ without: ['scare-2'] });
 
       expect((await pageOf('tag:survival-horror', 1, index)).feature).toEqual(tag);
       repository.unindexedSources.set(gameId('scare-2'), {
+        slug: 'scare-2',
         features: taggedGameOf('scare-2').features.filter(({ type }) => type !== 'TAG'),
       });
       await expect(pageOf('tag:survival-horror', 1, index)).rejects.toThrow(

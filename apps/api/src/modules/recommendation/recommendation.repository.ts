@@ -15,12 +15,14 @@ export interface StoredFeature {
 
 // O jogo da biblioteca que não está no índice: os atributos gravados montam o vetor.
 export interface UnindexedGame {
+  slug: string;
   features: StoredFeature[];
 }
 
+// As datas em milissegundos: decidem, no empate, de que jogo sai "Porque você gostou de".
 export interface UserState {
-  ratings: { gameId: string; score: number }[];
-  listEntries: { gameId: string; listType: ListType }[];
+  ratings: { gameId: string; score: number; ratedAt: number }[];
+  listEntries: { gameId: string; listType: ListType; addedAt: number }[];
   preferenceFeatureIds: string[];
   unindexedGames: ReadonlyMap<string, UnindexedGame>;
 }
@@ -38,11 +40,17 @@ export class RecommendationRepository {
     const [state] = await this.prisma.$queryRaw<Omit<UserState, 'unindexedGames'>[]>`
       SELECT
         coalesce((
-          SELECT json_agg(json_build_object('gameId', "gameId", 'score', "score"))
+          SELECT json_agg(json_build_object(
+            'gameId', "gameId", 'score', "score",
+            'ratedAt', floor(extract(epoch FROM "updatedAt") * 1000)
+          ))
           FROM "Rating" WHERE "userId" = ${userId}::uuid
         ), '[]') AS "ratings",
         coalesce((
-          SELECT json_agg(json_build_object('gameId', "gameId", 'listType', "listType"))
+          SELECT json_agg(json_build_object(
+            'gameId', "gameId", 'listType', "listType",
+            'addedAt', floor(extract(epoch FROM "createdAt") * 1000)
+          ))
           FROM "ListEntry" WHERE "userId" = ${userId}::uuid
         ), '[]') AS "listEntries",
         coalesce((
@@ -60,11 +68,15 @@ export class RecommendationRepository {
             where: { id: { in: unindexed } },
             select: {
               id: true,
+              slug: true,
               features: { select: { feature: { select: { type: true, igdbId: true } } } },
             },
           });
     const unindexedGames = new Map(
-      games.map(({ id, features }) => [id, { features: features.map(({ feature }) => feature) }]),
+      games.map(({ id, slug, features }) => [
+        id,
+        { slug, features: features.map(({ feature }) => feature) },
+      ]),
     );
 
     return { ratings, listEntries, preferenceFeatureIds, unindexedGames };

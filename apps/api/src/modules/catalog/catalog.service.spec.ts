@@ -129,7 +129,7 @@ class FakeCatalog implements Pick<
 }
 
 const service = (catalog: FakeCatalog) =>
-  new CatalogService(catalog as unknown as CatalogRepository, labels, 20);
+  new CatalogService(catalog as unknown as CatalogRepository, labels, 20, new Map());
 
 describe('CatalogService', () => {
   describe('searchGames', () => {
@@ -373,6 +373,25 @@ describe('CatalogService', () => {
       expect(
         (await service(catalog).listFeatures({ type: 'tag' })).map(({ name }) => name),
       ).toEqual(['Aconchegante', 'Difícil', 'Roguelike', 'RPG de Ação']);
+    });
+
+    it('as etiquetas levam os nomes de antes; gêneros e temas não têm', async () => {
+      const catalog = new FakeCatalog({ total: 0, games: [] }, [
+        { slug: 'difficult', name: 'Difícil', gameCount: 2 },
+        { slug: 'roguelike', name: 'Roguelike', gameCount: 3 },
+      ]);
+      const withAliases = new CatalogService(
+        catalog as unknown as CatalogRepository,
+        labels,
+        20,
+        new Map([['difficult', ['Impiedoso']]]),
+      );
+
+      expect(await withAliases.listFeatures({ type: 'tag' })).toEqual([
+        { slug: 'difficult', name: 'Difícil', gameCount: 2, aliases: ['Impiedoso'] },
+        { slug: 'roguelike', name: 'Roguelike', gameCount: 3, aliases: [] },
+      ]);
+      expect((await withAliases.listFeatures({ type: 'genre' }))[0]).not.toHaveProperty('aliases');
     });
   });
 });

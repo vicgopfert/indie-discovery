@@ -3,7 +3,8 @@
 Medição feita entre 05/11 e 07/11/2026, sem mudar o que a API usa. O resultado é o vocabulário de
 etiquetas aceitas (`apps/api/config/tags.json`, que se chamava `tags.draft.json` até o B-78), a
 decisão de pôr as etiquetas no vetor e a regra de prateleiras que o B-79 implementa. A ingestão, o
-vetor e a interface entraram no B-78 (seção 10).
+vetor e a interface entraram no B-78 (seção 10); a regra de prateleiras e os nomes da comunidade, no
+B-79 (seções 11 e 12).
 
 ## Por que medir
 
@@ -119,7 +120,9 @@ da documentação da Steam (Tag Wizard), e eu classifiquei cada etiqueta para a 
   - Agricultura e Rural ficam com Simulador Rural.
 - **Títulos:** o título substitui o nome em "Porque você curte `<título>`" quando o nome não se lê
   bem ali. Exemplos: Impiedoso → "jogos difíceis", Roguelike → "roguelikes e roguelites",
-  Montagem de Decks → "construção de baralho (deckbuilding)".
+  Montagem de Decks → "construção de baralho (deckbuilding)". **Alterado em 09/11/2026 (B-79):** 44
+  nomes passaram aos termos da comunidade (Impiedoso → Difícil, Montagem de Decks → Deckbuilding), e 9
+  títulos foram revistos (seção 12).
 - **Faça o que Quiser e Tático:** passaram de gênero para mecânica, porque atravessam gêneros. Assim
   saem da fase 1 da regra de prateleiras (seção 6).
 
@@ -348,7 +351,7 @@ com 6 prateleiras foi medida de novo, só para registro:
   - ficha e filtro do catálogo;
   - etiquetas no vetor, no lugar das palavras-chave;
   - RSS da API medido depois da carga e de três recargas em produção.
-- **B-79:**
+- **B-79** (feito em 09/11/2026, seções 11 e 12):
   - a regra de duas fases com até 6 prateleiras, com os títulos do vocabulário;
   - prateleiras "Porque você gostou de `<jogo>`" só para jogos com nota 4 ou mais, ou em favoritos.
     Um jogo só em "quero jogar" ou só em "concluídos" nunca gera essa prateleira;
@@ -567,3 +570,183 @@ trecho em qualquer lugar do nome, sem acento: "acao" também mostra Automação 
     preencheu as colunas novas de todo jogo do catálogo e zerou o IDF das palavras-chave, que
     saíram do vetor.
   - Nas próximas execuções, só mudam as linhas que mudarem de fato.
+
+## 11. Regra de prateleiras na plataforma (B-79)
+
+Implementado em 08 e 09/11/2026. As decisões do plano foram aprovadas pelo autor e estão marcadas
+abaixo como "decisão do autor". A regra é a da seção 6. O registro completo da recomendação está em
+`docs/recomendacao.md` (seção "Recomendações específicas").
+
+### Regra no código
+
+- **Vocabulário no índice:** cada etiqueta que pode virar prateleira traz do `tags.json` o grupo
+  (gênero ou subgênero, para a fase 1), o título e a ideia (`sameIdeaAs`). O índice também
+  responde o Jaccard de dois atributos no catálogo, calculado na primeira vez que o par aparece.
+- **Valores** (`config/recommendation.json`, com a justificativa de cada um):
+  - até 6 prateleiras;
+  - etiqueta específica em até 10% do catálogo;
+  - suporte de 2 jogos;
+  - atributo largo da IGDB em até 40% do catálogo;
+  - Jaccard dos jogos da biblioteca acima de 0,8 barra a etiqueta na fase 1;
+  - Jaccard dos jogos do catálogo acima de 0,5 barra a etiqueta na fase 2.
+- **`u_k > 0` (decisão do autor):** continua exigido, como no B-71, para que uma nota negativa
+  possa anular um atributo. O protótipo do B-77 não tinha essa condição; nenhum perfil dos
+  critérios C1 a C5 tem nota negativa.
+- **Ordem das preferências (decisão do autor):** pela frequência no catálogo e depois pela posição.
+  O protótipo usava a ordem recebida, que o banco não garante.
+- **Cota na lista principal:** o peso de todos os jogos da biblioteca que sustentam a prateleira,
+  como no protótipo; a preferência sem jogo vale β. No empate do déficit, entra a prateleira que
+  vem antes na página (decisão do autor).
+
+### Mesma ideia: IGDB e Steam
+
+A tabela de equivalência foi preparada com apoio de um assistente de IA no protótipo do B-77 e
+aprovada pelo autor em 09/11/2026, com um par a mais (Music ↔ Ritmo). São 42 atributos da IGDB em
+46 pares, gravados no campo `sameIdeaAs` das etiquetas. Simulação não está aceita no vocabulário, e
+o par dela não tem efeito.
+
+| Atributo da IGDB | Etiqueta da Steam |
+| --- | --- |
+| Gênero Adventure | Aventura |
+| Gênero Arcade | Arcade |
+| Gênero Card & Board Game | Cartas; Jogo de Tabuleiro; Jogo de Mesa |
+| Gênero Fighting | Luta |
+| Gênero Hack and slash/Beat 'em up | Hack and Slash; Beat 'em Up |
+| Gênero MOBA | MOBA |
+| Gênero Music | Música; Ritmo (acrescentado pelo autor) |
+| Gênero Pinball | Pinball |
+| Gênero Platform | Plataforma |
+| Gênero Point-and-click | Point-and-Click |
+| Gênero Puzzle | Puzzle |
+| Gênero Quiz/Trivia | Perguntas e Respostas |
+| Gênero Racing | Corrida |
+| Gênero Real Time Strategy (RTS) | Estratégia em Tempo Real (RTS) |
+| Gênero Role-playing (RPG) | RPG |
+| Gênero Shooter | Tiro |
+| Gênero Simulator | Simulação (não aceita) |
+| Gênero Sport | Esportes |
+| Gênero Strategy | Estratégia |
+| Gênero Tactical | Tático |
+| Gênero Turn-based strategy (TBS) | Estratégia em Turnos |
+| Gênero Visual Novel | Visual Novel |
+| Tema 4X | 4X |
+| Tema Action | Ação |
+| Tema Business | Gerenciamento |
+| Tema Comedy | Comédia; Engraçado |
+| Tema Educational | Educativo |
+| Tema Fantasy | Fantasia |
+| Tema Historical | Histórico |
+| Tema Horror | Terror |
+| Tema Kids | Para Toda a Família |
+| Tema Mystery | Mistério |
+| Tema Open world | Mundo Aberto |
+| Tema Party | Party Game |
+| Tema Romance | Romance |
+| Tema Sandbox | Sandbox |
+| Tema Science fiction | Ficção Científica |
+| Tema Stealth | Furtividade |
+| Tema Survival | Sobrevivência |
+| Tema Thriller | Thriller |
+| Tema Warfare | Guerra |
+
+As etiquetas estão com os nomes da seção 12.
+
+### Conformidade com o protótipo e critérios
+
+Os critérios foram gravados antes de medir, no mesmo formato do B-77, no catálogo local (ingestão
+de 07/11/2026).
+
+- **Conformidade:** o protótipo `rule-c6.mts` foi portado para o índice atual, com a tabela de
+  ideias pelos nomes em inglês e o Jaccard calculado à parte, sem usar o código novo. Nos 606
+  perfis (regressão, 4 realistas, caso Fantasia do B-78, 200 por preferências, 200 coerentes e 200
+  sorteados), a implementação deu os mesmos interesses, na mesma ordem, com as mesmas cotas e os
+  mesmos jogos de apoio: 606 de 606.
+- **Critérios, pela implementação completa** (com as prateleiras por jogo antes das de interesse e
+  a remoção dos repetidos):
+
+| Critério | Resultado |
+| --- | --- |
+| C1 original / revisado (registro) | passa / não passa (limitação da seção 7) |
+| C2, Amnesia | passa |
+| C3, perfis realistas | passa, com as mesmas prateleiras da seção 6 |
+| C4, preferências | 200 de 200 |
+| C5 (a), (b), (c) | 100%; 88,0%; 0% |
+| Ideia repetida | nenhuma |
+
+- **Prateleiras por jogo:** aparecem nos 406 perfis com avaliações (2 em cada) e em nenhum dos 200
+  só com preferências. Os números das prateleiras de interesse são os mesmos com e sem elas.
+- **Caso Fantasia do B-78** (Hollow Knight, Dead Cells, Hades, Celeste, Grim Dawn e Slay the Spire):
+  antes ficava só "Fantasia"; agora saem Roguelike, Soulslike, Fantasia (atributo largo, só para os
+  jogos sem etiqueta de gênero ou subgênero), Difícil, Metroidvania e Hack and Slash.
+
+## 12. Nomes da comunidade (B-79)
+
+**Decisão do autor (09/11/2026):** o nome em português da Steam é trocado pelo termo que a
+comunidade usa quando é o que o jogador brasileiro fala, e fica em português quando o português é
+natural. Os slugs, que vêm do nome em inglês, e as URLs não mudam. O nome antigo fica em `aliases`
+no `tags.json`, e a busca do filtro do catálogo também o encontra.
+
+| Nome da Steam | Nome novo |
+| --- | --- |
+| Quebra-Cabeça | Puzzle |
+| Faça o que Quiser | Sandbox |
+| Plataforma com Quebra-Cabeça | Puzzle Platformer |
+| Impiedoso | Difícil |
+| Romance Visual | Visual Novel |
+| Apontar e Clicar | Point-and-Click |
+| Gráficos Pixelados | Pixel Art |
+| Montagem de Decks | Deckbuilding |
+| Montagem de Decks Roguelike | Roguelike Deckbuilder |
+| Batalha com Cartas | Card Battler |
+| Mandando Bala | Shoot 'em Up |
+| SHMUP com Visão Superior | Top-Down Shooter |
+| Inferno de Balas | Bullet Hell |
+| Paraíso de Balas | Bullet Heaven |
+| Porradaria | Beat 'em Up |
+| Explorador de Calabouços | Dungeon Crawler |
+| Calabouço Misterioso | Mystery Dungeon |
+| Tiro de Tiozão | Boomer Shooter |
+| Tiro com Saques | Looter Shooter |
+| Tiro de Extração | Extraction Shooter |
+| Tiro de Heróis | Hero Shooter |
+| Tiro em Arena | Arena Shooter |
+| Tiro em Primeira Pessoa (FPS) | FPS |
+| Controle com Alavanca Dupla | Twin Stick Shooter |
+| Tiro sobre Trilhos | Rail Shooter |
+| Jogo de Ação Focado em Personagem | Character Action |
+| Simulador Imersivo | Immersive Sim |
+| Coleção de Criaturas | Creature Collector |
+| Progressão Ociosa | Idle |
+| Batalha Automática | Auto Battler |
+| Fuja da Sala | Escape Room |
+| Combinar 3 | Match 3 |
+| Corredor | Endless Runner |
+| Saques | Loot |
+| Fabricação | Crafting |
+| Duelo contra Chefões | Boss Rush |
+| Simulador de Encontros | Dating Sim |
+| Você Decide | Escolhas Importam |
+| Reúna a Galera | Party Game |
+| Estrada de Terra | Off-Road |
+| Mágica | Magia |
+| Furtivo | Furtividade |
+| Simulador de Vida Real | Simulador de Vida |
+| Simulador Rural | Simulador de Fazenda |
+
+**Títulos revisados**, para ficarem coerentes com os nomes novos (os outros títulos já combinavam):
+
+| Etiqueta | Título antes | Título novo |
+| --- | --- | --- |
+| Deckbuilding | construção de baralho (deckbuilding) | jogos de deckbuilding |
+| Top-Down Shooter | tiro com visão de cima | top-down shooters |
+| Twin Stick Shooter | tiro com dois analógicos (twin stick) | twin stick shooters |
+| Character Action | ação focada em combos | jogos de character action |
+| Creature Collector | coleta de criaturas | creature collectors |
+| Escape Room | jogos de sala de fuga | escape rooms |
+| Endless Runner | runners (corrida infinita) | endless runners |
+| Boomer Shooter | boomer shooters (tiro retrô) | boomer shooters |
+| Party Game | jogos para jogar com a galera | party games |
+
+- **Na produção:** o nome do atributo é gravado pela ingestão, que atualiza o nome do `Feature` já
+  gravado quando ele muda. Os nomes novos chegam à produção na primeira ingestão depois do deploy.
+- **Medições anteriores:** as tabelas das seções 2 a 7 e 10 usam os nomes da época.

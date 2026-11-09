@@ -7,8 +7,12 @@ describe('readScoringConfig', () => {
       preferenceWeight: 1,
       popularityWeightByMode: { POPULAR: -0.2, BALANCED: 0, DISCOVERY: 0.3 },
       lists: {
-        maxInterests: 4,
+        maxInterests: 6,
+        specificMaxDocumentRatio: 0.1,
+        minSupport: 2,
         interestMaxDocumentRatio: 0.4,
+        libraryOverlapMax: 0.8,
+        catalogOverlapMax: 0.5,
         shelfMinItems: 4,
         overviewMainSize: 5,
         overviewShelfSize: 5,
@@ -32,6 +36,10 @@ describe('readScoringConfig', () => {
     expect(withLists({ pageSize: 2.5 })).toBe(false);
     expect(withLists({ interestMaxDocumentRatio: 0 })).toBe(false);
     expect(withLists({ interestMaxDocumentRatio: 1.2 })).toBe(false);
+    expect(withLists({ specificMaxDocumentRatio: 0 })).toBe(false);
+    expect(withLists({ minSupport: 0 })).toBe(false);
+    expect(withLists({ libraryOverlapMax: 1.5 })).toBe(false);
+    expect(withLists({ catalogOverlapMax: 0 })).toBe(false);
   });
 
   it('recusa bônus de lista negativo e modo sem λ', () => {

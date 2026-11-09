@@ -319,7 +319,7 @@ describe('Catálogo', () => {
         themes: [{ slug: 'action', name: 'Ação' }],
         tags: [
           { slug: 'precision-platformer', name: 'Plataforma de Precisão' },
-          { slug: 'difficult', name: 'Impiedoso' },
+          { slug: 'difficult', name: 'Difícil' },
         ],
         tagSource: 'STEAM',
         steamAppId: 504230,
@@ -493,15 +493,20 @@ describe('Catálogo', () => {
       ]);
     });
 
-    it('lista as etiquetas com o nome do vocabulário e a contagem, sem as de fora do catálogo', async () => {
+    it('lista as etiquetas com o nome do vocabulário, os nomes de antes e a contagem, sem as de fora do catálogo', async () => {
       const response = await features('tag').expect(200);
 
       expect(response.body).toEqual([
-        { slug: 'space', name: 'Espacial', gameCount: 1 },
-        { slug: 'exploration', name: 'Exploração', gameCount: 1 },
-        { slug: 'difficult', name: 'Impiedoso', gameCount: 2 },
-        { slug: 'metroidvania', name: 'Metroidvania', gameCount: 1 },
-        { slug: 'precision-platformer', name: 'Plataforma de Precisão', gameCount: 1 },
+        { slug: 'difficult', name: 'Difícil', gameCount: 2, aliases: ['Impiedoso'] },
+        { slug: 'space', name: 'Espacial', gameCount: 1, aliases: [] },
+        { slug: 'exploration', name: 'Exploração', gameCount: 1, aliases: [] },
+        { slug: 'metroidvania', name: 'Metroidvania', gameCount: 1, aliases: [] },
+        {
+          slug: 'precision-platformer',
+          name: 'Plataforma de Precisão',
+          gameCount: 1,
+          aliases: [],
+        },
       ]);
     });
 

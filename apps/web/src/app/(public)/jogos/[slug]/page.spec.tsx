@@ -105,11 +105,11 @@ describe('GamePage', () => {
 
     await renderPage();
 
-    expect(screen.getByRole('link', { name: 'Impiedoso' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Difícil' })).toHaveAttribute(
       'href',
       '/catalogo?tag=difficult',
     );
-    expect(fact('Etiquetas')).toHaveTextContent(/^Plataforma de PrecisãoImpiedoso/);
+    expect(fact('Etiquetas')).toHaveTextContent(/^Plataforma de PrecisãoDifícil/);
     const attribution = screen.getByRole('link', { name: 'Etiquetas da comunidade Steam' });
     expect(attribution).toHaveAttribute('href', 'https://store.steampowered.com/app/504230');
     expect(attribution).toHaveAttribute('target', '_blank');

@@ -10,12 +10,27 @@ export function topBy<T>(
   limit: number,
   tieBreak: TieBreak,
 ): T[] {
-  let pool = items;
-  if (limit > 0 && items.length > limit) {
-    const cut = kthLargest(Float64Array.from(items, value), limit);
-    pool = items.filter((item) => value(item) >= cut);
+  const values = Float64Array.from(items, value);
+  return topIndices(values, (i) => id(items[i]!), limit, tieBreak).map((i) => items[i]!);
+}
+
+// O mesmo corte sobre os valores já calculados, pela posição de cada um: as prateleiras por jogo
+// montam os valores numa passada e não precisam de uma função por item (B-79).
+export function topIndices(
+  values: Float64Array,
+  id: (index: number) => string,
+  limit: number,
+  tieBreak: TieBreak,
+): number[] {
+  let pool: number[];
+  if (limit > 0 && values.length > limit) {
+    const cut = kthLargest(values.slice(), limit);
+    pool = [];
+    for (let i = 0; i < values.length; i++) if (values[i]! >= cut) pool.push(i);
+  } else {
+    pool = Array.from(values.keys());
   }
-  return [...pool].sort((a, b) => value(b) - value(a) || tieBreak(id(a), id(b))).slice(0, limit);
+  return pool.sort((a, b) => values[b]! - values[a]! || tieBreak(id(a), id(b))).slice(0, limit);
 }
 
 // O k-ésimo maior valor, com k a partir de 1: o mesmo de ordenar em ordem crescente e pegar a

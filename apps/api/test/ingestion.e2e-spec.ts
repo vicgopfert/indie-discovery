@@ -416,7 +416,7 @@ describe('Ingestão', () => {
     const index = buildContentIndex(
       await new ContentIndexRepository(prisma).loadRows(),
       tfidf,
-      new Set(),
+      new Map(),
     );
 
     expect(index.games).toHaveLength(mapped.length);

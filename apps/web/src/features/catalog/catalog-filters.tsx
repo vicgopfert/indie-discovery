@@ -79,7 +79,11 @@ export function CatalogFilters({
         legend="Etiquetas"
         name="tag"
         selected={query.tag}
-        choices={options.tags.map((tag) => ({ value: tag.slug, label: withCount(tag) }))}
+        choices={options.tags.map((tag) => ({
+          value: tag.slug,
+          label: withCount(tag),
+          aliases: tag.aliases ?? [],
+        }))}
         searchLabel="Buscar etiqueta pelo nome"
       />
       <Select label="Situação" name="status" value={query.status} choices={STATUS_CHOICES} />

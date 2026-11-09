@@ -1,10 +1,11 @@
 import { DiscoveryMode, ReleaseStatus } from '../../../generated/prisma/client';
 import type { ContentIndex, DisplayedAttribute, IndexedGame } from '../content-index';
 import type { Interest } from './interests';
+import type { LikedGame } from './liked-games';
 import type { ScoredCandidates } from './score';
 import type { ListsConfig } from './scoring-config';
 import type { TieBreak } from './tie-break';
-import { topBy } from './top';
+import { topBy, topIndices } from './top';
 
 export const MAIN_LIST_KEY = 'main';
 export const UPCOMING_LIST_KEY = 'upcoming';
@@ -12,18 +13,27 @@ export const UPCOMING_LIST_KEY = 'upcoming';
 export const interestListKey = ({ type, slug }: DisplayedAttribute) =>
   `${type.toLowerCase()}:${slug}`;
 
+export const likedGameListKey = (slug: string) => `game:${slug}`;
+
+// O atributo da prateleira de interesse, com o título do vocabulário (nulo nos gêneros e temas).
+export interface ShelfAttribute extends DisplayedAttribute {
+  title: string | null;
+}
+
 export function listAttribute(
   position: number,
   { features }: Pick<ContentIndex, 'features'>,
-): DisplayedAttribute {
-  const { type, slug, name } = features[position]!;
-  return { type, slug, name };
+): ShelfAttribute {
+  const { type, slug, name, title } = features[position]!;
+  return { type, slug, name, title };
 }
 
 export interface RankedList {
   key: string;
-  kind: 'main' | 'upcoming' | 'interest';
-  attribute: DisplayedAttribute | null;
+  kind: 'main' | 'liked-game' | 'interest' | 'upcoming';
+  attribute: ShelfAttribute | null;
+  // O jogo da biblioteca de "Porque você gostou de <jogo>".
+  likedGameId: string | null;
   // A lista completa, até o teto da configuração.
   games: readonly IndexedGame[];
   // Só no modo Descobertas: a mesma lista montada com λ = 0, para o "pouco conhecido".
@@ -32,7 +42,10 @@ export interface RankedList {
 
 export interface ListOptions {
   mode: DiscoveryMode;
+  // O λ do modo, em cos − λ · pop.
+  popularityWeight: number;
   interests: readonly Interest[];
+  likedGames: readonly LikedGame[];
   tieBreak: TieBreak;
 }
 
@@ -49,13 +62,14 @@ interface OrderedLists {
   shelves: IndexedGame[][];
 }
 
-// Na ordem da página: a principal, "Em breve no seu gosto" e uma prateleira por interesse. As
-// prateleiras são recortes do mesmo conjunto de candidatos, todas ordenadas pela pontuação do
-// perfil inteiro: sobem primeiro os jogos que também batem com os outros gostos.
+// Na ordem da página: a principal, "Porque você gostou de <jogo>", uma prateleira por interesse e
+// "Em breve no seu gosto". As prateleiras são recortes do mesmo conjunto de candidatos. As de
+// interesse e "Em breve" seguem a pontuação do perfil inteiro: sobem primeiro os jogos que também
+// batem com os outros gostos.
 export function buildLists(
   candidates: ScoredCandidates,
   catalog: Pick<ContentIndex, 'games' | 'features'>,
-  { mode, interests, tieBreak }: ListOptions,
+  { mode, popularityWeight, interests, likedGames, tieBreak }: ListOptions,
   config: ListsConfig,
 ): RankedList[] {
   const pools = poolsOf(candidates, catalog, interests);
@@ -70,27 +84,96 @@ export function buildLists(
       key: MAIN_LIST_KEY,
       kind: 'main',
       attribute: null,
+      likedGameId: null,
       games: byScore.main,
       bySimilarity: bySimilarity?.main ?? null,
     },
-    {
-      key: UPCOMING_LIST_KEY,
-      kind: 'upcoming',
-      attribute: null,
-      games: byScore.upcoming,
-      bySimilarity: bySimilarity?.upcoming ?? null,
-    },
+    ...likedGameLists(
+      candidates,
+      catalog,
+      likedGames,
+      { mode, popularityWeight, tieBreak },
+      config,
+    ),
     ...interests.map(({ position }, slot): RankedList => {
       const label = listAttribute(position, catalog);
       return {
         key: interestListKey(label),
         kind: 'interest',
         attribute: label,
+        likedGameId: null,
         games: byScore.shelves[slot]!,
         bySimilarity: bySimilarity?.shelves[slot] ?? null,
       };
     }),
+    {
+      key: UPCOMING_LIST_KEY,
+      kind: 'upcoming',
+      attribute: null,
+      likedGameId: null,
+      games: byScore.upcoming,
+      bySimilarity: bySimilarity?.upcoming ?? null,
+    },
   ];
+}
+
+// Os candidatos do perfil com algum atributo do jogo de origem, por cos(v_origem, v_j) − λ · pop,
+// com o mesmo desempate. Os vetores têm norma 1: o produto escalar é o cosseno. Uma passada pelos
+// candidatos serve aos jogos de origem todos: eram cerca de 15 mil candidatos por prateleira, e a
+// varredura dobrava com a segunda (B-79). Os pesos das origens ficam lado a lado, por atributo.
+function likedGameLists(
+  candidates: ScoredCandidates,
+  { games, features }: Pick<ContentIndex, 'games' | 'features'>,
+  likedGames: readonly LikedGame[],
+  { mode, popularityWeight, tieBreak }: Pick<ListOptions, 'mode' | 'popularityWeight' | 'tieBreak'>,
+  config: ListsConfig,
+): RankedList[] {
+  const sourceCount = likedGames.length;
+  if (sourceCount === 0) return [];
+  const sources = new Float64Array(features.length * sourceCount);
+  likedGames.forEach(({ vector }, s) => {
+    vector.featurePositions.forEach((position, i) => {
+      sources[position * sourceCount + s] = vector.weights[i]!;
+    });
+  });
+  const gameOf = (k: number) => games[candidates.gamePositions[k]!]!;
+  const pools = likedGames.map((): number[] => []);
+  const similarities = likedGames.map((): number[] => []);
+  const dots = new Float64Array(sourceCount);
+  for (let k = 0; k < candidates.count; k++) {
+    const game = gameOf(k);
+    dots.fill(0);
+    for (let i = 0; i < game.featurePositions.length; i++) {
+      const base = game.featurePositions[i]! * sourceCount;
+      const weight = game.weights[i]!;
+      for (let s = 0; s < sourceCount; s++) dots[s]! += sources[base + s]! * weight;
+    }
+    for (let s = 0; s < sourceCount; s++) {
+      if (dots[s]! <= 0) continue;
+      pools[s]!.push(k);
+      similarities[s]!.push(dots[s]!);
+    }
+  }
+
+  return likedGames.map((liked, s): RankedList => {
+    const pool = pools[s]!;
+    const similarity = Float64Array.from(similarities[s]!);
+    const score = similarity.map(
+      (value, j) => value - popularityWeight * gameOf(pool[j]!).popularityNorm,
+    );
+    const top = (values: Float64Array) =>
+      topIndices(values, (j) => gameOf(pool[j]!).id, config.shelfCap, tieBreak).map((j) =>
+        gameOf(pool[j]!),
+      );
+    return {
+      key: likedGameListKey(liked.slug),
+      kind: 'liked-game',
+      attribute: null,
+      likedGameId: liked.gameId,
+      games: top(score),
+      bySimilarity: mode === DiscoveryMode.DISCOVERY ? top(similarity) : null,
+    };
+  });
 }
 
 // Uma passada pelos candidatos, com a prateleira de cada atributo numa tabela pela posição dele
@@ -152,7 +235,7 @@ function orderLists(
 }
 
 // Posição a posição, entra o próximo jogo ainda não usado da prateleira com o maior déficit em
-// relação à cota, share_k · n − c_k; no empate, a que vem antes, de maior cota. O jogo de dois
+// relação à cota, share_k · n − c_k; no empate, a que vem antes na página. O jogo de dois
 // interesses conta para a prateleira que o pôs. Esgotadas as prateleiras, segue pelo resto.
 export function interleave(
   shelves: readonly (readonly IndexedGame[])[],

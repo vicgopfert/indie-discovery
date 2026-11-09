@@ -14,7 +14,7 @@ const options: CatalogFilterOptions = {
   themes: [{ slug: 'horror', name: 'Terror', gameCount: 1500 }],
   tags: [
     { slug: 'action-rpg', name: 'RPG de Ação', gameCount: 900 },
-    { slug: 'difficult', name: 'Impiedoso', gameCount: 2100 },
+    { slug: 'difficult', name: 'Difícil', gameCount: 2100, aliases: ['Impiedoso'] },
     { slug: 'metroidvania', name: 'Metroidvania', gameCount: 700 },
   ],
   countries: [{ code: 'BR', name: 'Brasil', gameCount: 251 }],
@@ -92,6 +92,19 @@ describe('CatalogFilters', () => {
     expect(search).not.toHaveAttribute('name');
     await userEvent.clear(search);
     expect(within(tags).getAllByRole('checkbox')).toHaveLength(3);
+  });
+
+  it('a busca também encontra a etiqueta pelo nome de antes', async () => {
+    renderFilters({ tag: 'metroidvania' });
+    const tags = group('Etiquetas');
+
+    await userEvent.type(
+      screen.getByRole('searchbox', { name: 'Buscar etiqueta pelo nome' }),
+      'impied',
+    );
+
+    expect(within(tags).getByRole('checkbox', { name: 'Difícil (2.100)' })).toBeVisible();
+    expect(within(tags).queryByRole('checkbox', { name: 'RPG de Ação (900)' })).toBeNull();
   });
 
   it('não leva a página: filtrar de novo volta para a primeira', () => {

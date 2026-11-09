@@ -150,7 +150,7 @@ describe('LibraryService', () => {
     } as unknown as CatalogRepository;
     service = new LibraryService(
       library as unknown as LibraryRepository,
-      new CatalogService(catalog, labels, 20),
+      new CatalogService(catalog, labels, 20, new Map()),
     );
   });
 
