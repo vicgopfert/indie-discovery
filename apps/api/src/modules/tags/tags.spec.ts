@@ -124,6 +124,13 @@ describe('tagVocabularySchema', () => {
     expect(valid([tag(1, 'Pixel Art'), tag(2, 'Pixel-art', { accepted: false })])).toBe(true);
   });
 
+  it('a mesma ideia aponta para um gênero ou tema da IGDB, pela chave da prateleira', () => {
+    expect(valid([tag(1, 'Romance Visual', { sameIdeaAs: 'genre:visual-novel' })])).toBe(true);
+    expect(valid([tag(1, 'Terror', { sameIdeaAs: 'theme:horror' })])).toBe(true);
+    expect(valid([tag(1, 'Romance Visual', { sameIdeaAs: 'Visual Novel' })])).toBe(false);
+    expect(valid([tag(1, 'Roguelike', { sameIdeaAs: 'tag:roguelike' })])).toBe(false);
+  });
+
   function valid(tags: TagVocabulary['tags']) {
     return tagVocabularySchema.safeParse({
       rule: 'x',

@@ -38,6 +38,20 @@ export interface IndexedFeature {
   // Pode virar prateleira: gêneros e temas sempre, e as etiquetas marcadas no vocabulário. As
   // visuais e as vagas ficam na pontuação, no filtro e, por último, no motivo.
   shelf: boolean;
+  // Etiqueta de gênero ou subgênero, que diz o tipo de jogo: a fase 1 da regra de prateleiras.
+  gameKind: boolean;
+  // O título do vocabulário em "Porque você curte <título>"; sem ele, vale o nome.
+  title: string | null;
+  // Dois atributos com a mesma ideia não viram duas prateleiras: o gênero ou tema da IGDB vale
+  // pela própria chave, e a etiqueta, pelo gênero ou tema equivalente do vocabulário.
+  idea: string;
+}
+
+// O que o vocabulário diz de cada etiqueta que pode virar prateleira.
+export interface ShelfTag {
+  gameKind: boolean;
+  title: string | null;
+  sameIdeaAs: string | null;
 }
 
 // Gêneros e temas têm o nome traduzido pelo arquivo de rótulos; as etiquetas já vêm em português
@@ -77,11 +91,11 @@ export interface ContentIndex {
 }
 
 // Os pesos são refeitos a partir do IDF gravado na ingestão, com a mesma conta dela (tfidfVector).
-// shelfTagIds: os ids, na Steam, das etiquetas que podem virar prateleira.
+// shelfTags: as etiquetas que podem virar prateleira, pelo id da Steam.
 export function buildContentIndex(
   rows: ContentIndexRows,
   config: TfidfConfig,
-  shelfTagIds: ReadonlySet<number>,
+  shelfTags: ReadonlyMap<number, ShelfTag>,
 ): ContentIndex {
   const idf = new Map<FeatureKey, number>();
   const positionByKey = new Map<FeatureKey, number>();
@@ -114,14 +128,21 @@ export function buildContentIndex(
 
   return {
     games,
-    features: rows.features.map(({ id, type, igdbId, slug, name }, position) => ({
-      id,
-      type,
-      slug,
-      name,
-      documentRatio: ratio(documentCount[position]!),
-      shelf: isLabeledFeatureType(type) || (type === FeatureType.TAG && shelfTagIds.has(igdbId)),
-    })),
+    features: rows.features.map(({ id, type, igdbId, slug, name }, position) => {
+      const tag = type === FeatureType.TAG ? shelfTags.get(igdbId) : undefined;
+      const key = `${type.toLowerCase()}:${slug}`;
+      return {
+        id,
+        type,
+        slug,
+        name,
+        documentRatio: ratio(documentCount[position]!),
+        shelf: isLabeledFeatureType(type) || tag !== undefined,
+        gameKind: tag?.gameKind ?? false,
+        title: tag?.title ?? null,
+        idea: tag?.sameIdeaAs ?? key,
+      };
+    }),
     positionByGameId: new Map(games.map(({ id }, position) => [id, position])),
     positionByFeatureId: new Map(rows.features.map(({ id }, position) => [id, position])),
     vectorOf,

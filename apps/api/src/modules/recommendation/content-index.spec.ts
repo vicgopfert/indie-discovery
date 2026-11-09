@@ -1,6 +1,6 @@
 import { FeatureType, ReleaseStatus } from '../../generated/prisma/client';
 import { buildContentIndex, type ContentIndexRows } from './content-index';
-import { BOOT_RETRY_DELAYS_MS, ContentIndexService } from './content-index.service';
+import { BOOT_RETRY_DELAYS_MS, ContentIndexService, shelfTagsOf } from './content-index.service';
 import type { ContentIndexRepository } from './content-index.repository';
 import {
   computeIdf,
@@ -57,7 +57,7 @@ function rowsFor(games: Record<string, ContentFeature[]>): ContentIndexRows {
 
 describe('buildContentIndex', () => {
   const rows = rowsFor(catalog);
-  const index = buildContentIndex(rows, config, new Set());
+  const index = buildContentIndex(rows, config, new Map());
 
   it('refaz para cada jogo o mesmo vetor que a ingestão calcula', () => {
     const idf = computeIdf(Object.values(catalog), config);
@@ -94,7 +94,7 @@ describe('buildContentIndex', () => {
     const withoutCeleste = buildContentIndex(
       { ...rows, games: rows.games.filter((game) => game.slug !== 'celeste') },
       config,
-      new Set(),
+      new Map(),
     );
     const celeste = index.games[index.positionByGameId.get('g-celeste')!]!;
 
@@ -132,14 +132,65 @@ describe('buildContentIndex', () => {
 
 describe('buildContentIndex: prateleiras', () => {
   const rows = rowsFor(catalog);
-  const index = buildContentIndex(rows, config, new Set([1]));
-  const shelfOf = (name: string) => index.features.find((f) => f.name === name)!.shelf;
+  const index = buildContentIndex(
+    rows,
+    config,
+    new Map([[1, { gameKind: true, title: 'jogos de etiqueta', sameIdeaAs: 'genre:GENRE-2' }]]),
+  );
+  const featureOf = (name: string) => index.features.find((f) => f.name === name)!;
 
   it('gêneros e temas podem virar prateleira; as etiquetas, só as marcadas no vocabulário', () => {
-    expect(shelfOf('GENRE-1')).toBe(true);
-    expect(shelfOf('THEME-2')).toBe(true);
-    expect(shelfOf('TAG-1')).toBe(true);
-    expect(shelfOf('TAG-2')).toBe(false);
+    expect(featureOf('GENRE-1').shelf).toBe(true);
+    expect(featureOf('THEME-2').shelf).toBe(true);
+    expect(featureOf('TAG-1').shelf).toBe(true);
+    expect(featureOf('TAG-2').shelf).toBe(false);
+  });
+
+  it('a etiqueta traz do vocabulário o tipo de jogo e o título; gêneros e temas não têm', () => {
+    expect(featureOf('TAG-1')).toMatchObject({ gameKind: true, title: 'jogos de etiqueta' });
+    expect(featureOf('TAG-2')).toMatchObject({ gameKind: false, title: null });
+    expect(featureOf('GENRE-1')).toMatchObject({ gameKind: false, title: null });
+  });
+
+  it('a etiqueta com equivalente da IGDB tem a ideia dele; as outras, a própria chave', () => {
+    expect(featureOf('TAG-1').idea).toBe(featureOf('GENRE-2').idea);
+    expect(featureOf('GENRE-2').idea).toBe('genre:GENRE-2');
+    expect(featureOf('TAG-2').idea).toBe('tag:TAG-2');
+  });
+});
+
+describe('shelfTagsOf', () => {
+  const tag = (id: number, group: 'genre' | 'subgenre' | 'mechanic' | 'visual', shelf = true) => ({
+    id,
+    name: `Etiqueta ${id}`,
+    englishName: `Tag ${id}`,
+    group,
+    accepted: true,
+    shelf,
+    catalogGames: 10,
+    styles: [],
+    keywords: [],
+    summaryTerms: [],
+  });
+  const tags = shelfTagsOf({
+    rule: 'regra',
+    minRelativeWeight: 0.3,
+    minRelativeWeightRationale: 'regra',
+    tags: [
+      { ...tag(1, 'genre'), sameIdeaAs: 'genre:puzzle' },
+      { ...tag(2, 'subgenre'), title: 'roguelikes' },
+      tag(3, 'mechanic'),
+      tag(4, 'visual', false),
+      { ...tag(5, 'genre'), accepted: false },
+    ],
+  });
+
+  it('só as aceitas que podem virar prateleira, com gênero e subgênero como tipo de jogo', () => {
+    expect([...tags]).toEqual([
+      [1, { gameKind: true, title: null, sameIdeaAs: 'genre:puzzle' }],
+      [2, { gameKind: true, title: 'roguelikes', sameIdeaAs: null }],
+      [3, { gameKind: false, title: null, sameIdeaAs: null }],
+    ]);
   });
 });
 

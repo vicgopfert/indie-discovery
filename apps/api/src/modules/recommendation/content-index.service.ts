@@ -6,7 +6,7 @@ import {
   type OnModuleDestroy,
 } from '@nestjs/common';
 import type { TagVocabulary } from '../tags/tags';
-import { buildContentIndex, type ContentIndex } from './content-index';
+import { buildContentIndex, type ContentIndex, type ShelfTag } from './content-index';
 import { ContentIndexRepository } from './content-index.repository';
 import type { TfidfConfig } from './tfidf';
 
@@ -36,16 +36,14 @@ export class ContentIndexService implements OnApplicationBootstrap, OnModuleDest
   private failed = false;
   private closing = false;
   private cancelRetry: (() => void) | null = null;
-  private readonly shelfTagIds: ReadonlySet<number>;
+  private readonly shelfTags: ReadonlyMap<number, ShelfTag>;
 
   constructor(
     private readonly repository: ContentIndexRepository,
     @Inject(TFIDF_CONFIG) private readonly config: TfidfConfig,
     @Inject(TAG_VOCABULARY) vocabulary: TagVocabulary,
   ) {
-    this.shelfTagIds = new Set(
-      vocabulary.tags.filter((t) => t.accepted && t.shelf).map((t) => t.id),
-    );
+    this.shelfTags = shelfTagsOf(vocabulary);
   }
 
   // A carga roda depois que a API começa a escutar: o health check do Render responde em até
@@ -130,7 +128,7 @@ export class ContentIndexService implements OnApplicationBootstrap, OnModuleDest
     try {
       const rows = await this.repository.loadRows();
       const transactionMs = Date.now() - start;
-      const index = buildContentIndex(rows, this.config, this.shelfTagIds);
+      const index = buildContentIndex(rows, this.config, this.shelfTags);
       const after = process.memoryUsage();
       this.current = { index, loadedAt: new Date(), durationMs: Date.now() - start };
       this.failed = false;
@@ -152,6 +150,23 @@ export class ContentIndexService implements OnApplicationBootstrap, OnModuleDest
       throw error;
     }
   }
+}
+
+// Os grupos gênero e subgênero dizem o tipo de jogo; mecânica, clima e tema descrevem o jogo, mas
+// atravessam tipos.
+export function shelfTagsOf(vocabulary: TagVocabulary): ReadonlyMap<number, ShelfTag> {
+  return new Map(
+    vocabulary.tags
+      .filter((t) => t.accepted && t.shelf)
+      .map((t) => [
+        t.id,
+        {
+          gameKind: t.group === 'genre' || t.group === 'subgenre',
+          title: t.title ?? null,
+          sameIdeaAs: t.sameIdeaAs ?? null,
+        },
+      ]),
+  );
 }
 
 function signedMb(bytes: number) {

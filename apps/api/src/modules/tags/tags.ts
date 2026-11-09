@@ -44,6 +44,12 @@ export const tagVocabularySchema = z
         // No lugar do nome em "Porque você curte <título>", quando o nome não se lê bem ali
         // (Impiedoso → "jogos difíceis").
         title: z.string().min(1).optional(),
+        // O gênero ou tema da IGDB com a mesma ideia: as prateleiras não repetem uma ideia pelas
+        // duas fontes (gênero Visual Novel e etiqueta Romance Visual).
+        sameIdeaAs: z
+          .string()
+          .regex(/^(genre|theme):[a-z0-9-]+$/)
+          .optional(),
         catalogGames: z.number().int().nonnegative(),
         styles: z.array(z.string().min(1)).default([]),
         keywords: z.array(z.string().min(1)).default([]),

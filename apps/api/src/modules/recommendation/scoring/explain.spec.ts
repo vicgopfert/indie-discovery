@@ -96,6 +96,9 @@ describe('explain sem atributo que vire motivo', () => {
     name: slug,
     documentRatio: 0.1,
     shelf: false,
+    gameKind: false,
+    title: null,
+    idea: slug,
   });
   const index = { features: [keyword('a'), keyword('b')] };
   const vector = (weights: number[]) => ({

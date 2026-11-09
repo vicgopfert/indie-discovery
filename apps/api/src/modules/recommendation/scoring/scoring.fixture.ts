@@ -14,8 +14,14 @@ const { GENRE, THEME, TAG } = FeatureType;
 
 export const featureId = (slug: string) => `f-${slug}`;
 
-// shelf: só nas etiquetas, se ela pode virar prateleira (pelo vocabulário, na API).
-type FixtureFeature = ContentIndexRows['features'][number] & { shelf?: boolean };
+// Só nas etiquetas, o que o vocabulário diz delas na API: shelf, se pode virar prateleira, e, nas
+// que podem, se é de gênero ou subgênero, o título e o gênero ou tema com a mesma ideia.
+type FixtureFeature = ContentIndexRows['features'][number] & {
+  shelf?: boolean;
+  gameKind?: boolean;
+  title?: string;
+  sameIdeaAs?: string;
+};
 
 const FILLER_FEATURE: FixtureFeature = {
   id: featureId('filler'),
@@ -222,7 +228,18 @@ function fixtureIndex(
         })),
     },
     readTfidfConfig(),
-    new Set(features.filter((f) => f.type === TAG && f.shelf).map((f) => f.igdbId)),
+    new Map(
+      features
+        .filter((f) => f.type === TAG && f.shelf)
+        .map((f) => [
+          f.igdbId,
+          {
+            gameKind: f.gameKind ?? false,
+            title: f.title ?? null,
+            sameIdeaAs: f.sameIdeaAs ?? null,
+          },
+        ]),
+    ),
   );
 }
 

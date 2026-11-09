@@ -1,5 +1,5 @@
 {
-  "rule": "Vocabulário das etiquetas da comunidade Steam (B-77), revisado pelo autor em 07/11/2026: grupos, prateleiras e títulos. Etiquetas com ao menos 3 jogos no catálogo (peso mínimo relativo 0,1 na coleta de 05/11/2026), com o nome em português da própria Steam. Grupos pelos da documentação da Steam (Tag Wizard): entram gênero, subgênero, mecânica, clima, tema e visual; ficam de fora jogadores, recursos técnicos, opinião e outros (inclusive Indie, em quase todo o catálogo, e as de conteúdo adulto). Simulação e Simulador de Caminhada saíram pela precisão (R3). shelf: pode virar prateleira de interesse (o visual e as etiquetas vagas ou subjetivas não viram). title: opcional, substitui o nome em \"Porque você curte <título>\". As palavras-chave e os termos do resumo vêm dos 49 estilos do B-74 e são evidência de reserva para os jogos sem etiqueta aceita da Steam; saiu a evidência que a Steam confirma em menos de 50% dos jogos com as duas fontes. Etiqueta fora deste arquivo é ignorada pela ingestão até uma nova revisão.",
+  "rule": "Vocabulário das etiquetas da comunidade Steam (B-77), revisado pelo autor em 07/11/2026: grupos, prateleiras e títulos. Etiquetas com ao menos 3 jogos no catálogo (peso mínimo relativo 0,1 na coleta de 05/11/2026), com o nome em português da própria Steam. Grupos pelos da documentação da Steam (Tag Wizard): entram gênero, subgênero, mecânica, clima, tema e visual; ficam de fora jogadores, recursos técnicos, opinião e outros (inclusive Indie, em quase todo o catálogo, e as de conteúdo adulto). Simulação e Simulador de Caminhada saíram pela precisão (R3). shelf: pode virar prateleira de interesse (o visual e as etiquetas vagas ou subjetivas não viram). title: opcional, substitui o nome em \"Porque você curte <título>\". sameIdeaAs: opcional, o gênero ou tema da IGDB que diz a mesma coisa (\"genre:visual-novel\" para Romance Visual), para as prateleiras não repetirem uma ideia pelas duas fontes; tabela do protótipo do B-77, adotada no B-79. As palavras-chave e os termos do resumo vêm dos 49 estilos do B-74 e são evidência de reserva para os jogos sem etiqueta aceita da Steam; saiu a evidência que a Steam confirma em menos de 50% dos jogos com as duas fontes. Etiqueta fora deste arquivo é ignorada pela ingestão até uma nova revisão.",
   "minRelativeWeight": 0.3,
   "minRelativeWeightRationale": "Medido no B-77 (R2): uma etiqueta conta se o peso dela for pelo menos 0,3 vez o da mais votada do próprio jogo. É o maior corte com precisão de ao menos 90% na amostra julgada pelo autor (91,6%) que mantém a cobertura (94,1% do catálogo, 87,3% no quartil menos popular). O corte é relativo porque o peso da rota não é contagem de votos.",
   "unmappedStyles": ["walking-simulator", "liminal-horror"],
@@ -35,6 +35,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:adventure",
       "catalogGames": 10569,
       "styles": [],
       "keywords": [],
@@ -47,6 +48,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "theme:action",
       "catalogGames": 10083,
       "styles": [],
       "keywords": [],
@@ -131,6 +133,7 @@
       "group": "genre",
       "accepted": false,
       "shelf": false,
+      "sameIdeaAs": "genre:simulator",
       "catalogGames": 5302,
       "styles": [],
       "keywords": [],
@@ -143,6 +146,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:puzzle",
       "catalogGames": 4822,
       "styles": [],
       "keywords": [],
@@ -155,6 +159,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:role-playing-rpg",
       "catalogGames": 4779,
       "styles": [],
       "keywords": [],
@@ -179,6 +184,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:strategy",
       "catalogGames": 4648,
       "styles": [],
       "keywords": [],
@@ -227,6 +233,7 @@
       "group": "theme",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "theme:horror",
       "catalogGames": 3712,
       "styles": [],
       "keywords": [],
@@ -251,6 +258,7 @@
       "group": "theme",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "theme:fantasy",
       "catalogGames": 3570,
       "styles": [],
       "keywords": [],
@@ -267,7 +275,8 @@
       "styles": [],
       "keywords": [],
       "summaryTerms": [],
-      "title": "jogos engraçados"
+      "title": "jogos engraçados",
+      "sameIdeaAs": "theme:comedy"
     },
     {
       "id": 4106,
@@ -313,6 +322,7 @@
       "group": "theme",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "theme:science-fiction",
       "catalogGames": 2920,
       "styles": [],
       "keywords": [],
@@ -349,6 +359,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:platform",
       "catalogGames": 2788,
       "styles": [],
       "keywords": [],
@@ -373,6 +384,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:arcade",
       "catalogGames": 2673,
       "styles": [],
       "keywords": [],
@@ -385,6 +397,7 @@
       "group": "theme",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "theme:mystery",
       "catalogGames": 2647,
       "styles": [],
       "keywords": [],
@@ -421,6 +434,7 @@
       "group": "mood",
       "accepted": true,
       "shelf": false,
+      "sameIdeaAs": "theme:kids",
       "catalogGames": 2471,
       "styles": [],
       "keywords": [],
@@ -482,7 +496,8 @@
       "styles": [],
       "keywords": [],
       "summaryTerms": [],
-      "title": "jogos de mundo aberto"
+      "title": "jogos de mundo aberto",
+      "sameIdeaAs": "theme:open-world"
     },
     {
       "id": 1774,
@@ -491,6 +506,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:shooter",
       "catalogGames": 2290,
       "styles": [],
       "keywords": [],
@@ -544,7 +560,8 @@
       "styles": [],
       "keywords": [],
       "summaryTerms": [],
-      "title": "jogos sandbox"
+      "title": "jogos sandbox",
+      "sameIdeaAs": "theme:sandbox"
     },
     {
       "id": 4791,
@@ -565,6 +582,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "theme:survival",
       "catalogGames": 2151,
       "styles": [],
       "keywords": [],
@@ -593,7 +611,8 @@
       "styles": [],
       "keywords": [],
       "summaryTerms": [],
-      "title": "comédias"
+      "title": "comédias",
+      "sameIdeaAs": "theme:comedy"
     },
     {
       "id": 6971,
@@ -630,7 +649,8 @@
       "styles": ["business"],
       "keywords": ["tycoon", "business-simulation", "management-sim", "sports-manager"],
       "summaryTerms": ["tycoon", "business sim", "business simulation", "management sim"],
-      "title": "jogos de gerenciamento"
+      "title": "jogos de gerenciamento",
+      "sameIdeaAs": "theme:business"
     },
     {
       "id": 4175,
@@ -700,6 +720,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:point-and-click",
       "catalogGames": 1803,
       "styles": [],
       "keywords": [],
@@ -825,7 +846,8 @@
       "styles": [],
       "keywords": [],
       "summaryTerms": [],
-      "title": "visual novels"
+      "title": "visual novels",
+      "sameIdeaAs": "genre:visual-novel"
     },
     {
       "id": 1663,
@@ -1109,7 +1131,8 @@
       "styles": [],
       "keywords": [],
       "summaryTerms": [],
-      "title": "jogos táticos"
+      "title": "jogos táticos",
+      "sameIdeaAs": "genre:tactical"
     },
     {
       "id": 4094,
@@ -1130,6 +1153,7 @@
       "group": "subgenre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:hack-and-slash-beat-em-up",
       "catalogGames": 1149,
       "styles": [],
       "keywords": [],
@@ -1234,6 +1258,7 @@
       "group": "subgenre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:turn-based-strategy-tbs",
       "catalogGames": 1064,
       "styles": [],
       "keywords": [],
@@ -1411,7 +1436,8 @@
       "styles": [],
       "keywords": [],
       "summaryTerms": [],
-      "title": "jogos de furtividade"
+      "title": "jogos de furtividade",
+      "sameIdeaAs": "theme:stealth"
     },
     {
       "id": 5186,
@@ -1444,6 +1470,7 @@
       "group": "mood",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "theme:thriller",
       "catalogGames": 875,
       "styles": [],
       "keywords": ["psychological-thriller"],
@@ -1677,6 +1704,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": false,
+      "sameIdeaAs": "genre:card-board-game",
       "catalogGames": 720,
       "styles": [],
       "keywords": [],
@@ -1777,7 +1805,8 @@
       "styles": [],
       "keywords": [],
       "summaryTerms": [],
-      "title": "jogos históricos"
+      "title": "jogos históricos",
+      "sameIdeaAs": "theme:historical"
     },
     {
       "id": 4328,
@@ -1798,6 +1827,7 @@
       "group": "theme",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "theme:romance",
       "catalogGames": 642,
       "styles": [],
       "keywords": [],
@@ -1860,6 +1890,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:racing",
       "catalogGames": 623,
       "styles": [],
       "keywords": [],
@@ -1872,6 +1903,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:sport",
       "catalogGames": 623,
       "styles": [],
       "keywords": [],
@@ -2069,6 +2101,7 @@
       "group": "theme",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "theme:warfare",
       "catalogGames": 520,
       "styles": [],
       "keywords": [],
@@ -2166,6 +2199,7 @@
       "group": "subgenre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:real-time-strategy-rts",
       "catalogGames": 488,
       "styles": [],
       "keywords": [],
@@ -2207,7 +2241,8 @@
       "styles": [],
       "keywords": [],
       "summaryTerms": [],
-      "title": "beat 'em up"
+      "title": "beat 'em up",
+      "sameIdeaAs": "genre:hack-and-slash-beat-em-up"
     },
     {
       "id": 6378,
@@ -2420,7 +2455,8 @@
       "styles": [],
       "keywords": [],
       "summaryTerms": [],
-      "title": "jogos para jogar com a galera"
+      "title": "jogos para jogar com a galera",
+      "sameIdeaAs": "theme:party"
     },
     {
       "id": 1751,
@@ -2453,6 +2489,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": false,
+      "sameIdeaAs": "genre:music",
       "catalogGames": 409,
       "styles": [],
       "keywords": [],
@@ -2513,6 +2550,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:card-board-game",
       "catalogGames": 394,
       "styles": [],
       "keywords": [],
@@ -2565,7 +2603,8 @@
       "styles": [],
       "keywords": [],
       "summaryTerms": [],
-      "title": "jogos educativos"
+      "title": "jogos educativos",
+      "sameIdeaAs": "theme:educational"
     },
     {
       "id": 3813,
@@ -2687,6 +2726,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:music",
       "catalogGames": 351,
       "styles": [],
       "keywords": [],
@@ -2711,6 +2751,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:fighting",
       "catalogGames": 344,
       "styles": [],
       "keywords": [],
@@ -2747,6 +2788,7 @@
       "group": "genre",
       "accepted": true,
       "shelf": false,
+      "sameIdeaAs": "genre:card-board-game",
       "catalogGames": 328,
       "styles": [],
       "keywords": [],
@@ -3728,6 +3770,7 @@
       "group": "subgenre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "theme:4x-explore-expand-exploit-and-exterminate",
       "catalogGames": 128,
       "styles": [],
       "keywords": [],
@@ -4245,6 +4288,7 @@
       "group": "subgenre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:moba",
       "catalogGames": 61,
       "styles": [],
       "keywords": [],
@@ -4354,6 +4398,7 @@
       "group": "subgenre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:pinball",
       "catalogGames": 56,
       "styles": [],
       "keywords": [],
@@ -4488,6 +4533,7 @@
       "group": "subgenre",
       "accepted": true,
       "shelf": true,
+      "sameIdeaAs": "genre:quiz-trivia",
       "catalogGames": 46,
       "styles": [],
       "keywords": [],
