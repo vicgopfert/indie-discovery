@@ -5,7 +5,7 @@ import type { LikedGame } from './liked-games';
 import type { ScoredCandidates } from './score';
 import type { ListsConfig } from './scoring-config';
 import type { TieBreak } from './tie-break';
-import { topBy } from './top';
+import { topBy, topIndices } from './top';
 
 export const MAIN_LIST_KEY = 'main';
 export const UPCOMING_LIST_KEY = 'upcoming';
@@ -88,8 +88,12 @@ export function buildLists(
       games: byScore.main,
       bySimilarity: bySimilarity?.main ?? null,
     },
-    ...likedGames.map((game) =>
-      likedGameList(candidates, catalog, game, { mode, popularityWeight, tieBreak }, config),
+    ...likedGameLists(
+      candidates,
+      catalog,
+      likedGames,
+      { mode, popularityWeight, tieBreak },
+      config,
     ),
     ...interests.map(({ position }, slot): RankedList => {
       const label = listAttribute(position, catalog);
@@ -114,49 +118,62 @@ export function buildLists(
 }
 
 // Os candidatos do perfil com algum atributo do jogo de origem, por cos(v_origem, v_j) − λ · pop,
-// com o mesmo desempate. Os vetores têm norma 1: o produto escalar é o cosseno.
-function likedGameList(
+// com o mesmo desempate. Os vetores têm norma 1: o produto escalar é o cosseno. Uma passada pelos
+// candidatos serve aos jogos de origem todos: eram cerca de 15 mil candidatos por prateleira, e a
+// varredura dobrava com a segunda (B-79). Os pesos das origens ficam lado a lado, por atributo.
+function likedGameLists(
   candidates: ScoredCandidates,
   { games, features }: Pick<ContentIndex, 'games' | 'features'>,
-  liked: LikedGame,
+  likedGames: readonly LikedGame[],
   { mode, popularityWeight, tieBreak }: Pick<ListOptions, 'mode' | 'popularityWeight' | 'tieBreak'>,
   config: ListsConfig,
-): RankedList {
-  const source = new Float64Array(features.length);
-  liked.vector.featurePositions.forEach((position, i) => {
-    source[position] = liked.vector.weights[i]!;
+): RankedList[] {
+  const sourceCount = likedGames.length;
+  if (sourceCount === 0) return [];
+  const sources = new Float64Array(features.length * sourceCount);
+  likedGames.forEach(({ vector }, s) => {
+    vector.featurePositions.forEach((position, i) => {
+      sources[position * sourceCount + s] = vector.weights[i]!;
+    });
   });
   const gameOf = (k: number) => games[candidates.gamePositions[k]!]!;
-  const pool: number[] = [];
-  const similarity = new Float64Array(candidates.count);
-  const score = new Float64Array(candidates.count);
+  const pools = likedGames.map((): number[] => []);
+  const similarities = likedGames.map((): number[] => []);
+  const dots = new Float64Array(sourceCount);
   for (let k = 0; k < candidates.count; k++) {
     const game = gameOf(k);
-    let dot = 0;
+    dots.fill(0);
     for (let i = 0; i < game.featurePositions.length; i++) {
-      dot += source[game.featurePositions[i]!]! * game.weights[i]!;
+      const base = game.featurePositions[i]! * sourceCount;
+      const weight = game.weights[i]!;
+      for (let s = 0; s < sourceCount; s++) dots[s]! += sources[base + s]! * weight;
     }
-    if (dot <= 0) continue;
-    pool.push(k);
-    similarity[k] = dot;
-    score[k] = dot - popularityWeight * game.popularityNorm;
+    for (let s = 0; s < sourceCount; s++) {
+      if (dots[s]! <= 0) continue;
+      pools[s]!.push(k);
+      similarities[s]!.push(dots[s]!);
+    }
   }
-  const top = (value: Float64Array) =>
-    topBy(
-      pool,
-      (k) => value[k]!,
-      (k) => gameOf(k).id,
-      config.shelfCap,
-      tieBreak,
-    ).map(gameOf);
-  return {
-    key: likedGameListKey(liked.slug),
-    kind: 'liked-game',
-    attribute: null,
-    likedGameId: liked.gameId,
-    games: top(score),
-    bySimilarity: mode === DiscoveryMode.DISCOVERY ? top(similarity) : null,
-  };
+
+  return likedGames.map((liked, s): RankedList => {
+    const pool = pools[s]!;
+    const similarity = Float64Array.from(similarities[s]!);
+    const score = similarity.map(
+      (value, j) => value - popularityWeight * gameOf(pool[j]!).popularityNorm,
+    );
+    const top = (values: Float64Array) =>
+      topIndices(values, (j) => gameOf(pool[j]!).id, config.shelfCap, tieBreak).map((j) =>
+        gameOf(pool[j]!),
+      );
+    return {
+      key: likedGameListKey(liked.slug),
+      kind: 'liked-game',
+      attribute: null,
+      likedGameId: liked.gameId,
+      games: top(score),
+      bySimilarity: mode === DiscoveryMode.DISCOVERY ? top(similarity) : null,
+    };
+  });
 }
 
 // Uma passada pelos candidatos, com a prateleira de cada atributo numa tabela pela posição dele
