@@ -8,6 +8,8 @@ import {
   UserSchema,
 } from '@indie/contracts';
 import { type INestApplication } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import type { Application } from 'express';
 import type { Test } from 'supertest';
 import type { App } from 'supertest/types';
 import { ContentIndexService } from '../src/modules/recommendation/content-index.service';
@@ -18,6 +20,17 @@ import { createApp, sessionHelpers } from './support/e2e-app';
 const GAMES = ['celeste', 'ori', 'hollow-knight', 'inside', 'baba-is-you', 'darkwood'];
 const LISTS = ['favorite', 'completed', 'want-to-play'];
 const PREFERENCES = { genres: ['puzzle', 'platform'], themes: ['horror'] };
+const SESSION_REQUIRED = 'Sessão ausente ou expirada';
+
+// Rotas registradas no servidor e fora da documentação pública, cada uma com o motivo.
+const HIDDEN_FROM_DOCS: Record<string, string> = {
+  'POST /api/internal/reload-index':
+    'chamada só pelo workflow de ingestão, com o segredo interno, e não pela sessão',
+};
+
+// Nenhuma rota identifica um usuário pelo caminho: só o jogo, a lista e a lista recomendada.
+const ALLOWED_PATH_PARAMS = new Set(['slug', 'list', 'key']);
+const SAMPLE_PARAMS: Record<string, string> = { slug: 'celeste', list: 'favorite', key: 'main' };
 
 type Client = ReturnType<ReturnType<typeof sessionHelpers>['as']>;
 
@@ -192,5 +205,118 @@ describe('Posse dos dados: uma pessoa não altera nem lê a biblioteca de outra 
     expect(
       GameLibraryStateSchema.parse((await b.get('/api/me/library/darkwood')).body),
     ).toMatchObject({ rating: { score: 4 }, lists: ['COMPLETED'] });
+  });
+
+  describe('a identidade vem só da sessão, nunca do corpo nem da consulta', () => {
+    it('a nota e a lista com o id da Outra no corpo e na consulta ficam com a Jogadora', async () => {
+      const rows = await rowsOf(outra.id);
+      const as = helpers.as(jogadora.cookie);
+
+      const rated = await as.put(`/api/me/ratings/celeste?userId=${outra.id}`, {
+        score: 3,
+        userId: outra.id,
+      });
+      const listed = await as.put(`/api/me/lists/favorite/inside?userId=${outra.id}`, {
+        userId: outra.id,
+      });
+
+      expect([rated.status, listed.status]).toEqual([200, 200]);
+      expect(LibrarySchema.parse((await as.get('/api/me/library')).body)).toMatchObject({
+        ratings: [{ score: 3, game: { slug: 'celeste' } }],
+        lists: { FAVORITE: [{ game: { slug: 'inside' } }] },
+      });
+      expect(await rowsOf(outra.id)).toEqual(rows);
+    });
+
+    it('as preferências com o id da Outra no corpo ficam com a Jogadora', async () => {
+      const rows = await rowsOf(outra.id);
+      const as = helpers.as(jogadora.cookie);
+
+      const response = await as.put('/api/me/preferences', {
+        genres: ['shooter', 'adventure'],
+        themes: ['fantasy'],
+        userId: outra.id,
+      });
+
+      expect(response.status).toBe(200);
+      expect(PreferencesSchema.parse((await as.get('/api/me/preferences')).body)).toEqual(
+        PreferencesSchema.parse(response.body),
+      );
+      expect(await rowsOf(outra.id)).toEqual(rows);
+    });
+
+    it('o PATCH /me com id, e-mail, papel e nome no corpo só troca o modo da Jogadora', async () => {
+      const rows = await rowsOf(outra.id);
+      const [before] = await rowsOf(jogadora.id);
+
+      const response = await helpers.as(jogadora.cookie).patch('/api/me', {
+        discoveryMode: 'POPULAR',
+        id: outra.id,
+        email: 'outra@example.com',
+        role: 'ADMIN',
+        displayName: 'Outra',
+      });
+
+      expect(response.status).toBe(200);
+      const [after] = await rowsOf(jogadora.id);
+      expect(after).toEqual({ ...before, discoveryMode: 'POPULAR' });
+      expect(await rowsOf(outra.id)).toEqual(rows);
+    });
+  });
+
+  describe('inventário das rotas', () => {
+    // A tabela real do Express, depois do prefixo global: o que o servidor de fato atende.
+    const registeredRoutes = () => {
+      const express = app.getHttpAdapter().getInstance() as Application;
+      return express.router.stack.flatMap(({ route }) =>
+        route
+          ? Object.keys((route as unknown as { methods: Record<string, boolean> }).methods)
+              .filter((method) => method !== '_all')
+              .map((method) => `${method.toUpperCase()} ${route.path}`)
+          : [],
+      );
+    };
+    const documentedRoutes = () =>
+      Object.entries(
+        SwaggerModule.createDocument(app, new DocumentBuilder().build()).paths,
+      ).flatMap(([path, operations]) =>
+        Object.keys(operations).map(
+          (method) => `${method.toUpperCase()} ${path.replace(/\{(\w+)\}/g, ':$1')}`,
+        ),
+      );
+    const pathParams = (route: string) => [...route.matchAll(/:(\w+)/g)].map(([, name]) => name!);
+
+    it('o servidor atende só as rotas documentadas e as exceções declaradas', () => {
+      const registered = registeredRoutes();
+      const documented = documentedRoutes();
+
+      expect(new Set(registered).size).toBe(registered.length);
+      expect(documented.filter((route) => route in HIDDEN_FROM_DOCS)).toEqual([]);
+      expect([...registered].sort()).toEqual(
+        [...documented, ...Object.keys(HIDDEN_FROM_DOCS)].sort(),
+      );
+    });
+
+    it('nenhuma rota recebe um identificador de usuário pelo caminho', () => {
+      for (const route of registeredRoutes()) {
+        for (const param of pathParams(route)) {
+          expect([route, ALLOWED_PATH_PARAMS.has(param)]).toEqual([route, true]);
+        }
+      }
+    });
+
+    it('as rotas que exigem sessão são exatamente as da prova de posse', async () => {
+      const sessionRoutes: string[] = [];
+      for (const route of registeredRoutes()) {
+        const [method, path] = route.split(' ') as [string, string];
+        const url = path.replace(/:(\w+)/g, (_, name: string) => SAMPLE_PARAMS[name]!);
+        const response = await helpers.anonymous(method, url);
+        const message =
+          response.status === 401 ? ApiErrorSchema.parse(response.body).message : null;
+        if (message === SESSION_REQUIRED) sessionRoutes.push(route);
+      }
+
+      expect(sessionRoutes.sort()).toEqual(Object.keys(SESSION_ROUTES).sort());
+    });
   });
 });
