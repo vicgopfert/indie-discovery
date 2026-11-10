@@ -1,4 +1,5 @@
 import { DiscoveryMode, ListType } from '../../../generated/prisma/client';
+import type { LikedGame } from './liked-games';
 import { recommend, type RecommendationInput } from './recommend';
 import {
   featurePosition,
@@ -10,6 +11,7 @@ import {
   TASTE_LIBRARY,
   tasteIndex,
 } from './scoring.fixture';
+import { sourceSimilarity } from './source-similarity';
 
 const { POPULAR, BALANCED, DISCOVERY } = DiscoveryMode;
 
@@ -129,6 +131,22 @@ describe('recommend', () => {
     expect(slugs(result).slice(0, 2).sort()).toEqual(['obscure-rogue', 'popular-rogue']);
     // Os outros pela pontuação: Spelunky divide o gênero, Plataforma e Pixel Art com Dead Cells.
     expect(slugs(result).slice(2)).toEqual(['spelunky', 'celeste', 'limbo', 'inside', 'free-solo']);
+  });
+
+  it('com only, monta só a lista pedida; a chave fora do perfil não traz nenhuma', () => {
+    const interactions = [rated(index, 'hades', 5), rated(index, 'dead-cells', 5)];
+    const similarityOf = jest.fn((liked: LikedGame) => sourceSimilarity(index, liked.vector));
+    const keys = (only: string) =>
+      recommend(index, input({ interactions, similarityOf, only }), scoringConfig).lists.map(
+        ({ key }) => key,
+      );
+
+    expect(keys('main')).toEqual(['main']);
+    expect(keys('theme:fantasy')).toEqual(['theme:fantasy']);
+    expect(similarityOf).not.toHaveBeenCalled();
+    expect(keys('game:hades')).toEqual(['game:hades']);
+    expect(similarityOf).toHaveBeenCalledTimes(1);
+    expect(keys('game:celeste')).toEqual([]);
   });
 
   it('trocar o modo muda a lista: o mais popular sobe em Populares e o menos em Descobertas', () => {

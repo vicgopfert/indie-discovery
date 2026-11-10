@@ -8,6 +8,7 @@ import { buildLists, MAIN_LIST_KEY, type RankedList } from './lists';
 import { buildProfile, hasPositiveComponent, type Interaction } from './profile';
 import { scoreCandidates } from './score';
 import type { ScoringConfig } from './scoring-config';
+import type { SimilarityOf } from './source-similarity';
 import { userTieBreak } from './tie-break';
 
 export interface RecommendationInput {
@@ -19,6 +20,10 @@ export interface RecommendationInput {
   preferencePositions: readonly number[];
   // Posições dos gêneros e temas escondidos dos filtros, que não viram interesse.
   hiddenPositions: ReadonlySet<number>;
+  // A semelhança dos jogos de origem, guardada entre requisições (SimilarityCache).
+  similarityOf?: SimilarityOf;
+  // Só esta lista, para o "ver mais"; sem ela, todas.
+  only?: string;
 }
 
 // profile: pelo perfil; popular: perfil sem componente positiva, inclusive o vazio, só com a
@@ -26,7 +31,7 @@ export interface RecommendationInput {
 // partida a frio, no caso de uso.
 export interface RecommendationLists {
   basis: 'profile' | 'popular';
-  // Na ordem da página, a principal primeiro.
+  // Na ordem da página, a principal primeiro; com `only`, só ela, ou nenhuma se não for do perfil.
   lists: readonly RankedList[];
   // Calculado só para os jogos mostrados.
   reasonOf(game: IndexedGame): ScoredReason | null;
@@ -86,6 +91,8 @@ export function recommend(
         interests,
         likedGames,
         tieBreak,
+        ...(input.similarityOf && { similarityOf: input.similarityOf }),
+        ...(input.only !== undefined && { only: input.only }),
       },
       config.lists,
     ),

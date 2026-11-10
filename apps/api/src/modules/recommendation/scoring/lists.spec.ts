@@ -1,8 +1,8 @@
 import { DiscoveryMode, ReleaseStatus } from '../../../generated/prisma/client';
 import type { IndexedGame } from '../content-index';
 import { pickInterests } from './interests';
-import { pickLikedGames } from './liked-games';
-import { buildLists, interleave, type RankedList } from './lists';
+import { type LikedGame, pickLikedGames } from './liked-games';
+import { buildLists, interleave, type ListOptions, type RankedList } from './lists';
 import { buildProfile } from './profile';
 import { scoreCandidates } from './score';
 import type { ListsConfig } from './scoring-config';
@@ -20,6 +20,7 @@ import {
   TASTE_LIBRARY,
   tasteIndex,
 } from './scoring.fixture';
+import { SimilarityCache } from './source-similarity';
 import { userTieBreak } from './tie-break';
 
 const game = (id: string) => ({ id }) as IndexedGame;
@@ -323,5 +324,60 @@ describe('buildLists: prateleiras por jogo', () => {
     const shelf = balanced.find(({ key }) => key === 'game:amnesia')!;
 
     expect(shelf.games.map(({ slug }) => slug)).toEqual(['fright-a']);
+  });
+});
+
+describe('buildLists: só a lista pedida', () => {
+  const index = shelfIndex();
+  const library = SHELF_LIBRARY.map((slug) => rated(index, slug, 5));
+  const profile = buildProfile(library, [], index.features.length, scoringConfig);
+  const interests = pickInterests(profile, [], index, new Set(), scoringConfig);
+  const likedGames = pickLikedGames(library, interests, scoringConfig);
+  const excludedGameIds = new Set(library.map(({ gameId }) => gameId));
+  const listsIn = (mode: DiscoveryMode, extra: Partial<ListOptions> = {}) =>
+    buildLists(
+      scoreCandidates(index, profile, { mode, excludedGameIds }, scoringConfig),
+      index,
+      {
+        mode,
+        popularityWeight: scoringConfig.popularityWeightByMode[mode],
+        interests,
+        likedGames,
+        tieBreak: userTieBreak('u-1'),
+        ...extra,
+      },
+      scoringConfig.lists,
+    );
+
+  it.each([DiscoveryMode.POPULAR, DiscoveryMode.BALANCED, DiscoveryMode.DISCOVERY])(
+    'em %s, cada lista pedida sozinha é igual à da visão geral',
+    (mode) => {
+      const all = listsIn(mode);
+
+      expect(all.map(({ kind }) => kind)).toEqual(
+        expect.arrayContaining(['main', 'liked-game', 'interest', 'upcoming']),
+      );
+      for (const list of all) expect(listsIn(mode, { only: list.key })).toEqual([list]);
+    },
+  );
+
+  it('a chave que não é do perfil não monta nada', () => {
+    expect(listsIn(DiscoveryMode.BALANCED, { only: 'game:amnesia-the-bunker' })).toEqual([]);
+    expect(listsIn(DiscoveryMode.BALANCED, { only: 'tag:metroidvania' })).toEqual([]);
+  });
+
+  it('a semelhança guardada dá as mesmas listas, e só a lista por jogo a consulta', () => {
+    const cache = new SimilarityCache(index, 10);
+    const similarityOf = jest.fn((liked: LikedGame) => cache.of(liked));
+
+    expect(listsIn(DiscoveryMode.DISCOVERY, { similarityOf })).toEqual(
+      listsIn(DiscoveryMode.DISCOVERY),
+    );
+    similarityOf.mockClear();
+    listsIn(DiscoveryMode.BALANCED, { similarityOf, only: 'main' });
+    listsIn(DiscoveryMode.BALANCED, { similarityOf, only: 'tag:roguelike' });
+    expect(similarityOf).not.toHaveBeenCalled();
+    listsIn(DiscoveryMode.BALANCED, { similarityOf, only: 'game:celeste' });
+    expect(similarityOf).toHaveBeenCalledTimes(1);
   });
 });
