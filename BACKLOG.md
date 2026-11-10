@@ -155,7 +155,7 @@ Entrega: jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de
 - [x] **B-36** (P, E5) E2e de recomendação + teste de determinismo — ampliado no B-71: cobre a visão geral sem repetição, as prateleiras, a paginação com os tetos e o determinismo de cada lista (a principal, cada prateleira e cada página) — concluído em 10/11/2026: 18 testes e2e novos (`recommendation-lists.e2e-spec.ts`); determinismo pela "foto" dos três modos em quatro situações; tetos com valores reduzidos; mutações conferidas (`docs/recomendacao.md`)
   - [x] Fixar a ordem das interações lidas do banco antes de montar o perfil: hoje vêm sem `ORDER BY`, e a soma em ponto flutuante depende da ordem (levantado no plano do B-36) — feito no B-71: a soma do perfil segue a ordem do id do jogo
 - [x] **B-30** (P, E4) E2e de biblioteca e posse dos dados (um usuário não altera dados de outro) — concluído em 10/11/2026: 10 testes e2e (`ownership.e2e-spec.ts`); todas as rotas com sessão sem efeito nos dados de outra pessoa, no banco e na API; inventário das rotas pela tabela do servidor; mutações conferidas (proposta técnica, seção 8)
-- [ ] **B-58** (M, E3) Interface das coleções: vitrine "Explore por cultura", página da coleção, indicação na ficha
+- [x] **B-58** (M, E3) Interface das coleções: vitrine "Explore por cultura", página da coleção, indicação na ficha — concluído em 10/11/2026: `/colecoes`, `/colecoes/<slug>`, vitrine na página inicial, links no catálogo, o item "Coleções" na ficha e o link no cabeçalho, que deixou de transbordar a 390 px; conferido no navegador local, sem e com login, a 390 e a 1280 px (`docs/colecoes.md`)
 
 ## S10 — Partida a frio, perfil e avaliação offline (semanas 19–20)
 
