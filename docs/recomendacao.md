@@ -1,4 +1,4 @@
-# Recomendação: núcleo de pontuação (B-32), rota (B-33), página (B-35), listas por interesse (B-71), estilos (B-74), etiquetas (B-78) e recomendações específicas (B-79)
+# Recomendação: núcleo de pontuação (B-32), rota (B-33), página (B-35), listas por interesse (B-71), estilos (B-74), etiquetas (B-78), recomendações específicas (B-79) e testes de ponta a ponta (B-36)
 
 O núcleo são funções puras em `apps/api/src/modules/recommendation/scoring/`, com os pesos
 na seção `scoring` de `apps/api/config/recommendation.json`. Ele recebe o índice de
@@ -1107,3 +1107,81 @@ e base `profile`. Mediana (p95), 100 amostras por linha, com a primeira mediçã
   a biblioteca ou as preferências do usuário mudam e a cada recarga do índice.
 - **Mitigação para a defesa:** instância paga do Render no período da defesa ou demonstração local,
   a decidir perto da data.
+
+## Testes de ponta a ponta (B-36)
+
+O e2e de recomendação passa pela rota inteira: sessão, banco de teste, índice carregado do banco,
+caso de uso e resposta validada pelo contrato. O de antes (`apps/api/test/recommendations.e2e-spec.ts`)
+cobre as regras uma a uma num catálogo de 6 jogos; o do B-36
+(`apps/api/test/recommendation-lists.e2e-spec.ts`) cobre as listas juntas, num catálogo sintético
+de 109 jogos (`test/support/recommendation-catalog.ts`) que gera a página completa com a
+configuração real: a principal, as 2 prateleiras "Porque você gostou de", 3 de interesse (duas de
+etiqueta e a preferência por Quebra-cabeça) e "Em breve". Cada família de etiqueta tem 10 jogos,
+abaixo dos 10% das prateleiras específicas, com vetores iguais e popularidades diferentes, para
+que os modos mudem a ordem.
+
+### O que é coberto
+
+- **O mesmo estado gera as mesmas listas.** A "foto" compara, nos três modos, a visão geral e cada
+  página de cada lista que ela mostra, em quatro situações: duas leituras seguidas (a primeira sem a
+  semelhança guardada, a segunda com ela); depois de recarregar o índice; com a biblioteca gravada
+  de novo na ordem inversa, com as mesmas datas; e com a semelhança guardada por outra usuária que
+  tem o mesmo jogo de origem (o cache do B-79 é compartilhado entre usuários). Os dois usuários não
+  são comparados entre si, porque o desempate é sorteado por usuário (seção "Desempate").
+- **Por que a biblioteca da ordem inversa é gravada pelo Prisma, e não pela API:** só assim a ordem
+  das linhas e as datas ficam sob controle. As consultas do estado do usuário não têm `ORDER BY`, e
+  as datas desempatam as prateleiras por jogo. Conferido na primeira execução: a leitura volta na
+  ordem inversa, com as datas gravadas.
+- **Avaliar um jogo muda a lista seguinte:** com a nota no primeiro jogo da principal, a principal
+  muda e o jogo some de todas as páginas de todas as listas; ao tirar a nota, a foto volta a ser a
+  de antes.
+- **Recarga com catálogo novo:** um jogo novo parecido com o de origem aparece no "ver mais" da
+  prateleira por jogo depois da recarga; a semelhança guardada não sobrevive ao índice antigo.
+- **Modos:** as listas principais completas dos três modos são diferentes duas a duas, e só o
+  Descobertas marca "pouco conhecido".
+- **Visão geral:** as seções vêm na ordem da página (principal, por jogo, por interesse, em breve),
+  sem repetir jogos, nos tamanhos da configuração; o que ela mostra de cada lista aparece no "ver
+  mais" dela na mesma ordem (a principal é o começo da lista completa), e `hasMore` diz se a lista
+  completa tem mais. Isso confere que o "ver mais" que monta só a lista pedida (B-79) coincide com a
+  montagem completa. A prateleira por jogo responde 404 depois que a nota cai abaixo do mínimo.
+- **Os tamanhos vêm da configuração carregada** (`overviewMainSize`, `overviewShelfSize`,
+  `shelfMinItems`, `likedGameMinScore`), sem números fixos, para os testes continuarem válidos se o
+  B-37 calibrar esses valores (decisão do autor).
+- **Paginação com tetos reduzidos** (`pageSize` 3, `mainCap` 6, `shelfCap` 9), num app de teste que
+  troca só esses três valores da configuração real: a principal e uma prateleira param no teto, de
+  página em página, sem repetir jogos; a página além do teto vem vazia; nenhuma lista passa do
+  teto dela; a página acima do máximo da rota responde 400. Os tetos reais (100 e 200) pediriam mais
+  de 200 candidatos numa prateleira; o e2e prova que a rota respeita os tetos que a configuração
+  disser, e os valores reais são validados pelo schema e pelo unitário de `listPage` (decisão do
+  autor).
+
+### Prova de que os testes pegam a falha (10/11/2026)
+
+Cada mutação foi aplicada sozinha ao código da API, local e sem commit, e desfeita depois.
+
+| Mutação | E2e de recomendação | Unitário |
+| --- | --- | --- |
+| (a) A soma do perfil sem a ordenação pelo id do jogo | Não pega | Pega: `buildProfile` (o mesmo vetor em qualquer ordem, até o último bit) e `pickInterests` (as mesmas prateleiras em qualquer ordem) |
+| (b) O cache de semelhança sobrevive à recarga do índice | Pega: a recarga com um jogo novo no catálogo (e, conforme a posição sorteada do jogo novo, também o "Porque você gostou de" do e2e anterior) | Não pega |
+| (c) O "ver mais" da principal sem as cotas das prateleiras | Pega: o que a visão geral mostra está no "ver mais", nos três modos | Pega: cada lista pedida sozinha é igual à da visão geral, nos três modos |
+| (d) A principal cortada no teto das prateleiras | Pega: a principal para no teto, e nenhuma lista passa do teto | Pega: cada lista é cortada no teto da configuração |
+
+- **(a) não aparece no e2e**, como o plano previa: o catálogo do e2e não tem uma combinação de pesos
+  em que a ordem da soma mude o último bit. O guarda continua sendo o unitário do B-71, que usa uma
+  combinação feita para isso; o catálogo do e2e não foi ajustado para pegá-la.
+- **(b) dependia do sorteio:** a primeira versão do teste só conferia que o jogo novo aparecia, e o
+  cache velho podia apontar, por acaso, para a posição dele. O teste passou a conferir o conjunto
+  exato da prateleira, que é a família da Origem Fazenda mais o jogo novo, e pegou a mutação nas
+  3 execuções seguidas, cada uma com ids sorteados de novo.
+
+### Testes da web até o redesign
+
+Diretriz do autor (10/11/2026), válida até a interface nova do redesign:
+
+- **Testes de lógica, sim:** cliente HTTP, validação, destino do `?next=`, estado dos formulários e
+  das listas.
+- **Nada de testes de estrutura visual:** sem fotos de marcação, sem conferir classes, ordem de
+  elementos de layout ou estilos, que o redesign vai refazer.
+- **Localizar elementos por papel e texto** (`getByRole`, `getByLabelText`, `getByText`), nunca por
+  classe ou estrutura do DOM.
+- **Testes de fluxo no navegador e de acessibilidade ficam para depois da interface nova.**
