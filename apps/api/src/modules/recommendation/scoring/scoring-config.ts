@@ -21,6 +21,8 @@ const listsConfigSchema = z
     likedGameShelves: z.number().int().nonnegative(),
     likedGameMinScore: z.number().int().min(1).max(5),
     likedGameRationale: z.string().min(1),
+    likedGameCacheSize: z.number().int().nonnegative(),
+    likedGameCacheSizeRationale: z.string().min(1),
     shelfMinItems: size,
     shelfMinItemsRationale: z.string().min(1),
     overviewMainSize: size,

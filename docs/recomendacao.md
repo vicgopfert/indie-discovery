@@ -958,3 +958,107 @@ favoritos), Amnesia: The Bunker com nota 4, Inside só em "quero jogar" e Limbo 
   encontra Deckbuilding e Roguelike Deckbuilder.
 - **Capas:** na captura da página inteira, as fileiras de baixo apareceram vazias. As capas têm
   `loading="lazy"`; rolando a página, as 50 carregaram.
+
+### Medição em produção (09/11/2026): reprovada pela regra 3
+
+Depois do merge do PR #78, do deploy, da ingestão (com os nomes novos das etiquetas) e da
+conferência no navegador feita pelo autor. Critérios gravados antes de medir: metodologia do
+B-33, 100 amostras por linha, direto no Render e pela Vercel, com a rota de saúde na mesma rodada,
+e as regras de decisão 1 a 3 do B-76.
+
+- **Conta e perfil:** a conta reutilizável, com o perfil da medição do B-76 (seis roguelikes com
+  nota 5: Risk of Rain 2, Spelunky 2, Enter the Gungeon, Slay the Spire, Dead Cells e Hades). A
+  visão geral tem 9 seções, com as prateleiras "Porque você gostou de Risk of Rain 2" e "de
+  Spelunky 2". O arquivo de critérios supunha a biblioteca da conferência local; a correção foi
+  registrada nele antes da medição completa, depois de um teste do script com 2 rodadas.
+- **Janela:** 16:24:30 a 16:41:24 UTC. 2.600 requisições, todas com status 200 e base `profile`.
+
+Mediana (p95), por linha:
+
+| Requisição | Direto no Render | Pela Vercel |
+| --- | --- | --- |
+| Visão geral, Populares | 325 ms (991) | 374 ms (1.057) |
+| Visão geral, Equilibrado | 301 ms (897) | 330 ms (1.087) |
+| Visão geral, Descobertas | 310 ms (1.083) | 396 ms (998) |
+| "Ver mais", principal p. 1, Populares | 297 ms (908) | 374 ms (991) |
+| "Ver mais", principal p. 1, Equilibrado | 301 ms (985) | 313 ms (899) |
+| "Ver mais", principal p. 1, Descobertas | 313 ms (1.003) | 396 ms (1.000) |
+| "Ver mais", `tag:roguelike` p. 1, Populares | 298 ms (993) | 313 ms (1.024) |
+| "Ver mais", `tag:roguelike` p. 1, Equilibrado | 299 ms (699) | 314 ms (1.091) |
+| "Ver mais", `tag:roguelike` p. 1, Descobertas | 306 ms (1.010) | 392 ms (998) |
+| "Ver mais", `game:risk-of-rain-2` p. 1, Populares | 299 ms (994) | 309 ms (989) |
+| "Ver mais", `game:risk-of-rain-2` p. 1, Equilibrado | 298 ms (990) | 324 ms (988) |
+| "Ver mais", `game:risk-of-rain-2` p. 1, Descobertas | 308 ms (994) | 401 ms (1.101) |
+| Todas as de recomendação juntas | 304 ms (987) | 379 ms (1.000) |
+| `GET /api/health` | 137 ms (251) | 175 ms (396) |
+
+- **Resultado (regra 3):** várias linhas passaram de 1 s no p95, a maior com 1.101 ms, e a rota de
+  saúde não teve cauda parecida (nenhuma amostra acima de 600 ms). **Reprovado.**
+- **Comparação com o B-76**, mesma conta e mesmo perfil: a mediana passou de cerca de 200 para
+  cerca de 300 ms, e o p95, de 600 a 900 ms para cerca de 1 s.
+- **A cauda é constante:** de 7% a 9% das requisições de recomendação levaram 900 ms ou mais,
+  cerca de 2 por rodada de 24, do começo ao fim da janela.
+- **Todas as rotas pioraram igual:** o "ver mais" de qualquer lista montava todas as listas do
+  perfil, inclusive as 2 varreduras das prateleiras por jogo.
+- **Hipótese da cota de CPU** (não medida nesta rodada): na instância de 0,1 CPU, os cerca de 7 ms
+  de CPU a mais por requisição medidos no local viram mais uma janela de cerca de 100 ms de
+  espera, e parte das requisições cai na cauda. Para confirmar, o tempo no servidor
+  (`durationMs` do log do Render) é comparado com o tempo do cliente.
+
+**Opções levadas ao autor:**
+1. Os vizinhos na carga do índice (a alternativa registrada). Custo estimado, não medido: cerca de
+   23 mil varreduras de 2 a 3 ms no local a cada carga e recarga, possivelmente vários minutos com
+   a CPU de produção; muda a saída e custa memória.
+2. Reduzir o custo sem mudar a saída: o "ver mais" monta só a lista pedida, e a semelhança de cada
+   jogo de origem fica guardada entre requisições.
+3. Registrar como reprovado e aceitar como limitação da instância gratuita.
+
+**Decisão do autor (09/11/2026): opção 2**, com critério e parada fixados antes de medir:
+- prova: foto completa idêntica à da `main` atual;
+- medição local antes do commit: visão geral na primeira chamada e repetida, "ver mais" de cada
+  tipo de lista e memória do cache cheio;
+- em produção: as mesmas 12 linhas e a rota de saúde, com 100 amostras, e as regras 1 a 3 do B-76;
+  **alterado pelo autor em 10/11/2026, antes de medir:** saíram a medição da visão geral na primeira
+  chamada depois de uma recarga e a comparação com o `durationMs` do log do Render, e por isso a
+  hipótese da cota de CPU fica sem confirmação;
+- parada: se reprovar de novo pela regra 3, não há nova otimização, e o autor decide entre uma
+  prateleira por jogo em vez de duas e registrar como limitação da instância gratuita.
+
+### Correção: "ver mais" só da lista pedida e semelhança guardada (10/11/2026)
+
+**O que mudou, sem mudar a saída:**
+- **"Ver mais" só da lista pedida:** a página monta só a lista da chave. A principal monta as
+  prateleiras de interesse que alimentam as cotas; a prateleira por jogo, a de interesse e "Em
+  breve", só a própria. A visão geral continua montando todas.
+- **Semelhança guardada (`SimilarityCache`):** a semelhança de cada jogo de origem com os jogos do
+  índice não depende do perfil. Ela é calculada uma vez por jogo, contra todos os jogos do índice, e
+  fica guardada entre requisições e entre usuários. A requisição só a filtra pelos candidatos do
+  perfil, na ordem deles, e aplica o λ do modo, com a mesma conta de antes.
+- **Limite e invalidação:** o cache guarda os 100 jogos de origem usados mais recentemente
+  (`likedGameCacheSize`, com a justificativa no config). A recarga do índice começa um cache
+  vazio.
+
+**Prova:** a foto completa da branch ficou idêntica à da `main` depois do merge do PR #78: 53.991
+respostas, 0 diferentes e o mesmo hash.
+
+**Tempo local** (10/11/2026), nos 400 perfis da semente 71 e nos três modos, pelo caminho do caso
+de uso, com o estado já lido. "Primeira" é a visão geral com o cache vazio, como depois de uma
+recarga. Mediana (p95), primeira rodada; a segunda ficou dentro de 0,8 ms:
+
+| Requisição | `main` | Com o cache |
+| --- | --- | --- |
+| Visão geral, primeira chamada | 19,7 ms (30,5) | 19,4 ms (29,2) |
+| Visão geral, repetida | 19,3 ms (31,1) | 14,5 ms (22,8) |
+| "Ver mais", principal | 19,9 ms (30,8) | 11,1 ms (18,6) |
+| "Ver mais", prateleira de interesse | 16,2 ms (30,6) | 7,7 ms (10,5) |
+| "Ver mais", prateleira por jogo | 24,1 ms (33,8) | 5,2 ms (7,2) |
+| "Ver mais", "Em breve" | 19,6 ms (30,6) | 8,3 ms (10,7) |
+
+- A primeira chamada fica igual à da `main`: ela ainda faz as 2 varreduras, agora contra o índice
+  inteiro, cerca de 23 mil jogos em vez de cerca de 17 mil candidatos.
+- **Memória do cache cheio**, com 100 jogos de origem e cerca de 18 mil jogos por origem:
+  `arrayBuffers` +20,3 MB e RSS +22,4 MB; o heap do V8 não muda, porque os vetores tipados ficam
+  fora dele.
+
+**Em produção:** medida depois do merge, pelos critérios acima, com as mesmas 12 linhas e a rota de
+saúde.

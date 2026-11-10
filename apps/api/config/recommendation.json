@@ -46,6 +46,8 @@
       "likedGameShelves": 2,
       "likedGameMinScore": 4,
       "likedGameRationale": "Prateleiras \"Porque você gostou de <jogo>\" (B-79): até 2, de jogos com nota 4 ou mais ou em favoritos; um jogo só em \"quero jogar\" ou só em \"concluídos\" não diz que o jogador gostou dele. Primeiro os jogos que nenhuma prateleira de interesse cobre (o gosto de um jogo só, regra do B-77), depois pelo peso do jogo no perfil e, no empate, pela data mais recente entre a nota e a entrada em favoritos (decisões do autor). Os jogos da prateleira são os candidatos do perfil, ordenados pela semelhança com o jogo de origem, com o mesmo termo de popularidade do modo; ela fica fora das cotas da lista principal.",
+      "likedGameCacheSize": 100,
+      "likedGameCacheSizeRationale": "Quantos jogos de origem das prateleiras \"Porque você gostou de\" guardam a semelhança com os jogos do índice entre requisições (B-79). Cada um guarda cerca de 18 mil jogos (posição e valor, cerca de 0,2 MB): com 100, o cache cheio ocupa cerca de 20 MB (medido em 10/11/2026: arrayBuffers +20,3 MB, RSS +22,4 MB), perto de 4% dos 512 MB da instância, cujo RSS máximo medido foi 216,7 MB (B-78). Cada usuário usa até 2: 100 cobrem 50 usuários ativos entre duas recargas, mais que o uso esperado até a defesa. Acima disso, sai o usado há mais tempo, e a próxima requisição dele refaz a varredura. A recarga do índice começa um cache vazio.",
       "shelfMinItems": 4,
       "shelfMinItemsRationale": "Na visão geral, a prateleira que fica com menos jogos que isso, já sem os que apareceram antes, não aparece: com 1 a 3 jogos ela parece quebrada. O interesse continua contando nas cotas da lista principal, e o \"ver mais\" dele continua existindo.",
       "overviewMainSize": 5,
