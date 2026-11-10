@@ -73,6 +73,10 @@ const gameDetailSelect = {
       language: { select: { locale: true, namePt: true } },
     },
   },
+  collections: {
+    select: { collection: { select: { slug: true, name: true } } },
+    orderBy: { collection: { sortOrder: 'asc' } },
+  },
 } satisfies Prisma.GameSelect;
 
 export type GameDetailRow = Prisma.GameGetPayload<{ select: typeof gameDetailSelect }>;

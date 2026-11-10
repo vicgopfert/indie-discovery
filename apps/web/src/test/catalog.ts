@@ -31,5 +31,6 @@ export const sampleGameDetail = (overrides: Partial<GameDetail> = {}): GameDetai
     { locale: 'pt-BR', name: 'Português (Brasil)', interface: true, subtitles: true, audio: false },
   ],
   officialUrl: 'https://www.celestegame.com',
+  collections: [],
   ...overrides,
 });

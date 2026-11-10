@@ -108,6 +108,7 @@ describe('GameDetailSchema', () => {
       },
     ],
     officialUrl: 'https://www.celestegame.com',
+    collections: [{ slug: 'brasil', name: 'Brasil' }],
   };
 
   it('aceita a ficha completa e a ficha sem os dados opcionais', () => {
@@ -126,6 +127,13 @@ describe('GameDetailSchema', () => {
         officialUrl: null,
       }).success,
     ).toBe(true);
+  });
+
+  it('sem as coleções, como na API anterior ao B-58, vale a lista vazia', () => {
+    const withoutCollections: Record<string, unknown> = { ...detail };
+    delete withoutCollections.collections;
+
+    expect(GameDetailSchema.parse(withoutCollections).collections).toEqual([]);
   });
 
   it('só aceita link http ou https', () => {
