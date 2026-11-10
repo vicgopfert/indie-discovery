@@ -20,6 +20,7 @@ import { listPage, overview, type ShownGame } from './scoring/overview';
 import { interactionsOf } from './scoring/profile';
 import { recommend, type RecommendationLists } from './scoring/recommend';
 import type { ScoringConfig } from './scoring/scoring-config';
+import { SimilarityCache } from './scoring/source-similarity';
 
 export const SCORING_CONFIG = Symbol('SCORING_CONFIG');
 
@@ -33,6 +34,7 @@ const NO_ITEMS = { items: [], hasMore: false };
 @Injectable()
 export class GenerateRecommendationsUseCase {
   private readonly hiddenByIndex = new WeakMap<ContentIndex, ReadonlySet<number>>();
+  private readonly similarityByIndex = new WeakMap<ContentIndex, SimilarityCache>();
 
   constructor(
     private readonly contentIndex: ContentIndexService,
@@ -63,13 +65,14 @@ export class GenerateRecommendationsUseCase {
 
   // Com a lista vazia (sem perfil), só a principal existe, e vazia. Uma chave que não está entre
   // as listas atuais responde 404: o perfil pode ter mudado entre a visão geral e o "ver mais".
+  // Só a lista pedida é montada (B-79).
   async page(
     userId: string,
     mode: DiscoveryMode,
     key: string,
     page: number,
   ): Promise<RecommendationPage> {
-    const result = await this.recommend(userId, mode);
+    const result = await this.recommend(userId, mode, key);
     if (result === null && key === MAIN_LIST_KEY) {
       return { mode, basis: 'empty', key, feature: null, game: null, page, ...NO_ITEMS };
     }
@@ -100,6 +103,7 @@ export class GenerateRecommendationsUseCase {
   private async recommend(
     userId: string,
     mode: DiscoveryMode,
+    only?: string,
   ): Promise<RecommendationLists | null> {
     const index = this.contentIndex.index;
     if (!index) throw new ServiceUnavailableException(INDEX_UNAVAILABLE);
@@ -126,9 +130,21 @@ export class GenerateRecommendationsUseCase {
           return position === undefined ? [] : [position];
         }),
         hiddenPositions: this.hiddenPositions(index),
+        similarityOf: (liked) => this.similarityCache(index).of(liked),
+        ...(only !== undefined && { only }),
       },
       this.config,
     );
+  }
+
+  // Um cache para cada índice carregado: a recarga cria outro, e o anterior sai com o índice.
+  private similarityCache(index: ContentIndex): SimilarityCache {
+    let cache = this.similarityByIndex.get(index);
+    if (cache === undefined) {
+      cache = new SimilarityCache(index, this.config.lists.likedGameCacheSize);
+      this.similarityByIndex.set(index, cache);
+    }
+    return cache;
   }
 
   // Só depende do índice: calculado uma vez para cada índice carregado.
