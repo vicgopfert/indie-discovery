@@ -1,22 +1,29 @@
 import {
+  ApiErrorSchema,
   type Recommendation,
   type RecommendationOverview,
   RecommendationOverviewSchema,
   type RecommendationPage,
   RecommendationPageSchema,
+  RECOMMENDATIONS_PAGE_MAX,
   UserSchema,
 } from '@indie/contracts';
 import { type INestApplication } from '@nestjs/common';
 import type { App } from 'supertest/types';
 import { ContentIndexService } from '../src/modules/recommendation/content-index.service';
-import { SCORING_CONFIG } from '../src/modules/recommendation/generate-recommendations.use-case';
+import {
+  LIST_NOT_FOUND,
+  SCORING_CONFIG,
+} from '../src/modules/recommendation/generate-recommendations.use-case';
 import {
   type ListsConfig,
+  readScoringConfig,
   type ScoringConfig,
 } from '../src/modules/recommendation/scoring/scoring-config';
 import { PrismaService } from '../src/prisma/prisma.service';
 import type { CatalogBuilder } from './support/catalog-builder';
 import {
+  INTEREST_KEYS,
   LIKED_GAME_KEYS,
   seedRecommendationCatalog,
   writeLibrary,
@@ -27,6 +34,12 @@ const MODES = ['popular', 'balanced', 'discovery'] as const;
 type Mode = (typeof MODES)[number];
 
 const slugsOf = (items: readonly Recommendation[]) => items.map(({ game }) => game.slug);
+
+function isSubsequence(part: readonly string[], whole: readonly string[]) {
+  let i = 0;
+  for (const slug of whole) if (slug === part[i]) i++;
+  return i === part.length;
+}
 
 function recommendationClient(app: INestApplication<App>, lists: ListsConfig) {
   const helpers = sessionHelpers(app);
@@ -191,5 +204,141 @@ describe('Listas de recomendação de ponta a ponta (B-36)', () => {
       await prisma.game.delete({ where: { slug: 'fazenda-nova' } });
       await reload();
     }
+  });
+
+  it('cada modo gera uma lista principal diferente, e só o Descobertas marca "pouco conhecido"', async () => {
+    const mains = new Map<Mode, string[]>();
+    for (const mode of MODES) {
+      const shown = await client.overview(jogadora.cookie, mode);
+      const items = [shown.main, ...shown.shelves].flatMap((list) => list.items);
+      expect(items.some(({ lowKnown }) => lowKnown)).toBe(mode === 'discovery');
+      mains.set(mode, (await client.allPages(jogadora.cookie, 'main', mode)).slugs);
+    }
+
+    expect(mains.get('popular')).not.toEqual(mains.get('balanced'));
+    expect(mains.get('popular')).not.toEqual(mains.get('discovery'));
+    expect(mains.get('balanced')).not.toEqual(mains.get('discovery'));
+  });
+
+  describe('visão geral', () => {
+    it.each(MODES)(
+      '(%s) traz cada espécie de lista na ordem da página, sem repetir jogos, nos tamanhos da configuração',
+      async (mode) => {
+        const { main, shelves } = await client.overview(jogadora.cookie, mode);
+
+        expect(shelves.map(({ key, kind }) => [key, kind])).toEqual([
+          ...LIKED_GAME_KEYS.map((key) => [key, 'liked-game']),
+          ...INTEREST_KEYS.map((key) => [key, 'interest']),
+          ['upcoming', 'upcoming'],
+        ]);
+        expect(main.items).toHaveLength(lists.overviewMainSize);
+        for (const { items } of shelves) {
+          expect(items.length).toBeGreaterThanOrEqual(lists.shelfMinItems);
+          expect(items.length).toBeLessThanOrEqual(lists.overviewShelfSize);
+        }
+        const shown = [main, ...shelves].flatMap(({ items }) => slugsOf(items));
+        expect(new Set(shown).size).toBe(shown.length);
+      },
+    );
+
+    it.each(MODES)(
+      '(%s) o que mostra de cada lista está no "ver mais" dela, na mesma ordem, e hasMore diz se há mais',
+      async (mode) => {
+        const { main, shelves } = await client.overview(jogadora.cookie, mode);
+
+        const fullMain = (await client.allPages(jogadora.cookie, 'main', mode)).slugs;
+        expect(fullMain.slice(0, main.items.length)).toEqual(slugsOf(main.items));
+        expect(main.hasMore).toBe(fullMain.length > main.items.length);
+        for (const { key, items, hasMore } of shelves) {
+          const full = (await client.allPages(jogadora.cookie, key, mode)).slugs;
+          expect(isSubsequence(slugsOf(items), full)).toBe(true);
+          expect(hasMore).toBe(full.length > items.length);
+        }
+      },
+    );
+
+    it('o "ver mais" da prateleira por jogo responde 404 depois que a nota cai abaixo do mínimo', async () => {
+      const detetive = LIKED_GAME_KEYS[1]!;
+      const { shelves } = await client.overview(jogadora.cookie, 'balanced');
+      expect(shelves.map(({ key }) => key)).toContain(detetive);
+
+      await client.helpers
+        .as(jogadora.cookie)
+        .put('/api/me/ratings/origem-detetive', { score: lists.likedGameMinScore - 1 });
+
+      const response = await client.helpers
+        .as(jogadora.cookie)
+        .get(`/api/recommendations/lists/${detetive}`);
+      expect(response.status).toBe(404);
+      expect(ApiErrorSchema.parse(response.body).message).toBe(LIST_NOT_FOUND);
+    });
+  });
+});
+
+// Os tetos reais (100 e 200) pediriam mais de 200 candidatos numa prateleira; com tetos pequenos,
+// o teste afirma números exatos e prova que a rota respeita os que a configuração disser.
+describe('Paginação do "ver mais" com tetos reduzidos (B-36)', () => {
+  const caps = { pageSize: 3, mainCap: 6, shelfCap: 9 };
+  let app: INestApplication<App>;
+  let client: ReturnType<typeof recommendationClient>;
+  let cookie: string;
+
+  beforeAll(async () => {
+    const config = readScoringConfig();
+    const lists = { ...config.lists, ...caps };
+    app = await createApp((builder) =>
+      builder.overrideProvider(SCORING_CONFIG).useValue({ ...config, lists }),
+    );
+    const prisma = app.get(PrismaService);
+    client = recommendationClient(app, lists);
+    await seedRecommendationCatalog(prisma);
+    await app.get(ContentIndexService).reload();
+    const jogadora = await client.player('jogadora@example.com');
+    await writeLibrary(prisma, jogadora.userId);
+    cookie = jogadora.cookie;
+  });
+
+  afterAll(() => app.close());
+
+  // O catálogo tem mais candidatos que os dois tetos: 28 nas prateleiras de interesse e 12 em
+  // Quebra-cabeça.
+  it.each([
+    ['main', caps.mainCap],
+    ['genre:puzzle', caps.shelfCap],
+  ])('a lista %s para no teto de %i, de página em página, sem repetir jogos', async (key, cap) => {
+    const { pages, slugs } = await client.allPages(cookie, key, 'balanced');
+
+    expect(pages.map(({ page, items, hasMore }) => [page, items.length, hasMore])).toEqual(
+      Array.from({ length: cap / caps.pageSize }, (_, i) => [
+        i + 1,
+        caps.pageSize,
+        i + 1 < cap / caps.pageSize,
+      ]),
+    );
+    expect(new Set(slugs).size).toBe(cap);
+    const beyond = await client.page(cookie, key, 'balanced', pages.length + 1);
+    expect(beyond).toMatchObject({ items: [], hasMore: false });
+  });
+
+  it('nenhuma lista da visão geral passa do teto dela', async () => {
+    for (const mode of MODES) {
+      const { shelves } = await client.overview(cookie, mode);
+      expect((await client.allPages(cookie, 'main', mode)).slugs.length).toBeLessThanOrEqual(
+        caps.mainCap,
+      );
+      for (const { key } of shelves) {
+        expect((await client.allPages(cookie, key, mode)).slugs.length).toBeLessThanOrEqual(
+          caps.shelfCap,
+        );
+      }
+    }
+  });
+
+  it('recusa a página além do máximo da rota', async () => {
+    const response = await client.helpers
+      .as(cookie)
+      .get(`/api/recommendations/lists/main?page=${RECOMMENDATIONS_PAGE_MAX + 1}`);
+
+    expect(response.status).toBe(400);
   });
 });
