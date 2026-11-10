@@ -1,8 +1,11 @@
 import type { GameSearchQuery } from '@indie/contracts';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { listCountries, listFeatures, searchGames } from '@/features/catalog/api';
 import { CatalogFilters } from '@/features/catalog/catalog-filters';
 import { CatalogPagination } from '@/features/catalog/catalog-pagination';
+import { listCollectionsOrNull } from '@/features/collections/api';
+import { CollectionLinks } from '@/features/collections/collection-showcase';
 import {
   CatalogUnavailable,
   InvalidFilters,
@@ -26,6 +29,8 @@ export default async function CatalogPage({
 }: {
   searchParams: Promise<CatalogSearchParams>;
 }) {
+  // As coleções vêm em paralelo e fora do Promise.all do catálogo: a falha delas não o derruba.
+  const collections = listCollectionsOrNull();
   const params = parseCatalogParams(await searchParams);
   const content = params.ok ? (
     await loadCatalog(params.query)
@@ -36,6 +41,9 @@ export default async function CatalogPage({
   return (
     <main className="mx-auto max-w-5xl space-y-6 px-4 py-8">
       <h1 className="text-2xl font-semibold">Catálogo</h1>
+      <Suspense fallback={null}>
+        <CollectionLinks collections={collections} />
+      </Suspense>
       {content}
     </main>
   );

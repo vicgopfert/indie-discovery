@@ -1,5 +1,5 @@
 import type { GameDetail } from '@indie/contracts';
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { sampleGameDetail } from '@/test/catalog';
 import { apiError, stubFetch } from '@/test/fetch';
@@ -160,6 +160,33 @@ describe('GamePage', () => {
     expect(fact('Português')).toHaveTextContent('Idiomas não informados');
     expect(screen.getByText('Link oficial não informado')).toBeInTheDocument();
     expect(screen.queryByText(/Todos os idiomas/)).not.toBeInTheDocument();
+  });
+
+  it('as coleções do jogo levam à página de cada uma, na ordem recebida', async () => {
+    stubGame(
+      sampleGameDetail({
+        collections: [
+          { slug: 'japao', name: 'Japão' },
+          { slug: 'mitologia-nordica', name: 'Mitologia nórdica' },
+        ],
+      }),
+    );
+
+    await renderPage();
+
+    const links = within(fact('Coleções') as HTMLElement).getAllByRole('link');
+    expect(links.map((link) => [link.textContent, link.getAttribute('href')])).toEqual([
+      ['Japão', '/colecoes/japao'],
+      ['Mitologia nórdica', '/colecoes/mitologia-nordica'],
+    ]);
+  });
+
+  it('jogo fora de todas as coleções não mostra o item', async () => {
+    stubGame(sampleGameDetail({ collections: [] }));
+
+    await renderPage();
+
+    expect(screen.queryByText('Coleções', { selector: 'dt' })).not.toBeInTheDocument();
   });
 
   it('jogo inexistente ou fora do catálogo vira a página 404', async () => {

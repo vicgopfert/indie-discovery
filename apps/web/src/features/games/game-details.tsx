@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { CATALOG_PATH } from '@/features/catalog/search-params';
+import { collectionHref } from '@/features/collections/paths';
 import { GameLibraryControls } from '@/features/library/game-library-controls';
 import { GameCover } from './game-cover';
 import {
@@ -62,6 +63,19 @@ export function GameDetails({ game }: { game: GameDetail }) {
             <FeatureLinks param="tag" features={game.tags} />
             <TagSource game={game} />
           </Fact>
+          {game.collections.length > 0 && (
+            <Fact term="Coleções">
+              <ul className="flex flex-wrap gap-x-3 gap-y-1">
+                {game.collections.map(({ slug, name }) => (
+                  <li key={slug}>
+                    <Link href={collectionHref(slug)} className="underline">
+                      {name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </Fact>
+          )}
           <Fact term="Desenvolvimento">{companyNames(game.developers)}</Fact>
           <Fact term="Publicação">{companyNames(game.publishers)}</Fact>
           <Fact term="País do estúdio">
