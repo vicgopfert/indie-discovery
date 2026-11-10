@@ -1060,5 +1060,50 @@ recarga. Mediana (p95), primeira rodada; a segunda ficou dentro de 0,8 ms:
   `arrayBuffers` +20,3 MB e RSS +22,4 MB; o heap do V8 não muda, porque os vetores tipados ficam
   fora dele.
 
-**Em produção:** medida depois do merge, pelos critérios acima, com as mesmas 12 linhas e a rota de
-saúde.
+**Em produção:** seção seguinte.
+
+### Segunda medição em produção (10/11/2026) e decisão
+
+Depois do merge do PR #79 e do deploy, das 14:04:07 às 14:17:30 UTC, com os mesmos critérios, a
+mesma conta e o mesmo perfil (seis roguelikes com nota 5): 2.600 requisições, todas com status 200
+e base `profile`. Mediana (p95), 100 amostras por linha, com a primeira medição ao lado:
+
+| Requisição | 09/11, direto | 09/11, Vercel | 10/11, direto | 10/11, Vercel |
+| --- | --- | --- | --- | --- |
+| Visão geral, Populares | 325 ms (991) | 374 ms (1.057) | 363 ms (1.087) | 371 ms (993) |
+| Visão geral, Equilibrado | 301 ms (897) | 330 ms (1.087) | 361 ms (981) | 311 ms (801) |
+| Visão geral, Descobertas | 310 ms (1.083) | 396 ms (998) | 398 ms (1.090) | 391 ms (1.204) |
+| "Ver mais", principal p. 1, Populares | 297 ms (908) | 374 ms (991) | 297 ms (581) | 291 ms (594) |
+| "Ver mais", principal p. 1, Equilibrado | 301 ms (985) | 313 ms (899) | 299 ms (711) | 287 ms (614) |
+| "Ver mais", principal p. 1, Descobertas | 313 ms (1.003) | 396 ms (1.000) | 300 ms (910) | 297 ms (811) |
+| "Ver mais", `tag:roguelike` p. 1, Populares | 298 ms (993) | 313 ms (1.024) | 290 ms (431) | 215 ms (699) |
+| "Ver mais", `tag:roguelike` p. 1, Equilibrado | 299 ms (699) | 314 ms (1.091) | 291 ms (593) | 206 ms (493) |
+| "Ver mais", `tag:roguelike` p. 1, Descobertas | 306 ms (1.010) | 392 ms (998) | 296 ms (501) | 210 ms (411) |
+| "Ver mais", `game:risk-of-rain-2` p. 1, Populares | 299 ms (994) | 309 ms (989) | 233 ms (630) | 203 ms (600) |
+| "Ver mais", `game:risk-of-rain-2` p. 1, Equilibrado | 298 ms (990) | 324 ms (988) | 236 ms (718) | 203 ms (493) |
+| "Ver mais", `game:risk-of-rain-2` p. 1, Descobertas | 308 ms (994) | 401 ms (1.101) | 236 ms (385) | 204 ms (350) |
+| Todas as de recomendação juntas | 304 ms (987) | 379 ms (1.000) | 294 ms (723) | 265 ms (718) |
+| `GET /api/health` | 137 ms (251) | 175 ms (396) | 212 ms (297) | 176 ms (380) |
+
+- **Resultado (regra 3):** reprovado de novo.
+- **O que passou:** as 9 linhas de "ver mais" ficaram com p95 abaixo de 1 s, nos dois caminhos, e
+  o p95 de todas as linhas de recomendação juntas caiu de 987 para 723 ms direto (de 1.000 para
+  718 ms pela Vercel).
+- **O que não passou:** a visão geral, em 3 de 6 linhas (Populares e Descobertas direto, Descobertas
+  pela Vercel), com 6% a 8% das chamadas acima de 900 ms (23 de 300 direto e 18 de 300 pela
+  Vercel). A rota de saúde não teve cauda parecida: no máximo 696 ms, p95 de 297 e 380 ms.
+- **Decisão do autor (10/11/2026): a visão geral fica registrada como limitação da instância
+  gratuita, sem nova otimização** (opção ii da parada fixada antes de medir).
+- **Por que não uma prateleira por jogo em vez de duas (opção i):** a medição repete a mesma conta,
+  com o cache de vizinhos já aquecido, e a visão geral falhou também nos modos sem a segunda
+  montagem das listas (Populares, com 1.087 ms direto; a segunda montagem, pela semelhança, só
+  existe no modo Descobertas). O custo que sobra é montar a visão geral inteira, não as prateleiras
+  por jogo.
+- **Causa provável (hipótese, não confirmada):** a cota de 0,1 de CPU da instância gratuita do
+  Render. Ela é coerente com as medições do B-76 em diante (produção cerca de 10 vezes mais lenta
+  que o local em trabalho de CPU, tempo em janelas de cerca de 100 ms), mas não foi confirmada
+  pelo `durationMs` do log do Render, que o autor tirou da medição.
+- **Trabalho futuro (Fase B):** guardar a visão geral pronta por usuário e modo, invalidada quando
+  a biblioteca ou as preferências do usuário mudam e a cada recarga do índice.
+- **Mitigação para a defesa:** instância paga do Render no período da defesa ou demonstração local,
+  a decidir perto da data.
