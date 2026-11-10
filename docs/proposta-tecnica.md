@@ -442,7 +442,7 @@ Com um único frontend na mesma origem e sem clientes móveis, a vantagem do JWT
 
 ### Autorização
 
-- Toda rota `/api/me/*` e `/api/recommendations` usa o `userId` **da sessão**, nunca de parâmetro ou corpo. Assim, um usuário não tem como alterar dados de outro: não existe rota que receba o ID de outro usuário.
+- Toda rota `/api/me/*` e `/api/recommendations` usa o `userId` **da sessão**, nunca de parâmetro ou corpo. Assim, um usuário não tem como alterar dados de outro: não existe rota que receba o ID de outro usuário. **Provado no B-30 (10/11/2026):** o e2e `apps/api/test/ownership.e2e-spec.ts` passa como uma pessoa por todas as rotas com sessão, sobre os mesmos jogos de outra, e confere que os dados da outra ficam iguais no banco (usuário, sessões, notas, listas e preferências) e na API; um `userId` no corpo ou na consulta, ou um e-mail e um papel no `PATCH /me`, são ignorados. O inventário lê as rotas registradas no servidor e confere que são as do Swagger mais as exceções declaradas no teste (hoje só `POST /api/internal/reload-index`, fora da documentação pública e protegida pelo segredo interno), que nenhuma tem parâmetro de caminho fora de `slug`, `list` e `key` e que as rotas com sessão são exatamente as da prova: uma rota nova com sessão faz o teste falhar até entrar nela. Para conferir que o teste pega a falha, o filtro de `userId` foi tirado, um ponto por vez, local e sem commit, da remoção da nota, da remoção da lista, da limpeza das listas exclusivas, da troca das preferências, da leitura das listas na biblioteca e da leitura das listas na recomendação: as seis mutações foram pegas, todas só pelo e2e de posse.
 - O papel `ADMIN` existe no modelo, mas nenhuma rota P0 depende dele. A ingestão é executada por linha de comando e o recarregamento do índice é protegido por segredo de ambiente.
 
 ### Proteções da API
@@ -1189,7 +1189,7 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | B-27 | Endpoints de avaliação, listas, biblioteca, preferências e modo (`/me/*`) (F-08, F-12) | P0 | B-26, B-17 | `userId` vem só da sessão; `PUT` repetido não duplica. **Concluído em 02/11/2026:** oito rotas com o jogo pelo slug, "concluídos" e "quero jogar" exclusivos e o jogo fora do catálogo mantido na biblioteca, marcado; e2e com sessão real | M |
 | B-28 | Componentes de avaliação e listas na página do jogo (F-08) | P0 | B-27, B-24 | Usuário deslogado é levado ao login; logado vê o próprio estado e altera com retorno visual. **Concluído em 03/11/2026:** controles na ficha com a rota nova `GET /api/me/library/:slug`; quem não entrou vai ao login e volta para a ficha; os mesmos controles para jogos "Em breve" | M |
 | B-29 | Página de perfil com avaliações e listas (F-09) | P0 | B-28 | Estados vazios orientam o próximo passo; remover avaliação pela página funciona; avatar com as iniciais do nome no perfil e no cabeçalho | P |
-| B-30 | E2e de biblioteca e posse dos dados | P0 | B-27, B-05 | Prova que uma pessoa não altera nem lê a biblioteca de outra | P |
+| B-30 | E2e de biblioteca e posse dos dados | P0 | B-27, B-05 | Prova que uma pessoa não altera nem lê a biblioteca de outra. **Concluído em 10/11/2026:** 10 testes e2e; comparação pelo banco e pela API, identidade fora do corpo e da consulta, gravações simultâneas e inventário das rotas pela tabela do servidor, com o Swagger e as exceções declaradas (decisões do autor; seção 8) | P |
 
 ### E5. Recomendação
 
@@ -1412,7 +1412,7 @@ O MVP está pronto quando **todos** os itens abaixo forem verdadeiros e verifica
 | Fluxos essenciais | O roteiro de demonstração roda do início ao fim sem intervenção manual: cadastro → partida a frio → recomendações com motivo → troca de modo com lista diferente → avaliação de um jogo → lista atualizada → ficha com link oficial → logout |
 | Requisitos | Cada critério de aceitação dos P0 (seção 4) foi conferido e marcado, incluindo a decisão registrada do portão do F-06 |
 | Persistência | Avaliações, listas, preferências e modo continuam após logout, novo login e reinicialização da API |
-| Validações | Entradas inválidas nos endpoints P0 devolvem 400 no formato padronizado; nenhuma rota `/me/*` aceita identificador de outro usuário |
+| Validações | Entradas inválidas nos endpoints P0 devolvem 400 no formato padronizado; nenhuma rota `/me/*` aceita identificador de outro usuário (inventário das rotas do B-30, seção 8) |
 | Testes críticos | Unitários de pontuação, TF-IDF, critério indie e mapeamento, e e2e de autenticação, posse dos dados e recomendação, todos verdes no CI da `main` |
 | Segurança | Lista da seção 8 revisada item a item antes do congelamento (RNF-01) |
 | Independência da IGDB | Demonstração executada com as credenciais da IGDB removidas da API (RNF-02) |

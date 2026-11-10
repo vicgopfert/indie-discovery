@@ -10,7 +10,7 @@ import { ContentIndexRepository } from '../src/modules/recommendation/content-in
 import { ContentIndexService } from '../src/modules/recommendation/content-index.service';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { CatalogBuilder } from './support/catalog-builder';
-import { createApp, sessionHelpers } from './support/recommendation-app';
+import { createApp, sessionHelpers } from './support/e2e-app';
 
 describe('Recomendações (GET /recommendations)', () => {
   let app: INestApplication<App>;

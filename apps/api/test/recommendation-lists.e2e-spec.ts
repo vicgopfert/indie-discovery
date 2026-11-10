@@ -28,7 +28,7 @@ import {
   seedRecommendationCatalog,
   writeLibrary,
 } from './support/recommendation-catalog';
-import { createApp, sessionHelpers } from './support/recommendation-app';
+import { createApp, sessionHelpers } from './support/e2e-app';
 
 const MODES = ['popular', 'balanced', 'discovery'] as const;
 type Mode = (typeof MODES)[number];

@@ -41,6 +41,14 @@ export function sessionHelpers(app: INestApplication<App>) {
     patch: (path: string, body: object) =>
       server().patch(path).set('Cookie', cookie).set('Origin', origin).send(body),
     delete: (path: string) => server().delete(path).set('Cookie', cookie).set('Origin', origin),
+    post: (path: string, body?: object) =>
+      server().post(path).set('Cookie', cookie).set('Origin', origin).send(body),
   });
-  return { server, register, as };
+  // Sem sessão, com a origem do frontend: a resposta diz se a rota exige sessão.
+  const anonymous = (method: string, path: string) => {
+    const call =
+      server()[method.toLowerCase() as 'get' | 'post' | 'put' | 'patch' | 'delete'](path);
+    return method === 'GET' ? call : call.set('Origin', origin).send({});
+  };
+  return { server, register, as, anonymous };
 }

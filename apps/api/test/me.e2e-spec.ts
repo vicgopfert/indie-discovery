@@ -226,24 +226,6 @@ describe('Biblioteca, preferências e modo (/me)', () => {
       });
       expect((await as(jogadora).get('/api/me/library/nao-existe')).status).toBe(404);
     });
-
-    it('cada usuário vê e altera só os próprios dados', async () => {
-      await as(jogadora).put('/api/me/ratings/celeste', { score: 2 });
-      await as(outra).put('/api/me/ratings/celeste', { score: 5 });
-      await as(outra).put('/api/me/lists/favorite/celeste');
-
-      await as(jogadora).delete('/api/me/lists/favorite/celeste');
-
-      expect((await library(jogadora)).ratings).toMatchObject([{ score: 2 }]);
-      expect((await as(jogadora).get('/api/me/library/celeste')).body).toMatchObject({
-        rating: { score: 2 },
-        lists: [],
-      });
-      expect(await library(outra)).toMatchObject({
-        ratings: [{ score: 5 }],
-        lists: { FAVORITE: [{ game: { slug: 'celeste' } }] },
-      });
-    });
   });
 
   describe('preferências', () => {
