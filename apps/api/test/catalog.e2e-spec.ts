@@ -337,7 +337,28 @@ describe('Catálogo', () => {
           },
         ],
         officialUrl: 'https://www.celestegame.com',
+        collections: [{ slug: 'plataformas', name: 'Coleção plataformas' }],
       });
+    });
+
+    it('traz as coleções do jogo na ordem do arquivo de curadoria', async () => {
+      const prisma = app.get(PrismaService);
+      await prisma.collection.update({
+        where: { slug: 'quebra-cabecas' },
+        data: { games: { create: { gameId: gameIds.get('Celeste')! } } },
+      });
+      try {
+        const response = await game('celeste').expect(200);
+
+        expect(GameDetailSchema.parse(response.body).collections).toEqual([
+          { slug: 'quebra-cabecas', name: 'Coleção quebra-cabecas' },
+          { slug: 'plataformas', name: 'Coleção plataformas' },
+        ]);
+      } finally {
+        await prisma.collectionGame.deleteMany({
+          where: { collection: { slug: 'quebra-cabecas' }, gameId: gameIds.get('Celeste')! },
+        });
+      }
     });
 
     it('jogo sem os dados opcionais traz listas vazias e nulos', async () => {
@@ -355,6 +376,12 @@ describe('Catálogo', () => {
         languages: [],
         officialUrl: null,
       });
+    });
+
+    it('jogo sem coleção traz a lista vazia', async () => {
+      const response = await game('1000xresist').expect(200);
+
+      expect(GameDetailSchema.parse(response.body).collections).toEqual([]);
     });
 
     it('as etiquetas da reserva da IGDB vêm marcadas, em ordem alfabética', async () => {

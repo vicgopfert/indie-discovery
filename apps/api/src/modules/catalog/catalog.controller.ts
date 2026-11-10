@@ -66,6 +66,7 @@ const GAME_DETAIL_EXAMPLE = {
     { locale: 'pt-BR', name: 'Português (Brasil)', interface: true, subtitles: true, audio: false },
   ],
   officialUrl: 'https://www.celestegame.com',
+  collections: [],
 };
 
 const COLLECTION_EXAMPLE = {
@@ -145,7 +146,7 @@ export class CatalogController {
   @ApiParam({ name: 'slug', description: 'Slug do jogo, o mesmo da IGDB' })
   @ApiOkResponse({
     description:
-      'Ficha do jogo com empresas, país do estúdio e a origem desse dado, etiquetas da comunidade Steam e a origem delas, idiomas e link oficial',
+      'Ficha do jogo com empresas, país do estúdio e a origem desse dado, etiquetas da comunidade Steam e a origem delas, idiomas, link oficial e as coleções culturais em que o jogo está ({ slug, name }, na ordem do arquivo de curadoria; o Celeste do exemplo não está em nenhuma)',
     schema: { example: GAME_DETAIL_EXAMPLE },
   })
   @ApiNotFoundResponse({ description: 'Slug inexistente ou jogo fora do catálogo' })

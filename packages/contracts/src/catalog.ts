@@ -142,9 +142,14 @@ export const StudioCountrySchema = z.object({
 
 export type StudioCountry = z.infer<typeof StudioCountrySchema>;
 
+export const GameCollectionSchema = z.object({ slug: z.string(), name: z.string() });
+
+export type GameCollection = z.infer<typeof GameCollectionSchema>;
+
 // As etiquetas vêm da comunidade Steam, da mais votada para a menos, ou, sem nenhuma aceita lá,
 // da reserva pelas palavras-chave e pelo resumo da IGDB, em ordem alfabética (B-78). O id da Steam
-// leva à página do jogo na loja, na atribuição.
+// leva à página do jogo na loja, na atribuição. As coleções vêm na ordem do arquivo de curadoria;
+// sem o campo, valem vazias: a Vercel publica a web antes de o Render publicar a API (B-58).
 export const GameDetailSchema = GameSummarySchema.extend({
   summary: z.string(),
   themes: z.array(FeatureLabelSchema),
@@ -156,6 +161,7 @@ export const GameDetailSchema = GameSummarySchema.extend({
   studioCountry: StudioCountrySchema.nullable(),
   languages: z.array(GameLanguageSchema),
   officialUrl: z.url({ protocol: /^https?$/ }).nullable(),
+  collections: z.array(GameCollectionSchema).default([]),
 });
 
 export type GameDetail = z.infer<typeof GameDetailSchema>;

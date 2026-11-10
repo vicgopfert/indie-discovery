@@ -1,7 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { sampleGame } from '@/test/catalog';
-import { stubFetch } from '@/test/fetch';
+import { sampleCollection, sampleGame } from '@/test/catalog';
+import { apiError, stubFetch } from '@/test/fetch';
+import { renderAwaitingData } from '@/test/render';
 import CatalogPage from './page';
 
 vi.mock('next/form', () => import('@/test/next-form'));
@@ -14,16 +15,20 @@ const page = (items = [sampleGame()], total = items.length, pageNumber = 1) => (
   totalPages: Math.ceil(total / 24),
 });
 
-function stubCatalog(games: ReturnType<typeof page>) {
+function stubCatalog(
+  games: ReturnType<typeof page>,
+  collections = () => Response.json([sampleCollection()]),
+) {
   return stubFetch((path) => {
     if (path.startsWith('/api/games')) return Response.json(games);
+    if (path === '/api/collections') return collections();
     if (path.startsWith('/api/countries')) return Response.json([]);
     return Response.json([{ slug: 'puzzle', name: 'Quebra-cabeça', gameCount: 3607 }]);
   });
 }
 
 const renderPage = async (searchParams: Record<string, string | string[]> = {}) =>
-  render(await CatalogPage({ searchParams: Promise.resolve(searchParams) }));
+  renderAwaitingData(await CatalogPage({ searchParams: Promise.resolve(searchParams) }));
 
 describe('CatalogPage', () => {
   it('repassa os filtros da URL à API e mostra os jogos com o total', async () => {
@@ -64,13 +69,37 @@ describe('CatalogPage', () => {
     expect(screen.queryByRole('navigation', { name: 'Paginação' })).not.toBeInTheDocument();
   });
 
-  it('URL inválida mostra o problema sem chamar a API', async () => {
+  it('URL inválida mostra o problema sem buscar jogos', async () => {
     const fetchMock = stubCatalog(page());
 
     await renderPage({ page: 'abc' });
 
     expect(screen.getByRole('alert')).toHaveTextContent('Página: A página deve ser um número.');
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(fetchMock.mock.calls.map(([path]) => path)).toEqual(['/api/collections']);
+  });
+
+  it('mostra as coleções em links para a página de cada uma', async () => {
+    stubCatalog(page());
+
+    await renderPage();
+
+    const collections = await screen.findByRole('navigation', { name: 'Explore por cultura' });
+    expect(within(collections).getByRole('link', { name: 'Brasil' })).toHaveAttribute(
+      'href',
+      '/colecoes/brasil',
+    );
+  });
+
+  it('se as coleções falharem, o catálogo continua e elas não aparecem', async () => {
+    stubCatalog(page([sampleGame()], 30), () => apiError(500, 'Erro interno'));
+
+    await renderPage();
+
+    expect(await screen.findByText('30 jogos')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Celeste' })).toBeInTheDocument();
+    expect(
+      screen.queryByRole('navigation', { name: 'Explore por cultura' }),
+    ).not.toBeInTheDocument();
   });
 
   it('se a API falhar, avisa e oferece tentar de novo na mesma busca', async () => {

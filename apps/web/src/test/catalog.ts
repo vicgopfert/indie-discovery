@@ -1,4 +1,9 @@
-import type { GameDetail, GameSummary } from '@indie/contracts';
+import type {
+  CollectionDetail,
+  CollectionSummary,
+  GameDetail,
+  GameSummary,
+} from '@indie/contracts';
 
 export const sampleGame = (overrides: Partial<GameSummary> = {}): GameSummary => ({
   slug: 'celeste',
@@ -31,5 +36,27 @@ export const sampleGameDetail = (overrides: Partial<GameDetail> = {}): GameDetai
     { locale: 'pt-BR', name: 'Português (Brasil)', interface: true, subtitles: true, audio: false },
   ],
   officialUrl: 'https://www.celestegame.com',
+  collections: [],
   ...overrides,
+});
+
+export const sampleCollection = (
+  overrides: Partial<CollectionSummary> = {},
+): CollectionSummary => ({
+  slug: 'brasil',
+  name: 'Brasil',
+  description: 'Folclore, povos originários, história e cotidiano do Brasil.',
+  gameCount: 29,
+  coverImageIds: ['co1aaa', 'co1bbb'],
+  ...overrides,
+});
+
+export const sampleCollectionDetail = (
+  games: GameSummary[] = [sampleGame()],
+  { page = 1, total = games.length, pageSize = 24 } = {},
+): CollectionDetail => ({
+  slug: 'brasil',
+  name: 'Brasil',
+  description: 'Folclore, povos originários, história e cotidiano do Brasil.',
+  games: { items: games, page, pageSize, total, totalPages: Math.ceil(total / pageSize) },
 });

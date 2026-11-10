@@ -84,6 +84,7 @@ export class CatalogService {
         }))
         .sort(byName),
       officialUrl: webUrl(game.storeUrl),
+      collections: game.collections.map(({ collection }) => collection),
     };
   }
 

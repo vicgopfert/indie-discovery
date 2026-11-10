@@ -83,6 +83,7 @@ const celesteDetail: GameDetailRow = {
     language('pt-BR', 'Português (Brasil)', { interface: true, subtitles: true }),
     language('en-US', 'Inglês', { interface: true, subtitles: true, audio: true }),
   ],
+  collections: [],
 };
 
 class FakeCatalog implements Pick<
@@ -220,7 +221,23 @@ describe('CatalogService', () => {
           },
         ],
         officialUrl: 'https://www.celestegame.com',
+        collections: [],
       });
+    });
+
+    it('traz as coleções do jogo na ordem em que o repositório as lê', async () => {
+      const detail = await findGame({
+        ...celesteDetail,
+        collections: [
+          { collection: { slug: 'japao', name: 'Japão' } },
+          { collection: { slug: 'mitologia-nordica', name: 'Mitologia nórdica' } },
+        ],
+      });
+
+      expect(detail.collections).toEqual([
+        { slug: 'japao', name: 'Japão' },
+        { slug: 'mitologia-nordica', name: 'Mitologia nórdica' },
+      ]);
     });
 
     it('sem país, empresas, idiomas e link, devolve vazio e nulo', async () => {
