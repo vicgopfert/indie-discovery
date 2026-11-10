@@ -1,4 +1,4 @@
-# Coleções culturais (B-57)
+# Coleções culturais (B-57) e a interface delas (B-58)
 
 Navegação por cultura retratada (F-24). Nenhuma fonte de dados registra a cultura de um
 jogo de forma ampla (relatório do M0, seção 8.8), então as coleções são curadas: o sistema
@@ -110,3 +110,46 @@ as palavras-chave em 8 das 11 coleções.
   inexistente ou coleção sem jogo no catálogo respondem 404 com "Coleção não encontrada.".
 
 O vínculo do jogo que sai do catálogo continua gravado, e as consultas filtram o catálogo.
+
+## Interface (B-58)
+
+Tudo funciona sem login. O visual é provisório, com os componentes e as classes que já existiam,
+até o trabalho com a designer.
+
+- **Vitrine "Explore por cultura"** em `/colecoes` e na página inicial: um cartão por coleção, na
+  ordem do arquivo, com o nome em link para a coleção, a descrição, a contagem ("29 jogos") e até
+  4 capas. Na página inicial, a vitrine fica num `Suspense`, com "Carregando coleções…": com a
+  instância gratuita do Render acordando, o resto da página não espera por ela. As duas páginas
+  são geradas a cada requisição: geradas no build, guardariam a resposta da API daquele momento.
+- **Catálogo:** uma linha "Explore por cultura" com o nome das coleções em links. Ela é pedida em
+  paralelo e fora da chamada do catálogo: se a API das coleções falhar, o catálogo continua e a
+  linha não aparece.
+- **Página da coleção** (`/colecoes/<slug>?page=N`): nome, descrição, contagem e os jogos, dos mais
+  populares para os menos, de 24 em 24, com "Anterior" e "Próxima". Uma página inválida na URL
+  mostra a primeira, sem tela de erro (decisão do autor); uma página além da última leva de volta
+  à primeira; a coleção inexistente responde 404, sem `loading.tsx`, como a ficha do jogo.
+- **Ficha do jogo:** o item "Coleções", com os links, só quando o jogo está em alguma. Não estar
+  numa coleção não é um dado faltando (decisão do autor).
+- **Cabeçalho:** o link "Coleções", entre "Catálogo" e "Recomendações". O cabeçalho
+  transbordava a 390 px de largura: sem login, "Entrar" e "Criar conta" passavam 89 px da tela,
+  também em produção antes do B-58; com sessão, 12 px. A correção, incluída no B-58 por decisão do
+  autor, é a mais simples das duas propostas (quebrar em duas linhas ou agrupar num menu): abaixo de
+  640 px, os links principais descem para uma segunda linha, e o nome de quem entrou, que pode ter
+  até 50 caracteres, é cortado com reticências (o nome inteiro fica no `title`). Um menu pediria
+  um componente com estado de abrir e fechar. Conferido em 10/11/2026 no navegador local, a 390 e a
+  1280 px, sem e com login (com um nome de 50 caracteres), em todas as páginas: o cabeçalho cabe na
+  tela, em até 2 linhas a 390 px e em 1 a 1280 px.
+- **API:** a ficha (`GET /api/games/:slug`) traz `collections`, com o slug e o nome, na ordem do
+  arquivo. No contrato, o campo vale `[]` quando falta: a Vercel publica a web antes de o Render
+  publicar a API, e sem isso toda ficha ficaria indisponível nesse intervalo (decisão do autor).
+  Conferido em 10/11/2026 com a web nova contra a API de produção de antes: a ficha abre, sem o
+  item.
+
+### Para o redesign
+
+- **Destaque para a cultura brasileira.** A F-24 pede destaque para a cultura brasileira; hoje ele
+  é só a ordem do arquivo, com o Brasil em primeiro na vitrine e no catálogo. O destaque visual
+  fica para o redesign (decisão do autor).
+- **Cabeçalho em duas linhas nas telas estreitas.** A quebra dos links em duas linhas abaixo de
+  640 px é provisória: resolveu o transbordamento e abriu espaço para o link "Coleções", mas o
+  redesign deve decidir a navegação nas telas estreitas (menu, barra inferior ou outra forma).
