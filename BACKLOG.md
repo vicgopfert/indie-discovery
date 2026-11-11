@@ -151,7 +151,7 @@ Entrega: jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de
   - [x] Ordem na página: principal, por jogo, por interesse, em breve; o motivo só cita etiquetas se elas entrarem no vetor — feito em 09/11/2026; o motivo "Porque você gostou de" saiu (decisão do autor)
   - [x] Vizinhos por requisição com os vetores tipados do B-76; p95 fim a fim abaixo de 1 s em produção — vizinhos por requisição feitos em 09/11/2026, numa passada para as 2 prateleiras; o tempo local ficou em 1,58 a 1,60 vez o da `main` (critério de 1,5): exceção registrada por decisão do autor, e o p95 em produção decide; se falhar pela regra 3 do B-76, os vizinhos passam para a carga do índice. **Medido em 09/11/2026: reprovado pela regra 3** (p95 de até 1.101 ms, sem cauda na rota de saúde); por decisão do autor, o "ver mais" passou a montar só a lista pedida e a semelhança das prateleiras por jogo ficou guardada entre requisições, sem mudar a saída (foto completa idêntica); **medido de novo em 10/11/2026:** as 9 linhas de "ver mais" abaixo de 1 s, p95 agregado de 987 para 723 ms direto; a visão geral reprovou pela regra 3 e fica como limitação da instância gratuita (decisão do autor); a visão geral pronta por usuário fica para a Fase B, e a defesa usa instância paga ou demonstração local, a decidir perto da data
   - [x] Nomes das etiquetas pelos termos da comunidade (Puzzle, Deckbuilding, Difícil), com o nome antigo como `aliases` e encontrado pela busca do filtro — acrescentado e feito em 09/11/2026 (decisão do autor, `docs/etiquetas.md`, seção 12)
-- [x] **Congelamento do modelo de recomendação** (depois do B-79): nenhuma fonte de dados nova e nenhuma regra nova de prateleira até a defesa; o que surgir vira calibração do B-37 ou Fase B — decidido em 05/11/2026 — em vigor desde 10/11/2026 — o B-50 é compatível com ele (11/11/2026, decisão do autor): não traz fonte de dados nova nem muda regra de pontuação ou de prateleira da visão geral; é a semelhança da prateleira "Porque você gostou de `<jogo>`" (B-79) aplicada à ficha — o B-84 e o B-85 também são compatíveis (11/11/2026, decisão do autor): a plataforma é dado novo da mesma fonte, só para exibição e filtro, e não entra no vetor, na pontuação nem nas prateleiras; recomendar só jogos da plataforma do jogador seria regra nova e fica para a Fase B
+- [x] **Congelamento do modelo de recomendação** (depois do B-79): nenhuma fonte de dados nova e nenhuma regra nova de prateleira até a defesa; o que surgir vira calibração do B-37 ou Fase B — decidido em 05/11/2026 — em vigor desde 10/11/2026 — o B-50 é compatível com ele (11/11/2026, decisão do autor): não traz fonte de dados nova nem muda regra de pontuação ou de prateleira da visão geral; é a semelhança da prateleira "Porque você gostou de `<jogo>`" (B-79) aplicada à ficha — o B-84 e o B-85 também são compatíveis (11/11/2026, decisão do autor): a plataforma é dado novo da mesma fonte, só para exibição e filtro, e não entra no vetor, na pontuação nem nas prateleiras; recomendar só jogos da plataforma do jogador seria regra nova e fica para a Fase B — o B-86 a B-88 também são compatíveis (11/11/2026, decisão do autor): o preço não entra no vetor, na pontuação nem nas prateleiras; uma prateleira "Em promoção no seu gosto" seria regra nova e fica para a Fase B (F-37)
 - [x] **B-36** (P, E5) E2e de recomendação + teste de determinismo — ampliado no B-71: cobre a visão geral sem repetição, as prateleiras, a paginação com os tetos e o determinismo de cada lista (a principal, cada prateleira e cada página) — concluído em 10/11/2026: 18 testes e2e novos (`recommendation-lists.e2e-spec.ts`); determinismo pela "foto" dos três modos em quatro situações; tetos com valores reduzidos; mutações conferidas (`docs/recomendacao.md`)
   - [x] Fixar a ordem das interações lidas do banco antes de montar o perfil: hoje vêm sem `ORDER BY`, e a soma em ponto flutuante depende da ordem (levantado no plano do B-36) — feito no B-71: a soma do perfil segue a ordem do id do jogo
 - [x] **B-30** (P, E4) E2e de biblioteca e posse dos dados (um usuário não altera dados de outro) — concluído em 10/11/2026: 10 testes e2e (`ownership.e2e-spec.ts`); todas as rotas com sessão sem efeito nos dados de outra pessoa, no banco e na API; inventário das rotas pela tabela do servidor; mutações conferidas (proposta técnica, seção 8)
@@ -237,6 +237,28 @@ Entrega: todos os P0 prontos; pesos calibrados; **congelamento**.
   - [ ] Opções numa rota com a contagem de jogos, só com plataformas de 20 jogos ou mais
   - [ ] Filtro na página do catálogo, com o estado na URL
   - [ ] Testes de contrato e e2e da combinação com os outros filtros
+- [ ] **B-86** (M, E3) Preço da Steam na ficha (F-36). Acrescentado em 11/11/2026 (decisão do autor). Depende do B-84. Só a Steam, pela mesma `IStoreBrowseService/GetItems` das etiquetas, sem fonte nem chave nova; nenhuma requisição de usuário consulta a Steam; só loja oficial, nunca keyshops, sem afiliado e sem "média de preço"; o menor preço fica para a Fase B (F-37). Decisões e análise da GG.deals em `docs/precos.md`
+  - [ ] **Sonda só de leitura antes de implementar, com a regra escrita no plano antes de medir (como no B-77 e no B-78):**
+    - a `GetItems` com `country_code: 'BR'` e as opções de compra (`include_all_purchase_options`) devolve preço final, original e desconto em reais?
+    - conferir à mão 20 jogos contra a página da loja: pago, com desconto, gratuito e "Em breve".
+    - **Regra (valor inicial, decisão do autor):** preço divergente em mais de 1 dos 20 reprova a fonte.
+    - Resultado em `docs/precos.md`.
+  - [ ] Preço pedido no mesmo lote das etiquetas na ingestão
+  - [ ] Tabela `GamePrice` (jogo, loja, preço final, preço original, desconto, moeda, data da coleta) + migration (seção 10)
+  - [ ] Contrato de `GET /games/:slug` com `price`; Swagger com exemplo
+  - [ ] Preço ao lado do botão da Steam no "Onde jogar". O visual definitivo fica com a designer
+  - [ ] Testes: jogo pago, com desconto, gratuito, "Em breve", sem id da Steam e loja fora do ar (mantém o último preço gravado, com a data da coleta)
+- [ ] **B-87** (P, E6) Rodada diária de preços. Acrescentado em 11/11/2026 (decisão do autor). Depende do B-86
+  - [ ] Modo `precos` no workflow "Ingestão", só com a rodada de preços
+  - [ ] Agendada uma vez por dia depois das 15h de Brasília, no mesmo grupo de concorrência do banco de produção, para nunca rodar junto com a ingestão
+  - [ ] Grava só os preços que mudaram
+  - [ ] Falha da Steam não apaga preço gravado; o resumo da execução registra a falha
+  - [ ] Tempo da rodada, requisições e linhas gravadas por dia registrados em `docs/precos.md`
+  - [ ] Observação no B-54 (ingestão agendada, P1): ele pode reaproveitar o agendamento deste item
+- [ ] **B-88** (P, E3) Filtro "Em promoção" no catálogo (F-38). Acrescentado em 11/11/2026 (decisão do autor). Depende do B-86. É navegação e entra no plano de corte com os outros filtros
+  - [ ] Parâmetro `onSale` em `GET /api/games`, combinável com os outros filtros
+  - [ ] Filtro na página do catálogo, com o estado na URL
+  - [ ] Testes de contrato e e2e da combinação com os outros filtros
 
 ## S11 — Avaliação com usuários e acabamento (semanas 21–22)
 
@@ -279,6 +301,7 @@ Entrega: dois ensaios realizados, texto entregue, slides revisados.
   - [ ] Apagar as contas de teste criadas em produção: `medicao-m2-preferencias@example.com` e `medicao-m2-avaliacoes@example.com` (medição do M2, B-33), `b35-producao-2026-11-03@example.com` (conferência do B-35), `b71-producao-2026-11-03@example.com` (conferência do B-71), `b74-producao-2026-11-05@example.com` (conferência do B-74), `b76-producao-2026-11-05@example.com` e `b76-producao-2-2026-11-05@example.com` (medições do B-76)
 - [ ] **B-53** (M) Edição de nome e troca de senha
 - [ ] **B-54** (P) Ingestão agendada (GitHub Actions)
+  - [ ] Pode reaproveitar o agendamento da rodada diária de preços (B-87)
 - [ ] **B-55** (M) E2e no navegador (Playwright) do roteiro de demonstração
 - [ ] **B-65** (P) ID dos jogos na Steam gravado pela ingestão — absorvido pelo B-78 (P0) em 05/11/2026
 - [ ] **B-66** (M) Vínculo da conta Steam à conta do usuário, com o avatar público da Steam no lugar das iniciais
@@ -289,7 +312,7 @@ Entrega: dois ensaios realizados, texto entregue, slides revisados.
 
 ## P2 — pós-defesa
 
-Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de entrada de cada item (F-22, F-23, F-25, F-27 a F-29 e F-33: sugestão de jogo, área do estúdio, recursos de comunidade, recomendação híbrida com embeddings, filtragem colaborativa, avisos de lançamento, foto de perfil enviada pelo usuário).
+Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de entrada de cada item (F-22, F-23, F-25, F-27 a F-29, F-33 e F-37: sugestão de jogo, área do estúdio, recursos de comunidade, recomendação híbrida com embeddings, filtragem colaborativa, avisos de lançamento, foto de perfil enviada pelo usuário, preços em outras lojas com o menor preço histórico e a prateleira "Em promoção no seu gosto").
 
 ---
 
@@ -306,4 +329,4 @@ Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de en
 
 ## Se o atraso passar de uma sprint
 
-Aplicar o plano de corte da seção 16 do documento, nesta ordem: 1) cortar todo P1, os jogos semelhantes na ficha (B-50), a redefinição de senha por e-mail (B-80 e B-81), o "Onde jogar" na ficha (B-84) e testes opcionais de frontend; 2) Swagger sem exemplos; 3) B-21 e B-85 viram P1; 4) partida a frio sem a etapa de avaliação; 5) perfil só leitura; 6) reduzir catálogo por data de lançamento. **Nunca cortar:** contas/sessão, ingestão com critério indie e vetores, catálogo e ficha, avaliações, partida a frio mínima, recomendações com motivo e modos, avaliação offline, testes críticos, implantação e contingência local.
+Aplicar o plano de corte da seção 16 do documento, nesta ordem: 1) cortar todo P1, os jogos semelhantes na ficha (B-50), a redefinição de senha por e-mail (B-80 e B-81), o "Onde jogar" na ficha (B-84), o preço da Steam na ficha (B-86 e B-87) e testes opcionais de frontend; 2) Swagger sem exemplos; 3) B-21, B-85 e B-88 viram P1; 4) partida a frio sem a etapa de avaliação; 5) perfil só leitura; 6) reduzir catálogo por data de lançamento. **Nunca cortar:** contas/sessão, ingestão com critério indie e vetores, catálogo e ficha, avaliações, partida a frio mínima, recomendações com motivo e modos, avaliação offline, testes críticos, implantação e contingência local.
