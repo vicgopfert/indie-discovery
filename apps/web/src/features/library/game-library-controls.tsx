@@ -1,6 +1,6 @@
 'use client';
 
-import { type GameLibraryState, type ListType, RATING_MAX, RATING_MIN } from '@indie/contracts';
+import type { GameLibraryState, ListType } from '@indie/contracts';
 import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useEffect } from 'react';
@@ -10,8 +10,7 @@ import { errorMessage, isUnauthorized } from '@/lib/api-client';
 import { withRedirect } from '@/lib/safe-redirect';
 import type { LibraryAction } from './api';
 import { useGameLibrary, useLibraryAction } from './hooks';
-
-const SCORES = Array.from({ length: RATING_MAX - RATING_MIN + 1 }, (_, i) => RATING_MIN + i);
+import { RatingButtons } from './rating-buttons';
 
 const LISTS: { list: ListType; label: string }[] = [
   { list: 'FAVORITE', label: 'Favorito' },
@@ -92,37 +91,12 @@ function LibraryForm({
       <h2 id="library-heading" className="font-medium">
         Sua biblioteca
       </h2>
-      <div
-        role="group"
-        aria-labelledby="rating-label"
-        className="flex flex-wrap items-center gap-2"
-      >
-        <span id="rating-label" className="text-sm">
-          Sua nota
-        </span>
-        {SCORES.map((score) => (
-          <Button
-            key={score}
-            size="sm"
-            variant={rating?.score === score ? 'default' : 'outline'}
-            aria-pressed={rating?.score === score}
-            disabled={saving}
-            onClick={() => rating?.score !== score && onAction({ kind: 'rate', score })}
-          >
-            {score}
-          </Button>
-        ))}
-        {rating && (
-          <Button
-            size="sm"
-            variant="ghost"
-            disabled={saving}
-            onClick={() => onAction({ kind: 'unrate' })}
-          >
-            Remover nota
-          </Button>
-        )}
-      </div>
+      <RatingButtons
+        score={rating?.score ?? null}
+        disabled={saving}
+        onRate={(score) => onAction({ kind: 'rate', score })}
+        onUnrate={() => onAction({ kind: 'unrate' })}
+      />
       <div role="group" aria-label="Listas" className="flex flex-wrap gap-2">
         {LISTS.map(({ list, label }) => {
           const inList = lists.includes(list);
