@@ -151,7 +151,7 @@ Entrega: jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de
   - [x] Ordem na página: principal, por jogo, por interesse, em breve; o motivo só cita etiquetas se elas entrarem no vetor — feito em 09/11/2026; o motivo "Porque você gostou de" saiu (decisão do autor)
   - [x] Vizinhos por requisição com os vetores tipados do B-76; p95 fim a fim abaixo de 1 s em produção — vizinhos por requisição feitos em 09/11/2026, numa passada para as 2 prateleiras; o tempo local ficou em 1,58 a 1,60 vez o da `main` (critério de 1,5): exceção registrada por decisão do autor, e o p95 em produção decide; se falhar pela regra 3 do B-76, os vizinhos passam para a carga do índice. **Medido em 09/11/2026: reprovado pela regra 3** (p95 de até 1.101 ms, sem cauda na rota de saúde); por decisão do autor, o "ver mais" passou a montar só a lista pedida e a semelhança das prateleiras por jogo ficou guardada entre requisições, sem mudar a saída (foto completa idêntica); **medido de novo em 10/11/2026:** as 9 linhas de "ver mais" abaixo de 1 s, p95 agregado de 987 para 723 ms direto; a visão geral reprovou pela regra 3 e fica como limitação da instância gratuita (decisão do autor); a visão geral pronta por usuário fica para a Fase B, e a defesa usa instância paga ou demonstração local, a decidir perto da data
   - [x] Nomes das etiquetas pelos termos da comunidade (Puzzle, Deckbuilding, Difícil), com o nome antigo como `aliases` e encontrado pela busca do filtro — acrescentado e feito em 09/11/2026 (decisão do autor, `docs/etiquetas.md`, seção 12)
-- [x] **Congelamento do modelo de recomendação** (depois do B-79): nenhuma fonte de dados nova e nenhuma regra nova de prateleira até a defesa; o que surgir vira calibração do B-37 ou Fase B — decidido em 05/11/2026 — em vigor desde 10/11/2026
+- [x] **Congelamento do modelo de recomendação** (depois do B-79): nenhuma fonte de dados nova e nenhuma regra nova de prateleira até a defesa; o que surgir vira calibração do B-37 ou Fase B — decidido em 05/11/2026 — em vigor desde 10/11/2026 — o B-50 é compatível com ele (11/11/2026, decisão do autor): não traz fonte de dados nova nem muda regra de pontuação ou de prateleira da visão geral; é a semelhança da prateleira "Porque você gostou de `<jogo>`" (B-79) aplicada à ficha
 - [x] **B-36** (P, E5) E2e de recomendação + teste de determinismo — ampliado no B-71: cobre a visão geral sem repetição, as prateleiras, a paginação com os tetos e o determinismo de cada lista (a principal, cada prateleira e cada página) — concluído em 10/11/2026: 18 testes e2e novos (`recommendation-lists.e2e-spec.ts`); determinismo pela "foto" dos três modos em quatro situações; tetos com valores reduzidos; mutações conferidas (`docs/recomendacao.md`)
   - [x] Fixar a ordem das interações lidas do banco antes de montar o perfil: hoje vêm sem `ORDER BY`, e a soma em ponto flutuante depende da ordem (levantado no plano do B-36) — feito no B-71: a soma do perfil segue a ordem do id do jogo
 - [x] **B-30** (P, E4) E2e de biblioteca e posse dos dados (um usuário não altera dados de outro) — concluído em 10/11/2026: 10 testes e2e (`ownership.e2e-spec.ts`); todas as rotas com sessão sem efeito nos dados de outra pessoa, no banco e na API; inventário das rotas pela tabela do servidor; mutações conferidas (proposta técnica, seção 8)
@@ -174,6 +174,15 @@ Entrega: todos os P0 prontos; pesos calibrados; **congelamento**.
 - [ ] **B-62** (M, E5) Modo de jogo e perspectiva como quarto bloco do vetor (fatia em config, fora da explicação ao jogador); a fatia só fica acima de zero se melhorar o acerto@10 no B-37; medir depois do B-69 — movido da S7 para a S10 no B-32, para ficar ao lado do B-37 que decide a fatia
 - [ ] **B-25** (P, E3) Página "Como funciona" (lista grandes empresas, estúdios controlados e exceções manuais com motivo e fonte)
   - [ ] Se o B-75 (P1) entrar: listar também os estilos e as palavras-chave de cada um
+  - [ ] Explicar como os jogos semelhantes da ficha são escolhidos (cosseno, sem popularidade, motivo em comum)
+- [ ] **B-50** (M, E5) Jogos semelhantes na ficha (F-17), promovido de P1 a P0 em 11/11/2026 (decisão do autor)
+  - [ ] `GET /api/games/:slug/similar`, pública, no módulo de recomendação: 404 para jogo fora do catálogo e 503 para índice indisponível, como em `/recommendations`. Contrato Zod e Swagger com exemplo
+  - [ ] Seleção e motivo como funções puras sobre `sourceSimilarity`, com o desempate fixo já existente
+  - [ ] Cache próprio só com os ids dos N primeiros por jogo, separado do `SimilarityCache` das prateleiras, com capacidade em config. A recarga do índice esvazia o cache. Motivo: é a primeira rota pública que faz varredura no índice, e robôs de busca percorrendo as fichas não podem tirar do cache os jogos de origem das prateleiras dos usuários
+  - [ ] Medição no catálogo local: distribuição do cosseno do 6º vizinho, quantos jogos ficam sem a seção com o mínimo escolhido e a fração de jogos "Em breve" entre os vizinhos
+  - [ ] Seção no fim da ficha, carregada à parte e sem bloquear a página nem mudar o 404 dela, reaproveitando os componentes de capa das fileiras. O visual definitivo fica com a designer
+  - [ ] Testes: unitários da seleção e do motivo; e2e com o próprio jogo excluído, o "Em breve" incluído, a mesma resposta com e sem sessão, e 404 e 503
+  - [ ] p95 fim a fim em produção pela metodologia do B-33, com o cache vazio e cheio. Se passar de 1 s com o cache vazio, os vizinhos passam a ser calculados na carga do índice (a alternativa já registrada em `docs/recomendacao.md`; na ficha ela não muda a lista, porque não há filtro pelo perfil)
 
 ## S11 — Avaliação com usuários e acabamento (semanas 21–22)
 
@@ -183,6 +192,7 @@ Entrega: **M3**: critérios de prontidão atendidos.
   - [ ] Observar se os jogadores reconhecem os jogos só pela capa nas fileiras da visão geral no celular, onde não há o `title` ao passar o mouse (ajuste de design do B-72, 05/11/2026)
   - [ ] Observar se sentem falta dos selos "Em breve" e "Pouco conhecido" e do motivo nas fileiras de capas; a página do "ver mais" continua com os cartões completos, os selos e o motivo
   - [ ] Observar se o jogador percorre a visão geral até o fim, com até 10 seções (B-79)
+  - [ ] Observar se o jogador usa os jogos semelhantes para navegar entre fichas e se entende o "Em comum" (B-50)
 - [ ] **B-45** (M, E7) Correções priorizadas a partir do teste de usabilidade
 - [ ] **B-41** (P, E6) Contingência local: dump do banco + restauração no PostgreSQL embutido
 - [ ] **B-42** (P, E7) Revisão final do Swagger (exemplos e erros em todos os endpoints P0)
@@ -209,7 +219,6 @@ Entrega: dois ensaios realizados, texto entregue, slides revisados.
 ## P1 — depois do M2, se houver capacidade (não bloqueia a defesa)
 
 - [ ] **B-49** (P) Registro de cliques de saída
-- [ ] **B-50** (P) Jogos parecidos na ficha
 - [ ] **B-51** (P) Sitemap e robots
 - [ ] **B-52** (P) Exclusão da própria conta
   - [ ] Apagar as contas de teste criadas em produção: `medicao-m2-preferencias@example.com` e `medicao-m2-avaliacoes@example.com` (medição do M2, B-33), `b35-producao-2026-11-03@example.com` (conferência do B-35), `b71-producao-2026-11-03@example.com` (conferência do B-71), `b74-producao-2026-11-05@example.com` (conferência do B-74), `b76-producao-2026-11-05@example.com` e `b76-producao-2-2026-11-05@example.com` (medições do B-76)
@@ -242,4 +251,4 @@ Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de en
 
 ## Se o atraso passar de uma sprint
 
-Aplicar o plano de corte da seção 16 do documento, nesta ordem: 1) cortar todo P1 e testes opcionais de frontend; 2) Swagger sem exemplos; 3) B-21 vira P1; 4) partida a frio sem a etapa de avaliação; 5) perfil só leitura; 6) reduzir catálogo por data de lançamento. **Nunca cortar:** contas/sessão, ingestão com critério indie e vetores, catálogo e ficha, avaliações, partida a frio mínima, recomendações com motivo e modos, avaliação offline, testes críticos, implantação e contingência local.
+Aplicar o plano de corte da seção 16 do documento, nesta ordem: 1) cortar todo P1, os jogos semelhantes na ficha (B-50) e testes opcionais de frontend; 2) Swagger sem exemplos; 3) B-21 vira P1; 4) partida a frio sem a etapa de avaliação; 5) perfil só leitura; 6) reduzir catálogo por data de lançamento. **Nunca cortar:** contas/sessão, ingestão com critério indie e vetores, catálogo e ficha, avaliações, partida a frio mínima, recomendações com motivo e modos, avaliação offline, testes críticos, implantação e contingência local.
