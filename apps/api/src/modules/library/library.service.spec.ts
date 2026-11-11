@@ -1,5 +1,5 @@
 import { LIST_TYPES } from '@indie/contracts';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import type { FeatureType, ListType } from '../../generated/prisma/client';
 import type { CatalogRepository, FeatureCountRow } from '../catalog/catalog.repository';
 import { CatalogService } from '../catalog/catalog.service';
@@ -19,14 +19,30 @@ const labels = new FeatureLabels(
   }),
 );
 
-const options: Record<'GENRE' | 'THEME', FeatureCountRow[]> = {
+const options: Record<'GENRE' | 'THEME' | 'TAG', FeatureCountRow[]> = {
   GENRE: [
     { slug: 'puzzle', name: 'Puzzle', gameCount: 10 },
     { slug: 'platform', name: 'Platform', gameCount: 8 },
     { slug: 'indie', name: 'Indie', gameCount: 20 },
   ],
   THEME: [{ slug: 'horror', name: 'Horror', gameCount: 5 }],
+  TAG: [
+    { slug: 'roguelike', name: 'Roguelike', gameCount: 6 },
+    { slug: 'platformer', name: 'Plataforma', gameCount: 7 },
+    { slug: 'psychological-horror', name: 'Terror Psicológico', gameCount: 3 },
+    { slug: 'pixel-graphics', name: 'Pixel Art', gameCount: 9 },
+    { slug: 'visual-novel', name: 'Romance Visual', gameCount: 2 },
+  ],
 };
+
+// Pixel Art não vira prateleira; Plataforma diz o mesmo que um gênero oferecido; Romance Visual
+// aponta para um gênero que não está nas opções.
+const PREFERENCE_TAGS = new Map<string, string | null>([
+  ['roguelike', null],
+  ['platformer', 'genre:platform'],
+  ['psychological-horror', null],
+  ['visual-novel', 'genre:visual-novel'],
+]);
 
 const game = (slug: string, inCatalog = true): LibraryGameRow & { id: string } => ({
   id: `id-${slug}`,
@@ -53,11 +69,14 @@ class FakeLibrary implements Pick<
   | 'findFeatureIds'
   | 'replacePreferences'
   | 'findPreferences'
+  | 'hasPreferences'
+  | 'findOnboardingGames'
 > {
   ratings = new Map<string, number>();
   lists = new Set<string>();
   preferences: string[] = [];
   onboardedAt: Date | null = null;
+  onboardingLimit: number | null = null;
 
   findGame(slug: string) {
     const found = GAMES.find((candidate) => candidate.slug === slug);
@@ -129,10 +148,19 @@ class FakeLibrary implements Pick<
     return Promise.resolve();
   }
 
+  hasPreferences() {
+    return Promise.resolve(this.preferences.length > 0);
+  }
+
+  findOnboardingGames(_userId: string, limit: number) {
+    this.onboardingLimit = limit;
+    return Promise.resolve([game('celeste')]);
+  }
+
   findPreferences(): Promise<PreferenceRow[]> {
     return Promise.resolve(
       this.preferences.map((id) => {
-        const [type, slug] = id.split(':') as ['GENRE' | 'THEME', string];
+        const [type, slug] = id.split(':') as ['GENRE' | 'THEME' | 'TAG', string];
         return { type, slug, name: options[type].find((option) => option.slug === slug)!.name };
       }),
     );
@@ -146,11 +174,12 @@ describe('LibraryService', () => {
   beforeEach(() => {
     library = new FakeLibrary();
     const catalog = {
-      countGamesByFeature: (type: 'GENRE' | 'THEME') => Promise.resolve(options[type]),
+      countGamesByFeature: (type: 'GENRE' | 'THEME' | 'TAG') => Promise.resolve(options[type]),
     } as unknown as CatalogRepository;
     service = new LibraryService(
       library as unknown as LibraryRepository,
       new CatalogService(catalog, labels, 20, new Map()),
+      PREFERENCE_TAGS,
     );
   });
 
@@ -245,22 +274,43 @@ describe('LibraryService', () => {
   });
 
   describe('preferências', () => {
-    it('grava gêneros e temas e devolve os nomes em português', async () => {
+    it('oferece as etiquetas que viram prateleira, sem repetir a ideia de um gênero ou tema', async () => {
+      const { genres, themes, tags } = await service.findPreferenceOptions();
+
+      expect(genres.map(({ slug }) => slug)).toEqual(['platform', 'puzzle']);
+      expect(themes.map(({ slug }) => slug)).toEqual(['horror']);
+      expect(tags.map(({ slug }) => slug)).toEqual([
+        'roguelike',
+        'visual-novel',
+        'psychological-horror',
+      ]);
+    });
+
+    it('grava gêneros, temas e etiquetas e devolve os nomes em português', async () => {
       expect(
-        await service.savePreferences('u1', { genres: ['puzzle', 'platform'], themes: ['horror'] }),
+        await service.savePreferences('u1', {
+          genres: ['puzzle', 'platform'],
+          themes: ['horror'],
+          tags: ['roguelike', 'psychological-horror'],
+        }),
       ).toEqual({
         genres: [
           { slug: 'platform', name: 'Plataforma' },
           { slug: 'puzzle', name: 'Quebra-cabeça' },
         ],
         themes: [{ slug: 'horror', name: 'Terror' }],
+        tags: [
+          { slug: 'roguelike', name: 'Roguelike' },
+          { slug: 'psychological-horror', name: 'Terror Psicológico' },
+        ],
       });
     });
 
-    it('recusa o que GET /features não oferece, incluindo o gênero escondido', async () => {
+    it('recusa o que as opções não oferecem: gênero escondido e etiqueta repetida ou sem prateleira', async () => {
       const save = service.savePreferences('u1', {
         genres: ['puzzle', 'indie', 'roguelike'],
         themes: ['horror', 'space'],
+        tags: ['roguelike', 'platformer', 'pixel-graphics'],
       });
 
       await expect(save).rejects.toThrow(BadRequestException);
@@ -269,6 +319,7 @@ describe('LibraryService', () => {
           message: [
             'genres: Opção desconhecida: indie, roguelike.',
             'themes: Opção desconhecida: space.',
+            'tags: Opção desconhecida: platformer, pixel-graphics.',
           ],
         },
       });
@@ -276,13 +327,42 @@ describe('LibraryService', () => {
     });
 
     it('conclui a partida a frio só na primeira vez', async () => {
-      await service.savePreferences('u1', { genres: ['puzzle', 'platform'], themes: ['horror'] });
+      await service.savePreferences('u1', {
+        genres: ['puzzle', 'platform'],
+        themes: ['horror'],
+        tags: [],
+      });
       const first = library.onboardedAt;
-      await service.savePreferences('u1', { genres: ['puzzle'], themes: ['horror'] });
+      await service.savePreferences('u1', { genres: ['puzzle'], themes: ['horror'], tags: [] });
 
       expect(first).toBeInstanceOf(Date);
       expect(library.onboardedAt).toBe(first);
       expect(library.preferences).toEqual(['GENRE:puzzle', 'THEME:horror']);
+    });
+  });
+
+  describe('jogos da partida a frio', () => {
+    it('sem preferências gravadas, recusa com 409', async () => {
+      await expect(service.findOnboardingGames('u1')).rejects.toThrow(ConflictException);
+      expect(library.onboardingLimit).toBeNull();
+    });
+
+    it('pede até 60 jogos e devolve o resumo do catálogo', async () => {
+      library.preferences = ['GENRE:puzzle'];
+
+      expect(await service.findOnboardingGames('u1')).toEqual({
+        items: [
+          {
+            slug: 'celeste',
+            name: 'celeste',
+            coverImageId: 'cover-celeste',
+            releaseStatus: 'RELEASED',
+            firstReleaseDate: null,
+            genres: [],
+          },
+        ],
+      });
+      expect(library.onboardingLimit).toBe(60);
     });
   });
 });

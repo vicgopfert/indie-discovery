@@ -210,18 +210,27 @@ describe('RecommendationsView', () => {
     expect(fetchMock).not.toHaveBeenCalledWith(DISCOVERY, expect.anything());
   });
 
-  it('sem avaliações, listas nem preferências, orienta a avaliar, sem o seletor', async () => {
+  it('sem avaliações, listas nem preferências, leva à partida a frio, sem o seletor', async () => {
     stubList(sampleRecommendationOverview({ basis: 'empty', items: [] }));
     renderWithQuery(<RecommendationsView />);
 
-    expect(
-      await screen.findByText(/Avalie alguns jogos ou guarde nas suas listas/),
-    ).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Ver o catálogo' })).toHaveAttribute(
+    expect(await screen.findByText(/Conte do que você gosta/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Escolher meus gostos' })).toHaveAttribute(
       'href',
-      '/catalogo',
+      '/boas-vindas',
     );
+    expect(screen.queryByRole('link', { name: 'Mudar meus gostos' })).not.toBeInTheDocument();
     expect(screen.queryByRole('group', { name: 'Modo de descoberta' })).not.toBeInTheDocument();
+  });
+
+  it('com perfil, oferece mudar os gostos', async () => {
+    stubList(sampleRecommendationOverview());
+    renderWithQuery(<RecommendationsView />);
+
+    expect(await screen.findByRole('link', { name: 'Mudar meus gostos' })).toHaveAttribute(
+      'href',
+      '/boas-vindas',
+    );
   });
 
   it('com a lista de populares, explica por quê, sem o seletor', async () => {

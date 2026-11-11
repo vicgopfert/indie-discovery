@@ -1,4 +1,4 @@
-# Recomendação: núcleo de pontuação (B-32), rota (B-33), página (B-35), listas por interesse (B-71), estilos (B-74), etiquetas (B-78), recomendações específicas (B-79) e testes de ponta a ponta (B-36)
+# Recomendação: núcleo de pontuação (B-32), rota (B-33), página (B-35), listas por interesse (B-71), estilos (B-74), etiquetas (B-78), recomendações específicas (B-79), testes de ponta a ponta (B-36) e partida a frio (B-34)
 
 O núcleo são funções puras em `apps/api/src/modules/recommendation/scoring/`, com os pesos
 na seção `scoring` de `apps/api/config/recommendation.json`. Ele recebe o índice de
@@ -15,7 +15,8 @@ lê o estado no banco, chama o núcleo e monta a resposta de `GET /api/recommend
    um sinal independente. Notas 1 e 2 afastam o perfil daqueles atributos; nota 3 é neutra.
 2. **Perfil:** `u = Σ w_i · v_i + β · Σ e_f`, com `e_f` o vetor unitário de cada gênero ou
    tema escolhido na partida a frio e β = 1. O perfil é um vetor denso, com uma posição por
-   atributo do índice.
+   atributo do índice. **Alterado em 11/11/2026 (B-34):** também de cada etiqueta escolhida
+   (seção "Partida a frio").
 3. **Candidatos:** os jogos do índice que o usuário não avaliou e que não estão em nenhuma
    lista, com vetor não vazio e **cosseno acima de zero**, para que todo jogo recomendado
    tenha ao menos um atributo a favor. Com poucos candidatos, a lista sai menor, sem
@@ -467,7 +468,7 @@ prateleiras e no motivo. O vetor não muda.
 - **Interesses:**
   - Os estilos concorrem ao lado dos gêneros e temas, com o limite de 40% do catálogo.
   - Um estilo só concorre se a soma dos pesos dos jogos da biblioteca que o têm for positiva, o equivalente ao `u_k > 0`.
-  - As preferências da partida a frio continuam só com gêneros e temas; oferecer estilos nelas fica para o B-34.
+  - As preferências da partida a frio continuam só com gêneros e temas; oferecer estilos nelas fica para o B-34. **Alterado em 11/11/2026 (B-34):** a partida a frio oferece as etiquetas que tomaram o lugar dos estilos (seção "Partida a frio").
 - **Desempate da cobertura**, para todos os atributos: pelo peso na biblioteca, contando os jogos já cobertos; depois, pelo menos frequente no catálogo; e por fim pela posição, com os estilos depois dos gêneros e temas. O `u_k` saiu do desempate.
 - **Prateleira:** "Porque você curte `<estilo>`", com a chave `style:<slug>` e os candidatos que têm o estilo, também os que só o têm pelo resumo.
 - **Motivo:**
@@ -1185,3 +1186,67 @@ Diretriz do autor (10/11/2026), válida até a interface nova do redesign:
 - **Localizar elementos por papel e texto** (`getByRole`, `getByLabelText`, `getByText`), nunca por
   classe ou estrutura do DOM.
 - **Testes de fluxo no navegador e de acessibilidade ficam para depois da interface nova.**
+
+## Partida a frio (B-34)
+
+Implementada em 11/11/2026. A página `/boas-vindas` e as rotas estão na proposta técnica (seção
+de rotas e o parágrafo da partida a frio); aqui fica o que toca a recomendação.
+
+### Etiquetas nas preferências
+
+- **Decisão do autor:** a escolha oferece, além dos gêneros e temas, as etiquetas da comunidade
+  Steam que podem virar prateleira (`shelf` em `config/tags.json`). As etiquetas descrevem o gosto
+  de forma mais específica que Aventura ou Ação, já estão no vetor desde o B-78, e o núcleo trata
+  a preferência pela posição no vetor: nada muda na pontuação. A etiqueta visual ou vaga, que não
+  vira prateleira, fica de fora, porque a preferência viraria prateleira por escolha do jogador.
+- **Sem a mesma ideia em dois grupos (decisão do autor):** sai a etiqueta com `sameIdeaAs` apontando
+  para um gênero ou tema oferecido, e fica o da IGDB (a etiqueta Puzzle sai, fica o gênero
+  Quebra-cabeça). A rota de opções e a validação do `PUT /api/me/preferences` usam o mesmo
+  conjunto. No catálogo local de 11/11/2026, são 22 gêneros, 21 temas e 230 etiquetas: as 41
+  etiquetas com `sameIdeaAs` apontam todas para um gênero ou tema oferecido e saíram das 271.
+- **Isenção do limite de 10%:** as preferências continuam isentas do suporte e dos limites das
+  prateleiras, como decidido no B-77 (seção "Prateleiras de interesse", passo 2). O limite de 10%
+  do catálogo (`specificMaxDocumentRatio`) vale para as etiquetas que a biblioteca sustenta, e não
+  para as escolhidas: uma etiqueta escolhida acima dele vira prateleira por escolha do jogador. No
+  catálogo local de 11/11/2026, duas das 230 passam do limite: Relaxante (12,2%) e Terror
+  Psicológico (10,4%).
+- **Congelamento:** compatível (decisão do autor). Não há fonte de dados nova nem regra nova de
+  prateleira: a etiqueta já estava no vetor e nas prateleiras, e a preferência segue o caminho que
+  os gêneros e temas já seguiam.
+- **Para o B-37:** os 200 perfis por preferências da semente 71 só têm gêneros e temas. A
+  calibração do β e das cotas precisa de perfis de partida a frio com etiquetas.
+
+### Jogos para avaliar
+
+`GET /api/me/onboarding/games` devolve até 60 jogos em rodadas: o mais popular de cada preferência,
+depois o segundo de cada uma, e assim por diante; dentro da rodada, pela popularidade, depois pelo
+nome e pelo id. O jogo de duas preferências fica na primeira rodada em que aparece. Assim cada
+preferência aparece já nos primeiros jogos, em vez de uma preferência popular ocupar a tela toda.
+Entram só os jogos lançados, que o jogador pode ter jogado, no catálogo e fora da biblioteca dele.
+
+- **Fonte:** o banco, e não o índice. A etapa funciona com o índice carregando, e a ordem é a de
+  `popular` do catálogo.
+- **Exemplo (local, 11/11/2026):** com Plataforma, Terror e Roguelike, os 12 primeiros são Hollow
+  Knight: Silksong, Hades, Little Nightmares, Hollow Knight, Undertale, Hades II, Stray, Soma,
+  Dead Cells, Inside, Moonlighter e Celeste.
+
+### Conferência no navegador local (11/11/2026)
+
+Script fora do repositório (`check-b34.mjs`), a 390 e a 1280 px, com a API e a web compiladas e o
+catálogo local de 23.001 jogos. Roteiro: cadastro → `/boas-vindas` → "Agora não" → lista vazia →
+"Escolher meus gostos" → recusa sem escolhas → Plataforma, Terror e, pela busca, Roguelike →
+"Pular" → visão geral → "Mudar meus gostos" → 4 notas → "Concluir". Resultado: 40 de 40
+conferências, entre elas:
+
+- o cadastro leva a `/boas-vindas`; as etiquetas começam com 24, e "Ver todas (230)" aparece;
+- nenhuma ideia em dois grupos e só etiquetas de prateleira, conferido contra o vocabulário;
+- o aviso do mínimo some quando a escolha muda (defeito achado nesta conferência e corrigido);
+- na etapa 2, o foco vai para o título, e há 12 jogos e mais 12 em "Mostrar mais jogos";
+- a visão geral, sem nenhuma nota, tem "Porque você curte roguelikes e roguelites" ao lado de
+  Plataforma e Terror;
+- ao refazer, a etapa 1 vem preenchida; com 4 notas, o 5º jogo não aceita nota até uma ser
+  removida;
+- depois das notas, a lista principal muda e não traz os jogos avaliados;
+- todas as páginas cabem na largura, sem rolagem horizontal.
+
+As contas de teste locais foram apagadas depois.

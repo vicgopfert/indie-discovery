@@ -491,7 +491,9 @@ não do cache de 05/11):
 **Interesses com a regra atual** (400 perfis da semente 71):
 - 184 dos 200 perfis por avaliações têm alguma etiqueta entre os interesses, e 307 dos 419
   interesses deles são etiquetas. Os 200 perfis por preferências não têm etiqueta, porque as
-  preferências da partida a frio são só gêneros e temas (B-34).
+  preferências da partida a frio são só gêneros e temas (B-34). **Alterado em 11/11/2026 (B-34):**
+  a partida a frio passou a oferecer as etiquetas que podem virar prateleira, sem as que repetem a
+  ideia de um gênero ou tema (`docs/recomendacao.md`, seção "Partida a frio").
 - **Ideia repetida** (gênero ou tema e etiqueta da mesma ideia, pela tabela de equivalência do
   protótipo do B-77): nenhum perfil, entre os interesses escolhidos e entre as prateleiras
   mostradas.

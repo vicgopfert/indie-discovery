@@ -8,6 +8,7 @@ import { useRecommendationOverview } from './hooks';
 import { listHref, listTitle, RECOMMENDATIONS_PATH } from './lists';
 import {
   BasisNote,
+  ChangeTastesLink,
   EmptyProfile,
   ModeControls,
   RecommendationsError,
@@ -42,6 +43,7 @@ function Recommendations({ mode }: { mode: DiscoveryMode }) {
   return (
     <div className="space-y-6">
       <ModeControls mode={mode} basis={overview.data.basis} updating={overview.isPlaceholderData} />
+      {overview.data.basis !== 'empty' && <ChangeTastesLink />}
       <RecommendedGames overview={overview.data} updating={overview.isPlaceholderData} />
     </div>
   );

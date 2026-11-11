@@ -7,7 +7,7 @@ import { type ReactNode, useEffect } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { clearAccount, useSession } from '@/features/auth/hooks';
-import { CATALOG_PATH } from '@/features/catalog/search-params';
+import { ONBOARDING_PATH } from '@/features/onboarding/paths';
 import { errorMessage, isUnauthorized } from '@/lib/api-client';
 import { withRedirect } from '@/lib/safe-redirect';
 import { useSaveDiscoveryMode } from './hooks';
@@ -20,10 +20,12 @@ type Basis = RecommendationOverview['basis'];
 export function SessionGate({
   next,
   heading,
+  invite = 'para ver suas recomendações.',
   children,
 }: {
   next: string;
   heading?: ReactNode;
+  invite?: string;
   children: (user: User) => ReactNode;
 }) {
   const { data: user, isPending } = useSession();
@@ -39,7 +41,7 @@ export function SessionGate({
           <Link href={withRedirect('/entrar', next)} className="underline">
             Entre
           </Link>{' '}
-          para ver suas recomendações.
+          {invite}
         </p>
       </>
     );
@@ -119,9 +121,19 @@ export function ModeControls({
 export function EmptyProfile() {
   return (
     <p>
-      Avalie alguns jogos ou guarde nas suas listas para receber recomendações.{' '}
-      <Link href={CATALOG_PATH} className="underline">
-        Ver o catálogo
+      Conte do que você gosta para receber recomendações.{' '}
+      <Link href={ONBOARDING_PATH} className="underline">
+        Escolher meus gostos
+      </Link>
+    </p>
+  );
+}
+
+export function ChangeTastesLink() {
+  return (
+    <p className="text-sm">
+      <Link href={ONBOARDING_PATH} className="underline">
+        Mudar meus gostos
       </Link>
     </p>
   );

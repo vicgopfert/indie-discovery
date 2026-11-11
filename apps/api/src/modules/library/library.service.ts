@@ -1,17 +1,26 @@
-import type {
-  FeatureQuery,
-  GameLists,
-  GameLibraryState,
-  Library,
-  LibraryGame,
-  ListType,
-  Preferences,
-  PreferencesInput,
-  Rating,
+import {
+  type FeatureLabel,
+  type GameLists,
+  type GameLibraryState,
+  type Library,
+  type LibraryGame,
+  type ListType,
+  ONBOARDING_GAMES_MAX,
+  type OnboardingGames,
+  type PreferenceOptions,
+  type Preferences,
+  type PreferencesInput,
+  type Rating,
 } from '@indie/contracts';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import type { FeatureType } from '../../generated/prisma/client';
 import { CatalogService } from '../catalog/catalog.service';
-import type { LabeledFeatureType } from '../catalog/feature-labels';
 import { type LibraryGameRow, LibraryRepository } from './library.repository';
 
 // "Concluídos" e "quero jogar" se excluem; "favoritos" combina com qualquer uma.
@@ -21,22 +30,24 @@ const EXCLUSIVE_LISTS: Record<ListType, ListType[]> = {
   WANT_TO_PLAY: ['COMPLETED'],
 };
 
-const PREFERENCE_TYPES = [
-  { field: 'genres', filter: 'genre', type: 'GENRE' },
-  { field: 'themes', filter: 'theme', type: 'THEME' },
-] as const satisfies {
-  field: keyof PreferencesInput;
-  filter: FeatureQuery['type'];
-  type: LabeledFeatureType;
-}[];
+const PREFERENCE_GROUPS = [
+  { field: 'genres', type: 'GENRE' },
+  { field: 'themes', type: 'THEME' },
+  { field: 'tags', type: 'TAG' },
+] as const satisfies { field: keyof PreferencesInput; type: FeatureType }[];
+
+export const PREFERENCE_TAGS = Symbol('PREFERENCE_TAGS');
 
 const GAME_NOT_FOUND = 'Jogo não encontrado.';
+
+const byName = (a: FeatureLabel, b: FeatureLabel) => a.name.localeCompare(b.name, 'pt-BR');
 
 @Injectable()
 export class LibraryService {
   constructor(
     private readonly library: LibraryRepository,
     private readonly catalog: CatalogService,
+    @Inject(PREFERENCE_TAGS) private readonly preferenceTags: ReadonlyMap<string, string | null>,
   ) {}
 
   async rate(userId: string, slug: string, score: number): Promise<Rating> {
@@ -94,15 +105,36 @@ export class LibraryService {
     };
   }
 
-  // Só valem as opções que GET /features oferece: atributo escondido ou sem jogo no catálogo não.
+  // As opções de GET /features, com as etiquetas que podem virar prateleira, menos as que repetem a
+  // ideia de um gênero ou tema oferecido (fica o da IGDB): a mesma ideia não aparece em dois grupos.
+  async findPreferenceOptions(): Promise<PreferenceOptions> {
+    const [genres, themes, tags] = await Promise.all([
+      this.catalog.listFeatures({ type: 'genre' }),
+      this.catalog.listFeatures({ type: 'theme' }),
+      this.catalog.listFeatures({ type: 'tag' }),
+    ]);
+    const offered = new Set([
+      ...genres.map(({ slug }) => `genre:${slug}`),
+      ...themes.map(({ slug }) => `theme:${slug}`),
+    ]);
+    return {
+      genres,
+      themes,
+      tags: tags.filter(({ slug }) => {
+        const sameIdea = this.preferenceTags.get(slug);
+        return sameIdea === null || (sameIdea !== undefined && !offered.has(sameIdea));
+      }),
+    };
+  }
+
+  // Só valem as opções da partida a frio: atributo escondido ou sem jogo no catálogo não.
   async savePreferences(userId: string, input: PreferencesInput): Promise<Preferences> {
+    const options = await this.findPreferenceOptions();
     const featureIds: string[] = [];
     const unknown: string[] = [];
-    for (const { field, filter, type } of PREFERENCE_TYPES) {
-      const options = new Set(
-        (await this.catalog.listFeatures({ type: filter })).map(({ slug }) => slug),
-      );
-      const invalid = input[field].filter((slug) => !options.has(slug));
+    for (const { field, type } of PREFERENCE_GROUPS) {
+      const offered = new Set(options[field].map(({ slug }) => slug));
+      const invalid = input[field].filter((slug) => !offered.has(slug));
       if (invalid.length > 0) unknown.push(`${field}: Opção desconhecida: ${invalid.join(', ')}.`);
       else featureIds.push(...(await this.library.findFeatureIds(type, input[field])));
     }
@@ -112,14 +144,27 @@ export class LibraryService {
     return this.findPreferences(userId);
   }
 
+  // A etiqueta já tem o nome em português, gravado na ingestão.
   async findPreferences(userId: string): Promise<Preferences> {
     const preferences = await this.library.findPreferences(userId);
-    const ofType = (type: LabeledFeatureType) =>
-      this.catalog.labeled(
-        type,
-        preferences.filter((preference) => preference.type === type),
-      );
-    return { genres: ofType('GENRE'), themes: ofType('THEME') };
+    const ofType = (type: FeatureType) =>
+      preferences.filter((preference) => preference.type === type);
+    return {
+      genres: this.catalog.labeled('GENRE', ofType('GENRE')),
+      themes: this.catalog.labeled('THEME', ofType('THEME')),
+      tags: ofType('TAG')
+        .map(({ slug, name }) => ({ slug, name }))
+        .sort(byName),
+    };
+  }
+
+  // Os mais populares de cada preferência, em rodadas, para nenhuma ficar de fora.
+  async findOnboardingGames(userId: string): Promise<OnboardingGames> {
+    if (!(await this.library.hasPreferences(userId))) {
+      throw new ConflictException('Escolha seus gostos antes: os jogos para avaliar vêm deles.');
+    }
+    const games = await this.library.findOnboardingGames(userId, ONBOARDING_GAMES_MAX);
+    return { items: games.map((game) => this.catalog.toSummary(game)) };
   }
 
   // Avaliar ou pôr numa lista exige o jogo no catálogo: não se começa pelo que não se vê.
