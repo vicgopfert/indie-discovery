@@ -1,9 +1,10 @@
-# Preços da Steam (B-86 a B-88)
+# Preços e demos da Steam (B-86 a B-88, B-90 e B-91)
 
 Decidido em 11/11/2026, antes de implementar. O preço da Steam entra na ficha (B-86), é atualizado
-por uma rodada diária (B-87) e alimenta o filtro "Em promoção" no catálogo (B-88). Este documento
+por uma rodada diária (B-87) e alimenta o filtro "Em promoção" no catálogo (B-88). A demo da Steam
+(B-90) e o filtro "Com demo" (B-91) usam a mesma rota e a mesma rodada (seção 6). Este documento
 traz as decisões, a arquitetura e a análise da GG.deals, consultada como fonte de outras lojas e do
-menor preço histórico. As medições entram aqui com a sonda do B-86 e a rodada do B-87.
+menor preço histórico. As medições entram aqui com as sondas do B-86 e do B-90 e a rodada do B-87.
 
 ## 1. Objetivo e decisões
 
@@ -87,4 +88,32 @@ subconjunto.
 
 A rota da Steam não tem documentação pública (R-15 da proposta técnica). Se ela parar de devolver
 preços, os preços gravados ficam, com a data da coleta, e o B-87 registra a falha no resumo da
-execução.
+execução. O mesmo vale para a demo (seção 6): a gravada fica até a próxima rodada bem-sucedida.
+
+## 6. Demos (B-90)
+
+Decisões do autor (11/11/2026):
+
+- **Fonte: só a Steam.**
+  - A IGDB não registra demos: não há esse tipo de jogo nela.
+  - Na Steam, a demo é um App ID separado, associado ao App ID do jogo completo (documentação do
+    Steamworks). O catálogo tem o id da Steam de 95,5% dos jogos (`docs/etiquetas.md`, B-77).
+  - Demos em outras lojas não têm fonte viável e ficam de fora.
+- **Dois caminhos, decididos pela sonda do B-90 antes de implementar:**
+  - **(A)** A `IStoreBrowseService/GetItems`, já usada para etiquetas e preços, pedindo os itens
+    relacionados (ids de demo, a confirmar). Se aprovada, a demo vem no mesmo lote, sem requisição
+    a mais, e a rodada diária do B-87 também a atualiza.
+  - **(B)** Se a A for reprovada: a rota `appdetails` da loja, que atende um jogo por chamada e tem
+    limite de cerca de 200 requisições a cada 5 minutos (cerca de 9 horas para o catálogo inteiro).
+    Nesse caso, só para os jogos "Em breve" e os lançados nos últimos 12 meses, com o tempo da
+    rodada medido antes de decidir.
+- **Link:** o botão "Jogar a demo na Steam" leva à página do jogo na Steam, onde fica o botão de
+  baixar a demo. Não se usa o protocolo `steam://install/`, que exige o aplicativo instalado e
+  começaria o download sem a pessoa ver a página.
+- **Congelamento do modelo:** compatível. A demo não entra no vetor, na pontuação nem nas
+  prateleiras. A prateleira "Com demo no seu gosto" seria regra nova e fica para a Fase B (F-37).
+
+**Sonda do B-90:** o resultado entra nesta seção. A regra, escrita no plano antes de medir (valor
+inicial, decisão do autor), confere 20 jogos à mão contra a página da loja, 10 com demo (incluindo
+jogos "Em breve") e 10 sem; mais de 1 erro em 20 reprova a rota A. Se a A for reprovada, a medição
+da rota B nos jogos "Em breve" e nos lançados nos últimos 12 meses também entra aqui.

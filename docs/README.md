@@ -9,7 +9,7 @@
 | `recomendacao.md` | Recomendação: o núcleo de pontuação (B-32), com perfil, pontuação, desempate, motivos, "pouco conhecido", lista de populares e as medições de tempo e de empates, e a rota `GET /api/recommendations` (B-33), com a partida a frio, o jogo fora do catálogo e o tempo de resposta |
 | `ingestao.md` | Ingestão do catálogo (B-13): como rodar, o fluxo de uma execução, a política de falhas, os alertas de revisão, a popularidade reconstruída e as medições da primeira carga |
 | `colecoes.md` | Coleções culturais (B-57): o fluxo da curadoria, a regra de curadoria e de ambientação, as coleções iniciais, as fontes da sugestão e as limitações |
-| `precos.md` | Preços da Steam (B-86 a B-88): as decisões, a arquitetura da coleta em lote, a análise de viabilidade da GG.deals, as alternativas e os riscos |
+| `precos.md` | Preços e demos da Steam (B-86 a B-88, B-90 e B-91): as decisões, a arquitetura da coleta em lote, a análise de viabilidade da GG.deals, as alternativas, os riscos e os dois caminhos para as demos |
 | `m0-relatorio-igdb.md` | Relatório do marco M0 (B-07): termos da IGDB, cobertura dos campos, recortes do catálogo e decisões de dados |
 
 As transcrições e análises das pesquisas de campo (entrevistas na BGS 2026 e
