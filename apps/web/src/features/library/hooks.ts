@@ -13,12 +13,19 @@ export function useGameLibrary(slug: string) {
   return useQuery({ queryKey: gameKey(slug), queryFn: () => getGameLibrary(slug) });
 }
 
-// Sem atualização otimista: o que aparece marcado é o que a API gravou.
+const OUTSIDE_LIBRARY: GameLibraryState = { rating: null, lists: [] };
+
+// Sem atualização otimista: o que aparece marcado é o que a API gravou. Sem o estado no cache, o
+// jogo está fora da biblioteca, como os da partida a frio.
 export function useLibraryAction(slug: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (action: LibraryAction) =>
-      applyLibraryAction(slug, action, queryClient.getQueryData<GameLibraryState>(gameKey(slug))!),
+      applyLibraryAction(
+        slug,
+        action,
+        queryClient.getQueryData<GameLibraryState>(gameKey(slug)) ?? OUTSIDE_LIBRARY,
+      ),
     // Sem esperar as outras listas recarregarem: a ficha já mostra o que foi gravado.
     onSuccess: (state) => {
       queryClient.setQueryData(gameKey(slug), state);

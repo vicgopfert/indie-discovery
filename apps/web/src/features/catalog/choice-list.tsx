@@ -6,7 +6,7 @@ import { useId, useState } from 'react';
 // aliases: outros nomes pelos quais a busca também encontra a opção.
 export type Choice = { value: string; label: string; aliases?: readonly string[] };
 
-const normalized = (text: string) =>
+export const normalized = (text: string) =>
   text
     .normalize('NFD')
     .replace(/\p{Diacritic}/gu, '')

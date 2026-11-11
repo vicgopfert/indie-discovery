@@ -20,10 +20,12 @@ type Basis = RecommendationOverview['basis'];
 export function SessionGate({
   next,
   heading,
+  invite = 'para ver suas recomendações.',
   children,
 }: {
   next: string;
   heading?: ReactNode;
+  invite?: string;
   children: (user: User) => ReactNode;
 }) {
   const { data: user, isPending } = useSession();
@@ -39,7 +41,7 @@ export function SessionGate({
           <Link href={withRedirect('/entrar', next)} className="underline">
             Entre
           </Link>{' '}
-          para ver suas recomendações.
+          {invite}
         </p>
       </>
     );
