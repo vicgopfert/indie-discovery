@@ -1,6 +1,7 @@
 import {
   type ListType,
   ListParamSchema,
+  ONBOARDING_GAMES_MAX,
   PREFERENCES_MAX_PER_TYPE,
   PREFERENCES_MIN,
   type PreferencesInput,
@@ -12,6 +13,7 @@ import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Put } from 
 import {
   ApiBadRequestResponse,
   ApiBody,
+  ApiConflictResponse,
   ApiCookieAuth,
   ApiForbiddenResponse,
   ApiNoContentResponse,
@@ -25,15 +27,16 @@ import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import type { User } from '../../generated/prisma/client';
 import { LibraryService } from './library.service';
 
-const LIBRARY_GAME_EXAMPLE = {
+const GAME_EXAMPLE = {
   slug: 'celeste',
   name: 'Celeste',
   coverImageId: 'co3byy',
   releaseStatus: 'RELEASED',
   firstReleaseDate: '2018-01-25',
   genres: [{ slug: 'platform', name: 'Plataforma' }],
-  inCatalog: true,
 };
+
+const LIBRARY_GAME_EXAMPLE = { ...GAME_EXAMPLE, inCatalog: true };
 
 const PREFERENCES_EXAMPLE = {
   genres: [
@@ -204,5 +207,15 @@ export class LibraryController {
   })
   findPreferences(@CurrentUser() user: User) {
     return this.library.findPreferences(user.id);
+  }
+
+  @Get('onboarding/games')
+  @ApiOkResponse({
+    description: `Até ${ONBOARDING_GAMES_MAX} jogos lançados para avaliar na partida a frio, fora da biblioteca do usuário: os mais populares de cada preferência, em rodadas`,
+    schema: { example: { items: [GAME_EXAMPLE] } },
+  })
+  @ApiConflictResponse({ description: 'Usuário sem preferências gravadas' })
+  findOnboardingGames(@CurrentUser() user: User) {
+    return this.library.findOnboardingGames(user.id);
   }
 }

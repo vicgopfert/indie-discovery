@@ -1,5 +1,5 @@
 import { LIST_TYPES } from '@indie/contracts';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import type { FeatureType, ListType } from '../../generated/prisma/client';
 import type { CatalogRepository, FeatureCountRow } from '../catalog/catalog.repository';
 import { CatalogService } from '../catalog/catalog.service';
@@ -69,11 +69,14 @@ class FakeLibrary implements Pick<
   | 'findFeatureIds'
   | 'replacePreferences'
   | 'findPreferences'
+  | 'hasPreferences'
+  | 'findOnboardingGames'
 > {
   ratings = new Map<string, number>();
   lists = new Set<string>();
   preferences: string[] = [];
   onboardedAt: Date | null = null;
+  onboardingLimit: number | null = null;
 
   findGame(slug: string) {
     const found = GAMES.find((candidate) => candidate.slug === slug);
@@ -143,6 +146,15 @@ class FakeLibrary implements Pick<
     this.preferences = featureIds;
     this.onboardedAt ??= now;
     return Promise.resolve();
+  }
+
+  hasPreferences() {
+    return Promise.resolve(this.preferences.length > 0);
+  }
+
+  findOnboardingGames(_userId: string, limit: number) {
+    this.onboardingLimit = limit;
+    return Promise.resolve([game('celeste')]);
   }
 
   findPreferences(): Promise<PreferenceRow[]> {
@@ -326,6 +338,31 @@ describe('LibraryService', () => {
       expect(first).toBeInstanceOf(Date);
       expect(library.onboardedAt).toBe(first);
       expect(library.preferences).toEqual(['GENRE:puzzle', 'THEME:horror']);
+    });
+  });
+
+  describe('jogos da partida a frio', () => {
+    it('sem preferências gravadas, recusa com 409', async () => {
+      await expect(service.findOnboardingGames('u1')).rejects.toThrow(ConflictException);
+      expect(library.onboardingLimit).toBeNull();
+    });
+
+    it('pede até 60 jogos e devolve o resumo do catálogo', async () => {
+      library.preferences = ['GENRE:puzzle'];
+
+      expect(await service.findOnboardingGames('u1')).toEqual({
+        items: [
+          {
+            slug: 'celeste',
+            name: 'celeste',
+            coverImageId: 'cover-celeste',
+            releaseStatus: 'RELEASED',
+            firstReleaseDate: null,
+            genres: [],
+          },
+        ],
+      });
+      expect(library.onboardingLimit).toBe(60);
     });
   });
 });

@@ -2,6 +2,7 @@ import {
   ApiErrorSchema,
   GameLibraryStateSchema,
   LibrarySchema,
+  OnboardingGamesSchema,
   PreferencesSchema,
   RecommendationOverviewSchema,
   RecommendationPageSchema,
@@ -54,6 +55,7 @@ const SESSION_ROUTES: Record<string, (as: Client) => (() => Test)[]> = {
   ],
   'GET /api/me/preferences': (as) => [() => as.get('/api/me/preferences')],
   'GET /api/me/preferences/options': (as) => [() => as.get('/api/me/preferences/options')],
+  'GET /api/me/onboarding/games': (as) => [() => as.get('/api/me/onboarding/games')],
   'PATCH /api/me': (as) => [() => as.patch('/api/me', { discoveryMode: 'POPULAR' })],
   'GET /api/auth/me': (as) => [() => as.get('/api/auth/me')],
   'GET /api/recommendations': (as) => [() => as.get('/api/recommendations')],
@@ -188,6 +190,18 @@ describe('Posse dos dados: uma pessoa não altera nem lê a biblioteca de outra 
     const response = await as.get('/api/recommendations/lists/game:celeste');
     expect(response.status).toBe(404);
     expect(ApiErrorSchema.parse(response.body).message).toBe('Lista não encontrada.');
+  });
+
+  it('a biblioteca da Outra não tira jogos da partida a frio da Jogadora', async () => {
+    const as = helpers.as(jogadora.cookie);
+    await as.put('/api/me/preferences', PREFERENCES);
+
+    const response = await as.get('/api/me/onboarding/games');
+
+    expect(response.status).toBe(200);
+    expect(OnboardingGamesSchema.parse(response.body).items.map(({ slug }) => slug)).toEqual(
+      expect.arrayContaining(['celeste', 'inside', 'baba-is-you']),
+    );
   });
 
   it('gravações simultâneas no mesmo jogo ficam cada uma com a sua dona', async () => {

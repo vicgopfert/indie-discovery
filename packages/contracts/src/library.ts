@@ -117,3 +117,10 @@ export const PreferenceOptionsSchema = z.object({
 });
 
 export type PreferenceOptions = z.infer<typeof PreferenceOptionsSchema>;
+
+export const ONBOARDING_GAMES_MAX = 60;
+export const ONBOARDING_RATINGS_MAX = 4;
+
+export const OnboardingGamesSchema = z.object({ items: z.array(GameSummarySchema) });
+
+export type OnboardingGames = z.infer<typeof OnboardingGamesSchema>;

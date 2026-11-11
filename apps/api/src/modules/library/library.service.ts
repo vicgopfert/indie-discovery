@@ -5,12 +5,20 @@ import {
   type Library,
   type LibraryGame,
   type ListType,
+  ONBOARDING_GAMES_MAX,
+  type OnboardingGames,
   type PreferenceOptions,
   type Preferences,
   type PreferencesInput,
   type Rating,
 } from '@indie/contracts';
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import type { FeatureType } from '../../generated/prisma/client';
 import { CatalogService } from '../catalog/catalog.service';
 import { type LibraryGameRow, LibraryRepository } from './library.repository';
@@ -148,6 +156,15 @@ export class LibraryService {
         .map(({ slug, name }) => ({ slug, name }))
         .sort(byName),
     };
+  }
+
+  // Os mais populares de cada preferência, em rodadas, para nenhuma ficar de fora.
+  async findOnboardingGames(userId: string): Promise<OnboardingGames> {
+    if (!(await this.library.hasPreferences(userId))) {
+      throw new ConflictException('Escolha seus gostos antes: os jogos para avaliar vêm deles.');
+    }
+    const games = await this.library.findOnboardingGames(userId, ONBOARDING_GAMES_MAX);
+    return { items: games.map((game) => this.catalog.toSummary(game)) };
   }
 
   // Avaliar ou pôr numa lista exige o jogo no catálogo: não se começa pelo que não se vê.

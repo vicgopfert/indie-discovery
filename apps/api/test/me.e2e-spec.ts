@@ -3,6 +3,7 @@ import {
   GameLibraryStateSchema,
   GameListsSchema,
   LibrarySchema,
+  OnboardingGamesSchema,
   PreferenceOptionsSchema,
   PreferencesSchema,
   RatingSchema,
@@ -328,6 +329,84 @@ describe('Biblioteca, preferências e modo (/me)', () => {
         ],
       });
       expect((await me(jogadora)).onboardingCompletedAt).not.toBeNull();
+    });
+  });
+
+  describe('jogos da partida a frio', () => {
+    const onboardingGames = async (cookie: string) => {
+      const response = await as(cookie).get('/api/me/onboarding/games');
+      expect(response.status).toBe(200);
+      return OnboardingGamesSchema.parse(response.body).items.map(({ slug }) => slug);
+    };
+
+    it('sem preferências gravadas, responde 409', async () => {
+      const response = await as(jogadora).get('/api/me/onboarding/games');
+
+      expect(response.status).toBe(409);
+      expect(errorMessage(response.body)).toBe(
+        'Escolha seus gostos antes: os jogos para avaliar vêm deles.',
+      );
+    });
+
+    it('os mais populares de cada preferência, em rodadas, só lançados e fora da biblioteca', async () => {
+      await catalog.game({ name: 'Puzzle Um', genres: ['Puzzle'], popularity: 0.9 });
+      await catalog.game({ name: 'Puzzle Dois', genres: ['Puzzle'], popularity: 0.8 });
+      await catalog.game({ name: 'Puzzle Tres', genres: ['Puzzle'], popularity: 0.7 });
+      await catalog.game({
+        name: 'Rogue Um',
+        genres: ['Puzzle'],
+        tags: ['Roguelike'],
+        popularity: 0.6,
+      });
+      await catalog.game({ name: 'Terror Um', themes: ['Horror'], popularity: 0.5 });
+      await catalog.game({ name: 'Terror Dois', themes: ['Horror'], popularity: 0.4 });
+      await catalog.game({
+        name: 'Puzzle Em Breve',
+        genres: ['Puzzle'],
+        status: 'UPCOMING',
+        popularity: 1,
+      });
+      await catalog.game({
+        name: 'Puzzle Fora',
+        genres: ['Puzzle'],
+        inCatalog: false,
+        popularity: 0.95,
+      });
+      await as(jogadora).put('/api/me/preferences', {
+        genres: ['puzzle'],
+        themes: ['horror'],
+        tags: ['roguelike'],
+      });
+      await as(jogadora).put('/api/me/ratings/puzzle-dois', { score: 4 });
+      await as(jogadora).put('/api/me/lists/want-to-play/terror-dois');
+      await as(outra).put('/api/me/preferences', {
+        genres: ['puzzle'],
+        themes: ['horror'],
+        tags: ['roguelike'],
+      });
+
+      const expected = [
+        'puzzle-um',
+        'rogue-um',
+        'terror-um',
+        'puzzle-tres',
+        'celeste',
+        'baba-is-you',
+        'recem-lancado',
+      ];
+      expect(await onboardingGames(jogadora)).toEqual(expected);
+      expect(await onboardingGames(jogadora)).toEqual(expected);
+      expect(await onboardingGames(outra)).toEqual([
+        'puzzle-um',
+        'rogue-um',
+        'terror-um',
+        'puzzle-dois',
+        'terror-dois',
+        'puzzle-tres',
+        'celeste',
+        'baba-is-you',
+        'recem-lancado',
+      ]);
     });
   });
 

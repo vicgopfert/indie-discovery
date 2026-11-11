@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { FeatureType, ListType, Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { gameSummarySelect } from '../catalog/catalog.repository';
+import { type GameSummaryRow, gameSummarySelect } from '../catalog/catalog.repository';
 
 const libraryGameSelect = { ...gameSummarySelect, inCatalog: true } satisfies Prisma.GameSelect;
 
@@ -125,6 +125,45 @@ export class LibraryRepository {
         data: { onboardingCompletedAt: now },
       }),
     ]);
+  }
+
+  async hasPreferences(userId: string): Promise<boolean> {
+    return (await this.prisma.userPreference.count({ where: { userId } })) > 0;
+  }
+
+  // Rodadas: o mais popular de cada preferência, depois o segundo de cada uma, e assim por diante;
+  // o jogo de duas preferências fica na primeira rodada em que aparece. Só os lançados, que o
+  // jogador pode ter jogado, e fora da biblioteca dele.
+  async findOnboardingGames(userId: string, limit: number): Promise<GameSummaryRow[]> {
+    const ranked = await this.prisma.$queryRaw<{ id: string }[]>`
+      WITH ranked AS (
+        SELECT g."id", g."popularityNorm", g."name",
+          row_number() OVER (
+            PARTITION BY p."featureId" ORDER BY g."popularityNorm" DESC, g."name", g."id"
+          ) AS "round"
+        FROM "UserPreference" p
+        JOIN "GameFeature" gf ON gf."featureId" = p."featureId"
+        JOIN "Game" g ON g."id" = gf."gameId"
+        WHERE p."userId" = ${userId}::uuid
+          AND g."inCatalog" AND g."releaseStatus" = 'RELEASED'
+          AND NOT EXISTS (
+            SELECT 1 FROM "Rating" r WHERE r."userId" = p."userId" AND r."gameId" = g."id"
+          )
+          AND NOT EXISTS (
+            SELECT 1 FROM "ListEntry" l WHERE l."userId" = p."userId" AND l."gameId" = g."id"
+          )
+      )
+      SELECT "id" FROM ranked
+      GROUP BY "id", "popularityNorm", "name"
+      ORDER BY min("round"), "popularityNorm" DESC, "name", "id"
+      LIMIT ${limit}`;
+    const ids = ranked.map(({ id }) => id);
+    const games = await this.prisma.game.findMany({
+      where: { id: { in: ids } },
+      select: { ...gameSummarySelect, id: true },
+    });
+    const byId = new Map(games.map((game) => [game.id, game]));
+    return ids.map((id) => byId.get(id)!);
   }
 
   async findPreferences(userId: string): Promise<PreferenceRow[]> {
