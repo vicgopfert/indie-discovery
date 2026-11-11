@@ -144,6 +144,11 @@ até o trabalho com a designer.
   publicar a API, e sem isso toda ficha ficaria indisponível nesse intervalo (decisão do autor).
   Conferido em 10/11/2026 com a web nova contra a API de produção de antes: a ficha abre, sem o
   item.
+- **Conferência em produção (10/11/2026, das 18:21:46 às 18:23:23 UTC, depois do merge do PR
+  #83):** o mesmo script do navegador local, a 390 e a 1280 px, sem login e com a conta
+  reutilizável do B-76: 133 de 133. A vitrine com as 10 coleções carregou em 2,0 s a 3,1 s na
+  página inicial e em 2,3 s a 2,5 s em `/colecoes`; o cabeçalho coube na tela em todas as
+  páginas.
 
 ### Para o redesign
 
