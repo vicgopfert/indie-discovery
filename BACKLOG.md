@@ -151,7 +151,7 @@ Entrega: jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de
   - [x] Ordem na página: principal, por jogo, por interesse, em breve; o motivo só cita etiquetas se elas entrarem no vetor — feito em 09/11/2026; o motivo "Porque você gostou de" saiu (decisão do autor)
   - [x] Vizinhos por requisição com os vetores tipados do B-76; p95 fim a fim abaixo de 1 s em produção — vizinhos por requisição feitos em 09/11/2026, numa passada para as 2 prateleiras; o tempo local ficou em 1,58 a 1,60 vez o da `main` (critério de 1,5): exceção registrada por decisão do autor, e o p95 em produção decide; se falhar pela regra 3 do B-76, os vizinhos passam para a carga do índice. **Medido em 09/11/2026: reprovado pela regra 3** (p95 de até 1.101 ms, sem cauda na rota de saúde); por decisão do autor, o "ver mais" passou a montar só a lista pedida e a semelhança das prateleiras por jogo ficou guardada entre requisições, sem mudar a saída (foto completa idêntica); **medido de novo em 10/11/2026:** as 9 linhas de "ver mais" abaixo de 1 s, p95 agregado de 987 para 723 ms direto; a visão geral reprovou pela regra 3 e fica como limitação da instância gratuita (decisão do autor); a visão geral pronta por usuário fica para a Fase B, e a defesa usa instância paga ou demonstração local, a decidir perto da data
   - [x] Nomes das etiquetas pelos termos da comunidade (Puzzle, Deckbuilding, Difícil), com o nome antigo como `aliases` e encontrado pela busca do filtro — acrescentado e feito em 09/11/2026 (decisão do autor, `docs/etiquetas.md`, seção 12)
-- [x] **Congelamento do modelo de recomendação** (depois do B-79): nenhuma fonte de dados nova e nenhuma regra nova de prateleira até a defesa; o que surgir vira calibração do B-37 ou Fase B — decidido em 05/11/2026 — em vigor desde 10/11/2026 — o B-50 é compatível com ele (11/11/2026, decisão do autor): não traz fonte de dados nova nem muda regra de pontuação ou de prateleira da visão geral; é a semelhança da prateleira "Porque você gostou de `<jogo>`" (B-79) aplicada à ficha
+- [x] **Congelamento do modelo de recomendação** (depois do B-79): nenhuma fonte de dados nova e nenhuma regra nova de prateleira até a defesa; o que surgir vira calibração do B-37 ou Fase B — decidido em 05/11/2026 — em vigor desde 10/11/2026 — o B-50 é compatível com ele (11/11/2026, decisão do autor): não traz fonte de dados nova nem muda regra de pontuação ou de prateleira da visão geral; é a semelhança da prateleira "Porque você gostou de `<jogo>`" (B-79) aplicada à ficha — o B-84 e o B-85 também são compatíveis (11/11/2026, decisão do autor): a plataforma é dado novo da mesma fonte, só para exibição e filtro, e não entra no vetor, na pontuação nem nas prateleiras; recomendar só jogos da plataforma do jogador seria regra nova e fica para a Fase B
 - [x] **B-36** (P, E5) E2e de recomendação + teste de determinismo — ampliado no B-71: cobre a visão geral sem repetição, as prateleiras, a paginação com os tetos e o determinismo de cada lista (a principal, cada prateleira e cada página) — concluído em 10/11/2026: 18 testes e2e novos (`recommendation-lists.e2e-spec.ts`); determinismo pela "foto" dos três modos em quatro situações; tetos com valores reduzidos; mutações conferidas (`docs/recomendacao.md`)
   - [x] Fixar a ordem das interações lidas do banco antes de montar o perfil: hoje vêm sem `ORDER BY`, e a soma em ponto flutuante depende da ordem (levantado no plano do B-36) — feito no B-71: a soma do perfil segue a ordem do id do jogo
 - [x] **B-30** (P, E4) E2e de biblioteca e posse dos dados (um usuário não altera dados de outro) — concluído em 10/11/2026: 10 testes e2e (`ownership.e2e-spec.ts`); todas as rotas com sessão sem efeito nos dados de outra pessoa, no banco e na API; inventário das rotas pela tabela do servidor; mutações conferidas (proposta técnica, seção 8)
@@ -175,6 +175,7 @@ Entrega: todos os P0 prontos; pesos calibrados; **congelamento**.
 - [ ] **B-25** (P, E3) Página "Como funciona" (lista grandes empresas, estúdios controlados e exceções manuais com motivo e fonte)
   - [ ] Se o B-75 (P1) entrar: listar também os estilos e as palavras-chave de cada um
   - [ ] Explicar como os jogos semelhantes da ficha são escolhidos (cosseno, sem popularidade, motivo em comum)
+  - [ ] Explicar de onde vêm as plataformas e os links de loja (IGDB e id da Steam) e a ordem alfabética das lojas
 - [ ] **B-50** (M, E5) Jogos semelhantes na ficha (F-17), promovido de P1 a P0 em 11/11/2026 (decisão do autor)
   - [ ] `GET /api/games/:slug/similar`, pública, no módulo de recomendação: 404 para jogo fora do catálogo e 503 para índice indisponível, como em `/recommendations`. Contrato Zod e Swagger com exemplo
   - [ ] Seleção e motivo como funções puras sobre `sourceSimilarity`, com o desempate fixo já existente
@@ -210,6 +211,32 @@ Entrega: todos os P0 prontos; pesos calibrados; **congelamento**.
   - [ ] Variáveis no Render. Remetente do tipo "Penumbra <nao-responda@…>"
   - [ ] Teste real com caixas do Gmail e do Outlook, conferindo se chega na caixa de entrada e não no spam
   - [ ] Se o provedor falhar, o pedido responde normalmente e o log registra a falha, sem expor o erro a quem pediu
+- [ ] **B-84** (M, E3) "Onde jogar" na ficha (F-34). Acrescentado em 11/11/2026 (decisão do autor). Dados só da IGDB e do id da Steam já gravado, sem API externa nova. Plataforma é onde o jogo roda e loja é onde ele é vendido; o "Site oficial" continua separado. Lojas em ordem alfabética, links da IGDB ou da Steam pelo id, sem afiliado, e link regional como a IGDB o registra (neutralidade, princípio 7 da proposta conceitual)
+  - [ ] **Medição antes de implementar, com as regras escritas no plano antes de medir (como no B-77):**
+    - cobertura de plataforma no catálogo;
+    - cobertura de link por loja, entre os jogos que têm a plataforma daquela loja;
+    - amostra de 10 links por loja conferida à mão, para ver se o link abre a página do jogo e não a página inicial da loja ou uma busca.
+    - **Regra (valor inicial, decisão do autor):** a loja com menos de 9 de 10 links corretos na amostra não ganha botão e fica só como plataforma.
+    - Resultado registrado em `docs/ingestao.md`.
+  - [ ] Ingestão:
+    - `platforms` (nome e abreviação) na consulta de jogos, sem requisição a mais;
+    - `websites` de loja gravados por inteiro, além do `storeUrl`, que fica como está;
+    - classificação de loja como função pura, com testes por tipo e por endereço: pelo tipo quando a IGDB tem tipo próprio (13 Steam, 15 itch.io, 16 Epic, 17 GOG), pelo endereço nos outros casos (`playstation.com`, `xbox.com` ou `microsoft.com`, `nintendo.` com `eshop` ou `store`, App Store, Google Play); o link da Steam montado pelo `steamAppId` (`https://store.steampowered.com/app/<id>`);
+    - critério indie, vetor e popularidade sem mudança.
+  - [ ] Modelagem (seção 10):
+    - `Platform`, com o id da IGDB e o nome curto de exibição vindo de `config/platforms.json`;
+    - `GamePlatform`;
+    - `GameStoreLink`, com o jogo, a loja e a URL;
+    - migration.
+  - [ ] Contrato de `GET /games/:slug` com `platforms` e `stores` (loja, nome e URL), Swagger com exemplo
+  - [ ] Seção "Onde jogar" na ficha. Conferir, para cada loja, as regras de uso do logotipo antes de usar o ícone; sem permissão clara, o botão fica só com o nome. O visual definitivo fica com a designer
+  - [ ] Nova ingestão em produção, com a cobertura final registrada em `docs/ingestao.md`
+  - [ ] Testes: unitários da classificação e do mapeamento de plataformas; e2e da ficha com loja por tipo, loja por endereço, Steam pelo id, plataforma sem loja e jogo sem plataforma
+- [ ] **B-85** (P, E3) Filtro por plataforma no catálogo (F-35). Acrescentado em 11/11/2026 (decisão do autor): P0 porque o custo é baixo depois que o dado existe; pelo mesmo raciocínio do B-75, é navegação e fica fora do núcleo da tese, por isso entra no plano de corte. Depende do B-84
+  - [ ] Parâmetro `platform` repetível em `GET /api/games`, combinável com os outros filtros
+  - [ ] Opções numa rota com a contagem de jogos, só com plataformas de 20 jogos ou mais
+  - [ ] Filtro na página do catálogo, com o estado na URL
+  - [ ] Testes de contrato e e2e da combinação com os outros filtros
 
 ## S11 — Avaliação com usuários e acabamento (semanas 21–22)
 
@@ -246,6 +273,7 @@ Entrega: dois ensaios realizados, texto entregue, slides revisados.
 ## P1 — depois do M2, se houver capacidade (não bloqueia a defesa)
 
 - [ ] **B-49** (P) Registro de cliques de saída
+  - [ ] Os botões de loja do "Onde jogar" (B-84) também são cliques de saída, com a loja registrada no evento
 - [ ] **B-51** (P) Sitemap e robots
 - [ ] **B-52** (P) Exclusão da própria conta
   - [ ] Apagar as contas de teste criadas em produção: `medicao-m2-preferencias@example.com` e `medicao-m2-avaliacoes@example.com` (medição do M2, B-33), `b35-producao-2026-11-03@example.com` (conferência do B-35), `b71-producao-2026-11-03@example.com` (conferência do B-71), `b74-producao-2026-11-05@example.com` (conferência do B-74), `b76-producao-2026-11-05@example.com` e `b76-producao-2-2026-11-05@example.com` (medições do B-76)
@@ -278,4 +306,4 @@ Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de en
 
 ## Se o atraso passar de uma sprint
 
-Aplicar o plano de corte da seção 16 do documento, nesta ordem: 1) cortar todo P1, os jogos semelhantes na ficha (B-50), a redefinição de senha por e-mail (B-80 e B-81) e testes opcionais de frontend; 2) Swagger sem exemplos; 3) B-21 vira P1; 4) partida a frio sem a etapa de avaliação; 5) perfil só leitura; 6) reduzir catálogo por data de lançamento. **Nunca cortar:** contas/sessão, ingestão com critério indie e vetores, catálogo e ficha, avaliações, partida a frio mínima, recomendações com motivo e modos, avaliação offline, testes críticos, implantação e contingência local.
+Aplicar o plano de corte da seção 16 do documento, nesta ordem: 1) cortar todo P1, os jogos semelhantes na ficha (B-50), a redefinição de senha por e-mail (B-80 e B-81), o "Onde jogar" na ficha (B-84) e testes opcionais de frontend; 2) Swagger sem exemplos; 3) B-21 e B-85 viram P1; 4) partida a frio sem a etapa de avaliação; 5) perfil só leitura; 6) reduzir catálogo por data de lançamento. **Nunca cortar:** contas/sessão, ingestão com critério indie e vetores, catálogo e ficha, avaliações, partida a frio mínima, recomendações com motivo e modos, avaliação offline, testes críticos, implantação e contingência local.
