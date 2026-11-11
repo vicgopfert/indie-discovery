@@ -7,6 +7,7 @@ Oct 19, 2026 · @Victor Gopfert
 | Campo | Valor |
 | --- | --- |
 | Projeto | Plataforma Web de Descoberta de Jogos Independentes |
+| Nome da plataforma | **Penumbra**, decidido em 11/11/2026 (decisão do autor). É o nome do produto; o título do TCC continua o mesmo. O nome provisório "Indie Discovery" e o repositório `indie-discovery` mudam no B-83 |
 | Natureza | Trabalho de Conclusão de Curso, modalidade projeto técnico |
 | Curso | Tecnologia em Análise e Desenvolvimento de Sistemas, UERJ |
 | Autor | Victor Gopfert Ferreira Figueiredo |
@@ -25,7 +26,7 @@ Neste documento, três marcações distinguem a força de cada decisão:
 
 ## 2. Resumo executivo
 
-**O sistema é um monólito modular em NestJS, com frontend Next.js e PostgreSQL via Prisma, organizado em monorrepositório e implantado em serviços sem custo.** O catálogo é montado por uma rotina de ingestão em lote a partir da API pública da IGDB; o usuário nunca consulta a IGDB diretamente, e a aplicação continua funcionando se ela estiver fora do ar.
+**O sistema é um monólito modular em NestJS, com frontend Next.js e PostgreSQL via Prisma, organizado em monorrepositório e implantado em serviços sem custo, com um domínio próprio como única despesa.** O catálogo é montado por uma rotina de ingestão em lote a partir da API pública da IGDB; o usuário nunca consulta a IGDB diretamente, e a aplicação continua funcionando se ela estiver fora do ar.
 
 As decisões centrais:
 
@@ -34,7 +35,7 @@ As decisões centrais:
 - **Padrões com justificativa, não por padrão.** Controllers, services e repositories em todos os módulos; casos de uso dedicados só onde há orquestração real (recomendação e ingestão); regras de negócio críticas como funções puras, testáveis sem banco nem framework.
 - **Contratos únicos em Zod**, compartilhados entre frontend e backend num pacote do monorrepositório e validados no NestJS pelo mecanismo nativo de *Standard Schema*.
 
-O MVP tem 17 funcionalidades P0, que demonstram a proposta central de ponta a ponta: cadastro, catálogo independente com filtros, coleções culturais curadas, ficha do jogo com os jogos semelhantes, avaliações e listas, partida a frio, recomendações com motivo, seleção do grau de novidade e uma avaliação offline mensurável do recomendador.
+O MVP tem 18 funcionalidades P0, que demonstram a proposta central de ponta a ponta: cadastro com redefinição de senha por e-mail, catálogo independente com filtros, coleções culturais curadas, ficha do jogo com os jogos semelhantes, avaliações e listas, partida a frio, recomendações com motivo, seleção do grau de novidade e uma avaliação offline mensurável do recomendador.
 
 O cronograma tem 24 semanas, com a premissa de 15 horas semanais dedicadas ao TCC. Prevê implantação já na semana 4, recomendação funcionando pela API na semana 16, congelamento de funcionalidades ao fim da semana 20 e duas semanas finais de margem antes da banca. Um ambiente local completo, com PostgreSQL embutido no projeto, serve de contingência para a demonstração.
 
@@ -51,7 +52,7 @@ O cronograma tem 24 semanas, com a premissa de 15 horas semanais dedicadas ao TC
 ### Fora do escopo da defesa
 
 - Qualquer funcionalidade operada por estúdios (cadastro de jogos, área do desenvolvedor).
-- Recursos sociais, comentários, notificações e e-mail transacional.
+- Recursos sociais, comentários e notificações. O e-mail transacional fica restrito à conta: redefinição de senha e aviso de senha alterada (F-26). **Alterado em 11/11/2026 (decisão do autor):** o e-mail transacional inteiro estava fora do escopo.
 - IA generativa, embeddings e filtragem colaborativa.
 - Aplicativo móvel nativo e internacionalização: a interface é em português.
 - Venda, intermediação ou qualquer modelo comercial.
@@ -64,7 +65,7 @@ O cronograma tem 24 semanas, com a premissa de 15 horas semanais dedicadas ao TC
 | PR-02 | Cerca de 15 horas semanais dedicadas ao TCC: 12 de desenvolvimento e 3 de escrita e atividades acadêmicas | Com menos horas, aplicar o plano de corte da seção 16 já no marco M1 |
 | PR-03 | 24 semanas até a banca, ancoradas no fim do período letivo em 24/04/2027 | Ao saber a data exata da defesa, recalcular os marcos a partir dela |
 | PR-04 | A API da IGDB continua gratuita para uso não comercial, com atribuição visível | Confirmar os termos na tarefa B-07; se mudarem, o MVP roda com um recorte salvo do catálogo |
-| PR-05 | Hospedagem e banco em camadas gratuitas, sem cartão de crédito | O ambiente local (PostgreSQL embutido, B-04) é a contingência oficial da demonstração |
+| PR-05 | Hospedagem e banco em camadas gratuitas, sem cartão de crédito. O domínio da Penumbra, com registro anual, é a única despesa (seção 6, acrescentado em 11/11/2026) | O ambiente local (PostgreSQL embutido, B-04) é a contingência oficial da demonstração |
 | PR-06 | O catálogo recortado tem cerca de 20 mil jogos. **Revisada no M0 (19/10/2026):** a premissa original era "poucos milhares", mas a IGDB tem 130 mil jogos indie; o recorte aprovado (relatório do M0, `docs/m0-relatorio-igdb.md`, seção 8) mantém só jogos com ficha completa e algum sinal de interesse | Reduzir o recorte (por exemplo, por ano de lançamento) até caber no banco gratuito e na memória da API |
 | PR-07 | As pesquisas de campo de outubro de 2026 já estão concluídas e entram no TCC como metodologia | Nenhuma nova pesquisa é necessária antes do teste de usabilidade |
 
@@ -76,7 +77,7 @@ Estas decisões vieram das pesquisas com desenvolvedores e jogadores e não são
 
 ## 4. Requisitos e MVP
 
-**O MVP é o conjunto P0: 17 funcionalidades que permitem a um jogador se cadastrar, informar o próprio gosto, receber recomendações explicadas e escolher o grau de novidade, sobre um catálogo real de jogos independentes.** P1 entra se sobrar capacidade depois do marco M2, sem nunca ser dependência de um P0. P2 é pós-defesa.
+**O MVP é o conjunto P0: 18 funcionalidades que permitem a um jogador se cadastrar, informar o próprio gosto, receber recomendações explicadas e escolher o grau de novidade, sobre um catálogo real de jogos independentes.** P1 entra se sobrar capacidade depois do marco M2, sem nunca ser dependência de um P0. P2 é pós-defesa.
 
 Complexidade: **B** baixa (até um dia de trabalho), **M** média (alguns dias), **A** alta (uma semana ou mais, com incerteza técnica).
 
@@ -101,6 +102,7 @@ Complexidade: **B** baixa (até um dia de trabalho), **M** média (alguns dias),
 | F-15 | **Documentação da API e verificação de saúde** | Contrato verificável e monitoramento mínimo | Swagger lista todos os endpoints P0 com exemplos e erros; rota de saúde informa API e banco | — | B |
 | F-17 | **Jogos semelhantes** na ficha do jogo | Reaproveita os vetores; é a recomendação de quem chega sem login; mostra a partida a frio do item, alcançando jogos "Em breve" sem histórico. Promovida de P1 a P0 em 11/11/2026 (decisão do autor) | Até 6 jogos, em ordem de cosseno com o jogo da ficha; a lista é a mesma para qualquer visitante, com ou sem login, sem termo de popularidade; nunca inclui o próprio jogo; inclui jogos "Em breve", com o selo; cada item mostra até 3 atributos em comum, pela contribuição de cada um ao cosseno, com os nomes do vocabulário; tamanho da lista e semelhança mínima em `config/recommendation.json`, com justificativa; abaixo do mínimo de itens, a seção não aparece; com o índice indisponível, a ficha abre normalmente, sem a seção; acessível sem login. **Alterado em 11/11/2026 (decisão do autor):** era "com o mesmo modo de popularidade". A lista passa a ser só pelo cosseno (λ = 0), porque é uma propriedade do jogo, cabe em cache, é a mesma que os buscadores indexam e é simples de explicar em "Como funciona". Os jogos da biblioteca de quem está logado não são excluídos: a exclusão é regra só das recomendações pessoais | F-04, F-07 | M |
 | F-24 | **Coleções culturais curadas** ("Explore por cultura") | Cultura retratada pesou 33,3% na pesquisa; nenhuma fonte de dados registra a cultura de forma ampla (medido no M0), então a navegação é feita por curadoria transparente. Promovida de P2 a P0 no M0 | Coleções definidas em arquivo versionado, com nome, descrição e jogos aprovados; candidatos sugeridos automaticamente (palavras-chave, resumo e Wikidata) e revisados pelo autor; cada coleção com pelo menos 10 jogos, com destaque para a cultura brasileira; vitrine na página inicial e no catálogo, página da coleção e indicação na ficha do jogo; acessível sem login | F-02, F-07 | M |
+| F-26 | **Redefinição de senha por e-mail** | Sem ela, quem esquece a senha perde a conta. Promovida de P2 a P0 em 11/11/2026 (decisão do autor): a plataforma fica pública, e o teste de usabilidade e a banca usam o ambiente de produção. Não toca no congelamento do modelo de recomendação | O pedido responde sempre a mesma mensagem, exista a conta ou não, sem saída rápida para conta inexistente (o envio acontece depois da resposta); limite de pedidos por IP e por e-mail; token aleatório de 32 bytes, com só o SHA-256 dele no banco, como nas sessões; validade de 60 minutos e uso único, e um pedido novo invalida o anterior; link montado a partir do `WEB_ORIGIN`, nunca do cabeçalho `Host`, com o token depois do `#`, para não chegar aos logs do servidor; a página de redefinição usa `Referrer-Policy: no-referrer`; a senha nova segue a regra do cadastro e é gravada com Argon2id; a redefinição encerra todas as sessões, não entra na conta automaticamente (leva ao login) e envia um e-mail avisando que a senha foi alterada; e-mails em português, sem rastreamento de abertura ou clique. Envio pela API HTTP do Resend, com domínio próprio (seção 6) | F-01 | M |
 
 ### P1: importantes, mas negociáveis
 
@@ -122,7 +124,6 @@ Complexidade: **B** baixa (até um dia de trabalho), **M** média (alguns dias),
 | F-22 | Sugestão de jogo ausente pela URL da loja, com moderação | Pedido de desenvolvedores; jogos pequenos e por lançar podem faltar nas bases |
 | F-23 | Área do estúdio para descrever os próprios jogos | Pedido de desenvolvedores; exige verificação de identidade |
 | F-25 | Recursos de comunidade: perfis públicos e listas compartilhadas | Pedido de desenvolvedores; só faz sentido com base de usuários |
-| F-26 | Recuperação de senha por e-mail | Exige provedor de e-mail transacional |
 | F-27 | Recomendação híbrida com embeddings semânticos | Evolução opcional, condicionada à avaliação da seção 12 |
 | F-28 | Filtragem colaborativa | Exige volume de interações que o MVP não terá |
 | F-29 | Avisos de lançamento de jogos acompanhados | Depende de e-mail ou notificação |
@@ -137,7 +138,7 @@ Complexidade: **B** baixa (até um dia de trabalho), **M** média (alguns dias),
 | RNF-03 | **Desempenho perceptível**: catálogo e recomendações respondem sem espera perceptível na demonstração | Medir e registrar o tempo de resposta com o catálogo real em M2; investigar se a resposta não for imediata. Sem meta numérica arbitrária. **Registrado em 10/11/2026 (B-79):** o critério de p95 fim a fim abaixo de 1 s, adotado desde o B-76, é atendido no "ver mais" e não na visão geral, que passa de 1 s em 3 de 6 linhas, com 6% a 8% das chamadas acima de 900 ms. Por decisão do autor, fica como limitação da instância gratuita (causa provável: a cota de 0,1 de CPU, hipótese sem o log do Render), com a visão geral pronta por usuário como trabalho futuro (Fase B) e, para a defesa, instância paga ou demonstração local (seção 12) |
 | RNF-04 | **Manutenibilidade**: TypeScript estrito, lint e formatação automáticos, CI verde para integrar | Hook de pre-commit e pipeline bloqueiam violações |
 | RNF-05 | **Acessibilidade básica**: HTML semântico, rótulos em formulários, contraste e navegação por teclado nos fluxos P0 | Checagem manual e com a auditoria de acessibilidade do navegador nos fluxos P0 |
-| RNF-06 | **Dados e termos de uso**: atribuição à IGDB, uso não comercial, coleta apenas de e-mail e nome de exibição | Revisão antes da implantação pública |
+| RNF-06 | **Dados e termos de uso**: atribuição à IGDB, uso não comercial, coleta apenas de e-mail e nome de exibição. **Acrescentado em 11/11/2026 (F-26):** o e-mail do usuário passa a ser processado também pelo provedor de envio, só para os e-mails da conta | Revisão antes da implantação pública |
 | RNF-07 | **Observabilidade mínima**: logs estruturados com identificador de requisição; histórico de ingestões | Log de uma requisição rastreável ponta a ponta; tabela de execuções de ingestão |
 
 ## 5. Arquitetura
@@ -313,6 +314,8 @@ Todas as variáveis (`DATABASE_URL`, `PORT`, `SESSION_TTL_DAYS`, `WEB_ORIGIN`, `
 | API | Render, *web service* gratuito | 512 MB de memória; hiberna após 15 minutos sem tráfego e leva cerca de um minuto para acordar; sistema de arquivos efêmero; 750 horas de instância por mês na conta | Acordar a API antes de demonstrar; o índice em memória precisa caber em 512 MB (dimensionado no M0); um único serviço no ar o mês todo usa no máximo 744 horas |
 | Banco | Neon, plano gratuito | 1 GB por projeto (eram 0,5 GB até 02/10/2026: https://neon.com/docs/changelog/2026-10-02); o computador do banco suspende após 5 minutos ociosos e volta na primeira consulta; 100 CU-horas de computação e 5 GB de tráfego de saída por projeto por mês, e ao estourar o banco fica suspenso até o mês seguinte, sem perder dados (conferido no B-38, 20/10/2026) | O catálogo recortado, de cerca de 20 mil jogos, cabe com folga; o banco não expira; a computação fica no tamanho mínimo, e o consumo é conferido no painel do Neon antes de cada marco e da demonstração |
 | Banco (descartado) | Render Postgres gratuito | Expira 30 dias após a criação | Não serve para um projeto de 24 semanas |
+| E-mail | Resend, plano gratuito, pela API HTTP | 3.000 e-mails por mês e 100 por dia; o domínio de teste só entrega para o e-mail da própria conta, então o envio exige domínio próprio verificado | Basta para os e-mails da conta (F-26). **Decidido em 11/11/2026 (decisão do autor):** o plano gratuito do Render bloqueia as portas SMTP 25, 465 e 587 desde setembro de 2025, por isso o envio é pela API HTTP; a Brevo sem domínio autenticado troca o remetente por `@brevosend.com` e põe a marca dela |
+| Domínio | Domínio próprio da Penumbra, registro anual (B-83) | É a única despesa nova do projeto; a renovação é anual (R-13) | Serve ao site e ao envio de e-mail (B-81). **Acrescentado em 11/11/2026 (decisão do autor)** |
 
 Os limites dos planos gratuitos mudam com frequência. Eles devem ser conferidos de novo na semana 3 (B-38) e na semana 21. Se qualquer serviço deixar de atender, a contingência é o ambiente local, com o PostgreSQL embutido e um dump do banco (B-41), ensaiado antes da defesa.
 
@@ -439,6 +442,7 @@ Com um único frontend na mesma origem e sem clientes móveis, a vantagem do JWT
 4. **Logout**: apaga a sessão no banco e limpa o cookie.
 5. **Expiração**: prazo fixo de 7 dias, sem renovação deslizante no P0. Sessões expiradas são removidas ao final de cada execução de ingestão.
 6. **Contas externas (P1)**: o login com Google (F-32) e o vínculo da Steam (F-31) terminam na mesma sessão no banco; muda só como a identidade é conferida. O Google usa OpenID Connect, com `state` e PKCE contra CSRF e interceptação do código. A Steam usa OpenID 2.0, que não entrega e-mail, por isso ela serve só para vincular a uma conta existente, e o retorno é confirmado com a própria Steam antes de gravar o Steam ID.
+7. **Redefinição de senha (F-26, B-80; acrescentado em 11/11/2026)**: o pedido responde sempre a mesma mensagem, com limite por IP e por e-mail. O token tem 32 bytes aleatórios, e o banco guarda só o hash SHA-256 dele, como nas sessões. Vale 60 minutos, tem uso único, e um pedido novo invalida o anterior. Redefinir a senha encerra todas as sessões e leva ao login. O cadastro já responde 409 para e-mail existente: a resposta genérica da redefinição evita um segundo caminho para descobrir contas, mas não fecha o primeiro.
 
 ### Autorização
 
@@ -461,8 +465,9 @@ Com um único frontend na mesma origem e sem clientes móveis, a vantagem do JWT
 
 ### Segredos e dados pessoais
 
-- Segredos (`DATABASE_URL`, credenciais da IGDB, segredo de recarga) só em variáveis de ambiente do provedor e do CI; nunca no repositório, no frontend ou nos logs.
-- Logs registram método, rota, status, duração e `requestId`; nunca senha, cookie, token ou corpo de login.
+- Segredos (`DATABASE_URL`, credenciais da IGDB, segredo de recarga e, a partir do B-81, a chave do provedor de e-mail) só em variáveis de ambiente do provedor e do CI; nunca no repositório, no frontend ou nos logs.
+- Logs registram método, rota, status, duração e `requestId`; nunca senha, cookie, token ou corpo de login. O token de redefinição vai no link depois do `#`, que o navegador não envia ao servidor (F-26).
+- O e-mail do usuário passa também pelo provedor de envio, só para os e-mails da conta (RNF-06, acrescentado em 11/11/2026).
 - Coleta mínima, de acordo com o princípio da necessidade da LGPD: e-mail, nome de exibição, avaliações, listas e preferências; no P1, o Steam ID e a URL do avatar público de uma conta Steam ou Google vinculada. A página "Como funciona" informa que dados são guardados e para quê. A exclusão de conta pelo próprio usuário é P1 (F-19); até lá, exclusão mediante pedido por e-mail.
 - Dependências: `pnpm audit` no CI como aviso, sem bloquear o build por vulnerabilidades sem correção disponível.
 
@@ -1166,6 +1171,8 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | B-18 | Proteções: throttler no login, helmet, `OriginGuard`, filtro global de exceções, request-id e logs em JSON | P0 | B-17 | Excesso de tentativas devolve 429; requisição com `Origin` estranho é rejeitada; erro 500 não expõe detalhes | M |
 | B-19 | Suíte e2e de autenticação | P0 | B-18, B-05 | Cobre cadastro, login, credencial errada, rota protegida, logout e sessão expirada, no CI | M |
 | B-64 | Páginas de entrar e cadastrar e estado de sessão no cabeçalho (F-01) | P0 | B-17, B-40 | Cadastro, login e logout pela interface no ambiente implantado; foco funcional, sem trabalho de design: o visual vem depois, com apoio de design gráfico e um documento de telas | P |
+| B-82 | Botão de mostrar e ocultar a senha (F-01, F-26) | P0 | B-64 | Componente `PasswordField` com o botão dentro do campo, o rótulo e o `aria-pressed` alternando, acessível pelo teclado e com o `autocomplete` mantido; usado no login, no cadastro e na redefinição; teste do componente. **Acrescentado em 11/11/2026 (decisão do autor)** | P |
+| B-80 | Redefinição de senha na API e na interface, com envio por console e falso (F-26) | P0 | B-17, B-82 | `PasswordResetToken` com migration; rotas de pedido e confirmação seguindo os critérios do F-26, no Swagger; `Mailer` com envio por console, falso e Resend; páginas `/esqueci-senha` e `/redefinir-senha`; e2e com a mesma resposta para e-mail inexistente, token expirado e reutilizado, pedido novo invalidando o anterior, sessões encerradas e limites. **Acrescentado em 11/11/2026 (decisão do autor)** | G |
 
 ### E3. Descoberta e interface pública
 
@@ -1222,6 +1229,8 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | B-39 | Implantação da API no Render com variáveis de ambiente e `GET /api/health` (F-15) | P0 | B-02, B-38 | Rota de saúde pública responde e informa o estado do banco | M |
 | B-40 | Implantação do frontend na Vercel com *rewrite* para a API | P0 | B-02 | Cookie de sessão funciona no ambiente implantado | P |
 | B-41 | Contingência local: dump do banco de produção, restauração no PostgreSQL embutido e roteiro de troca. O pacote embutido não traz `pg_dump` nem `pg_restore`: usar os binários portáteis oficiais do PostgreSQL 18 | P0 | B-04, B-14 | Demonstração completa roda só na máquina local, sem internet além das capas | P |
+| B-83 | Renomeação para Penumbra: domínio, site, repositório e serviços | P0 | B-39, B-40 | Domínio próprio no site, com `indie-discovery.vercel.app` redirecionando (308); `WEB_ORIGIN` atualizado e login, logout e cookies conferidos no domínio novo (R-03); repositório, serviço no Render e projeto no Neon renomeados, com o CI e os deploys disparando; nome novo no site e no README. Antes de registrar, conferir o conflito com a série de jogos Penumbra (Frictional Games) e a disponibilidade do domínio. **Acrescentado em 11/11/2026 (decisão do autor):** mudam só os nomes visíveis; os pacotes `@indie/*` e o banco `indie` ficam como estão, porque são internos, continuam corretos, e renomear o banco em produção é risco sem ganho. Precede o B-81 | M |
+| B-81 | Envio de e-mail em produção pelo Resend (F-26) | P0 | B-80, B-83 | Subdomínio de envio verificado (SPF e DKIM) e registro DMARC; e-mail real chega na caixa de entrada do Gmail e do Outlook; se o provedor falhar, o pedido responde normalmente e a falha fica no log. **Acrescentado em 11/11/2026 (decisão do autor)** | P |
 
 ### E7. Documentação e acabamento
 
@@ -1264,7 +1273,7 @@ O critério de conclusão de cada item soma-se à definição de pronto da seç�
 | Capacidade de desenvolvimento nas semanas 1 a 22 (12 h × 22) | — | 264 h |
 | Semanas 23 e 24 (15 h × 2), sem item novo | — | 30 h, divididas entre ensaios, slides e absorção de atraso |
 
-Com os itens acrescentados no M0 (B-56 a B-58), o ponto médio do P0 passou de 257 h para 275 h, e com o B-59 (aberto no B-11 como P e concluído como M), para 283 h, com o B-60 para 286 h e com o B-61 para 289 h, com o B-62 para cerca de 297 h e com o B-63 para cerca de 306 h e com o B-64 para cerca de 309 h e com o B-69 para cerca de 317 h. **Recontado em 03/11/2026:** a tabela não era atualizada desde o M0; pelas tabelas do backlog, o P0 tinha 24 itens P, 28 M e 2 G, 314 h no ponto médio, e com o B-71 e o B-72 (correção do F-11) passa a 329 h, 65 h acima da capacidade das semanas 1 a 22, com o B-73 (medição dos estilos, P) a 332 h, e com o B-74 (estilos, M) e o B-76 (tempo em produção, P) a 342 h, 78 h acima; o B-75 (filtro de estilo no catálogo) ficou como P1. **Ampliado em 05/11/2026:** o B-76 passou de P a G, para cobrir também a limpeza do módulo de recomendação, e foi para antes do B-72; o ponto médio do P0 vai a 355 h, 91 h acima. O ritmo real cobre a diferença: o M2 foi atingido na semana 3, com cerca de 14 semanas de folga. O autor decidiu não trocar nenhuma funcionalidade: a diferença é coberta pelas semanas 23 e 24 e pelo ritmo observado na semana 1, em que todo o E0 planejado para a sprint foi feito em um dia. O ritmo real é conferido a cada marco. Se a execução se aproximar do máximo, o plano de corte da seção 16 é aplicado nos marcos M1 e M2, e não na véspera da defesa. Os itens P1 só entram com horas que sobrarem depois do M2. **Acrescentado em 05/11/2026:** com o B-77 (P), o B-78 (G) e o B-79 (M), por escolha do autor, o ponto médio do P0 vai a cerca de 382 h, 118 h acima da capacidade das semanas 1 a 22; o B-65 (P1) é absorvido pelo B-78, e o B-75 (P1) é substituído por ele. A diferença é coberta pela mesma folga do ritmo real, conferida a cada marco. **Acrescentado em 11/11/2026:** com o B-50 (jogos semelhantes na ficha), promovido de P1 a P0 como M por decisão do autor, o ponto médio do P0 vai a cerca de 390 h, 126 h acima da capacidade das semanas 1 a 22; ele entra sem troca por outro item, coberto pela mesma folga do ritmo real, como o B-77 a B-79.
+Com os itens acrescentados no M0 (B-56 a B-58), o ponto médio do P0 passou de 257 h para 275 h, e com o B-59 (aberto no B-11 como P e concluído como M), para 283 h, com o B-60 para 286 h e com o B-61 para 289 h, com o B-62 para cerca de 297 h e com o B-63 para cerca de 306 h e com o B-64 para cerca de 309 h e com o B-69 para cerca de 317 h. **Recontado em 03/11/2026:** a tabela não era atualizada desde o M0; pelas tabelas do backlog, o P0 tinha 24 itens P, 28 M e 2 G, 314 h no ponto médio, e com o B-71 e o B-72 (correção do F-11) passa a 329 h, 65 h acima da capacidade das semanas 1 a 22, com o B-73 (medição dos estilos, P) a 332 h, e com o B-74 (estilos, M) e o B-76 (tempo em produção, P) a 342 h, 78 h acima; o B-75 (filtro de estilo no catálogo) ficou como P1. **Ampliado em 05/11/2026:** o B-76 passou de P a G, para cobrir também a limpeza do módulo de recomendação, e foi para antes do B-72; o ponto médio do P0 vai a 355 h, 91 h acima. O ritmo real cobre a diferença: o M2 foi atingido na semana 3, com cerca de 14 semanas de folga. O autor decidiu não trocar nenhuma funcionalidade: a diferença é coberta pelas semanas 23 e 24 e pelo ritmo observado na semana 1, em que todo o E0 planejado para a sprint foi feito em um dia. O ritmo real é conferido a cada marco. Se a execução se aproximar do máximo, o plano de corte da seção 16 é aplicado nos marcos M1 e M2, e não na véspera da defesa. Os itens P1 só entram com horas que sobrarem depois do M2. **Acrescentado em 05/11/2026:** com o B-77 (P), o B-78 (G) e o B-79 (M), por escolha do autor, o ponto médio do P0 vai a cerca de 382 h, 118 h acima da capacidade das semanas 1 a 22; o B-65 (P1) é absorvido pelo B-78, e o B-75 (P1) é substituído por ele. A diferença é coberta pela mesma folga do ritmo real, conferida a cada marco. **Acrescentado em 11/11/2026:** com o B-50 (jogos semelhantes na ficha), promovido de P1 a P0 como M por decisão do autor, o ponto médio do P0 vai a cerca de 390 h, 126 h acima da capacidade das semanas 1 a 22; ele entra sem troca por outro item, coberto pela mesma folga do ritmo real, como o B-77 a B-79. **Acrescentado em 11/11/2026:** com a redefinição de senha por e-mail (B-80, G, e B-81, P), o botão de mostrar a senha (B-82, P) e a renomeação para Penumbra (B-83, M), por decisão do autor, o ponto médio do P0 vai a cerca de 419 h, 155 h acima da capacidade das semanas 1 a 22, coberto pela mesma folga.
 
 ## 14. Cronograma até a defesa (Fase A)
 
@@ -1296,7 +1305,7 @@ A sprint S6 (semanas 11–12, entregando o M1) atravessa o recesso de fim de ano
 | S7 | 13–14 | Biblioteca, índice de conteúdo e coleções | B-19, B-26, B-27, B-31, B-57, B-69, B-63 | Avaliações e listas pela API; índice carregado com memória medida; e2e de autenticação no CI | R-07, R-09 |
 | S8 | 15–16 | Núcleo da recomendação | B-32, B-33 | **M2** | R-12, R-08 |
 | S9 | 17–18 | Recomendação e coleções na interface | B-28, B-35, B-71, B-73, B-74, B-76, B-72, B-77, B-78, B-79, B-36, B-30, B-58 | Jogador avalia na ficha e vê a lista mudar; e2e de recomendação e de posse no CI | R-01 |
-| S10 | 19–20 | Partida a frio, perfil e avaliação offline | B-34, B-29, B-37, B-62, B-25, B-50 | Todos os P0 prontos; pesos calibrados; **congelamento** | R-01, R-10 |
+| S10 | 19–20 | Partida a frio, perfil e avaliação offline | B-34, B-29, B-37, B-62, B-25, B-50, B-83, B-82, B-80, B-81 | Todos os P0 prontos; pesos calibrados; **congelamento** | R-01, R-03, R-10, R-16 |
 | S11 | 21–22 | Avaliação com usuários e acabamento | B-44, B-45, B-41, B-42, B-43 | **M3**: critérios de prontidão atendidos | R-10, R-13 |
 | Margem | 23–24 | Preparação da banca e absorção de atrasos | B-46, B-48, revisão do texto | Dois ensaios realizados, texto entregue, slides revisados | R-10 |
 
@@ -1350,10 +1359,9 @@ Reuniões com o orientador a cada sprint, levando o que foi implantado e o trech
 
 | ID | Funcionalidade | Só começa quando |
 | --- | --- | --- |
-| F-26 | Recuperação de senha por e-mail | Houver um provedor de e-mail transacional sem custo que atenda o volume |
 | F-22 | Sugestão de jogo ausente pela URL da loja, com moderação | Os cliques de saída mostrarem uso real e houver tempo para moderar; exige o papel `ADMIN` e um `RolesGuard` |
 | F-27 | Recomendação híbrida com embeddings | A cobertura de resumos medida no B-07 for suficiente e o protocolo da seção 12 for aplicado antes da adoção |
-| F-29 | Avisos de lançamento | F-26 existir (canal de e-mail) |
+| F-29 | Avisos de lançamento | O volume de avisos couber no plano do provedor de e-mail (seção 6). **Alterado em 11/11/2026:** dependia do F-26, que passou a P0; o canal de e-mail passa a existir com o B-81 |
 | F-23 | Área do estúdio | Houver um método de verificação de identidade do estúdio e interesse demonstrado por desenvolvedores |
 | F-25 | Recursos de comunidade | Houver base de usuários ativa que justifique moderação |
 | F-28 | Filtragem colaborativa | Houver volume de interações suficiente para superar a recomendação por conteúdo no protocolo offline |
@@ -1383,9 +1391,10 @@ Gravidade: **Alta** ameaça a defesa · **Média** atrasa ou empobrece o MVP · 
 | R-10 | **Obrigações acadêmicas concorrentes** (outras disciplinas, provas, estágio) | Alta | Semanas com menos horas que o previsto | Premissa de 15 horas revista em cada marco; escrita contínua em vez de concentrada no fim; plano de corte |
 | R-11 | **Catálogo grande demais** para o banco gratuito ou para a memória da API | Média | Falha na carga ou na inicialização | Tamanho medido no M0 e memória medida no B-31; recorte por data ou popularidade mínima |
 | R-12 | **Recomendações percebidas como ruins**, por palavras-chave ruidosas ou pesos mal calibrados | Média | Proposta central enfraquecida na banca | Peso menor para palavras-chave e descarte por limites; calibração com protocolo offline e *baselines*; teste de usabilidade com tempo para ajustes |
-| R-13 | **Mudança ou fim de um plano gratuito** durante o projeto | Média | Ambiente de demonstração fora do ar | Limites conferidos nas semanas 3 e 21; banco que não expira; contingência local ensaiada (B-41, B-46) |
+| R-13 | **Mudança ou fim de um plano gratuito** durante o projeto | Média | Ambiente de demonstração fora do ar | Limites conferidos nas semanas 3 e 21; banco que não expira; contingência local ensaiada (B-41, B-46). **Acrescentado em 11/11/2026 (B-83):** renovação anual do domínio da Penumbra antes do vencimento |
 | R-14 | **Curadoria das coleções culturais** consome mais tempo que o previsto ou resulta em coleções pequenas | Média | Diferencial enfraquecido na demonstração | Candidatos sugeridos automaticamente; começar com 8 a 10 coleções e mínimo de 10 jogos cada; critério de curadoria público em "Como funciona" |
 | R-15 | **Etiquetas da Steam indisponíveis**: a rota da loja não tem documentação pública, e a Valve pode mudar os termos ou cortar o acesso. **Acrescentado em 07/11/2026 (B-77)** | Média | Etiquetas novas deixam de chegar | As etiquetas ficam gravadas pela ingestão (B-78), e nenhuma requisição de usuário chama a Steam (RNF-02); se a rota falhar, a ingestão não falha e mantém as gravadas; a reserva da IGDB cobre os jogos sem etiqueta; a ficha cita "Etiquetas da comunidade Steam", sem sugerir endosso da Valve. **Alterado em 07/11/2026 (B-78):** antes da primeira coleta bem-sucedida não há etiqueta gravada para manter, e a ingestão falha sem gravar nada; antes do merge, uma sonda só de leitura confere, do GitHub Actions, se a loja responde |
+| R-16 | **Provedor de e-mail indisponível ou e-mails no spam**. **Acrescentado em 11/11/2026 (B-80, B-81)** | Média | Quem esqueceu a senha não recebe o link | Se o provedor falhar, o pedido responde normalmente e a falha fica no log, sem expor o erro a quem pediu; subdomínio de envio com SPF, DKIM e DMARC; teste real de entrega nas caixas do Gmail e do Outlook (B-81) |
 
 ### Plano de corte
 
@@ -1393,7 +1402,7 @@ Aplicado de cima para baixo, só até recuperar o atraso. Cada corte é registra
 
 | Ordem | Corte | O que se perde |
 | --- | --- | --- |
-| 1 | Todos os itens P1, os jogos semelhantes na ficha (B-50) e os testes opcionais de componentes do frontend | Os jogos semelhantes na ficha, complemento do núcleo; nada mais do MVP |
+| 1 | Todos os itens P1, os jogos semelhantes na ficha (B-50), a redefinição de senha por e-mail (B-80 e B-81) e os testes opcionais de componentes do frontend | Os jogos semelhantes na ficha, complemento do núcleo, e a redefinição de senha por e-mail; nada mais do MVP |
 | 2 | Palavras do resumo no vetor de conteúdo (B-63) passam a P1 | Distinção entre os cerca de 13% de jogos que continuam com vetor idêntico depois de modo e perspectiva (decisão do M0, seção 8.9) |
 | 3 | Swagger só com esquemas de entrada e saída, sem exemplos | Parte da documentação |
 | 4 | Filtros de idioma e país (B-21) passam a P1 | Recorte secundário de navegação |

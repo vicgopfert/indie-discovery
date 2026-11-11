@@ -183,6 +183,33 @@ Entrega: todos os P0 prontos; pesos calibrados; **congelamento**.
   - [ ] Seção no fim da ficha, carregada à parte e sem bloquear a página nem mudar o 404 dela, reaproveitando os componentes de capa das fileiras. O visual definitivo fica com a designer
   - [ ] Testes: unitários da seleção e do motivo; e2e com o próprio jogo excluído, o "Em breve" incluído, a mesma resposta com e sem sessão, e 404 e 503
   - [ ] p95 fim a fim em produção pela metodologia do B-33, com o cache vazio e cheio. Se passar de 1 s com o cache vazio, os vizinhos passam a ser calculados na carga do índice (a alternativa já registrada em `docs/recomendacao.md`; na ficha ela não muda a lista, porque não há filtro pelo perfil)
+- [ ] **B-83** (M, E6) Renomeação para Penumbra: domínio, site, repositório e serviços. Acrescentado em 11/11/2026 (decisão do autor). Precede o B-81. Mudam só os nomes visíveis; os pacotes `@indie/*` e o banco `indie` ficam como estão (internos, continuam corretos, e renomear o banco em produção é risco sem ganho)
+  - [ ] Conferir, antes de registrar, se o nome conflita com a série de jogos Penumbra (Frictional Games) na busca e em marca registrada (INPI), e a disponibilidade do domínio nas extensões consideradas
+  - [ ] Registrar o domínio e ligá-lo ao site na Vercel. O endereço `indie-discovery.vercel.app` redireciona (308) para o domínio novo, porque o `OriginGuard` aceita uma origem só
+  - [ ] Atualizar `WEB_ORIGIN` no Render. Conferir login, logout e cookies no domínio novo, em produção (risco R-03)
+  - [ ] Renomear o repositório no GitHub para `penumbra`, atualizar o remote local e conferir que o CI, o deploy da Vercel e o do Render continuam disparando
+  - [ ] Renomear o serviço no Render (conferir se a URL `.onrender.com` muda; se mudar, atualizar `API_URL` na Vercel) e o projeto no Neon. O banco mantém o nome
+  - [ ] Trocar o nome no código: `siteConfig.name` em `apps/web/src/config/site.ts`, `name` do `package.json` da raiz, `name` em `render.yaml` e o user agent do Wikidata em `wikidata-country.source.ts`. Pacotes `@indie/*` sem mudança
+  - [ ] README: nome Penumbra, tabela do ambiente implantado com os endereços novos, e "Boia" sem acento. Corrigir também "Bóia" em `docs/proposta-conceitual.md` e `docs/proposta-tecnica.md`. Os registros históricos com o endereço antigo em `docs/` ficam como estão
+  - [ ] Swagger e e2e passando com o nome novo; conferência no navegador em produção
+- [ ] **B-82** (P, E2) Botão de mostrar e ocultar a senha. Acrescentado em 11/11/2026 (decisão do autor)
+  - [ ] Componente `PasswordField` sobre o `TextField`, com o botão dentro do campo: `type="button"`, rótulo alternando entre "Mostrar senha" e "Ocultar senha", `aria-pressed`, acessível pelo teclado e com o `autocomplete` atual mantido
+  - [ ] Ícones pelo `lucide-react`, a biblioteca indicada no `components.json`, que ainda não está instalada
+  - [ ] Usado no login, no cadastro e na página de redefinição (B-80), e mais tarde no B-53
+  - [ ] Teste do componente: tipo do campo e rótulo alternando
+- [ ] **B-80** (G, E2) Redefinição de senha na API e na interface (F-26), com envio por console e falso. Acrescentado em 11/11/2026 (decisão do autor): F-26 promovida de P2 a P0, porque a plataforma fica pública, e o teste de usabilidade e a banca usam o ambiente de produção; não toca no congelamento do modelo
+  - [ ] Modelo `PasswordResetToken` (usuário, hash do token, validade, data de uso, apagado junto com a conta) + migration
+  - [ ] `POST /api/auth/password-reset/request` e `POST /api/auth/password-reset/confirm`, com contratos Zod e Swagger, seguindo os critérios do F-26 (token com hash, 60 minutos, uso único, resposta genérica, sessões encerradas). Limites no padrão do `ACCOUNT_THROTTLER` do login
+  - [ ] Interface `Mailer` com implementações para console (desenvolvimento: o link aparece no terminal), falsa (e2e, guarda os e-mails enviados) e Resend (produção, ligada no B-81). Variáveis em `env.ts` e `.env.example`, obrigatórias só em produção
+  - [ ] Link "Esqueci minha senha" no login e páginas `/esqueci-senha` e `/redefinir-senha`, com o token lido do `#` e `no-referrer`. Visual provisório
+  - [ ] e2e: mesma resposta para e-mail inexistente, token expirado, token reutilizado, pedido novo invalidando o anterior, sessões encerradas, limites
+  - [ ] Gravar a senha nova e encerrar as sessões numa função que o B-53 possa reaproveitar
+  - [ ] Observação para o B-68 (login com Google): decidir lá se uma conta criada pelo Google pode usar a redefinição para criar uma senha
+- [ ] **B-81** (P, E6) Envio de e-mail em produção pela API HTTP do Resend, com domínio próprio. Acrescentado em 11/11/2026 (decisão do autor). Depende do B-80 e do B-83
+  - [ ] Subdomínio de envio do domínio da Penumbra verificado no Resend (SPF e DKIM), mais o registro DMARC
+  - [ ] Variáveis no Render. Remetente do tipo "Penumbra <nao-responda@…>"
+  - [ ] Teste real com caixas do Gmail e do Outlook, conferindo se chega na caixa de entrada e não no spam
+  - [ ] Se o provedor falhar, o pedido responde normalmente e o log registra a falha, sem expor o erro a quem pediu
 
 ## S11 — Avaliação com usuários e acabamento (semanas 21–22)
 
@@ -234,7 +261,7 @@ Entrega: dois ensaios realizados, texto entregue, slides revisados.
 
 ## P2 — pós-defesa
 
-Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de entrada de cada item (F-22, F-23, F-25 a F-29 e F-33: sugestão de jogo, área do estúdio, recursos de comunidade, recuperação de senha, recomendação híbrida com embeddings, filtragem colaborativa, avisos de lançamento, foto de perfil enviada pelo usuário).
+Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de entrada de cada item (F-22, F-23, F-25, F-27 a F-29 e F-33: sugestão de jogo, área do estúdio, recursos de comunidade, recomendação híbrida com embeddings, filtragem colaborativa, avisos de lançamento, foto de perfil enviada pelo usuário).
 
 ---
 
@@ -251,4 +278,4 @@ Ver seção 15 de `docs/proposta-tecnica.md` para a ordem e as condições de en
 
 ## Se o atraso passar de uma sprint
 
-Aplicar o plano de corte da seção 16 do documento, nesta ordem: 1) cortar todo P1, os jogos semelhantes na ficha (B-50) e testes opcionais de frontend; 2) Swagger sem exemplos; 3) B-21 vira P1; 4) partida a frio sem a etapa de avaliação; 5) perfil só leitura; 6) reduzir catálogo por data de lançamento. **Nunca cortar:** contas/sessão, ingestão com critério indie e vetores, catálogo e ficha, avaliações, partida a frio mínima, recomendações com motivo e modos, avaliação offline, testes críticos, implantação e contingência local.
+Aplicar o plano de corte da seção 16 do documento, nesta ordem: 1) cortar todo P1, os jogos semelhantes na ficha (B-50), a redefinição de senha por e-mail (B-80 e B-81) e testes opcionais de frontend; 2) Swagger sem exemplos; 3) B-21 vira P1; 4) partida a frio sem a etapa de avaliação; 5) perfil só leitura; 6) reduzir catálogo por data de lançamento. **Nunca cortar:** contas/sessão, ingestão com critério indie e vetores, catálogo e ficha, avaliações, partida a frio mínima, recomendações com motivo e modos, avaliação offline, testes críticos, implantação e contingência local.
