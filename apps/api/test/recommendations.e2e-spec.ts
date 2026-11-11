@@ -95,6 +95,35 @@ describe('Recomendações (GET /recommendations)', () => {
     });
   });
 
+  it('a etiqueta escolhida na partida a frio vira prateleira e motivo', async () => {
+    for (const name of ['Dead Cells', 'Hades', 'Spelunky', 'Noita', 'Rogue Legacy']) {
+      await catalog.game({ name, genres: ['Platform'], tags: ['Roguelike'], popularity: 0.2 });
+    }
+    await prisma.feature.updateMany({ data: { idf: 1 } });
+    await app.get(ContentIndexService).reload();
+    await helpers
+      .as(jogadora)
+      .put('/api/me/preferences', { genres: ['puzzle'], themes: ['horror'], tags: ['roguelike'] });
+
+    // A visão geral não repete jogos, e neste catálogo pequeno a principal fica com todos: a
+    // prateleira aparece pelo "ver mais", que só existe para os interesses do perfil.
+    const shelf = await listPage('tag:roguelike');
+    const main = await recommendations();
+
+    expect(shelf.items.map(({ game }) => game.slug).sort()).toEqual([
+      'dead-cells',
+      'hades',
+      'noita',
+      'rogue-legacy',
+      'spelunky',
+    ]);
+    expect(main.main.items.map(({ reason }) => reason)).toContainEqual(
+      expect.objectContaining({
+        features: expect.arrayContaining([{ slug: 'roguelike', name: 'Roguelike' }]) as unknown,
+      }),
+    );
+  });
+
   it('deixa de fora o jogo avaliado e o que está em lista', async () => {
     await rate('hollow-knight', 5);
     await helpers.as(jogadora).put('/api/me/lists/want-to-play/celeste');

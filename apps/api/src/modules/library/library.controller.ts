@@ -41,6 +41,7 @@ const PREFERENCES_EXAMPLE = {
     { slug: 'puzzle', name: 'Quebra-cabeça' },
   ],
   themes: [{ slug: 'horror', name: 'Terror' }],
+  tags: [{ slug: 'roguelike', name: 'Roguelike' }],
 };
 
 const SLUG_PARAM = { name: 'slug', description: 'Slug do jogo, o mesmo da ficha' };
@@ -158,15 +159,35 @@ export class LibraryController {
     return this.library.findGameState(user.id, slug);
   }
 
+  @Get('preferences/options')
+  @ApiOkResponse({
+    description:
+      'Opções da partida a frio: os gêneros e temas de GET /features e as etiquetas que podem virar prateleira, sem as que dizem o mesmo que um gênero ou tema oferecido',
+    schema: {
+      example: {
+        genres: [{ slug: 'puzzle', name: 'Quebra-cabeça', gameCount: 3607 }],
+        themes: [{ slug: 'horror', name: 'Terror', gameCount: 2100 }],
+        tags: [{ slug: 'roguelike', name: 'Roguelike', gameCount: 1500, aliases: [] }],
+      },
+    },
+  })
+  findPreferenceOptions() {
+    return this.library.findPreferenceOptions();
+  }
+
   @Put('preferences')
-  @ApiBody({ schema: { example: { genres: ['platform', 'puzzle'], themes: ['horror'] } } })
+  @ApiBody({
+    schema: {
+      example: { genres: ['platform', 'puzzle'], themes: ['horror'], tags: ['roguelike'] },
+    },
+  })
   @ApiOkResponse({
     description:
       'Preferências da partida a frio trocadas pelo conjunto enviado; a primeira vez conclui a partida a frio (onboardingCompletedAt)',
     schema: { example: PREFERENCES_EXAMPLE },
   })
   @ApiBadRequestResponse({
-    description: `Menos de ${PREFERENCES_MIN} gêneros ou temas no total, mais de ${PREFERENCES_MAX_PER_TYPE} de um tipo ou slug fora das opções de GET /features`,
+    description: `Menos de ${PREFERENCES_MIN} gêneros, temas ou etiquetas no total, mais de ${PREFERENCES_MAX_PER_TYPE} de um tipo ou slug fora das opções de GET /me/preferences/options`,
   })
   @ApiForbiddenResponse(FORBIDDEN)
   savePreferences(
@@ -178,7 +199,7 @@ export class LibraryController {
 
   @Get('preferences')
   @ApiOkResponse({
-    description: 'Gêneros e temas escolhidos na partida a frio, com o nome em português',
+    description: 'Gêneros, temas e etiquetas escolhidos na partida a frio, com o nome em português',
     schema: { example: PREFERENCES_EXAMPLE },
   })
   findPreferences(@CurrentUser() user: User) {

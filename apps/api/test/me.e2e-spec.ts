@@ -3,6 +3,7 @@ import {
   GameLibraryStateSchema,
   GameListsSchema,
   LibrarySchema,
+  PreferenceOptionsSchema,
   PreferencesSchema,
   RatingSchema,
   UserSchema,
@@ -15,6 +16,7 @@ import request from 'supertest';
 import type { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/configure-app';
+import { readTagVocabulary, tagSlug } from '../src/modules/tags/tags';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { CatalogBuilder } from './support/catalog-builder';
 import { contentIndexLoaded } from './support/content-index';
@@ -25,6 +27,7 @@ describe('Biblioteca, preferências e modo (/me)', () => {
   let origin: string;
   let jogadora: string;
   let outra: string;
+  let catalog: CatalogBuilder;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({ imports: [AppModule] })
@@ -41,7 +44,7 @@ describe('Biblioteca, preferências e modo (/me)', () => {
 
   beforeEach(async () => {
     await prisma.$executeRaw`TRUNCATE "User", "Game", "Feature", "Company" CASCADE`;
-    const catalog = new CatalogBuilder(prisma);
+    catalog = new CatalogBuilder(prisma);
     await catalog.game({ name: 'Celeste', genres: ['Platform'], themes: ['Horror'] });
     await catalog.game({ name: 'Baba Is You', genres: ['Puzzle', 'Indie'] });
     await catalog.game({ name: 'Recem Lancado', genres: ['Puzzle'] });
@@ -250,27 +253,81 @@ describe('Biblioteca, preferências e modo (/me)', () => {
           { slug: 'puzzle', name: 'Quebra-cabeça' },
         ],
         themes: [{ slug: 'horror', name: 'Terror' }],
+        tags: [],
       });
       expect(onboardedAt).not.toBeNull();
       expect((await me(jogadora)).onboardingCompletedAt).toBe(onboardedAt);
       const preferences = async (cookie: string) =>
         PreferencesSchema.parse((await as(cookie).get('/api/me/preferences')).body);
       expect(await preferences(jogadora)).toEqual(PreferencesSchema.parse(first.body));
-      expect(await preferences(outra)).toEqual({ genres: [], themes: [] });
+      expect(await preferences(outra)).toEqual({ genres: [], themes: [], tags: [] });
     });
 
-    it('recusa menos de 3 e opções que GET /features não oferece', async () => {
+    it('recusa menos de 3 e opções que a partida a frio não oferece', async () => {
+      await catalog.game({ name: 'Dead Cells', genres: ['Platform'], tags: ['Platformer'] });
       const few = await as(jogadora).put('/api/me/preferences', { genres: ['puzzle'] });
       const unknown = await as(jogadora).put('/api/me/preferences', {
         genres: ['puzzle', 'indie', 'roguelike'],
         themes: ['horror'],
+        tags: ['platformer'],
       });
 
       expect(few.status).toBe(400);
-      expect(errorMessage(few.body)).toEqual(['Escolha pelo menos 3 gêneros ou temas.']);
+      expect(errorMessage(few.body)).toEqual(['Escolha pelo menos 3 gêneros, temas ou etiquetas.']);
       expect(unknown.status).toBe(400);
-      expect(errorMessage(unknown.body)).toEqual(['genres: Opção desconhecida: indie, roguelike.']);
+      expect(errorMessage(unknown.body)).toEqual([
+        'genres: Opção desconhecida: indie, roguelike.',
+        'tags: Opção desconhecida: platformer.',
+      ]);
       expect(await prisma.userPreference.count()).toBe(0);
+    });
+
+    it('oferece as etiquetas que viram prateleira, sem a mesma ideia em dois grupos', async () => {
+      await catalog.game({
+        name: 'Dead Cells',
+        genres: ['Platform'],
+        tags: ['Roguelike', 'Platformer', 'Pixel Graphics', 'Psychological Horror', 'Visual Novel'],
+      });
+
+      const response = await as(jogadora).get('/api/me/preferences/options');
+
+      expect(response.status).toBe(200);
+      const { genres, themes, tags } = PreferenceOptionsSchema.parse(response.body);
+      expect(genres.map(({ slug }) => slug)).toEqual(['platform', 'puzzle']);
+      expect(themes.map(({ slug }) => slug)).toEqual(['horror']);
+      expect(tags.map(({ slug }) => slug)).toEqual([
+        'roguelike',
+        'psychological-horror',
+        'visual-novel',
+      ]);
+      const offered = new Set([
+        ...genres.map(({ slug }) => `genre:${slug}`),
+        ...themes.map(({ slug }) => `theme:${slug}`),
+      ]);
+      const sameIdea = new Map(
+        readTagVocabulary().tags.map((tag) => [tagSlug(tag), tag.sameIdeaAs] as const),
+      );
+      for (const { slug } of tags) expect(offered.has(sameIdea.get(slug) ?? '')).toBe(false);
+    });
+
+    it('grava etiquetas junto dos gêneros e temas', async () => {
+      await catalog.game({ name: 'Dead Cells', tags: ['Roguelike', 'Metroidvania'] });
+
+      const response = await as(jogadora).put('/api/me/preferences', {
+        themes: ['horror'],
+        tags: ['roguelike', 'metroidvania'],
+      });
+
+      expect(response.status).toBe(200);
+      expect(PreferencesSchema.parse(response.body)).toEqual({
+        genres: [],
+        themes: [{ slug: 'horror', name: 'Terror' }],
+        tags: [
+          { slug: 'metroidvania', name: 'Metroidvania' },
+          { slug: 'roguelike', name: 'Roguelike' },
+        ],
+      });
+      expect((await me(jogadora)).onboardingCompletedAt).not.toBeNull();
     });
   });
 

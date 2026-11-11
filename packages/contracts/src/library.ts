@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { FeatureLabelSchema, GameSummarySchema } from './catalog';
+import { FeatureLabelSchema, FeatureOptionSchema, GameSummarySchema } from './catalog';
 
 export const RATING_MIN = 1;
 export const RATING_MAX = 5;
@@ -90,16 +90,30 @@ const preferenceSlugs = (label: string) =>
     .transform((slugs) => [...new Set(slugs)]);
 
 export const PreferencesInputSchema = z
-  .object({ genres: preferenceSlugs('gêneros'), themes: preferenceSlugs('temas') })
-  .refine(({ genres, themes }) => genres.length + themes.length >= PREFERENCES_MIN, {
-    error: `Escolha pelo menos ${PREFERENCES_MIN} gêneros ou temas.`,
-  });
+  .object({
+    genres: preferenceSlugs('gêneros'),
+    themes: preferenceSlugs('temas'),
+    tags: preferenceSlugs('etiquetas'),
+  })
+  .refine(
+    ({ genres, themes, tags }) => genres.length + themes.length + tags.length >= PREFERENCES_MIN,
+    { error: `Escolha pelo menos ${PREFERENCES_MIN} gêneros, temas ou etiquetas.` },
+  );
 
 export type PreferencesInput = z.output<typeof PreferencesInputSchema>;
 
 export const PreferencesSchema = z.object({
   genres: z.array(FeatureLabelSchema),
   themes: z.array(FeatureLabelSchema),
+  tags: z.array(FeatureLabelSchema),
 });
 
 export type Preferences = z.infer<typeof PreferencesSchema>;
+
+export const PreferenceOptionsSchema = z.object({
+  genres: z.array(FeatureOptionSchema),
+  themes: z.array(FeatureOptionSchema),
+  tags: z.array(FeatureOptionSchema),
+});
+
+export type PreferenceOptions = z.infer<typeof PreferenceOptionsSchema>;

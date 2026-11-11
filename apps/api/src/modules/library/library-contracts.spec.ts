@@ -66,25 +66,38 @@ describe('PreferencesInputSchema', () => {
         genres: ['puzzle', ' puzzle ', 'platform'],
         themes: ['horror'],
       }),
-    ).toEqual({ genres: ['puzzle', 'platform'], themes: ['horror'] });
+    ).toEqual({ genres: ['puzzle', 'platform'], themes: ['horror'], tags: [] });
   });
 
-  it('aceita só gêneros ou só temas', () => {
+  it('aceita só gêneros, só temas ou só etiquetas', () => {
     expect(PreferencesInputSchema.parse({ themes: ['horror', 'fantasy', 'comedy'] })).toEqual({
       genres: [],
       themes: ['horror', 'fantasy', 'comedy'],
+      tags: [],
     });
+    expect(
+      PreferencesInputSchema.parse({ tags: ['roguelike', 'metroidvania', 'difficult'] }),
+    ).toEqual({ genres: [], themes: [], tags: ['roguelike', 'metroidvania', 'difficult'] });
+  });
+
+  it('soma os três grupos para o mínimo de 3', () => {
+    expect(
+      PreferencesInputSchema.parse({ genres: ['puzzle'], themes: ['horror'], tags: ['roguelike'] }),
+    ).toEqual({ genres: ['puzzle'], themes: ['horror'], tags: ['roguelike'] });
   });
 
   it('recusa menos de 3 no total, contando repetidos uma vez', () => {
-    expect(messages({ genres: ['puzzle', 'puzzle'], themes: ['horror'] })).toEqual([
-      'Escolha pelo menos 3 gêneros ou temas.',
+    expect(messages({ genres: ['puzzle', 'puzzle'], tags: ['roguelike', 'roguelike'] })).toEqual([
+      'Escolha pelo menos 3 gêneros, temas ou etiquetas.',
     ]);
   });
 
   it('recusa mais de 50 de um tipo e slug vazio', () => {
     expect(messages({ genres: Array.from({ length: 51 }, (_, i) => `g${i}`) })).toContain(
       'Até 50 gêneros.',
+    );
+    expect(messages({ tags: Array.from({ length: 51 }, (_, i) => `t${i}`) })).toContain(
+      'Até 50 etiquetas.',
     );
     expect(messages({ genres: ['puzzle', ' ', 'platform'] })).toContain('Slug vazio.');
   });

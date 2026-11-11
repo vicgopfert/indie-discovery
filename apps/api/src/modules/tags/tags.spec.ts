@@ -2,6 +2,7 @@ import { FeatureType, TagSource } from '../../generated/prisma/client';
 import {
   evidenceAgreement,
   fallbackMatcher,
+  preferenceTags,
   relevantTags,
   tagAliases,
   tagAssigner,
@@ -155,6 +156,25 @@ describe('tagAliases', () => {
     });
 
     expect([...aliases]).toEqual([['difficult', ['Impiedoso']]]);
+  });
+});
+
+describe('preferenceTags', () => {
+  it('as aceitas que podem virar prateleira, pelo slug, com o gênero ou tema de mesma ideia', () => {
+    const tags = preferenceTags({
+      ...vocabulary,
+      tags: [
+        tag(1, 'Roguelike'),
+        tag(2, 'Romance Visual', { englishName: 'Visual Novel', sameIdeaAs: 'genre:visual-novel' }),
+        tag(3, 'Pixel Art', { englishName: 'Pixel Graphics', shelf: false }),
+        tag(4, 'Um Jogador', { englishName: 'Singleplayer', accepted: false, shelf: false }),
+      ],
+    });
+
+    expect([...tags]).toEqual([
+      ['roguelike', null],
+      ['visual-novel', 'genre:visual-novel'],
+    ]);
   });
 });
 

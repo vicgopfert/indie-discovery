@@ -101,6 +101,16 @@ export function tagAliases(vocabulary: TagVocabulary): ReadonlyMap<string, reado
   );
 }
 
+// As etiquetas que a partida a frio oferece: as que podem virar prateleira, pelo slug, com o gênero
+// ou tema de mesma ideia ("genre:visual-novel"), ou null.
+export function preferenceTags(vocabulary: TagVocabulary): ReadonlyMap<string, string | null> {
+  return new Map(
+    vocabulary.tags
+      .filter((t) => t.accepted && t.shelf)
+      .map((t) => [tagSlug(t), t.sameIdeaAs ?? null]),
+  );
+}
+
 export interface RelevantTag extends SteamTag {
   // O peso dividido pelo da etiqueta mais votada do próprio jogo.
   relative: number;
