@@ -8,6 +8,7 @@ import { FormAlert } from '@/components/form/form-alert';
 import { TextField } from '@/components/form/text-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
+import { onboardingHref } from '@/features/onboarding/paths';
 import { showApiError } from '@/lib/form-errors';
 import { useRegister } from './hooks';
 
@@ -23,7 +24,7 @@ export function RegisterForm({ redirectTo }: { redirectTo: string }) {
   const onSubmit = form.handleSubmit(async (input) => {
     try {
       await register.mutateAsync(input);
-      router.replace(redirectTo);
+      router.replace(onboardingHref(redirectTo));
     } catch (error) {
       showApiError(error, form.setError, {
         fields: ['displayName', 'email', 'password'],

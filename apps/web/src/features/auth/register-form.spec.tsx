@@ -32,13 +32,24 @@ describe('RegisterForm', () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it('cria a conta e segue para o destino', async () => {
+  it('cria a conta e segue para a partida a frio', async () => {
     stubFetch(() => Response.json(sampleUser, { status: 201 }));
     renderWithQuery(<RegisterForm redirectTo="/" />);
 
     await submit();
 
-    await waitFor(() => expect(router.replace).toHaveBeenCalledWith('/'));
+    await waitFor(() => expect(router.replace).toHaveBeenCalledWith('/boas-vindas'));
+  });
+
+  it('a partida a frio guarda o destino de onde a pessoa veio', async () => {
+    stubFetch(() => Response.json(sampleUser, { status: 201 }));
+    renderWithQuery(<RegisterForm redirectTo="/jogos/celeste" />);
+
+    await submit();
+
+    await waitFor(() =>
+      expect(router.replace).toHaveBeenCalledWith('/boas-vindas?next=%2Fjogos%2Fceleste'),
+    );
   });
 
   it('e-mail já cadastrado aparece no campo de e-mail', async () => {

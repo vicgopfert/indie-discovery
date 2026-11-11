@@ -172,13 +172,14 @@ describe('RecommendationListView', () => {
     expect(screen.queryByRole('group', { name: 'Modo de descoberta' })).not.toBeInTheDocument();
   });
 
-  it('sem perfil, orienta a avaliar jogos', async () => {
+  it('sem perfil, leva à partida a frio', async () => {
     stubPage(sampleRecommendationPage({ basis: 'empty', key: 'main', feature: null, items: [] }));
     renderList(1, 'main');
 
-    expect(
-      await screen.findByText(/Avalie alguns jogos ou guarde nas suas listas/),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole('link', { name: 'Escolher meus gostos' })).toHaveAttribute(
+      'href',
+      '/boas-vindas',
+    );
     expect(screen.queryByRole('group', { name: 'Modo de descoberta' })).not.toBeInTheDocument();
   });
 
