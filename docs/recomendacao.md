@@ -1250,3 +1250,12 @@ conferências, entre elas:
 - todas as páginas cabem na largura, sem rolagem horizontal.
 
 As contas de teste locais foram apagadas depois.
+
+### Conferência em produção (11/11/2026)
+
+Às 23:32 UTC, depois do merge do PR #85, o mesmo script, a 390 e a 1280 px, com o índice de
+produção carregado (23.177 jogos): 40 de 40. As opções e os 12 primeiros jogos da etapa 2 foram os
+mesmos da conferência local, e a visão geral, sem nenhuma nota, teve "Para você", "Porque você
+curte roguelikes e roguelites", Plataforma, Terror e "Em breve no seu gosto". A conferência
+cadastrou `b34-prod-390-202611112332@example.com` e `b34-prod-1280-202611112332@example.com`,
+que ficam para o B-52 apagar; as senhas ficam fora do repositório.
