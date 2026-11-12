@@ -369,7 +369,10 @@ Formam um quarto bloco do vetor, com fatia própria em configuração, e ficam f
 explicação mostrada ao jogador (F-11): "Recomendado por: um jogador" não explica nada. **A
 fatia só fica acima de zero se melhorar o acerto@10 no protocolo do B-37.** A queda de 21%
 para 13,4% de vetores idênticos mede distinção, não qualidade, e não serve de prova de
-melhora. O P0 passa para cerca de 297 h.
+melhora. O P0 passa para cerca de 297 h. **Alterado em 11/11/2026:** o B-62 foi para a Fase B.
+Com as etiquetas da comunidade Steam no vetor (B-78), o vetor idêntico ao de 10 ou mais caiu de
+21% para 0,9%, e o bloco reduz menos de 2 pontos percentuais (`docs/recomendacao.md`, seção
+"Modo de jogo, perspectiva e palavras do resumo").
 
 **Palavras do resumo**, medidas antes de decidir:
 
@@ -406,7 +409,7 @@ só fica acima de zero se melhorar o acerto@10 no B-37. Ficam fora da explicaç�
 por enquanto; entrar ou não decide-se no B-37, com exemplos reais. Os riscos de qualidade
 acima são pontos a observar no B-37, sem tratamento antes. O P0 passa para cerca de 306 h, o
 plano segue sem trocar funcionalidade, e o B-63 é o primeiro item do plano de corte depois
-dos P1.
+dos P1. **Alterado em 11/11/2026:** o B-63 também foi para a Fase B, pela mesma medição do B-62.
 
 ### 8.10 Cobertura de desenvolvedora para o critério indie — decidido em 26/10/2026
 

@@ -69,7 +69,9 @@ B-37.
   preferidos, então o motivo são os preferidos que batem com o jogo.
 - **Blocos futuros:** a reserva também cobre os blocos do B-62 (modo de jogo e
   perspectiva) e do B-63 (palavras do resumo), que não viram motivo. Um jogo que só pontua
-  por eles recebe "Porque você gostou de `<jogo>`".
+  por eles recebe "Porque você gostou de `<jogo>`". **Alterado em 11/11/2026:** os dois blocos
+  foram para a Fase B (seção "Modo de jogo, perspectiva e palavras do resumo"); a reserva
+  vale para qualquer bloco que entre depois.
 
 ## Medições no catálogo local (02/11/2026)
 
@@ -109,6 +111,9 @@ No Equilibrado, que não usa a popularidade, o sorteio decide a maior parte da l
 perfis por avaliações. A causa é a já registrada no B-12: muitos jogos têm vetores
 idênticos, por terem poucas etiquetas (21,1% do catálogo tem vetor idêntico ao de 10 ou
 mais jogos). Os blocos do B-62 e do B-63 diminuem esses empates, e o B-37 mede o efeito.
+**Alterado em 11/11/2026:** com as etiquetas do B-78, o vetor idêntico ao de 10 ou mais caiu para
+0,9% do catálogo, e os dois blocos foram para a Fase B (seção "Modo de jogo, perspectiva e
+palavras do resumo").
 
 **Motivos e "pouco conhecido":**
 
@@ -1259,3 +1264,89 @@ mesmos da conferência local, e a visão geral, sem nenhuma nota, teve "Para voc
 curte roguelikes e roguelites", Plataforma, Terror e "Em breve no seu gosto". A conferência
 cadastrou `b34-prod-390-202611112332@example.com` e `b34-prod-1280-202611112332@example.com`,
 que ficam para o B-52 apagar; as senhas ficam fora do repositório.
+
+## Modo de jogo, perspectiva e palavras do resumo (B-62 e B-63)
+
+**Decisão (11/11/2026): os dois blocos vão para a Fase B**, pela regra que o autor fixou antes de
+medir. Se o bloco reduzir em menos de 2 pontos percentuais as duas porcentagens abaixo, comparadas
+com o vetor atual, o item vai para a Fase B; se reduzir 2 pontos ou mais em uma delas, segue o
+plano. Os dois blocos reduziram menos de 2 pontos nas duas.
+
+### O que mudou desde o M0
+
+O M0 aprovou os dois blocos para distinguir os jogos de vetor pobre (relatório do M0, seção 8.9):
+em 26/10/2026, 21,0% do catálogo tinha vetor idêntico ao de 10 ou mais jogos, e 17,8% tinha até 2
+atributos no vetor. Esses números eram do vetor com as palavras-chave da IGDB. Com as etiquetas da
+comunidade Steam no lugar delas (B-78), caíram para 0,9% e 1,9%. As etiquetas já fizeram quase
+toda a distinção que os blocos fariam.
+
+Efeito de piso: com o vetor atual abaixo de 2% nas duas porcentagens, nenhum bloco poderia
+reduzir 2 pontos, nem zerando as duas. A linha de base já decidia a regra; a medição mostra
+quanto cada bloco reduz.
+
+### Resultado
+
+Catálogo local de 23.001 jogos, em 11/11/2026. O bloco novo entra com as fatias de teste de 0,1 e
+de 0,2, tirando o espaço das outras proporcionalmente: com 0,1, as fatias de 0,4, 0,3 e 0,3 viram
+0,36, 0,27 e 0,27.
+
+| Vetor | Idêntico ao de 10 ou mais | Até 2 atributos |
+| --- | --- | --- |
+| Atual (gênero, tema, etiquetas) | 211 (0,9%) | 429 (1,9%) |
+| Com modo de jogo e perspectiva, a 0,1 ou a 0,2 | 66 (0,3%) | 202 (0,9%) |
+| Com palavras do resumo, a 0,1 ou a 0,2 | 0 (0,0%) | 0 (0,0%) |
+
+As fatias de 0,1 e de 0,2 deram o mesmo resultado: as duas porcentagens dependem de quais
+atributos cada jogo tem, e não do peso deles. Os vetores foram calculados nas duas fatias para
+confirmar. Como no M0, os números medem distinção, não qualidade.
+
+### Modo de jogo e perspectiva (B-62)
+
+Os campos `game_modes` e `player_perspectives` foram buscados na IGDB para os 23.001 jogos, e
+ela respondeu para todos. O modo de jogo está em 22.872 jogos (99,4%) e a perspectiva em 17.032
+(74,0%). Depois dos limites de frequência do vetor (mínimo de 3 jogos, máximo de 80%), 18.343
+jogos (79,7%) ficam com ao menos um valor do bloco.
+
+| Campo | Valor | Jogos | Passa nos limites |
+| --- | --- | --- | --- |
+| Modo | Single player | 21.976 (95,5%) | não |
+| Modo | Multiplayer | 5.632 (24,5%) | sim |
+| Modo | Co-operative | 4.119 (17,9%) | sim |
+| Modo | Split screen | 557 (2,4%) | sim |
+| Modo | Massively Multiplayer Online (MMO) | 499 (2,2%) | sim |
+| Modo | Battle Royale | 110 (0,5%) | sim |
+| Perspectiva | First person | 4.860 (21,1%) | sim |
+| Perspectiva | Third person | 3.245 (14,1%) | sim |
+| Perspectiva | Bird view / Isometric | 5.133 (22,3%) | sim |
+| Perspectiva | Side view | 4.199 (18,3%) | sim |
+| Perspectiva | Text | 997 (4,3%) | sim |
+| Perspectiva | Auditory | 96 (0,4%) | sim |
+| Perspectiva | Virtual Reality | 577 (2,5%) | sim |
+
+Single player cai pelo limite de 80%: o bloco distinguiria sobretudo o multijogador, o
+cooperativo e a perspectiva.
+
+### Palavras do resumo (B-63)
+
+Como previsto na seção 13 da proposta: TF-IDF binário, sem radicalização, com os mesmos limites
+de frequência. A lista do M0 não ficou guardada, então a de palavras irrelevantes é a do inglês do
+NLTK, mais os termos genéricos *game*, *games*, *player*, *players*, *play* e *playing*. Todos os
+23.001 jogos têm resumo. Ficam 14.379 palavras e 590.400 ligações entre jogo e palavra; o M0
+tinha 13.465 e 491.712, com 20.057 jogos. A mediana é de 23 palavras por jogo; 267 jogos (1,2%)
+ficam com até 5, e 2 com nenhuma.
+
+### Reprodução
+
+Os scripts e os dados ficam fora do repositório, em `~/indie-discovery-b62/`:
+
+- `measure-play.mjs` busca os dois campos na IGDB, guarda a resposta em `igdb-play-cache.json`
+  e mede o B-62; a saída está em `resultado.txt`;
+- `measure-words.mjs` mede o B-63; a saída está em `resultado-b63.txt`.
+
+Os dois só leem o banco local, recusam outro banco e leem as credenciais do `.env` sem
+imprimi-las. Uso: `node measure-play.mjs <repo>` e `node measure-words.mjs <repo>`.
+
+### Na Fase B
+
+Os dois blocos voltam como variantes do protocolo do B-37 e só entram no vetor se melhorarem o
+acerto@10, o mesmo critério do M0. Até lá, o vetor fica com três blocos.
