@@ -33,15 +33,14 @@ describe('SiteHeader', () => {
     expect(within(account).getByRole('link', { name: 'Criar conta' })).toBeInTheDocument();
   });
 
-  it('com sessão, traz os mesmos links principais, o nome e o botão de sair', async () => {
+  it('com sessão, traz os mesmos links principais, o link do perfil e o botão de sair', async () => {
     stubFetch(() => Response.json({ ...sampleUser, displayName: 'Jogadora de Teste' }));
 
     renderWithQuery(<SiteHeader />);
 
-    expect(await screen.findByText('Jogadora de Teste')).toHaveAttribute(
-      'title',
-      'Jogadora de Teste',
-    );
+    const profile = await screen.findByRole('link', { name: 'Jogadora de Teste' });
+    expect(profile).toHaveAttribute('href', '/perfil');
+    expect(profile).toHaveAttribute('title', 'Jogadora de Teste');
     expect(mainLinks()).toEqual(MAIN_LINKS);
     expect(screen.getByRole('button', { name: 'Sair' })).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Entrar' })).not.toBeInTheDocument();

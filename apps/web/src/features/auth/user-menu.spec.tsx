@@ -48,6 +48,15 @@ describe('UserMenu', () => {
     );
   });
 
+  it('com sessão, o avatar com as iniciais e o nome levam ao perfil', async () => {
+    stubFetch(() => Response.json({ ...sampleUser, displayName: 'Jogadora de Teste' }));
+    renderWithQuery(<UserMenu />);
+
+    const profile = await screen.findByRole('link', { name: 'Jogadora de Teste' });
+    expect(profile).toHaveAttribute('href', '/perfil');
+    expect(profile).toHaveTextContent('JT');
+  });
+
   it('com sessão, mostra o nome; sair encerra a sessão na API e volta aos links', async () => {
     const fetchMock = stubFetch((path) =>
       path === '/api/auth/logout' ? new Response(null, { status: 204 }) : Response.json(sampleUser),
