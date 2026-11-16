@@ -704,4 +704,4 @@ O critério foi atendido nas duas.
   - **Prateleiras:** "Porque você curte `<estilo>`".
   - **Motivo:** o estilo entra só pela contribuição das palavras-chave dele (seção 12 da proposta técnica).
 - **B-75 (M, E3), P1:** filtro de estilo no catálogo, fora do núcleo da tese. Se entrar, a página "Como funciona" (B-25) passa a listar os estilos e as palavras-chave de cada um.
-- **B-37:** testa o caminho b como variante, com o mesmo critério de acerto@10.
+- **B-37:** testa o caminho b como variante, com o mesmo critério de acerto@10. **Encerrado em 11/11/2026 (B-37, decisão do autor):** a variante ficou superada pelo B-78. As palavras-chave saíram do vetor, e as etiquetas da comunidade Steam ocuparam o lugar delas; os estilos saíram do código (`config/styles.json` não existe mais) e viraram evidência de reserva das etiquetas. Recriar os estilos como um quarto bloco seria regra nova, contra o congelamento do modelo.

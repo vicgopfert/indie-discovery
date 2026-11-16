@@ -21,8 +21,9 @@ lê o estado no banco, chama o núcleo e monta a resposta de `GET /api/recommend
    lista, com vetor não vazio e **cosseno acima de zero**, para que todo jogo recomendado
    tenha ao menos um atributo a favor. Com poucos candidatos, a lista sai menor, sem
    completar com outros jogos.
-4. **Pontuação:** `score = cos(u, v_j) − λ_modo · pop_j`, com λ de −0,2 em Populares, 0 em
-   Equilibrado e +0,3 em Descobertas. Os vetores dos jogos têm norma 1, então
+4. **Pontuação:** `score = cos(u, v_j) − λ_modo · pop_j`, com λ de −0,3 em Populares, 0 em
+   Equilibrado e +0,2 em Descobertas, calibrados no B-37 (`docs/avaliacao-offline.md`); eram
+   −0,2 e +0,3, os valores iniciais da proposta. Os vetores dos jogos têm norma 1, então
    `cos = u · v_j / ‖u‖`.
 5. **Desempate:** sorteio fixo por usuário, pelo hash SHA-256 de `userId:gameId`, com o id
    do jogo como último critério.
@@ -121,7 +122,8 @@ palavras do resumo").
   recomendado tinha ao menos um gênero ou tema a favor.
 - No modo Descobertas, 62% dos itens dos perfis por avaliações (2.494 de 4.000) e 39% dos
   perfis só por preferências (1.546 de 4.000) saíram marcados como "pouco conhecido". Com
-  λ = 0,3, a popularidade muda a maior parte da lista. A calibração do λ é do B-37, e a
+  λ = 0,3, a popularidade muda a maior parte da lista. O B-37 calibrou o λ do Descobertas em
+  0,2 (`docs/avaliacao-offline.md`), e a
   forma de exibir a marca é do B-35.
 
 ## A rota (B-33)
@@ -252,7 +254,9 @@ origem"). Sobre o que vem do núcleo:
   B-35, um perfil com três jogos avaliados (`time-for-bed` e `lavaloop` com 5, `foundlings`
   com 4) teve os 20 itens marcados, e nenhum jogo em comum com a lista do Equilibrado. Em
   produção, o mesmo perfil teve 18 de 20 itens marcados (90%) e só 2 jogos em comum com o
-  Equilibrado. É um indício de que o λ de 0,3 está dominando a afinidade, a verificar no B-37.
+  Equilibrado. É um indício de que o λ de 0,3 está dominando a afinidade. **Verificado no B-37:**
+  com 0,3, o "pouco conhecido" passou de 50% do top-20 nos perfis coerentes, e o λ do
+  Descobertas foi calibrado em 0,2 (`docs/avaliacao-offline.md`).
 - **Listas `empty` e `popular`:** sem o seletor de modo, porque o modo não as muda.
 
 ## Limitação identificada (03/11/2026)
