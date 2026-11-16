@@ -2,6 +2,7 @@ import {
   type GameLibraryState,
   GameLibraryStateSchema,
   GameListsSchema,
+  LibrarySchema,
   LIST_PARAMS,
   type ListType,
   RatingSchema,
@@ -14,6 +15,8 @@ const LIST_PATHS = Object.fromEntries(
 ) as Record<ListType, keyof typeof LIST_PARAMS>;
 
 const game = (slug: string) => encodeURIComponent(slug);
+
+export const getLibrary = () => apiFetch('/me/library', { schema: LibrarySchema });
 
 export const getGameLibrary = (slug: string) =>
   apiFetch(`/me/library/${game(slug)}`, { schema: GameLibraryStateSchema });
