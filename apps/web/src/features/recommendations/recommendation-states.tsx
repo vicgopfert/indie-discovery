@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { ONBOARDING_PATH } from '@/features/onboarding/paths';
+import { PROFILE_PATH } from '@/features/profile/paths';
 import { errorMessage } from '@/lib/api-client';
 import { useSaveDiscoveryMode } from './hooks';
 import { ModeSelector } from './mode-selector';
@@ -84,11 +85,12 @@ export function EmptyProfile() {
   );
 }
 
+// No perfil, a pessoa vê os gostos e as notas antes de refazer a partida a frio.
 export function ChangeTastesLink() {
   return (
     <p className="text-sm">
-      <Link href={ONBOARDING_PATH} className="underline">
-        Mudar meus gostos
+      <Link href={PROFILE_PATH} className="underline">
+        Ver e mudar meus gostos
       </Link>
     </p>
   );

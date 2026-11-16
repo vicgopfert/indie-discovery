@@ -219,17 +219,17 @@ describe('RecommendationsView', () => {
       'href',
       '/boas-vindas',
     );
-    expect(screen.queryByRole('link', { name: 'Mudar meus gostos' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Ver e mudar meus gostos' })).not.toBeInTheDocument();
     expect(screen.queryByRole('group', { name: 'Modo de descoberta' })).not.toBeInTheDocument();
   });
 
-  it('com perfil, oferece mudar os gostos', async () => {
+  it('com perfil, leva ao perfil para ver e mudar os gostos', async () => {
     stubList(sampleRecommendationOverview());
     renderWithQuery(<RecommendationsView />);
 
-    expect(await screen.findByRole('link', { name: 'Mudar meus gostos' })).toHaveAttribute(
+    expect(await screen.findByRole('link', { name: 'Ver e mudar meus gostos' })).toHaveAttribute(
       'href',
-      '/boas-vindas',
+      '/perfil',
     );
   });
 
