@@ -11,7 +11,7 @@ import { Inject, Injectable, NotFoundException, ServiceUnavailableException } fr
 import { type DiscoveryMode, FeatureType } from '../../generated/prisma/client';
 import { CatalogService } from '../catalog/catalog.service';
 import { FeatureLabels } from '../catalog/feature-labels';
-import { type ContentIndex, isLabeledFeatureType } from './content-index';
+import { type ContentIndex, hiddenPositionsOf, isLabeledFeatureType } from './content-index';
 import { ContentIndexService } from './content-index.service';
 import { type RecommendedGameRow, RecommendationRepository } from './recommendation.repository';
 import type { ScoredReason } from './scoring/explain';
@@ -151,16 +151,7 @@ export class GenerateRecommendationsUseCase {
   private hiddenPositions(index: ContentIndex): ReadonlySet<number> {
     let hidden = this.hiddenByIndex.get(index);
     if (hidden === undefined) {
-      const positions = new Set<number>();
-      index.features.forEach((feature, position) => {
-        if (
-          isLabeledFeatureType(feature.type) &&
-          this.labels.isHidden(feature.type, feature.slug)
-        ) {
-          positions.add(position);
-        }
-      });
-      hidden = positions;
+      hidden = hiddenPositionsOf(index, this.labels);
       this.hiddenByIndex.set(index, hidden);
     }
     return hidden;

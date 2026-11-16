@@ -2,6 +2,8 @@ import {
   assertLocalDatabase,
   compareSnapshots,
   profileUserId,
+  RATED_SCORES,
+  seedProfiles,
   type Snapshot,
   type SnapshotEntry,
 } from './snapshot-recommendations';
@@ -52,5 +54,19 @@ describe('foto das recomendações', () => {
       missing: ['0|BALANCED|main|3'],
       different: ['0|BALANCED|main|1'],
     });
+  });
+
+  it('sorteia os mesmos perfis da semente 71 a cada execução, sem repetir item num perfil', () => {
+    const inputs = {
+      gameIds: Array.from({ length: 50 }, (_, i) => `g-${i}`),
+      featureIds: Array.from({ length: 10 }, (_, i) => `f-${i}`),
+    };
+    const profiles = seedProfiles(inputs);
+
+    expect(seedProfiles(inputs)).toEqual(profiles);
+    expect(profiles.rated).toHaveLength(200);
+    expect(profiles.preferred).toHaveLength(200);
+    for (const games of profiles.rated) expect(new Set(games).size).toBe(RATED_SCORES.length);
+    for (const features of profiles.preferred) expect(new Set(features).size).toBe(3);
   });
 });
