@@ -487,11 +487,38 @@ do refactor do B-37.
 
 Nenhuma resposta apareceu nem sumiu: cada lista tem o mesmo número de páginas.
 
-### Conferência em produção, depois do merge
+### Conferência em produção (16/11/2026)
 
-Repete a conferência do B-35 com o mesmo perfil (`time-for-bed` e `lavaloop` com 5, `foundlings`
-com 4) e compara com os números de lá: 18 de 20 itens do top-20 do Descobertas marcados "pouco
-conhecido" (90%) e só 2 jogos em comum com o Equilibrado.
+Depois do merge do PR #88. O índice carregou às 16:06:15 UTC, 4 minutos depois do merge, e
+`/api/health` respondeu 200, com o banco no ar e o índice pronto (23.177 jogos). Os critérios foram
+gravados antes de medir, fora do repositório. Em cada conta, o top-20 é a primeira página do "ver
+mais" da lista principal, nos três modos.
+
+**Conta nova, com o perfil do B-35** (decisão do autor): `b37-producao-2026-11-16@example.com`, com
+`time-for-bed` e `lavaloop` com 5 e `foundlings` com 4, sem listas nem preferências. Comparação
+perfil a perfil com a conferência em produção do B-35, ainda com λ = 0,3:
+
+| Medida | B-35 (λ = 0,3) | B-37 (λ = 0,2) |
+| --- | --- | --- |
+| "Pouco conhecido" no top-20 do Descobertas | 18 de 20 (90%) | 6 de 20 (30%) |
+| Jogos em comum, Descobertas × Equilibrado | 2 de 20 | 14 de 20 |
+
+- A lista do Descobertas deixa de ser quase toda trocada pela popularidade: 14 dos 20 jogos são os
+  do Equilibrado. A marca continua só no Descobertas: nenhum item do Populares nem do Equilibrado a
+  tem.
+- O Populares (λ = −0,3) tem só 2 jogos em comum com o Equilibrado nesse perfil (10%). Nos perfis
+  sintéticos da rodada 3, a sobreposição foi de 40% a 47%.
+- Nos três modos, as listas vêm pelo perfil (base `profile`) com 20 itens, e duas requisições
+  seguidas dão a mesma resposta.
+
+**Conta reutilizável** (`b76-producao-2-2026-11-05@example.com`, seis roguelikes com nota 5), só
+como continuidade das medições do B-76 e do B-79, sem comparar com o B-35:
+
+- a biblioteca é a mesma, e a visão geral tem as mesmas 9 seções do B-79 nos três modos, com as
+  prateleiras "Porque você gostou de" Risk of Rain 2 e Spelunky 2;
+- 11 de 20 itens do Descobertas marcados "pouco conhecido" (55%), 9 jogos em comum entre o
+  Descobertas e o Equilibrado e 13 entre o Populares e o Equilibrado;
+- as respostas se repetem nas duas requisições. O tempo de resposta não foi medido.
 
 ## Limitações
 

@@ -256,7 +256,9 @@ origem"). Sobre o que vem do núcleo:
   produção, o mesmo perfil teve 18 de 20 itens marcados (90%) e só 2 jogos em comum com o
   Equilibrado. É um indício de que o λ de 0,3 está dominando a afinidade. **Verificado no B-37:**
   com 0,3, o "pouco conhecido" passou de 50% do top-20 nos perfis coerentes, e o λ do
-  Descobertas foi calibrado em 0,2 (`docs/avaliacao-offline.md`).
+  Descobertas foi calibrado em 0,2 (`docs/avaliacao-offline.md`). Na conferência em produção
+  do B-37 (16/11/2026), uma conta nova com o mesmo perfil teve 6 de 20 itens marcados (30%) e
+  14 jogos em comum com o Equilibrado.
 - **Listas `empty` e `popular`:** sem o seletor de modo, porque o modo não as muda.
 
 ## Limitação identificada (03/11/2026)
