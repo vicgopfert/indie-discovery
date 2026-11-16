@@ -3,11 +3,15 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isUnauthorized } from '@/lib/api-client';
 import { clearAccount } from '@/features/auth/hooks';
 import { RECOMMENDATIONS_QUERY_KEY } from '@/features/recommendations/hooks';
-import { applyLibraryAction, getGameLibrary, type LibraryAction } from './api';
+import { applyLibraryAction, getGameLibrary, getLibrary, type LibraryAction } from './api';
 
 export const LIBRARY_QUERY_KEY = ['library'] as const;
 
 const gameKey = (slug: string) => [...LIBRARY_QUERY_KEY, slug] as const;
+
+export function useLibrary() {
+  return useQuery({ queryKey: LIBRARY_QUERY_KEY, queryFn: getLibrary });
+}
 
 export function useGameLibrary(slug: string) {
   return useQuery({ queryKey: gameKey(slug), queryFn: () => getGameLibrary(slug) });
@@ -15,16 +19,18 @@ export function useGameLibrary(slug: string) {
 
 const OUTSIDE_LIBRARY: GameLibraryState = { rating: null, lists: [] };
 
-// Sem atualização otimista: o que aparece marcado é o que a API gravou. Sem o estado no cache, o
-// jogo está fora da biblioteca, como os da partida a frio.
-export function useLibraryAction(slug: string) {
+// Sem atualização otimista: o que aparece marcado é o que a API gravou. O estado atual vem de quem
+// já o tem (o perfil o tira da biblioteca) ou do cache do jogo; sem nenhum dos dois, o jogo está
+// fora da biblioteca, como os da partida a frio.
+export function useLibraryAction(slug: string, current?: GameLibraryState) {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: gameKey(slug),
     mutationFn: (action: LibraryAction) =>
       applyLibraryAction(
         slug,
         action,
-        queryClient.getQueryData<GameLibraryState>(gameKey(slug)) ?? OUTSIDE_LIBRARY,
+        current ?? queryClient.getQueryData<GameLibraryState>(gameKey(slug)) ?? OUTSIDE_LIBRARY,
       ),
     // Sem esperar as outras listas recarregarem: a ficha já mostra o que foi gravado.
     onSuccess: (state) => {

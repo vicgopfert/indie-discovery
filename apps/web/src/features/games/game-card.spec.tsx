@@ -45,4 +45,11 @@ describe('GameCard', () => {
     expect(container.querySelector('img')).not.toBeInTheDocument();
     expect(screen.getAllByText('Celeste')).toHaveLength(2);
   });
+
+  it('sem link, o nome aparece como texto; o nível do título pode descer', () => {
+    render(<GameCard game={sampleGame()} linked={false} headingLevel="h3" />);
+
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 3, name: 'Celeste' })).toBeInTheDocument();
+  });
 });

@@ -3,6 +3,7 @@
 import type { DiscoveryMode, RecommendationOverview } from '@indie/contracts';
 import Link from 'next/link';
 import { type ReactNode, useId } from 'react';
+import { SessionGate, useClearAccountWhenUnauthorized } from '@/features/auth/session-gate';
 import { CoverRow } from './cover-row';
 import { useRecommendationOverview } from './hooks';
 import { listHref, listTitle, RECOMMENDATIONS_PATH } from './lists';
@@ -11,15 +12,14 @@ import {
   ChangeTastesLink,
   EmptyProfile,
   ModeControls,
+  RECOMMENDATIONS_INVITE,
   RecommendationsError,
   RecommendationsLoading,
-  SessionGate,
-  useClearAccountWhenUnauthorized,
 } from './recommendation-states';
 
 export function RecommendationsView() {
   return (
-    <SessionGate next={RECOMMENDATIONS_PATH}>
+    <SessionGate next={RECOMMENDATIONS_PATH} invite={RECOMMENDATIONS_INVITE}>
       {(user) => <Recommendations mode={user.discoveryMode} />}
     </SessionGate>
   );
