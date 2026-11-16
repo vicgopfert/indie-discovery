@@ -2,7 +2,7 @@
 
 import { ONBOARDING_RATINGS_MAX } from '@indie/contracts';
 import { useEffect, useRef, useState } from 'react';
-import { SessionGate } from '@/features/recommendations/recommendation-states';
+import { SessionGate } from '@/features/auth/session-gate';
 import { onboardingHref } from './paths';
 import { PreferencesStep } from './preferences-step';
 import { RatingStep } from './rating-step';

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Pagination } from '@/components/pagination';
+import { SessionGate, useClearAccountWhenUnauthorized } from '@/features/auth/session-gate';
 import { isNotFound } from '@/lib/api-client';
 import { useRecommendationPage } from './hooks';
 import { listHref, listTitle, RECOMMENDATIONS_PATH } from './lists';
@@ -13,10 +14,9 @@ import {
   BasisNote,
   EmptyProfile,
   ModeControls,
+  RECOMMENDATIONS_INVITE,
   RecommendationsError,
   RecommendationsLoading,
-  SessionGate,
-  useClearAccountWhenUnauthorized,
 } from './recommendation-states';
 
 type ListProps = { listKey: string; page: number };
@@ -34,6 +34,7 @@ export function RecommendationListView({ listKey, page }: ListProps) {
       <SessionGate
         next={listHref(listKey, page)}
         heading={<ListHeading title={listTitle(listKey)} />}
+        invite={RECOMMENDATIONS_INVITE}
       >
         {(user) => <RecommendationList listKey={listKey} page={page} mode={user.discoveryMode} />}
       </SessionGate>
