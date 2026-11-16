@@ -1,0 +1,151 @@
+{
+  "seed": 71,
+  "seedRationale": "A semente das medições do B-71 ao B-79: os perfis da semente 71 e os perfis coerentes do B-77 saem iguais aos de antes, e as famílias novas usam a mesma semente.",
+  "cutoffs": [10, 20],
+  "cutoffsRationale": "@20 é a tabela da seção 12 da proposta técnica (a primeira página do \"ver mais\" da principal); @10 é o critério das variantes do vetor, fixado no M0 para o B-62 e o B-63 (decisão 4 do plano do B-37).",
+  "samplingsRationale": "O jogo escondido sai de dois sorteios, sempre os dois: uniforme entre os jogos do atributo, que dá quase sempre jogos pouco conhecidos, e proporcional ao popularityCount, que dá quase sempre os conhecidos. São os dois extremos de uma biblioteca real; uma conclusão só vale se aparecer nos dois (decisão 3).",
+  "attributeProfiles": {
+    "profilesPerType": 360,
+    "minGames": 20,
+    "positiveScores": [5, 5, 4, 4],
+    "negativeScores": [1, 2],
+    "rationale": "Família A (seção 12): perfis que avaliam bem jogos de um atributo e mal jogos sem ele. O mesmo número de perfis para gêneros, temas e etiquetas de gênero ou subgênero, porque os perfis montados por um tipo de atributo favorecem a fatia desse tipo no vetor (acréscimo do autor ao plano). 360 por tipo (decisão do autor depois da rodada 1, que usou 120): com 120, o intervalo da diferença de acerto@10 num estrato chegava a ±1,6 ponto. No catálogo local de 11/11/2026 há 22 gêneros, 21 temas e 131 etiquetas de gênero ou subgênero com ao menos 20 jogos: 360 perfis por tipo dão 16 ou 17 por gênero e tema e 2 ou 3 por etiqueta. Cada jogo bem avaliado é escondido uma vez."
+  },
+  "coherentProfiles": {
+    "count": 600,
+    "maxDocumentRatio": 0.1,
+    "minGames": 20,
+    "mainScores": [5, 5, 4, 4],
+    "secondScores": [5, 4],
+    "rationale": "Família B: os perfis coerentes do B-77, com 4 jogos de uma etiqueta e 2 de outra, sorteados entre as etiquetas que podem virar prateleira em até 10% do catálogo. O limite fica fixo aqui para os perfis não mudarem quando o limite das prateleiras for calibrado. O sorteio uniforme refaz os do B-77 (base do C5): os 200 primeiros são os mesmos, porque o sorteio é sequencial; o proporcional à popularidade é a segunda amostragem. O jogo escondido sai uma vez do gosto principal e uma vez do secundário. 600 por amostragem (decisão do autor em 13/11/2026, depois da rodada 2, que usou 200): com 200, a família B uniforme tinha 7 acertos@20 do Equilibrado, pouco para a razão de acerto da regra c."
+  },
+  "coldStartProfiles": {
+    "count": 200,
+    "preferences": 3,
+    "ratedScores": [5, 4, 5, 4],
+    "aboveDocumentRatio": 0.1,
+    "aboveEvery": 10,
+    "rationale": "Família C: a partida a frio do B-34. Três preferências sorteadas entre as opções oferecidas (gêneros, temas e etiquetas); um perfil a cada 10 troca a última por uma etiqueta acima de 10% do catálogo, de que as preferências são isentas. Os jogos avaliados são os primeiros da lista de jogos para avaliar, na ordem da rota (o mais popular de cada preferência, em rodadas): 0 a 4, em blocos de 40 perfis. Cada jogo avaliado é escondido uma vez."
+  },
+  "bootstrap": {
+    "seed": 71,
+    "resamples": 2000,
+    "confidence": 0.95,
+    "rationale": "Intervalo de 95% da diferença de acerto entre duas configurações, por bootstrap pareado sobre os perfis (acréscimo do autor ao plano): os perfis são reamostrados com reposição, e o acerto é recalculado como acertos sobre jogos escondidos. Um limiar só conta como atingido se o intervalo inteiro estiver do lado da melhora."
+  },
+  "cases": {
+    "regression": {
+      "primaryGenre": "role-playing-rpg",
+      "primaryTheme": "fantasy",
+      "primaryCount": 6,
+      "secondary": ["7-days-to-die", "amnesia-the-bunker"],
+      "secondaryPattern": "Horror"
+    },
+    "realistic": {
+      "metroidvania e plataforma": [
+        ["hollow-knight", 5],
+        ["dead-cells", 5],
+        ["celeste", 4],
+        ["axiom-verge", 5]
+      ],
+      "ARPG e roguelike de ação": [
+        ["grim-dawn", 5],
+        ["hades--1", 5],
+        ["hades-ii", 4],
+        ["vampire-survivors", 4]
+      ],
+      "aconchegante": [
+        ["stardew-valley", 5],
+        ["a-short-hike", 5],
+        ["unpacking", 4],
+        ["spiritfarer", 5]
+      ],
+      "estratégia e baralho": [
+        ["slay-the-spire", 5],
+        ["into-the-breach", 5],
+        ["inscryption", 4],
+        ["monster-train", 4]
+      ],
+      "caso Fantasia do B-78": [
+        ["hollow-knight", 5],
+        ["dead-cells", 5],
+        ["hades--1", 5],
+        ["celeste", 5],
+        ["grim-dawn", 5],
+        ["slay-the-spire", 5]
+      ]
+    },
+    "realisticOnlyRecord": ["caso Fantasia do B-78"],
+    "rationale": "Os casos do B-77 e do B-79 (docs/etiquetas.md, seção 6): o RPG com terror de produção (os 6 RPG de fantasia mais populares e os dois jogos de terror, todos com nota 5) e os perfis realistas. O caso Fantasia do B-78 é só registro no C3."
+  },
+  "criteria": {
+    "coherentMain": 0.9,
+    "coherentSecond": 0.7,
+    "coherentNone": 0.05,
+    "minShelves": 2,
+    "rationale": "Os limites do C1 a C5 gravados no B-77 e mantidos no B-79: C3 e C4 pedem ao menos 2 prateleiras de interesse na visão geral; C5 pede prateleira só do gosto principal em ao menos 90% dos perfis coerentes, só do secundário em ao menos 70% e no máximo 5% sem prateleira. O C5 usa os 200 primeiros perfis coerentes uniformes, os do B-77, mesmo com a família B maior.",
+    "coherentProfiles": 200
+  },
+  "variants": {
+    "shelfLimit": [0.1, 0.15, 0.2],
+    "blockShares": [
+      {
+        "GENRE": 0.4,
+        "THEME": 0.3,
+        "TAG": 0.3
+      },
+      {
+        "GENRE": 0.34,
+        "THEME": 0.33,
+        "TAG": 0.33
+      },
+      {
+        "GENRE": 0.3,
+        "THEME": 0.3,
+        "TAG": 0.4
+      },
+      {
+        "GENRE": 0.5,
+        "THEME": 0.25,
+        "TAG": 0.25
+      },
+      {
+        "GENRE": 0.25,
+        "THEME": 0.25,
+        "TAG": 0.5
+      }
+    ],
+    "discoveryLambda": [0.05, 0.1, 0.15, 0.2, 0.3],
+    "popularLambda": [-0.05, -0.1, -0.2, -0.3],
+    "preferenceWeight": [0.5, 1, 2],
+    "rationale": "As grades da rodada 2, aprovadas no plano do B-37 (decisão 6): o limite de frequência das prateleiras, as fatias dos blocos (e a normalização global), o λ de cada modo e o β. Os limiares das regras são fixados pelo autor depois da rodada 1, antes de medir qualquer variante."
+  },
+  "rules": {
+    "blockShares": {
+      "mode": "BALANCED",
+      "cutoff": 10,
+      "minDifference": 0,
+      "rationale": "Regra b, fixada pelo autor depois da rodada 1: troca só se o intervalo de 95% da diferença de acerto@10 contra a configuração atual ficar inteiro acima de zero nas 8 combinações (gênero, tema e etiqueta da família A nas duas amostragens, mais a família B nas duas amostragens), e o intervalo da diferença de cobertura dos interesses@20 não ficar inteiro abaixo de zero nessas combinações. Caso contrário, 40/30/30. Medida no modo Equilibrado, o padrão, em que λ = 0 e a lista sai só da semelhança (o λ é calibrado depois)."
+    },
+    "lambda": {
+      "cutoff": 20,
+      "minArpGap": 0.05,
+      "maxLowKnown": 0.5,
+      "minHitRatio": 0.7,
+      "coverageSubsample": 0.5,
+      "coverageRationale": "Decisão do autor em 13/11/2026, depois da rodada 2: a cobertura do catálogo conta os jogos distintos do grupo, e o bootstrap com reposição repete perfis e puxa o intervalo para zero (na rodada 2, o valor medido caiu fora do próprio intervalo). O intervalo da condição \"cobertura do Descobertas ≥ a do Populares\" sai de subamostras de metade dos perfis, sem reposição, com as duas listas na mesma subamostra; a condição é decidida pela diferença Descobertas − Populares nas subamostras.",
+      "rationale": "Regra c, fixada pelo autor depois da rodada 1: escolhe o maior λ, em valor absoluto, que cumpre em todas as combinações das famílias A e B nas duas amostragens. Descobertas: ARP do Equilibrado menos a do Descobertas ≥ 0,05; \"pouco conhecido\" no top-20 do Descobertas ≤ 50%; acerto@20 do Descobertas ≥ 0,7 vez o do Equilibrado; cobertura do catálogo@20 do Descobertas ≥ a do Populares. Populares: ARP do Populares menos a do Equilibrado ≥ 0,05 e acerto@20 do Populares ≥ 0,7 vez o do Equilibrado. Cada condição vale só com o intervalo de 95% inteiro do lado dela. Se nenhum valor da grade passar, fica o λ atual, com as condições que falharam registradas.",
+      "fallbackRationale": "Reserva da regra c, fixada pelo autor em 13/11/2026 às 12:42, depois da rodada 2 e antes de refazer a regra c. Se algum valor da grade passar em todas as condições, vale a regra (o maior λ em valor absoluto). Se nenhum passar: entre os valores da grade que cumprem toda condição que o λ atual cumpre, pelo ponto medido e pelo intervalo, adota-se o que falha em menos condições; no empate, o de maior |λ|. Se nenhum valor cumprir isso, fica o λ atual. Vale para o Descobertas e para o Populares. Motivo: na rodada 2, a reserva \"fica o λ atual\" manteria o pior valor da grade (0,3 falhou em 4 condições no Descobertas; 0,1 falhou em 1, com a razão de acerto medida em 0,71 e o intervalo [0,65; 0,77]). A reserva existia para não trocar sem evidência, e a evidência contra o valor atual é a mais forte da medição. Mesma lógica da exceção do B-77, aqui fixada antes de medir.",
+      "pairRationale": "Aplicação da regra c por pares, fixada pelo autor em 16/11/2026 às 11:20, depois da rodada 3 e antes de refazer a regra c. As condições referem-se à configuração inteira (a ordem de ARP e a cobertura do Descobertas ≥ a do Populares envolvem os dois modos), e a primeira aplicação avaliou cada modo com o valor antigo do outro: com os dois valores escolhidos juntos, a cobertura do Descobertas ficou abaixo da do Populares. É correção da aplicação da regra, sem mudar critérios, limiares, intervalos nem a grade. Avaliam-se os 20 pares da grade (Descobertas 0,05; 0,1; 0,15; 0,2; 0,3 × Populares −0,05; −0,1; −0,2; −0,3), com todas as condições da regra c calculadas sobre o par, nas famílias A e B e nas duas amostragens. Se algum par passar em tudo, escolhe-se o de maior |λ| do Descobertas e, no empate, o de maior |λ| do Populares. Se nenhum passar, vale a reserva aplicada aos pares: entre os pares que cumprem toda condição que o par atual (0,3; −0,2) cumpre, pelo ponto medido e pelo intervalo, adota-se o que falha em menos condições; no empate, o de maior |λ| do Descobertas e depois o do Populares. Se nenhum par cumprir isso, fica o par atual."
+    },
+    "preferenceWeight": {
+      "mode": "BALANCED",
+      "cutoff": 20,
+      "minPreferenceCoverage": 0.95,
+      "rationale": "Regra d, fixada pelo autor depois da rodada 1: entre os β com cobertura das preferências@20 ≥ 95% na família C (o intervalo de 95% inteiro acima), troca só se outro valor tiver acerto@20 maior que o de β = 1, com o intervalo da diferença inteiro acima de zero; havendo mais de um, o de maior acerto@20. Medida no modo Equilibrado."
+    },
+    "upcomingDominance": 0.5,
+    "upcomingRationale": "\"Em breve\" domina um modo se passar de 50% do top-20 (seção 12); abaixo disso, só registrado.",
+    "rationale": "Limiares das regras da rodada 2, fixados pelo autor em 13/11/2026, depois da rodada 1 e antes de medir qualquer variante. As regras são aplicadas na ordem a → b → c → d, cada uma sobre os valores escolhidos pelas anteriores. Nas condições que não são acerto (diferença de ARP, \"pouco conhecido\", cobertura e razão de acerto) vale o mesmo bootstrap pareado sobre os perfis."
+  }
+}

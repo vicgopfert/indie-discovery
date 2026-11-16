@@ -16,6 +16,7 @@ import { RecommendationModule } from './modules/recommendation/recommendation.mo
 import type { ScoringConfig } from './modules/recommendation/scoring/scoring-config';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
+import { mulberry32, sample } from './evaluation/random';
 
 // Foto das respostas de recomendação para conferir que uma mudança não altera nenhuma: a visão geral
 // e o "ver mais" de cada lista, nos três modos, em 400 perfis da semente 71 (200 com quatro jogos
@@ -29,7 +30,7 @@ import { PrismaService } from './prisma/prisma.service';
 
 const SEED = 71;
 const PROFILES_PER_KIND = 200;
-const RATED_SCORES = [5, 5, 4, 1];
+export const RATED_SCORES = [5, 5, 4, 1];
 // Datas fixas: a data da nota desempata as prateleiras "Porque você gostou de" (B-79), e notas
 // gravadas no mesmo milissegundo mudariam a foto entre execuções.
 const RATED_AT = Date.UTC(2026, 0, 1);
@@ -53,10 +54,10 @@ export interface Snapshot {
 }
 
 // A foto cria e apaga contas: como os e2e, só roda em banco local.
-export function assertLocalDatabase(databaseUrl: string) {
+export function assertLocalDatabase(databaseUrl: string, tool = 'A foto das recomendações') {
   const { hostname } = new URL(databaseUrl);
   if (!LOCAL_HOSTS.has(hostname)) {
-    throw new Error(`A foto das recomendações só roda em banco local; o host é "${hostname}".`);
+    throw new Error(`${tool} só roda em banco local; o host é "${hostname}".`);
   }
 }
 
@@ -64,23 +65,6 @@ export function assertLocalDatabase(databaseUrl: string) {
 export function profileUserId(profile: number) {
   const hex = createHash('sha256').update(`${EMAIL_PREFIX}${SEED}:${profile}`).digest('hex');
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-4${hex.slice(13, 16)}-a${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
-}
-
-export function mulberry32(seed: number) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function sample<T>(random: () => number, items: readonly T[], count: number): T[] {
-  const picked = new Set<T>();
-  while (picked.size < count) picked.add(items[Math.floor(random() * items.length)]!);
-  return [...picked];
 }
 
 // Só o que está no snapshot de cada lado; uma foto rápida é comparada com as entradas dela.
@@ -112,29 +96,54 @@ export function compareSnapshots(before: Snapshot, after: Snapshot) {
 })
 class SnapshotModule {}
 
-async function createProfiles(prisma: PrismaService, labels: FeatureLabels) {
-  const games = (
+export interface SeedProfiles {
+  // Os ids dos jogos avaliados de cada perfil, na ordem das notas de RATED_SCORES.
+  rated: string[][];
+  // Os ids dos gêneros e temas preferidos de cada perfil.
+  preferred: string[][];
+}
+
+// Os jogos do catálogo e os gêneros e temas visíveis, na ordem em que a semente os sorteia.
+export async function findSeedInputs(prisma: PrismaService, labels: FeatureLabels) {
+  const gameIds = (
     await prisma.game.findMany({
       where: { inCatalog: true },
       select: { id: true },
       orderBy: { id: 'asc' },
     })
   ).map(({ id }) => id);
-  const features = (
+  const featureIds = (
     await prisma.feature.findMany({
       where: { type: { in: [FeatureType.GENRE, FeatureType.THEME] }, idf: { gt: 0 } },
       select: { id: true, type: true, slug: true },
       orderBy: [{ type: 'asc' }, { igdbId: 'asc' }],
     })
-  ).filter(({ type, slug }) => !labels.isHidden(type as 'GENRE' | 'THEME', slug));
+  )
+    .filter(({ type, slug }) => !labels.isHidden(type as 'GENRE' | 'THEME', slug))
+    .map(({ id }) => id);
+  return { gameIds, featureIds };
+}
 
+// Os 200 perfis por avaliações primeiro e os 200 por preferências depois, da mesma sequência.
+export function seedProfiles({
+  gameIds,
+  featureIds,
+}: {
+  gameIds: readonly string[];
+  featureIds: readonly string[];
+}): SeedProfiles {
   const random = mulberry32(SEED);
   const rated = Array.from({ length: PROFILES_PER_KIND }, () =>
-    sample(random, games, RATED_SCORES.length),
+    sample(random, gameIds, RATED_SCORES.length),
   );
   const preferred = Array.from({ length: PROFILES_PER_KIND }, () =>
-    sample(random, features, PREFERENCES_PER_PROFILE).map(({ id }) => id),
+    sample(random, featureIds, PREFERENCES_PER_PROFILE),
   );
+  return { rated, preferred };
+}
+
+async function createProfiles(prisma: PrismaService, labels: FeatureLabels) {
+  const { rated, preferred } = seedProfiles(await findSeedInputs(prisma, labels));
 
   await deleteProfiles(prisma);
   const profiles = [...rated, ...preferred].map((_, i) => ({

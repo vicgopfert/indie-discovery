@@ -27,11 +27,11 @@
     "preferenceWeight": 1,
     "preferenceWeightRationale": "β: peso de cada gênero ou tema escolhido na partida a frio, somado ao perfil como vetor unitário daquele atributo. Valor inicial da proposta; a calibração é do B-37.",
     "popularityWeightByMode": {
-      "POPULAR": -0.2,
+      "POPULAR": -0.3,
       "BALANCED": 0,
-      "DISCOVERY": 0.3
+      "DISCOVERY": 0.2
     },
-    "popularityWeightRationale": "λ do modo em score = cos(u, v) − λ · pop: negativo favorece os populares, positivo os pouco conhecidos, e o Equilibrado não usa a popularidade. Valores iniciais da proposta; a calibração é do B-37.",
+    "popularityWeightRationale": "λ do modo em score = cos(u, v) − λ · pop: negativo favorece os populares, positivo os pouco conhecidos, e o Equilibrado não usa a popularidade. Calibrado no B-37 em 16/11/2026 pela regra c aplicada aos pares (Descobertas; Populares), com as condições dos dois modos calculadas juntas (docs/avaliacao-offline.md); eram 0,3 e −0,2, os valores iniciais da proposta. Nenhum dos 20 pares passou em todas as condições. Pela reserva fixada antes da medição, 7 pares cumprem tudo o que o par atual cumpre e falham em 3 condições, contra 9 do atual; no empate, fica o de maior |λ| do Descobertas e depois do Populares: 0,2 e −0,3.",
     "lists": {
       "maxInterests": 6,
       "maxInterestsRationale": "Quantas prateleiras de interesse a visão geral pode ter, cada uma com uma cota na lista principal. A regra de duas fases do B-77 foi medida com 4, 5 e 6 prateleiras: com 6, os perfis coerentes ganham prateleira só do gosto secundário em 85,5% (70,5% com 4) e nenhuma some pelo mínimo de jogos (docs/etiquetas.md, seção 6). Com as 2 prateleiras por jogo, a principal e \"Em breve\", a visão geral chega a 10 seções (B-79).",

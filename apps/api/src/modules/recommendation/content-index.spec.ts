@@ -1,5 +1,5 @@
 import { FeatureType, ReleaseStatus } from '../../generated/prisma/client';
-import { buildContentIndex, type ContentIndexRows } from './content-index';
+import { buildContentIndex, type ContentIndexRows, hiddenPositionsOf } from './content-index';
 import { BOOT_RETRY_DELAYS_MS, ContentIndexService, shelfTagsOf } from './content-index.service';
 import type { ContentIndexRepository } from './content-index.repository';
 import {
@@ -156,6 +156,19 @@ describe('buildContentIndex: prateleiras', () => {
     expect(featureOf('TAG-1').idea).toBe(featureOf('GENRE-2').idea);
     expect(featureOf('GENRE-2').idea).toBe('genre:GENRE-2');
     expect(featureOf('TAG-2').idea).toBe('tag:TAG-2');
+  });
+});
+
+describe('hiddenPositionsOf', () => {
+  const index = buildContentIndex(rowsFor(catalog), config, new Map());
+  const positionOf = (name: string) => index.features.findIndex((f) => f.name === name);
+
+  it('só os gêneros e temas escondidos dos filtros; etiqueta com o mesmo slug fica de fora', () => {
+    const hidden = hiddenPositionsOf(index, {
+      isHidden: (type, slug) => (type === 'GENRE' && slug === 'GENRE-1') || slug === 'TAG-1',
+    });
+
+    expect([...hidden]).toEqual([positionOf('GENRE-1')]);
   });
 });
 

@@ -1,5 +1,5 @@
 import { FeatureType, type ReleaseStatus } from '../../generated/prisma/client';
-import type { LabeledFeatureType } from '../catalog/feature-labels';
+import type { FeatureLabels, LabeledFeatureType } from '../catalog/feature-labels';
 import {
   type ContentFeature,
   type FeatureKey,
@@ -58,6 +58,18 @@ export interface ShelfTag {
 // do vocabulário (B-78).
 export function isLabeledFeatureType(type: FeatureType): type is LabeledFeatureType {
   return type === FeatureType.GENRE || type === FeatureType.THEME;
+}
+
+// As posições dos gêneros e temas escondidos dos filtros, que não viram interesse nem motivo.
+export function hiddenPositionsOf(
+  { features }: Pick<ContentIndex, 'features'>,
+  labels: Pick<FeatureLabels, 'isHidden'>,
+): ReadonlySet<number> {
+  const hidden = new Set<number>();
+  features.forEach(({ type, slug }, position) => {
+    if (isLabeledFeatureType(type) && labels.isHidden(type, slug)) hidden.add(position);
+  });
+  return hidden;
 }
 
 // O atributo de uma prateleira ou de um motivo.

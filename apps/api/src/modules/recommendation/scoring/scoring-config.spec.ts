@@ -1,11 +1,11 @@
 import { readScoringConfig, scoringConfigSchema } from './scoring-config';
 
 describe('readScoringConfig', () => {
-  it('lê e valida o arquivo versionado, com os valores iniciais da proposta', () => {
+  it('lê e valida o arquivo versionado, com os valores calibrados no B-37', () => {
     expect(readScoringConfig()).toMatchObject({
       listBonus: { FAVORITE: 2, COMPLETED: 1, WANT_TO_PLAY: 0.5 },
       preferenceWeight: 1,
-      popularityWeightByMode: { POPULAR: -0.2, BALANCED: 0, DISCOVERY: 0.3 },
+      popularityWeightByMode: { POPULAR: -0.3, BALANCED: 0, DISCOVERY: 0.2 },
       lists: {
         maxInterests: 6,
         specificMaxDocumentRatio: 0.1,
