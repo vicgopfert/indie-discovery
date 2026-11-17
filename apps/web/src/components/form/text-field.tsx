@@ -1,18 +1,21 @@
 'use client';
 
-import { type ComponentProps, useId } from 'react';
+import { type ComponentProps, type ComponentType, useId } from 'react';
 import { type Control, type FieldValues, type Path, useController } from 'react-hook-form';
 import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 
-type TextFieldProps<TValues extends FieldValues, TTransformed> = Omit<
-  ComponentProps<typeof Input>,
+type InputProps = ComponentProps<typeof Input>;
+
+export type TextFieldProps<TValues extends FieldValues, TTransformed> = Omit<
+  InputProps,
   'id' | 'name' | 'value' | 'defaultValue' | 'onChange' | 'onBlur'
 > & {
   control: Control<TValues, unknown, TTransformed>;
   name: Path<TValues>;
   label: string;
   description?: string;
+  input?: ComponentType<InputProps>;
 };
 
 export function TextField<TValues extends FieldValues, TTransformed>({
@@ -20,6 +23,7 @@ export function TextField<TValues extends FieldValues, TTransformed>({
   name,
   label,
   description,
+  input: InputComponent = Input,
   ...inputProps
 }: TextFieldProps<TValues, TTransformed>) {
   const id = useId();
@@ -33,7 +37,7 @@ export function TextField<TValues extends FieldValues, TTransformed>({
   return (
     <Field data-invalid={fieldState.invalid}>
       <FieldLabel htmlFor={id}>{label}</FieldLabel>
-      <Input
+      <InputComponent
         {...inputProps}
         {...field}
         id={id}
