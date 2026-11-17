@@ -69,4 +69,16 @@ describe('LoginForm', () => {
       'Não foi possível falar com o servidor',
     );
   });
+
+  it('mostra e oculta a senha pelo botão dentro do campo', async () => {
+    renderWithQuery(<LoginForm redirectTo="/" />);
+    const field = screen.getByLabelText('Senha');
+    const toggle = screen.getByRole('button', { name: 'Mostrar senha' });
+
+    await userEvent.setup().click(toggle);
+
+    expect(field).toHaveAttribute('type', 'text');
+    expect(field).toHaveAttribute('autocomplete', 'current-password');
+    expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  });
 });

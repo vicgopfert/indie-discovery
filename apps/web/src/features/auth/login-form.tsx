@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { FormAlert } from '@/components/form/form-alert';
+import { PasswordField } from '@/components/form/password-field';
 import { TextField } from '@/components/form/text-field';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
@@ -40,11 +41,10 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
           type="email"
           autoComplete="email"
         />
-        <TextField
+        <PasswordField
           control={form.control}
           name="password"
           label="Senha"
-          type="password"
           autoComplete="current-password"
         />
         <Button type="submit" disabled={isSubmitting}>
