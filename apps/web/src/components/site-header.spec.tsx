@@ -23,7 +23,7 @@ describe('SiteHeader', () => {
 
     renderWithQuery(<SiteHeader />);
 
-    expect(screen.getByRole('link', { name: 'Indie Discovery' })).toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: 'Penumbra' })).toHaveAttribute('href', '/');
     expect(mainLinks()).toEqual(MAIN_LINKS);
     const account = await screen.findByRole('navigation', { name: 'Conta' });
     expect(within(account).getByRole('link', { name: 'Entrar' })).toHaveAttribute(

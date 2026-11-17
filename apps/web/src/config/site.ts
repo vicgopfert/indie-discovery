@@ -1,5 +1,5 @@
-// O nome é provisório: trocá-lo aqui atualiza o título das páginas e o cabeçalho.
+// Trocar o nome aqui atualiza o título das páginas, o cabeçalho e a página inicial.
 export const siteConfig = {
-  name: 'Indie Discovery',
+  name: 'Penumbra',
   description: 'Descubra jogos independentes pela afinidade com o seu gosto.',
 };

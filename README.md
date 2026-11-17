@@ -1,4 +1,6 @@
-# Plataforma Web de Descoberta de Jogos Independentes
+# Penumbra
+
+Plataforma Web de Descoberta de Jogos Independentes.
 
 Plataforma web que recomenda jogos de estúdios e desenvolvedores independentes
 pela afinidade entre as características de cada jogo e as preferências de cada
@@ -9,7 +11,7 @@ catálogo por país do estúdio e por coleções culturais curadas.
 Trabalho de Conclusão de Curso — Tecnologia em Análise e Desenvolvimento de
 Sistemas, UERJ.
 Autor: Victor Gopfert Ferreira Figueiredo.
-Orientador: Leonardo da Silva Bóia.
+Orientador: Leonardo da Silva Boia.
 
 ## Stack
 
@@ -68,9 +70,9 @@ na aba Actions ("Run workflow").
 
 | O quê | Onde | Configuração |
 | --- | --- | --- |
-| Site | https://indie-discovery.vercel.app | Vercel, pasta `apps/web`, comando de build em `apps/web/vercel.json`; variáveis `API_URL` e `ENABLE_EXPERIMENTAL_COREPACK=1` no painel |
-| API | https://indie-discovery-api.onrender.com | Render, pelo Blueprint `render.yaml`; `DATABASE_URL` (URL com pooling) e `WEB_ORIGIN` no painel |
-| Swagger | https://indie-discovery.vercel.app/api/docs | — |
+| Site | https://penumbraindie.com.br (o `www` e o antigo `indie-discovery.vercel.app` redirecionam para ele) | Vercel, pasta `apps/web`, comando de build em `apps/web/vercel.json`; variáveis `API_URL` e `ENABLE_EXPERIMENTAL_COREPACK=1` no painel |
+| API | https://indie-discovery-api.onrender.com | Render, serviço `penumbra-api`, pelo Blueprint `render.yaml`; `DATABASE_URL` (URL com pooling) e `WEB_ORIGIN` no painel |
+| Swagger | https://penumbraindie.com.br/api/docs | — |
 | Banco | Neon, PostgreSQL 18, AWS US East | Migrations e seed pelo job `migrate-production` do CI (secret `PRODUCTION_DATABASE_URL`, URL direta) |
 
 O navegador só fala com a Vercel: `/api/*` é repassado para o Render pelo rewrite

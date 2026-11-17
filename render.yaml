@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: indie-discovery-api
+    name: penumbra-api
     runtime: node
     plan: free
     region: virginia
