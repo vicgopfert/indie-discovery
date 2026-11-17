@@ -13,7 +13,7 @@ export interface WikidataOptions {
 // A política do Wikidata pede um User-Agent com contato: o do repositório público.
 export const WIKIDATA_DEFAULTS: WikidataOptions = {
   endpoint: 'https://query.wikidata.org/sparql',
-  userAgent: 'indie-discovery/0.1 (https://github.com/vicgopfert/indie-discovery)',
+  userAgent: 'penumbra/0.1 (https://github.com/vicgopfert/penumbra)',
   timeoutMs: 120_000,
   maxAttempts: 3,
   retryDelayMs: 5000,

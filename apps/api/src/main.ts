@@ -15,7 +15,7 @@ async function bootstrap() {
   configureApp(app);
 
   const config = new DocumentBuilder()
-    .setTitle('Indie Discovery API')
+    .setTitle('Penumbra API')
     .setDescription('API da plataforma de descoberta de jogos independentes')
     .setVersion('0.1.0')
     .addCookieAuth('sid')
