@@ -3,6 +3,12 @@
   "buildCommand": "pnpm --filter @indie/web... run build",
   "redirects": [
     {
+      "source": "/",
+      "has": [{ "type": "host", "value": "indie-discovery.vercel.app" }],
+      "destination": "https://penumbraindie.com.br/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "indie-discovery.vercel.app" }],
       "destination": "https://penumbraindie.com.br/:path*",
