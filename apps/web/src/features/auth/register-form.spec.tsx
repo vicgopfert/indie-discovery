@@ -77,4 +77,16 @@ describe('RegisterForm', () => {
     );
     expect(screen.getAllByRole('alert')).toHaveLength(1);
   });
+
+  it('mostra e oculta a senha pelo botão dentro do campo', async () => {
+    renderWithQuery(<RegisterForm redirectTo="/" />);
+    const field = screen.getByLabelText(/^Senha/);
+    const toggle = screen.getByRole('button', { name: 'Mostrar senha' });
+
+    await userEvent.setup().click(toggle);
+
+    expect(field).toHaveAttribute('type', 'text');
+    expect(field).toHaveAttribute('autocomplete', 'new-password');
+    expect(toggle).toHaveAttribute('aria-pressed', 'true');
+  });
 });
