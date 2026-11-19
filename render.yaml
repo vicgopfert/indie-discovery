@@ -21,6 +21,11 @@ services:
         sync: false
       - key: INTERNAL_RELOAD_SECRET
         generateValue: true
-      # Desligado até o domínio de envio estar verificado no Resend (B-81).
+      # Envio pela API HTTP do Resend, com o domínio mail.penumbraindie.com.br verificado (B-81).
       - key: MAIL_TRANSPORT
-        value: 'off'
+        value: resend
+      - key: MAIL_FROM
+        value: 'Penumbra <nao-responda@mail.penumbraindie.com.br>'
+      # Chave só de envio, restrita ao domínio; criada no Resend e colada no painel do Render.
+      - key: RESEND_API_KEY
+        sync: false
