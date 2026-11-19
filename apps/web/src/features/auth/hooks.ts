@@ -1,6 +1,6 @@
 import type { User } from '@indie/contracts';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getSession, login, logout, register } from './api';
+import { getSession, login, logout, register, requestPasswordReset, resetPassword } from './api';
 
 export const SESSION_QUERY_KEY = ['session'] as const;
 
@@ -23,6 +23,14 @@ function useSignIn<TInput>(mutationFn: (input: TInput) => Promise<User>) {
 export function useLogout() {
   const queryClient = useQueryClient();
   return useMutation({ mutationFn: logout, onSuccess: () => clearAccount(queryClient) });
+}
+
+export const useRequestPasswordReset = () => useMutation({ mutationFn: requestPasswordReset });
+
+// A redefinição encerra todas as sessões da conta, inclusive a deste navegador, se houver.
+export function useResetPassword() {
+  const queryClient = useQueryClient();
+  return useMutation({ mutationFn: resetPassword, onSuccess: () => clearAccount(queryClient) });
 }
 
 // Ao sair, ou quando a sessão vence: o que estiver no cache pertence à conta que saiu.

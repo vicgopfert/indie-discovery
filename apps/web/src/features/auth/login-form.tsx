@@ -2,6 +2,7 @@
 
 import { LoginSchema } from '@indie/contracts';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { FormAlert } from '@/components/form/form-alert';
@@ -47,6 +48,11 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
           label="Senha"
           autoComplete="current-password"
         />
+        <p className="-mt-3 text-sm">
+          <Link href="/esqueci-senha" className="underline">
+            Esqueci minha senha
+          </Link>
+        </p>
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Entrando…' : 'Entrar'}
         </Button>

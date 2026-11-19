@@ -70,6 +70,15 @@ describe('LoginForm', () => {
     );
   });
 
+  it('leva à página de redefinição pelo link "Esqueci minha senha"', () => {
+    renderWithQuery(<LoginForm redirectTo="/" />);
+
+    expect(screen.getByRole('link', { name: 'Esqueci minha senha' })).toHaveAttribute(
+      'href',
+      '/esqueci-senha',
+    );
+  });
+
   it('mostra e oculta a senha pelo botão dentro do campo', async () => {
     renderWithQuery(<LoginForm redirectTo="/" />);
     const field = screen.getByLabelText('Senha');
