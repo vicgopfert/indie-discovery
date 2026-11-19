@@ -13,6 +13,9 @@ async function bootstrap() {
     logger: new ConsoleLogger({ json: process.env.NODE_ENV === 'production' }),
   });
   configureApp(app);
+  // No deploy, o Render manda SIGTERM: os ganchos de desligamento terminam os envios em andamento
+  // e fecham a conexão com o banco antes de a API sair.
+  app.enableShutdownHooks();
 
   const config = new DocumentBuilder()
     .setTitle('Penumbra API')
