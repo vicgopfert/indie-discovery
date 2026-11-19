@@ -21,3 +21,6 @@ services:
         sync: false
       - key: INTERNAL_RELOAD_SECRET
         generateValue: true
+      # Desligado até o domínio de envio estar verificado no Resend (B-81).
+      - key: MAIL_TRANSPORT
+        value: 'off'

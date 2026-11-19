@@ -1,0 +1,34 @@
+import { passwordChangedEmail, passwordResetEmail, passwordResetLink } from './account-emails';
+
+const ORIGIN = 'https://penumbraindie.com.br';
+const CHANGED_AT = new Date('2026-11-17T18:30:00Z');
+
+describe('e-mails de conta', () => {
+  it.each([
+    ['pedido de redefinição', passwordResetEmail('jogadora@example.com', 'https://link')],
+    ['senha alterada', passwordChangedEmail('jogadora@example.com', CHANGED_AT, ORIGIN)],
+  ])('%s: saudação genérica, sem texto digitado pelo usuário', (_, email) => {
+    expect(email.text.startsWith('Olá.\n')).toBe(true);
+    expect(email.to).toBe('jogadora@example.com');
+    expect(email.text).not.toContain('jogadora@example.com');
+  });
+
+  it('o link de redefinição leva o token depois do #', () => {
+    const link = passwordResetLink(ORIGIN, 'token-secreto');
+
+    expect(link).toBe(`${ORIGIN}/redefinir-senha#token-secreto`);
+    expect(passwordResetEmail('jogadora@example.com', link).text).toContain(link);
+  });
+
+  it('o pedido de redefinição avisa que só o link mais recente funciona', () => {
+    expect(passwordResetEmail('jogadora@example.com', 'https://link').text).toContain(
+      'Se você pediu mais de uma vez, só o link do e-mail mais recente funciona.',
+    );
+  });
+
+  it('a data da troca de senha sai no horário de Brasília', () => {
+    expect(passwordChangedEmail('jogadora@example.com', CHANGED_AT, ORIGIN).text).toContain(
+      '17 de novembro de 2026 às 15:30',
+    );
+  });
+});

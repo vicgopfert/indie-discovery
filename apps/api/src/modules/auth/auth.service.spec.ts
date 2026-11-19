@@ -4,7 +4,7 @@ import type { NewUser, UsersRepository } from '../users/users.repository';
 import type { AuthSettings } from './auth-settings';
 import { AuthService } from './auth.service';
 import type { PasswordHasher } from './password-hasher';
-import { hashSessionToken } from './session-token';
+import { hashSecretToken } from './secret-token';
 import type { SessionsRepository } from './sessions.repository';
 
 const NOW = new Date('2026-10-27T12:00:00Z');
@@ -61,7 +61,11 @@ class FakeHasher implements Pick<PasswordHasher, 'hash' | 'verify'> {
   }
 }
 
-const settings: AuthSettings = { sessionTtlDays: 7, secureCookie: false };
+const settings: AuthSettings = {
+  sessionTtlDays: 7,
+  secureCookie: false,
+  webOrigin: 'http://localhost:3000',
+};
 
 describe('AuthService', () => {
   let users: FakeUsers;
@@ -105,7 +109,7 @@ describe('AuthService', () => {
       expect(sessions.saved).toEqual([
         {
           userId: 'id-1',
-          tokenHash: hashSessionToken(token),
+          tokenHash: hashSecretToken(token),
           expiresAt: new Date('2026-11-03T12:00:00Z'),
         },
       ]);
@@ -128,7 +132,7 @@ describe('AuthService', () => {
       const { token } = await auth.login({ email: input.email, password: 'senha-forte' }, NOW);
 
       expect(sessions.saved).toHaveLength(2);
-      expect(sessions.saved[1]?.tokenHash).toBe(hashSessionToken(token));
+      expect(sessions.saved[1]?.tokenHash).toBe(hashSecretToken(token));
       expect(sessions.saved[1]?.tokenHash).not.toBe(token);
     });
 

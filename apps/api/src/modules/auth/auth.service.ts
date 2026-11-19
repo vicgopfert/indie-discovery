@@ -5,7 +5,7 @@ import { toPublicUser } from '../users/user.presenter';
 import { UsersRepository } from '../users/users.repository';
 import { AUTH_SETTINGS, type AuthSettings, sessionExpiresAt } from './auth-settings';
 import { PasswordHasher } from './password-hasher';
-import { hashSessionToken, newSessionToken } from './session-token';
+import { hashSecretToken, newSecretToken } from './secret-token';
 import { SessionsRepository } from './sessions.repository';
 
 const WRONG_CREDENTIALS = 'E-mail ou senha incorretos';
@@ -45,14 +45,14 @@ export class AuthService {
   }
 
   async logout(token: string) {
-    await this.sessions.delete(hashSessionToken(token));
+    await this.sessions.delete(hashSecretToken(token));
   }
 
   private async startSession(user: User, now: Date) {
-    const token = newSessionToken();
+    const token = newSecretToken();
     await this.sessions.create(
       user.id,
-      hashSessionToken(token),
+      hashSecretToken(token),
       sessionExpiresAt(this.settings, now),
     );
     return { user: toPublicUser(user), token };

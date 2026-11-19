@@ -2,9 +2,12 @@ import type { CookieOptions } from 'express';
 
 export const AUTH_SETTINGS = Symbol('AUTH_SETTINGS');
 
+export const SESSION_COOKIE = 'sid';
+
 export interface AuthSettings {
   sessionTtlDays: number;
   secureCookie: boolean;
+  webOrigin: string;
 }
 
 const DAY_MS = 86_400_000;

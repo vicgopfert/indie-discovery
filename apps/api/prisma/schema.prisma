@@ -49,6 +49,10 @@ enum DiscoveryMode {
   DISCOVERY
 }
 
+enum AccountTokenPurpose {
+  PASSWORD_RESET
+}
+
 enum ReviewFlagKind {
   NO_EFFECT_STUDIO
   PARENT_OUTSIDE_MAJORS
@@ -77,6 +81,7 @@ model User {
   onboardingCompletedAt DateTime?
   createdAt             DateTime         @default(now())
   sessions              Session[]
+  accountTokens         AccountToken[]
   ratings               Rating[]
   listEntries           ListEntry[]
   preferences           UserPreference[]
@@ -92,6 +97,21 @@ model Session {
   createdAt DateTime @default(now())
 
   @@index([userId])
+  @@index([expiresAt])
+}
+
+// Tokens de uso único enviados por e-mail, um só ativo por usuário e finalidade; a finalidade
+// separa a redefinição de senha dos que vierem depois, como a confirmação do e-mail.
+model AccountToken {
+  id        String              @id @default(uuid()) @db.Uuid
+  userId    String              @db.Uuid
+  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  purpose   AccountTokenPurpose
+  tokenHash String              @unique
+  expiresAt DateTime
+  createdAt DateTime            @default(now())
+
+  @@unique([userId, purpose])
   @@index([expiresAt])
 }
 
