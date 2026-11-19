@@ -29,7 +29,12 @@ import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Public } from '../../common/decorators/public.decorator';
 import type { User } from '../../generated/prisma/client';
 import { toPublicUser } from '../users/user.presenter';
-import { AUTH_SETTINGS, type AuthSettings, sessionCookieOptions } from './auth-settings';
+import {
+  AUTH_SETTINGS,
+  type AuthSettings,
+  SESSION_COOKIE,
+  sessionCookieOptions,
+} from './auth-settings';
 import {
   ACCOUNT_LOGIN_LIMIT,
   ACCOUNT_THROTTLER,
@@ -38,7 +43,6 @@ import {
   REGISTER_LIMIT,
 } from './auth-throttle';
 import { AuthService } from './auth.service';
-import { SESSION_COOKIE } from './session-token';
 
 const PUBLIC_USER_EXAMPLE = {
   id: '2f0c…',

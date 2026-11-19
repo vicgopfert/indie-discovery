@@ -7,7 +7,8 @@ import {
 import { Reflector } from '@nestjs/core';
 import type { AuthenticatedRequest } from '../../common/decorators/current-user.decorator';
 import { IS_PUBLIC } from '../../common/decorators/public.decorator';
-import { hashSessionToken, SESSION_COOKIE } from './session-token';
+import { SESSION_COOKIE } from './auth-settings';
+import { hashSecretToken } from './secret-token';
 import { SessionsRepository } from './sessions.repository';
 
 // Registrado como guard global: uma rota nova esquecida fica fechada, não aberta.
@@ -29,7 +30,7 @@ export class SessionAuthGuard implements CanActivate {
     const token: unknown = request.cookies?.[SESSION_COOKIE];
     const user =
       typeof token === 'string'
-        ? await this.sessions.findUserOfValidSession(hashSessionToken(token), new Date())
+        ? await this.sessions.findUserOfValidSession(hashSecretToken(token), new Date())
         : null;
     if (!user) throw new UnauthorizedException('Sessão ausente ou expirada');
     request.user = user;

@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC } from '../../common/decorators/public.decorator';
 import type { User } from '../../generated/prisma/client';
 import { SessionAuthGuard } from './session-auth.guard';
-import { hashSessionToken } from './session-token';
+import { hashSecretToken } from './secret-token';
 import type { SessionsRepository } from './sessions.repository';
 
 const user = { id: 'id-1', email: 'jogadora@example.com' } as User;
@@ -21,7 +21,7 @@ function contextWith(cookies: Record<string, string> | undefined, isPublic = fal
 }
 
 describe('SessionAuthGuard', () => {
-  const validHash = hashSessionToken('token-valido');
+  const validHash = hashSecretToken('token-valido');
   const sessions = {
     findUserOfValidSession: (tokenHash: string) =>
       Promise.resolve(tokenHash === validHash ? user : null),
