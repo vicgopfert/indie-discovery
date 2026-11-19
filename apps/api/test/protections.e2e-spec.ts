@@ -7,17 +7,25 @@ import request from 'supertest';
 import type { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
 import { configureApp } from '../src/configure-app';
+import { BackgroundTasks } from '../src/common/background-tasks';
 import { AuthService } from '../src/modules/auth/auth.service';
+import { MAILER } from '../src/modules/mail/mailer';
 import { PrismaService } from '../src/prisma/prisma.service';
+import { FakeMailer } from './support/fake-mailer';
 
 describe('Proteções HTTP', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let origin: string;
+  let mailer: FakeMailer;
 
   // Uma aplicação nova por teste zera os contadores do throttler, que ficam na memória.
   beforeEach(async () => {
-    const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compile();
+    mailer = new FakeMailer();
+    const moduleRef = await Test.createTestingModule({ imports: [AppModule] })
+      .overrideProvider(MAILER)
+      .useValue(mailer)
+      .compile();
     app = moduleRef.createNestApplication();
     configureApp(app);
     await app.init();
@@ -40,6 +48,13 @@ describe('Proteções HTTP', () => {
         displayName: 'Jogadora',
         password: 'senha-forte',
       });
+  const requestReset = (email: string) =>
+    server().post('/api/auth/password-reset/request').set('Origin', origin).send({ email });
+  const confirmReset = (token = 'token-inventado', password = 'senha-nova-forte') =>
+    server()
+      .post('/api/auth/password-reset/confirm')
+      .set('Origin', origin)
+      .send({ token, password });
 
   describe('throttler', () => {
     it('a 6ª tentativa de login no mesmo minuto recebe 429', async () => {
@@ -66,6 +81,20 @@ describe('Proteções HTTP', () => {
       for (let attempt = 0; attempt < 5; attempt++) await login();
 
       expect((await register(0)).status).toBe(201);
+    });
+
+    it('o 6º pedido de redefinição do mesmo IP na mesma hora recebe 429', async () => {
+      for (let index = 0; index < 5; index++) {
+        expect((await requestReset(`jogadora${index}@example.com`)).status).toBe(202);
+      }
+
+      expect((await requestReset('jogadora5@example.com')).status).toBe(429);
+    });
+
+    it('a 6ª tentativa de link de redefinição no mesmo minuto recebe 429', async () => {
+      for (let attempt = 0; attempt < 5; attempt++) expect((await confirmReset()).status).toBe(400);
+
+      expect((await confirmReset()).status).toBe(429);
     });
 
     it('sem proxies confiáveis, ignora o X-Forwarded-For enviado pelo cliente', async () => {
@@ -116,6 +145,17 @@ describe('Proteções HTTP', () => {
       for (let attempt = 1; attempt <= 10; attempt++) await fromIp(attempt);
 
       expect((await fromIp(11, 'outra@example.com')).status).toBe(401);
+    });
+
+    it('o 4º pedido de redefinição para o mesmo e-mail na mesma hora recebe 429, mesmo de IPs diferentes', async () => {
+      const resetFromIp = (attempt: number, email = 'jogadora@example.com') =>
+        requestReset(email).set('X-Forwarded-For', `203.0.113.${attempt}`);
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        expect((await resetFromIp(attempt)).status).toBe(202);
+      }
+
+      expect((await resetFromIp(4, ' JOGADORA@Example.com ')).status).toBe(429);
+      expect((await resetFromIp(5, 'outra@example.com')).status).toBe(202);
     });
   });
 
@@ -176,6 +216,42 @@ describe('Proteções HTTP', () => {
       const log = lines.join('\n');
       expect(log).not.toContain(password);
       for (const token of tokens) expect(log).not.toContain(token);
+    });
+
+    it('não registra o link de redefinição, a senha nova nem o e-mail de quem pediu', async () => {
+      await register(0);
+      const lines = captureLogs();
+      const password = 'senha-nova-que-nao-pode-vazar';
+
+      await requestReset('jogadora0@example.com');
+      await app.get(BackgroundTasks).drain();
+      const token = /#([\w-]+)/.exec(mailer.sent[0]!.text)![1]!;
+      expect((await confirmReset(token, password)).status).toBe(204);
+      await app.get(BackgroundTasks).drain();
+
+      expect(lines.some((line) => line.includes('/api/auth/password-reset/confirm'))).toBe(true);
+      const log = lines.join('\n');
+      expect(log).not.toContain(token);
+      expect(log).not.toContain(password);
+      expect(log).not.toContain('jogadora0@example.com');
+    });
+
+    it('falha no envio: o pedido responde normalmente, e o log fica só com o tipo e o código', async () => {
+      await register(0);
+      const lines = captureLogs();
+      jest
+        .spyOn(mailer, 'send')
+        .mockRejectedValue(
+          Object.assign(new Error('recusado para jogadora0@example.com'), { code: 'HTTP_422' }),
+        );
+
+      const response = await requestReset('jogadora0@example.com');
+      await app.get(BackgroundTasks).drain();
+
+      expect(response.status).toBe(202);
+      const log = lines.join('\n');
+      expect(log).toContain('Falha em \\"pedido de redefinição de senha\\": Error (HTTP_422)');
+      expect(log).not.toContain('jogadora0@example.com');
     });
   });
 
