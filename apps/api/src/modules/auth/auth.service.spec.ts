@@ -61,7 +61,11 @@ class FakeHasher implements Pick<PasswordHasher, 'hash' | 'verify'> {
   }
 }
 
-const settings: AuthSettings = { sessionTtlDays: 7, secureCookie: false };
+const settings: AuthSettings = {
+  sessionTtlDays: 7,
+  secureCookie: false,
+  webOrigin: 'http://localhost:3000',
+};
 
 describe('AuthService', () => {
   let users: FakeUsers;

@@ -10,6 +10,15 @@ export const EmailSchema = z
   .toLowerCase()
   .pipe(z.email({ error: 'E-mail inválido.' }).max(254, { error: 'E-mail longo demais.' }));
 
+export const NewPasswordSchema = z
+  .string({ error: 'Informe a senha.' })
+  .min(PASSWORD_MIN_LENGTH, {
+    error: `A senha tem no mínimo ${PASSWORD_MIN_LENGTH} caracteres.`,
+  })
+  .max(PASSWORD_MAX_LENGTH, {
+    error: `A senha tem no máximo ${PASSWORD_MAX_LENGTH} caracteres.`,
+  });
+
 export const RegisterSchema = z.object({
   email: EmailSchema,
   displayName: z
@@ -17,14 +26,7 @@ export const RegisterSchema = z.object({
     .trim()
     .min(1, { error: 'Informe o nome de exibição.' })
     .max(50, { error: 'O nome de exibição tem no máximo 50 caracteres.' }),
-  password: z
-    .string({ error: 'Informe a senha.' })
-    .min(PASSWORD_MIN_LENGTH, {
-      error: `A senha tem no mínimo ${PASSWORD_MIN_LENGTH} caracteres.`,
-    })
-    .max(PASSWORD_MAX_LENGTH, {
-      error: `A senha tem no máximo ${PASSWORD_MAX_LENGTH} caracteres.`,
-    }),
+  password: NewPasswordSchema,
 });
 
 export type RegisterInput = z.infer<typeof RegisterSchema>;
@@ -62,3 +64,24 @@ export const LoginSchema = z.object({
 });
 
 export type LoginInput = z.infer<typeof LoginSchema>;
+
+export const PasswordResetRequestSchema = z.object({ email: EmailSchema });
+
+export type PasswordResetRequestInput = z.infer<typeof PasswordResetRequestSchema>;
+
+// Cada pedido novo invalida o link anterior; vai no e-mail e na mensagem de link inválido.
+export const LATEST_RESET_LINK_NOTE =
+  'Se você pediu mais de uma vez, só o link do e-mail mais recente funciona.';
+
+// A mesma mensagem para link inexistente, vencido ou já usado.
+export const INVALID_RESET_LINK_MESSAGE = `O link de redefinição é inválido ou expirou. Peça um novo. ${LATEST_RESET_LINK_NOTE}`;
+
+export const PasswordResetConfirmSchema = z.object({
+  token: z
+    .string({ error: INVALID_RESET_LINK_MESSAGE })
+    .min(1, { error: INVALID_RESET_LINK_MESSAGE })
+    .max(128, { error: INVALID_RESET_LINK_MESSAGE }),
+  password: NewPasswordSchema,
+});
+
+export type PasswordResetConfirmInput = z.infer<typeof PasswordResetConfirmSchema>;

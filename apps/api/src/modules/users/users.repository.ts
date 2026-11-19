@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { type DiscoveryMode, Prisma, type User } from '../../generated/prisma/client';
+import {
+  AccountTokenPurpose,
+  type DiscoveryMode,
+  Prisma,
+  type User,
+} from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 
 export interface NewUser {
@@ -31,6 +36,23 @@ export class UsersRepository {
 
   findByEmail(email: string): Promise<User | null> {
     return this.prisma.user.findUnique({ where: { email } });
+  }
+
+  // Numa transação: consome o token de redefinição, se houver, grava o hash novo e encerra as
+  // sessões e os links de redefinição pendentes. false se outro pedido já usou o token.
+  replacePassword(userId: string, passwordHash: string, consumedTokenId?: string) {
+    return this.prisma.$transaction(async (tx) => {
+      if (consumedTokenId) {
+        const { count } = await tx.accountToken.deleteMany({ where: { id: consumedTokenId } });
+        if (count === 0) return false;
+      }
+      await tx.user.update({ where: { id: userId }, data: { passwordHash } });
+      await tx.session.deleteMany({ where: { userId } });
+      await tx.accountToken.deleteMany({
+        where: { userId, purpose: AccountTokenPurpose.PASSWORD_RESET },
+      });
+      return true;
+    });
   }
 
   updateDiscoveryMode(id: string, discoveryMode: DiscoveryMode): Promise<User> {
