@@ -15,14 +15,14 @@ import {
 } from './auth-throttle';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { CredentialsModule } from './credentials.module';
 import { PasswordHasher } from './password-hasher';
 import { SessionAuthGuard } from './session-auth.guard';
-import { SessionsModule } from './sessions.module';
 
 @Module({
   imports: [
     UsersModule,
-    SessionsModule,
+    CredentialsModule,
     // Memória do processo: basta para a única instância do Render.
     ThrottlerModule.forRoot({
       errorMessage: TOO_MANY_ATTEMPTS_MESSAGE,
