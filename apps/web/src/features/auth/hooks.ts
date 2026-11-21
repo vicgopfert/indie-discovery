@@ -1,6 +1,15 @@
 import type { User } from '@indie/contracts';
 import { type QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getSession, login, logout, register, requestPasswordReset, resetPassword } from './api';
+import {
+  confirmEmail,
+  getSession,
+  login,
+  logout,
+  register,
+  requestEmailConfirmation,
+  requestPasswordReset,
+  resetPassword,
+} from './api';
 
 export const SESSION_QUERY_KEY = ['session'] as const;
 
@@ -31,6 +40,18 @@ export const useRequestPasswordReset = () => useMutation({ mutationFn: requestPa
 export function useResetPassword() {
   const queryClient = useQueryClient();
   return useMutation({ mutationFn: resetPassword, onSuccess: () => clearAccount(queryClient) });
+}
+
+export const useRequestEmailConfirmation = () =>
+  useMutation({ mutationFn: requestEmailConfirmation });
+
+// Se a conta confirmada estiver aberta neste navegador, a sessão recarregada tira o aviso.
+export function useConfirmEmail() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: confirmEmail,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: SESSION_QUERY_KEY }),
+  });
 }
 
 // Ao sair, ou quando a sessão vence: o que estiver no cache pertence à conta que saiu.

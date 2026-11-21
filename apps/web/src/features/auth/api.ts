@@ -1,4 +1,5 @@
 import {
+  type EmailConfirmationInput,
   type LoginInput,
   type PasswordResetConfirmInput,
   type PasswordResetRequestInput,
@@ -29,6 +30,12 @@ export const requestPasswordReset = (input: PasswordResetRequestInput) =>
 
 export const resetPassword = (input: PasswordResetConfirmInput) =>
   apiFetch('/auth/password-reset/confirm', { method: 'POST', body: input });
+
+export const requestEmailConfirmation = () =>
+  apiFetch('/auth/email-confirmation/request', { method: 'POST' });
+
+export const confirmEmail = (input: EmailConfirmationInput) =>
+  apiFetch('/auth/email-confirmation/confirm', { method: 'POST', body: input });
 
 // Uma sessão que já venceu também termina sem sessão: o 401 aqui não é falha.
 export async function logout() {
