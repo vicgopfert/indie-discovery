@@ -7,8 +7,8 @@ import { passwordChangedEmail } from './account-emails';
 import { AUTH_SETTINGS, type AuthSettings } from './auth-settings';
 import { PasswordHasher } from './password-hasher';
 
-// Grava a senha nova, encerra todas as sessões e avisa por e-mail. Serve à redefinição e à troca
-// de senha com a conta aberta.
+// Grava a senha nova, encerra todas as sessões e avisa por e-mail, se o endereço estiver
+// confirmado. Serve à redefinição e à troca de senha com a conta aberta.
 @Injectable()
 export class PasswordChanger {
   constructor(
@@ -22,7 +22,7 @@ export class PasswordChanger {
   async change(user: User, password: string, consumedTokenId?: string, now = new Date()) {
     const passwordHash = await this.passwords.hash(password);
     const changed = await this.users.replacePassword(user.id, passwordHash, consumedTokenId);
-    if (changed) {
+    if (changed && user.emailConfirmedAt) {
       const email = passwordChangedEmail(user.email, now, this.settings.webOrigin);
       this.tasks.run('aviso de senha alterada', () => this.mailer.send(email));
     }

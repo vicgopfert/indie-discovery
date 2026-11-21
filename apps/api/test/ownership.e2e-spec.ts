@@ -13,10 +13,13 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import type { Application } from 'express';
 import type { Test } from 'supertest';
 import type { App } from 'supertest/types';
+import { BackgroundTasks } from '../src/common/background-tasks';
+import { MAILER } from '../src/modules/mail/mailer';
 import { ContentIndexService } from '../src/modules/recommendation/content-index.service';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { CatalogBuilder } from './support/catalog-builder';
 import { createApp, sessionHelpers } from './support/e2e-app';
+import { FakeMailer } from './support/fake-mailer';
 
 const GAMES = ['celeste', 'ori', 'hollow-knight', 'inside', 'baba-is-you', 'darkwood'];
 const LISTS = ['favorite', 'completed', 'want-to-play'];
@@ -58,21 +61,27 @@ const SESSION_ROUTES: Record<string, (as: Client) => (() => Test)[]> = {
   'GET /api/me/onboarding/games': (as) => [() => as.get('/api/me/onboarding/games')],
   'PATCH /api/me': (as) => [() => as.patch('/api/me', { discoveryMode: 'POPULAR' })],
   'GET /api/auth/me': (as) => [() => as.get('/api/auth/me')],
+  'POST /api/auth/email-confirmation/request': (as) => [
+    () => as.post('/api/auth/email-confirmation/request'),
+  ],
   'GET /api/recommendations': (as) => [() => as.get('/api/recommendations')],
   'GET /api/recommendations/lists/:key': (as) => [() => as.get('/api/recommendations/lists/main')],
   'POST /api/auth/logout': (as) => [() => as.post('/api/auth/logout')],
 };
 
 describe('Posse dos dados: uma pessoa não altera nem lê a biblioteca de outra (B-30)', () => {
+  const mailer = new FakeMailer();
   let app: INestApplication<App>;
   let prisma: PrismaService;
+  let tasks: BackgroundTasks;
   let helpers: ReturnType<typeof sessionHelpers>;
   let jogadora: { cookie: string; id: string };
   let outra: { cookie: string; id: string };
 
   beforeAll(async () => {
-    app = await createApp();
+    app = await createApp((builder) => builder.overrideProvider(MAILER).useValue(mailer));
     prisma = app.get(PrismaService);
+    tasks = app.get(BackgroundTasks);
     helpers = sessionHelpers(app);
     await prisma.$executeRaw`TRUNCATE "User", "Game", "Feature", "Company" CASCADE`;
     const catalog = new CatalogBuilder(prisma);
@@ -106,6 +115,9 @@ describe('Posse dos dados: uma pessoa não altera nem lê a biblioteca de outra 
     ]) {
       expect(response.status).toBe(200);
     }
+    // Os e-mails de confirmação do cadastro já saíram: daqui em diante, a lista só tem os novos.
+    await tasks.drain();
+    mailer.clear();
   });
 
   afterAll(() => app.close());
@@ -116,11 +128,12 @@ describe('Posse dos dados: uma pessoa não altera nem lê a biblioteca de outra 
     return { cookie, id: me.id };
   }
 
-  // Tudo o que está gravado da pessoa no banco, inclusive as sessões.
+  // Tudo o que está gravado da pessoa no banco, inclusive as sessões e os links enviados por e-mail.
   const rowsOf = (userId: string) =>
     Promise.all([
       prisma.user.findUniqueOrThrow({ where: { id: userId } }),
       prisma.session.findMany({ where: { userId }, orderBy: { id: 'asc' } }),
+      prisma.accountToken.findMany({ where: { userId }, orderBy: { id: 'asc' } }),
       prisma.rating.findMany({ where: { userId }, orderBy: { gameId: 'asc' } }),
       prisma.listEntry.findMany({
         where: { userId },
@@ -157,8 +170,10 @@ describe('Posse dos dados: uma pessoa não altera nem lê a biblioteca de outra 
         expect([route, status < 300]).toEqual([route, true]);
       }
     }
+    await tasks.drain();
 
     expect(await rowsOf(outra.id)).toEqual(rows);
+    expect(mailer.sent.map(({ to }) => to)).not.toContain('outra@example.com');
     expect(await viewOf(outra.cookie)).toEqual(view);
   });
 
@@ -257,6 +272,23 @@ describe('Posse dos dados: uma pessoa não altera nem lê a biblioteca de outra 
       expect(PreferencesSchema.parse((await as.get('/api/me/preferences')).body)).toEqual(
         PreferencesSchema.parse(response.body),
       );
+      expect(await rowsOf(outra.id)).toEqual(rows);
+    });
+
+    it('o reenvio da confirmação com o id e o e-mail da Outra vai só para a Jogadora', async () => {
+      const rows = await rowsOf(outra.id);
+
+      const response = await helpers
+        .as(jogadora.cookie)
+        .post(`/api/auth/email-confirmation/request?userId=${outra.id}`, {
+          userId: outra.id,
+          email: 'outra@example.com',
+        });
+      await tasks.drain();
+
+      expect(response.status).toBe(202);
+      expect(mailer.sent.map(({ to }) => to)).toEqual(['jogadora@example.com']);
+      expect(await prisma.accountToken.count({ where: { userId: jogadora.id } })).toBe(1);
       expect(await rowsOf(outra.id)).toEqual(rows);
     });
 

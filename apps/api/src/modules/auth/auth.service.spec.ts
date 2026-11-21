@@ -3,6 +3,7 @@ import type { User } from '../../generated/prisma/client';
 import type { NewUser, UsersRepository } from '../users/users.repository';
 import type { AuthSettings } from './auth-settings';
 import { AuthService } from './auth.service';
+import type { EmailConfirmationService } from './email-confirmation.service';
 import type { PasswordHasher } from './password-hasher';
 import { hashSecretToken } from './secret-token';
 import type { SessionsRepository } from './sessions.repository';
@@ -20,6 +21,7 @@ class FakeUsers implements Pick<UsersRepository, 'createIfEmailFree' | 'findByEm
       role: 'USER',
       discoveryMode: 'BALANCED',
       onboardingCompletedAt: null,
+      emailConfirmedAt: null,
       createdAt: NOW,
     };
     this.saved.push(user);
@@ -61,6 +63,14 @@ class FakeHasher implements Pick<PasswordHasher, 'hash' | 'verify'> {
   }
 }
 
+class FakeEmailConfirmation implements Pick<EmailConfirmationService, 'request'> {
+  readonly requested: User[] = [];
+
+  request(user: User) {
+    this.requested.push(user);
+  }
+}
+
 const settings: AuthSettings = {
   sessionTtlDays: 7,
   secureCookie: false,
@@ -71,6 +81,7 @@ describe('AuthService', () => {
   let users: FakeUsers;
   let sessions: FakeSessions;
   let hasher: FakeHasher;
+  let emailConfirmation: FakeEmailConfirmation;
   let auth: AuthService;
   const input = { email: 'jogadora@example.com', displayName: 'Jogadora', password: 'senha-forte' };
 
@@ -78,10 +89,12 @@ describe('AuthService', () => {
     users = new FakeUsers();
     sessions = new FakeSessions();
     hasher = new FakeHasher();
+    emailConfirmation = new FakeEmailConfirmation();
     auth = new AuthService(
       users as unknown as UsersRepository,
       sessions as unknown as SessionsRepository,
       hasher,
+      emailConfirmation as unknown as EmailConfirmationService,
       settings,
     );
   });
@@ -103,6 +116,7 @@ describe('AuthService', () => {
         role: 'USER',
         discoveryMode: 'BALANCED',
         onboardingCompletedAt: null,
+        emailConfirmedAt: null,
         createdAt: '2026-10-27T12:00:00.000Z',
       });
       expect(JSON.stringify(user)).not.toContain('senha-forte');
@@ -115,6 +129,12 @@ describe('AuthService', () => {
       ]);
     });
 
+    it('pede a confirmação do e-mail da conta nova', async () => {
+      await auth.register(input, NOW);
+
+      expect(emailConfirmation.requested).toEqual([users.saved[0]]);
+    });
+
     it('recusa o e-mail já cadastrado com 409', async () => {
       await auth.register(input, NOW);
 
@@ -122,6 +142,7 @@ describe('AuthService', () => {
         ConflictException,
       );
       expect(users.saved).toHaveLength(1);
+      expect(emailConfirmation.requested).toHaveLength(1);
     });
   });
 

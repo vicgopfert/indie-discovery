@@ -5,6 +5,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 import request from 'supertest';
 import type { App } from 'supertest/types';
 import { AppModule } from '../../src/app.module';
+import { BackgroundTasks } from '../../src/common/background-tasks';
 import { configureApp } from '../../src/configure-app';
 import { contentIndexLoaded } from './content-index';
 
@@ -27,11 +28,14 @@ export async function createApp(
 export function sessionHelpers(app: INestApplication<App>) {
   const origin = app.get(ConfigService).getOrThrow<string>('WEB_ORIGIN');
   const server = () => request(app.getHttpServer());
+  // O cadastro envia a confirmação do e-mail depois da resposta (B-98): a espera evita que o envio
+  // ainda em andamento dispute o TRUNCATE do teste seguinte.
   const register = async (email: string) => {
     const response = await server()
       .post('/api/auth/register')
       .set('Origin', origin)
       .send({ email, displayName: 'Jogadora', password: 'senha-forte' });
+    await app.get(BackgroundTasks).drain();
     return String(response.headers['set-cookie']).split(';')[0]!;
   };
   const as = (cookie: string) => ({

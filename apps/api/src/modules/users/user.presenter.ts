@@ -10,6 +10,7 @@ export function toPublicUser(user: User): PublicUser {
     role: user.role,
     discoveryMode: user.discoveryMode,
     onboardingCompletedAt: user.onboardingCompletedAt?.toISOString() ?? null,
+    emailConfirmedAt: user.emailConfirmedAt?.toISOString() ?? null,
     createdAt: user.createdAt.toISOString(),
   };
 }

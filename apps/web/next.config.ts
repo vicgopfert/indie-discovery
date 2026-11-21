@@ -6,15 +6,15 @@ const nextConfig: NextConfig = {
   rewrites() {
     return Promise.resolve([{ source: '/api/:path*', destination: `${apiUrl}/api/:path*` }]);
   },
-  // A página de redefinição recebe o token no endereço: nenhum pedido que ela fizer leva o
-  // endereço como Referer.
+  // As páginas de redefinição e de confirmação recebem o token no endereço: nenhum pedido que
+  // elas fizerem leva o endereço como Referer.
   headers() {
-    return Promise.resolve([
-      {
-        source: '/redefinir-senha',
+    return Promise.resolve(
+      ['/redefinir-senha', '/confirmar-email'].map((source) => ({
+        source,
         headers: [{ key: 'Referrer-Policy', value: 'no-referrer' }],
-      },
-    ]);
+      })),
+    );
   },
 };
 

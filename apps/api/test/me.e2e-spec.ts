@@ -16,6 +16,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 import request from 'supertest';
 import type { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
+import { BackgroundTasks } from '../src/common/background-tasks';
 import { configureApp } from '../src/configure-app';
 import { readTagVocabulary, tagSlug } from '../src/modules/tags/tags';
 import { PrismaService } from '../src/prisma/prisma.service';
@@ -62,6 +63,9 @@ describe('Biblioteca, preferências e modo (/me)', () => {
       .post('/api/auth/register')
       .set('Origin', origin)
       .send({ email, displayName: 'Jogadora', password: 'senha-forte' });
+    // O cadastro envia a confirmação do e-mail depois da resposta (B-98): a espera evita que o
+    // envio ainda em andamento dispute o TRUNCATE do teste seguinte.
+    await app.get(BackgroundTasks).drain();
     return String(response.headers['set-cookie']).split(';')[0]!;
   }
 

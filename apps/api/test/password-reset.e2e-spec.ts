@@ -60,12 +60,25 @@ describe('Redefinição de senha', () => {
     await tasks.drain();
     return response;
   };
+  // A redefinição só vai para endereço confirmado (B-98). Confirma como a rota faria, gravando a
+  // data e apagando o token, e tira da lista o e-mail de confirmação do cadastro.
+  const confirmEmails = async () => {
+    await tasks.drain();
+    await prisma.user.updateMany({ data: { emailConfirmedAt: new Date() } });
+    await prisma.accountToken.deleteMany({ where: { purpose: 'EMAIL_CONFIRMATION' } });
+  };
+  const registerConfirmed = async (email: string) => {
+    const cookie = await helpers.register(email);
+    await confirmEmails();
+    mailer.clear();
+    return cookie;
+  };
   const login = (password: string) =>
     server().post('/api/auth/login').set('Origin', origin).send({ email: EMAIL, password });
 
   describe('pedido', () => {
     it('responde 202 sem corpo e envia o link para o e-mail normalizado da conta', async () => {
-      await helpers.register(EMAIL);
+      await registerConfirmed(EMAIL);
 
       const response = await requestReset(' Jogadora@Example.com ');
 
@@ -80,7 +93,7 @@ describe('Redefinição de senha', () => {
     });
 
     it('e-mail sem conta recebe a mesma resposta, sem e-mail enviado e sem token gravado', async () => {
-      await helpers.register(EMAIL);
+      await registerConfirmed(EMAIL);
       const withAccount = await requestReset(EMAIL);
       mailer.clear();
 
@@ -94,7 +107,7 @@ describe('Redefinição de senha', () => {
     });
 
     it('responde antes de buscar a conta e enviar o e-mail', async () => {
-      await helpers.register(EMAIL);
+      await registerConfirmed(EMAIL);
       const release = mailer.hold();
 
       const response = await sendRequest(EMAIL);
@@ -107,7 +120,7 @@ describe('Redefinição de senha', () => {
     });
 
     it('o banco guarda só o SHA-256 do token, com validade de 60 minutos', async () => {
-      await helpers.register(EMAIL);
+      await registerConfirmed(EMAIL);
       const before = Date.now();
 
       const token = await requestToken();
@@ -121,7 +134,7 @@ describe('Redefinição de senha', () => {
     });
 
     it('monta o link com o WEB_ORIGIN, nunca com o Host enviado', async () => {
-      await helpers.register(EMAIL);
+      await registerConfirmed(EMAIL);
 
       await server()
         .post('/api/auth/password-reset/request')
@@ -135,7 +148,7 @@ describe('Redefinição de senha', () => {
     });
 
     it('um pedido novo invalida o link anterior', async () => {
-      await helpers.register(EMAIL);
+      await registerConfirmed(EMAIL);
       const first = await requestToken();
       const second = await requestToken();
 
@@ -144,7 +157,7 @@ describe('Redefinição de senha', () => {
     });
 
     it('dois pedidos simultâneos deixam um só link válido', async () => {
-      await helpers.register(EMAIL);
+      await registerConfirmed(EMAIL);
 
       await Promise.all([sendRequest(EMAIL), sendRequest(EMAIL)]);
       await tasks.drain();
@@ -164,10 +177,19 @@ describe('Redefinição de senha', () => {
         .set('Origin', origin)
         .send({ email: EMAIL, displayName: scam, password: OLD_PASSWORD })
         .expect(201);
-      const token = await requestToken();
-      await confirm(token);
+      await requestReset(EMAIL);
+      const confirmation = /\/confirmar-email#([\w-]+)/.exec(mailer.sent.at(-1)!.text)![1]!;
+      await server()
+        .post('/api/auth/email-confirmation/confirm')
+        .set('Origin', origin)
+        .send({ token: confirmation })
+        .expect(204);
+      await requestReset(EMAIL);
+      await confirm(tokenOf(mailer.sent.at(-1)!.text)!);
 
       expect(mailer.sent.map(({ subject }) => subject)).toEqual([
+        'Confirme o seu e-mail na Penumbra',
+        'Redefinição de senha da Penumbra: confirme o seu e-mail antes',
         'Redefinição de senha da Penumbra',
         'A sua senha da Penumbra foi alterada',
       ]);
@@ -178,7 +200,7 @@ describe('Redefinição de senha', () => {
     });
 
     it('pedido vindo de outro site recebe 403 e não envia e-mail', async () => {
-      await helpers.register(EMAIL);
+      await registerConfirmed(EMAIL);
 
       const response = await server()
         .post('/api/auth/password-reset/request')
@@ -193,7 +215,7 @@ describe('Redefinição de senha', () => {
 
   describe('confirmação', () => {
     it('troca a senha, encerra as sessões de todos os aparelhos e não abre outra', async () => {
-      const firstDevice = await helpers.register(EMAIL);
+      const firstDevice = await registerConfirmed(EMAIL);
       const secondDevice = String((await login(OLD_PASSWORD)).headers['set-cookie']).split(';')[0]!;
       const token = await requestToken();
 
@@ -212,7 +234,7 @@ describe('Redefinição de senha', () => {
     });
 
     it('avisa por e-mail que a senha foi alterada, sem link de redefinição', async () => {
-      await helpers.register(EMAIL);
+      await registerConfirmed(EMAIL);
       const token = await requestToken();
       mailer.clear();
 
@@ -248,7 +270,7 @@ describe('Redefinição de senha', () => {
     ])(
       'link %s recebe a mesma resposta 400 e não troca a senha',
       async (_, prepare, currentPassword) => {
-        await helpers.register(EMAIL);
+        await registerConfirmed(EMAIL);
         const token = await prepare(await requestToken());
         mailer.clear();
 
@@ -262,7 +284,7 @@ describe('Redefinição de senha', () => {
     );
 
     it('senha fora da regra do cadastro responde 400 sem gastar o link', async () => {
-      await helpers.register(EMAIL);
+      await registerConfirmed(EMAIL);
       const token = await requestToken();
 
       const response = await confirm(token, '1234567');
@@ -275,7 +297,7 @@ describe('Redefinição de senha', () => {
     });
 
     it('dois envios simultâneos com o mesmo link: só um troca a senha', async () => {
-      await helpers.register(EMAIL);
+      await registerConfirmed(EMAIL);
       const token = await requestToken();
 
       const responses = await Promise.all([

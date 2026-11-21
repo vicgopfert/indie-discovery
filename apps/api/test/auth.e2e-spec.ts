@@ -5,6 +5,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 import request from 'supertest';
 import type { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
+import { BackgroundTasks } from '../src/common/background-tasks';
 import { configureApp } from '../src/configure-app';
 import { PrismaService } from '../src/prisma/prisma.service';
 
@@ -26,7 +27,12 @@ describe('Autenticação', () => {
     origin = app.get(ConfigService).getOrThrow<string>('WEB_ORIGIN');
   });
 
-  beforeEach(() => prisma.$executeRaw`TRUNCATE "User" CASCADE`);
+  // O cadastro envia a confirmação do e-mail depois da resposta (B-98): a espera evita que o envio
+  // ainda em andamento dispute o TRUNCATE do teste seguinte.
+  beforeEach(async () => {
+    await app.get(BackgroundTasks).drain();
+    await prisma.$executeRaw`TRUNCATE "User" CASCADE`;
+  });
 
   afterAll(() => app.close());
 

@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { SiteFooter } from '@/components/site-footer';
 import { SiteHeader } from '@/components/site-header';
 import { siteConfig } from '@/config/site';
+import { EmailConfirmationBanner } from '@/features/auth/email-confirmation-banner';
 import { Providers } from './providers';
 import './globals.css';
 
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <Providers>
           <SiteHeader />
+          <EmailConfirmationBanner />
           {children}
           <SiteFooter />
         </Providers>

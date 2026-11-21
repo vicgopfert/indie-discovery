@@ -51,6 +51,7 @@ enum DiscoveryMode {
 
 enum AccountTokenPurpose {
   PASSWORD_RESET
+  EMAIL_CONFIRMATION
 }
 
 enum ReviewFlagKind {
@@ -79,6 +80,7 @@ model User {
   role                  UserRole         @default(USER)
   discoveryMode         DiscoveryMode    @default(BALANCED)
   onboardingCompletedAt DateTime?
+  emailConfirmedAt      DateTime?
   createdAt             DateTime         @default(now())
   sessions              Session[]
   accountTokens         AccountToken[]

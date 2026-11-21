@@ -7,7 +7,6 @@ import {
 } from '@indie/contracts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, useSyncExternalStore } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormAlert } from '@/components/form/form-alert';
 import { PasswordField } from '@/components/form/password-field';
@@ -15,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
 import { showApiError } from '@/lib/form-errors';
 import { useResetPassword } from './hooks';
+import { useInBrowser, useTokenFromLink } from './link-token';
 
 export const PASSWORD_RESET_DONE_PATH = '/entrar?senha=redefinida';
 
@@ -24,39 +24,8 @@ export const MISSING_RESET_TOKEN_MESSAGE =
 
 const NewPasswordFormSchema = PasswordResetConfirmSchema.pick({ password: true });
 
-const subscribeToNothing = () => () => {};
-
-// O token só existe no navegador, depois do #, que não vai ao servidor.
 export function ResetPasswordForm() {
-  const inBrowser = useSyncExternalStore(
-    subscribeToNothing,
-    () => true,
-    () => false,
-  );
-  return inBrowser ? <ResetPasswordFormWithLink /> : null;
-}
-
-const readToken = () => window.location.hash.slice(1) || null;
-
-const removeTokenFromAddress = () => {
-  if (window.location.hash) window.history.replaceState(null, '', window.location.pathname);
-};
-
-// Guardado no estado, o token sai da barra de endereço e do histórico. O link colado na mesma
-// aba só muda o #, sem recarregar a página.
-function useTokenFromLink() {
-  const [token, setToken] = useState(readToken);
-  useEffect(() => {
-    removeTokenFromAddress();
-    const takeNewToken = () => {
-      const next = readToken();
-      if (next) setToken(next);
-      removeTokenFromAddress();
-    };
-    window.addEventListener('hashchange', takeNewToken);
-    return () => window.removeEventListener('hashchange', takeNewToken);
-  }, []);
-  return token;
+  return useInBrowser() ? <ResetPasswordFormWithLink /> : null;
 }
 
 function ResetPasswordFormWithLink() {
