@@ -8,6 +8,7 @@ export const sampleUser: User = {
   role: 'USER',
   discoveryMode: 'BALANCED',
   onboardingCompletedAt: null,
+  emailConfirmedAt: '2026-10-27T12:05:00.000Z',
   createdAt: '2026-10-27T12:00:00.000Z',
 };
 

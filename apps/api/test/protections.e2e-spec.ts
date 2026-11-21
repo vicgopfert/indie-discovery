@@ -55,6 +55,17 @@ describe('Proteções HTTP', () => {
       .post('/api/auth/password-reset/confirm')
       .set('Origin', origin)
       .send({ token, password });
+  const confirmEmail = (token = 'token-inventado') =>
+    server().post('/api/auth/email-confirmation/confirm').set('Origin', origin).send({ token });
+  // A redefinição só vai para endereço confirmado (B-98): confirma como a rota faria e tira da
+  // lista o e-mail de confirmação do cadastro.
+  const registerConfirmed = async (index: number) => {
+    await register(index);
+    await app.get(BackgroundTasks).drain();
+    await prisma.user.updateMany({ data: { emailConfirmedAt: new Date() } });
+    await prisma.accountToken.deleteMany();
+    mailer.clear();
+  };
 
   describe('throttler', () => {
     it('a 6ª tentativa de login no mesmo minuto recebe 429', async () => {
@@ -95,6 +106,12 @@ describe('Proteções HTTP', () => {
       for (let attempt = 0; attempt < 5; attempt++) expect((await confirmReset()).status).toBe(400);
 
       expect((await confirmReset()).status).toBe(429);
+    });
+
+    it('a 6ª tentativa de link de confirmação no mesmo minuto recebe 429', async () => {
+      for (let attempt = 0; attempt < 5; attempt++) expect((await confirmEmail()).status).toBe(400);
+
+      expect((await confirmEmail()).status).toBe(429);
     });
 
     it('sem proxies confiáveis, ignora o X-Forwarded-For enviado pelo cliente', async () => {
@@ -159,6 +176,41 @@ describe('Proteções HTTP', () => {
     });
   });
 
+  describe('reenvio da confirmação do e-mail', () => {
+    // Cada conta é criada de um IP diferente, para o limite do cadastro não barrar.
+    beforeEach(() => (app.getHttpAdapter().getInstance() as Application).set('trust proxy', 1));
+    const accountFrom = async (index: number) => {
+      const response = await register(index).set('X-Forwarded-For', `198.51.100.${index}`);
+      return String(response.headers['set-cookie']).split(';')[0]!;
+    };
+    const resend = (cookie: string, ip: string) =>
+      server()
+        .post('/api/auth/email-confirmation/request')
+        .set('Origin', origin)
+        .set('Cookie', cookie)
+        .set('X-Forwarded-For', ip);
+
+    it('o 4º reenvio da mesma conta na mesma hora recebe 429, mesmo de IPs diferentes', async () => {
+      const [jogadora, outra] = [await accountFrom(0), await accountFrom(1)];
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        expect((await resend(jogadora, `203.0.113.${attempt}`)).status).toBe(202);
+      }
+
+      expect((await resend(jogadora, '203.0.113.4')).status).toBe(429);
+      expect((await resend(outra, '203.0.113.5')).status).toBe(202);
+    });
+
+    it('o 6º reenvio do mesmo IP na mesma hora recebe 429, mesmo de contas diferentes', async () => {
+      const cookies = [];
+      for (let index = 0; index < 6; index++) cookies.push(await accountFrom(index));
+      for (const cookie of cookies.slice(0, 5)) {
+        expect((await resend(cookie, '203.0.113.9')).status).toBe(202);
+      }
+
+      expect((await resend(cookies[5]!, '203.0.113.9')).status).toBe(429);
+    });
+  });
+
   describe('origem', () => {
     it.each([
       ['de outro site', 'https://atacante.example'],
@@ -219,7 +271,7 @@ describe('Proteções HTTP', () => {
     });
 
     it('não registra o link de redefinição, a senha nova nem o e-mail de quem pediu', async () => {
-      await register(0);
+      await registerConfirmed(0);
       const lines = captureLogs();
       const password = 'senha-nova-que-nao-pode-vazar';
 
@@ -236,8 +288,24 @@ describe('Proteções HTTP', () => {
       expect(log).not.toContain('jogadora0@example.com');
     });
 
-    it('falha no envio: o pedido responde normalmente, e o log fica só com o tipo e o código', async () => {
+    it('não registra o link de confirmação nem o e-mail de quem se cadastrou', async () => {
+      const lines = captureLogs();
+
       await register(0);
+      await app.get(BackgroundTasks).drain();
+      const token = /#([\w-]+)/.exec(mailer.sent[0]!.text)![1]!;
+      expect((await confirmEmail(token)).status).toBe(204);
+
+      expect(lines.some((line) => line.includes('/api/auth/email-confirmation/confirm'))).toBe(
+        true,
+      );
+      const log = lines.join('\n');
+      expect(log).not.toContain(token);
+      expect(log).not.toContain('jogadora0@example.com');
+    });
+
+    it('falha no envio: o pedido responde normalmente, e o log fica só com o tipo e o código', async () => {
+      await registerConfirmed(0);
       const lines = captureLogs();
       jest
         .spyOn(mailer, 'send')

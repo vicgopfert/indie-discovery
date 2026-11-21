@@ -51,6 +51,7 @@ const PUBLIC_USER_EXAMPLE = {
   role: 'USER',
   discoveryMode: 'BALANCED',
   onboardingCompletedAt: null,
+  emailConfirmedAt: null,
   createdAt: '2026-10-27T12:00:00.000Z',
 };
 

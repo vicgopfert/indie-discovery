@@ -7,6 +7,12 @@ describe('accountTracker', () => {
     );
   });
 
+  it('nas rotas com sessão, usa a conta da sessão, não o corpo', () => {
+    expect(
+      accountTracker({ user: { id: 'id-da-jogadora' }, body: { email: 'outra@example.com' } }),
+    ).toBe('user:id-da-jogadora');
+  });
+
   it.each([
     ['sem corpo', {}],
     ['sem e-mail', { body: {} }],

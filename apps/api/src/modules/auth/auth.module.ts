@@ -18,6 +18,8 @@ import {
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { CredentialsModule } from './credentials.module';
+import { EmailConfirmationController } from './email-confirmation.controller';
+import { EmailConfirmationService } from './email-confirmation.service';
 import { PasswordChanger } from './password-changer';
 import { PasswordHasher } from './password-hasher';
 import { PasswordResetController } from './password-reset.controller';
@@ -38,12 +40,13 @@ import { SessionAuthGuard } from './session-auth.guard';
       ],
     }),
   ],
-  controllers: [AuthController, PasswordResetController],
+  controllers: [AuthController, PasswordResetController, EmailConfirmationController],
   providers: [
     AuthService,
     PasswordHasher,
     PasswordChanger,
     PasswordResetService,
+    EmailConfirmationService,
     BackgroundTasks,
     { provide: APP_GUARD, useClass: SessionAuthGuard },
     {

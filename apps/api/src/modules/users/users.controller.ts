@@ -32,6 +32,7 @@ export class UsersController {
         role: 'USER',
         discoveryMode: 'DISCOVERY',
         onboardingCompletedAt: '2026-11-02T12:00:00.000Z',
+        emailConfirmedAt: '2026-10-27T12:05:00.000Z',
         createdAt: '2026-10-27T12:00:00.000Z',
       },
     },

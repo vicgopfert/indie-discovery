@@ -40,6 +40,7 @@ export const UserSchema = z.object({
   role: z.enum(['USER', 'ADMIN']),
   discoveryMode: z.enum(DISCOVERY_MODES),
   onboardingCompletedAt: z.iso.datetime().nullable(),
+  emailConfirmedAt: z.iso.datetime().nullable(),
   createdAt: z.iso.datetime(),
 });
 
@@ -69,12 +70,12 @@ export const PasswordResetRequestSchema = z.object({ email: EmailSchema });
 
 export type PasswordResetRequestInput = z.infer<typeof PasswordResetRequestSchema>;
 
-// Cada pedido novo invalida o link anterior; vai no e-mail e na mensagem de link inválido.
-export const LATEST_RESET_LINK_NOTE =
+// Cada pedido novo invalida o link anterior; vai nos e-mails e nas mensagens de link inválido.
+export const LATEST_LINK_NOTE =
   'Se você pediu mais de uma vez, só o link do e-mail mais recente funciona.';
 
 // A mesma mensagem para link inexistente, vencido ou já usado.
-export const INVALID_RESET_LINK_MESSAGE = `O link de redefinição é inválido ou expirou. Peça um novo. ${LATEST_RESET_LINK_NOTE}`;
+export const INVALID_RESET_LINK_MESSAGE = `O link de redefinição é inválido ou expirou. Peça um novo. ${LATEST_LINK_NOTE}`;
 
 export const PasswordResetConfirmSchema = z.object({
   token: z
@@ -85,3 +86,15 @@ export const PasswordResetConfirmSchema = z.object({
 });
 
 export type PasswordResetConfirmInput = z.infer<typeof PasswordResetConfirmSchema>;
+
+// Como o token do link é apagado ao ser usado, a mesma mensagem cobre quem já confirmou.
+export const INVALID_CONFIRMATION_LINK_MESSAGE = `O link de confirmação é inválido ou expirou. Se você já confirmou o seu e-mail, não precisa fazer nada; se não, entre na sua conta e peça um novo. ${LATEST_LINK_NOTE}`;
+
+export const EmailConfirmationSchema = z.object({
+  token: z
+    .string({ error: INVALID_CONFIRMATION_LINK_MESSAGE })
+    .min(1, { error: INVALID_CONFIRMATION_LINK_MESSAGE })
+    .max(128, { error: INVALID_CONFIRMATION_LINK_MESSAGE }),
+});
+
+export type EmailConfirmationInput = z.infer<typeof EmailConfirmationSchema>;

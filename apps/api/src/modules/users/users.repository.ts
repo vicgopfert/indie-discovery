@@ -55,6 +55,20 @@ export class UsersRepository {
     });
   }
 
+  // Numa transação: consome o token de confirmação e grava a data, mantendo a primeira se o
+  // e-mail já estava confirmado. false se outro pedido já usou o token.
+  confirmEmail(userId: string, consumedTokenId: string, now: Date) {
+    return this.prisma.$transaction(async (tx) => {
+      const { count } = await tx.accountToken.deleteMany({ where: { id: consumedTokenId } });
+      if (count === 0) return false;
+      await tx.user.updateMany({
+        where: { id: userId, emailConfirmedAt: null },
+        data: { emailConfirmedAt: now },
+      });
+      return true;
+    });
+  }
+
   updateDiscoveryMode(id: string, discoveryMode: DiscoveryMode): Promise<User> {
     return this.prisma.user.update({ where: { id }, data: { discoveryMode } });
   }

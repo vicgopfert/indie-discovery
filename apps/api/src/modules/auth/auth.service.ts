@@ -4,6 +4,7 @@ import type { User } from '../../generated/prisma/client';
 import { toPublicUser } from '../users/user.presenter';
 import { UsersRepository } from '../users/users.repository';
 import { AUTH_SETTINGS, type AuthSettings, sessionExpiresAt } from './auth-settings';
+import { EmailConfirmationService } from './email-confirmation.service';
 import { PasswordHasher } from './password-hasher';
 import { hashSecretToken, newSecretToken } from './secret-token';
 import { SessionsRepository } from './sessions.repository';
@@ -18,10 +19,12 @@ export class AuthService {
     private readonly users: UsersRepository,
     private readonly sessions: SessionsRepository,
     private readonly passwords: PasswordHasher,
+    private readonly emailConfirmation: EmailConfirmationService,
     @Inject(AUTH_SETTINGS) private readonly settings: AuthSettings,
   ) {}
 
-  // O e-mail chega normalizado pelo schema de entrada. O cadastro já abre a sessão.
+  // O e-mail chega normalizado pelo schema de entrada. O cadastro já abre a sessão, e a conta
+  // funciona antes de o e-mail ser confirmado.
   async register({ email, displayName, password }: RegisterInput, now = new Date()) {
     const user = await this.users.createIfEmailFree({
       email,
@@ -29,6 +32,7 @@ export class AuthService {
       passwordHash: await this.passwords.hash(password),
     });
     if (!user) throw new ConflictException('E-mail já cadastrado');
+    this.emailConfirmation.request(user, now);
     return this.startSession(user, now);
   }
 
