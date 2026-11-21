@@ -177,10 +177,19 @@ describe('Redefinição de senha', () => {
         .set('Origin', origin)
         .send({ email: EMAIL, displayName: scam, password: OLD_PASSWORD })
         .expect(201);
-      await confirmEmails();
-      await confirm(await requestToken());
+      await requestReset(EMAIL);
+      const confirmation = /\/confirmar-email#([\w-]+)/.exec(mailer.sent.at(-1)!.text)![1]!;
+      await server()
+        .post('/api/auth/email-confirmation/confirm')
+        .set('Origin', origin)
+        .send({ token: confirmation })
+        .expect(204);
+      await requestReset(EMAIL);
+      await confirm(tokenOf(mailer.sent.at(-1)!.text)!);
 
       expect(mailer.sent.map(({ subject }) => subject)).toEqual([
+        'Confirme o seu e-mail na Penumbra',
+        'Redefinição de senha da Penumbra: confirme o seu e-mail antes',
         'Redefinição de senha da Penumbra',
         'A sua senha da Penumbra foi alterada',
       ]);

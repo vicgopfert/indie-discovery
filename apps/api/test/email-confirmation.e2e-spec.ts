@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import request from 'supertest';
 import type { App } from 'supertest/types';
 import { BackgroundTasks } from '../src/common/background-tasks';
+import { PasswordChanger } from '../src/modules/auth/password-changer';
 import { MAILER } from '../src/modules/mail/mailer';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { createApp, sessionHelpers } from './support/e2e-app';
@@ -54,6 +55,14 @@ describe('Confirmação do e-mail (B-98)', () => {
     server().post('/api/auth/email-confirmation/confirm').set('Origin', origin).send({ token });
   const me = async (cookie: string) =>
     UserSchema.parse((await helpers.as(cookie).get('/api/auth/me')).body);
+  const requestReset = async (email = EMAIL) => {
+    const response = await server()
+      .post('/api/auth/password-reset/request')
+      .set('Origin', origin)
+      .send({ email });
+    await tasks.drain();
+    return response;
+  };
 
   describe('cadastro', () => {
     it('envia o link de confirmação depois da resposta, e a conta já funciona sem ele', async () => {
@@ -225,6 +234,63 @@ describe('Confirmação do e-mail (B-98)', () => {
 
       expect([anonymous.status, otherSite.status]).toEqual([401, 403]);
       expect(mailer.sent).toEqual([]);
+    });
+  });
+
+  describe('consequências para quem não confirmou', () => {
+    it('o pedido de redefinição responde igual, mas envia a confirmação no lugar do link', async () => {
+      await register();
+      mailer.clear();
+
+      const response = await requestReset();
+
+      expect(response.status).toBe(202);
+      expect(response.text).toBe('');
+      expect(mailer.sent).toHaveLength(1);
+      expect(mailer.sent[0]).toMatchObject({
+        to: EMAIL,
+        subject: 'Redefinição de senha da Penumbra: confirme o seu e-mail antes',
+      });
+      expect(mailer.sent[0]!.text).not.toContain('/redefinir-senha#');
+      expect(await prisma.accountToken.findMany({ select: { purpose: true } })).toEqual([
+        { purpose: 'EMAIL_CONFIRMATION' },
+      ]);
+    });
+
+    it('depois de confirmar por esse e-mail, a redefinição envia o link', async () => {
+      const cookie = await register();
+      await requestReset();
+
+      expect((await confirm(lastToken())).status).toBe(204);
+      mailer.clear();
+      await requestReset();
+
+      expect((await me(cookie)).emailConfirmedAt).not.toBeNull();
+      expect(mailer.sent.map(({ subject }) => subject)).toEqual([
+        'Redefinição de senha da Penumbra',
+      ]);
+      expect(mailer.sent[0]!.text).toContain(`${origin}/redefinir-senha#`);
+    });
+
+    it('o aviso de senha alterada só vai para endereço confirmado', async () => {
+      await register();
+      mailer.clear();
+      const changer = app.get(PasswordChanger);
+      const unconfirmed = await prisma.user.findUniqueOrThrow({ where: { email: EMAIL } });
+
+      expect(await changer.change(unconfirmed, 'senha-nova-forte')).toBe(true);
+      await tasks.drain();
+      expect(mailer.sent).toEqual([]);
+
+      const confirmed = await prisma.user.update({
+        where: { email: EMAIL },
+        data: { emailConfirmedAt: new Date() },
+      });
+      await changer.change(confirmed, 'outra-senha-forte');
+      await tasks.drain();
+      expect(mailer.sent.map(({ subject }) => subject)).toEqual([
+        'A sua senha da Penumbra foi alterada',
+      ]);
     });
   });
 });

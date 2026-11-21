@@ -6,11 +6,13 @@ import { MAILER, type Mailer } from '../mail/mailer';
 import { UsersRepository } from '../users/users.repository';
 import { AccountTokensRepository } from './account-tokens.repository';
 import {
+  confirmBeforeResetEmail,
   PASSWORD_RESET_TTL_MINUTES,
   passwordResetEmail,
   passwordResetLink,
 } from './account-emails';
 import { AUTH_SETTINGS, type AuthSettings } from './auth-settings';
+import { EmailConfirmationService } from './email-confirmation.service';
 import { PasswordChanger } from './password-changer';
 import { hashSecretToken, newSecretToken } from './secret-token';
 
@@ -22,6 +24,7 @@ export class PasswordResetService {
     private readonly users: UsersRepository,
     private readonly tokens: AccountTokensRepository,
     private readonly passwordChanger: PasswordChanger,
+    private readonly emailConfirmation: EmailConfirmationService,
     private readonly tasks: BackgroundTasks,
     @Inject(MAILER) private readonly mailer: Mailer,
     @Inject(AUTH_SETTINGS) private readonly settings: AuthSettings,
@@ -47,6 +50,10 @@ export class PasswordResetService {
   private async sendResetLink(email: string, now: Date) {
     const user = await this.users.findByEmail(email);
     if (!user) return;
+    if (!user.emailConfirmedAt) {
+      await this.emailConfirmation.sendLink(user, confirmBeforeResetEmail, now);
+      return;
+    }
     const token = newSecretToken();
     await this.tokens.replace(
       user.id,

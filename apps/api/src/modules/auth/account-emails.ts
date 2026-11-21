@@ -88,3 +88,25 @@ export function emailConfirmationEmail(to: string, link: string): Email {
     ].join('\n'),
   };
 }
+
+// Conta não confirmada que pediu a redefinição: o link que dá acesso à conta só vai para um
+// endereço confirmado, então primeiro vem a confirmação.
+export function confirmBeforeResetEmail(to: string, link: string): Email {
+  return {
+    to,
+    subject: 'Redefinição de senha da Penumbra: confirme o seu e-mail antes',
+    text: [
+      GREETING,
+      '',
+      'Recebemos um pedido para redefinir a senha da sua conta na Penumbra, mas o e-mail dela ' +
+        'ainda não foi confirmado. Abra o link abaixo para confirmar e, depois, peça a ' +
+        `redefinição de novo. ${CONFIRMATION_INSTRUCTIONS}`,
+      '',
+      link,
+      '',
+      'Se você não pediu a redefinição, ignore este e-mail: a sua senha continua a mesma.',
+      '',
+      'Penumbra',
+    ].join('\n'),
+  };
+}

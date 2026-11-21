@@ -1,4 +1,5 @@
 import {
+  confirmBeforeResetEmail,
   emailConfirmationEmail,
   emailConfirmationLink,
   passwordChangedEmail,
@@ -14,6 +15,10 @@ describe('e-mails de conta', () => {
     ['pedido de redefinição', passwordResetEmail('jogadora@example.com', 'https://link')],
     ['senha alterada', passwordChangedEmail('jogadora@example.com', CHANGED_AT, ORIGIN)],
     ['confirmação do e-mail', emailConfirmationEmail('jogadora@example.com', 'https://link')],
+    [
+      'confirmação antes da redefinição',
+      confirmBeforeResetEmail('jogadora@example.com', 'https://link'),
+    ],
   ])('%s: saudação genérica, sem texto digitado pelo usuário', (_, email) => {
     expect(email.text.startsWith('Olá.\n')).toBe(true);
     expect(email.to).toBe('jogadora@example.com');
@@ -38,11 +43,16 @@ describe('e-mails de conta', () => {
 
     expect(link).toBe(`${ORIGIN}/confirmar-email#token-secreto`);
     expect(emailConfirmationEmail('jogadora@example.com', link).text).toContain(link);
+    expect(confirmBeforeResetEmail('jogadora@example.com', link).text).toContain(link);
   });
 
-  it('a confirmação vale 7 dias e só o link mais recente funciona', () => {
-    const email = emailConfirmationEmail('jogadora@example.com', 'https://link');
-
+  it.each([
+    ['confirmação do e-mail', emailConfirmationEmail('jogadora@example.com', 'https://link')],
+    [
+      'confirmação antes da redefinição',
+      confirmBeforeResetEmail('jogadora@example.com', 'https://link'),
+    ],
+  ])('%s: vale 7 dias e só o link mais recente funciona', (_, email) => {
     expect(email.text).toContain('Ele vale por 7 dias.');
     expect(email.text).toContain(
       'Se você pediu mais de uma vez, só o link do e-mail mais recente funciona.',
@@ -54,6 +64,14 @@ describe('e-mails de conta', () => {
 
     expect(text).toContain('não envia para este endereço links de redefinição de senha');
     expect(text).toContain('Se você não criou uma conta na Penumbra, ignore este e-mail.');
+  });
+
+  it('a confirmação antes da redefinição pede para repetir o pedido depois de confirmar', () => {
+    const email = confirmBeforeResetEmail('jogadora@example.com', 'https://link');
+
+    expect(email.subject).toBe('Redefinição de senha da Penumbra: confirme o seu e-mail antes');
+    expect(email.text).toContain('peça a redefinição de novo');
+    expect(email.text).not.toContain('/redefinir-senha#');
   });
 
   it('a data da troca de senha sai no horário de Brasília', () => {
