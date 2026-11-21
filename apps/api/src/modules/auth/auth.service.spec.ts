@@ -20,6 +20,7 @@ class FakeUsers implements Pick<UsersRepository, 'createIfEmailFree' | 'findByEm
       role: 'USER',
       discoveryMode: 'BALANCED',
       onboardingCompletedAt: null,
+      emailConfirmedAt: null,
       createdAt: NOW,
     };
     this.saved.push(user);
